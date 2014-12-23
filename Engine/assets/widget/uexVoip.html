@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="css/index.css">
+<title>网络电话</title>
+<script type="text/javascript">
+    function onLoginCallBack (opCode, dataType, data)
+    {
+		alert(data);
+	}
+	window.uexOnload = function()
+    {
+         uexMyVoipPjsip.onLogin = onLoginCallBack ;
+	}
+    function backes()
+    {
+        uexMyVoipPjsip.logout();
+    }
+    function resendsmse()
+    {
+        uexMyVoipPjsip.login('102','102','192.168.1.119');
+    }
+    function ShakeOver()
+    {
+        uexMyVoipPjsip.call();
+    }
+</script>
+</head>
+
+<body>
+	<div class="tit">
+        <table width="320" border="1">
+            <tr>
+                <td colspan="4"> 网络电话</td>
+            </tr>
+            <tr>
+                <td> <input  class="btn" type="button" value="开启" onclick="resendsmse();" ></td>
+                <td> <input  class="btn" type="button" value="拨号" onclick="ShakeOver();" ></td>
+                <td> <input  class="btn" type="button" value="关闭" onclick="backes();" ></td>
+                <td> <a href="index.html">返 回 首 页</a></td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

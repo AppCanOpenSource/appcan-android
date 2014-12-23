@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="css/index.css">
+<title>输入框</title>
+<script type="text/javascript">
+var cText = 0;
+var cJson = 1;
+var cInt = 2;
+
+window.uexOnload = function() {
+	uexInput.cbCreate = function(opCode,dataType,data){
+		switch(dataType){
+			case cText:
+			break;
+			case cJson:
+				alert("uex.cJSON");
+				break;
+			case cInt:
+            if(data == '0')
+				alert("创建成功");
+				break;
+			default:
+				alert("Error");
+		}
+	};
+	
+	uexInput.onButtonClick=function (btnName,content){
+        alert(btnName+":"+content);
+	};
+	
+	uexInput.onError=function(opCode,errorCode,errorDesc){
+		alert(errorCode+":"+errorDesc);
+    };
+    
+}
+    function create(){
+        var jsstr = '{"background": "res://input_bg.png","inputType": "1", "items": [{"type": "0","name": "itemFace","emotion": {"normal": "res://emotion_normal.png",  "pressed": "res://emotion_pressed.png",   "default":"true"}, "keyboard": { "normal": "res://keyboard_normal.png","pressed": "res://keyboard_pressed.png" } },{"type": "1",                               "name": "itemInput",        "defText": "默认文字",            "defHint": "提示语",                  "bg": "input_bg.png",                "autofill": "true"}, { "type": "2", "name": "123456","label": "按钮", "bg": {"normal": "res://btn_normal.png",  "pressed": "res://btn_pressed.png"}  }, { "type": "3", "name": "frt565767","label": "发送", "bg": {"normal": "res://btn_normal.png",  "pressed": "res://btn_pressed.png"}  }]}'
+        var tt = '{"background":"res://icon15.png","inputType":"0","items":[{"type":"1","name":"itemInput","defText":"","defHint":"哈哈","bg":{"normal":"res://icon8.png","pressed":"res://icon8.png"},"autofill":"true"},{"type":"0","name":"itemFace","emotion":{"normal":"res://icon2.png","pressed":"res://emotion_pressed.png"},"keyboard":{"normal":"res://icon2.png","pressed":"res://icon2_act.png","default":"true"}},{"type":"3","name":"itemBtn","label":"","bg":{"normal":"res://send.png","pressed":"res://send_act.png"}},{"type":"2","name":"itemBtn","label":"button","bg":{"normal":"","pressed":""}}]}';
+        uexInput.create(tt);
+    }
+</script>
+</head>
+
+<body>
+    <span>1.create</span>
+    <input class="btn" type="button" value="创建输入框" onclick="create();"/>
+    <span>2.cleartext</span> 
+    <input class="btn" type="button" value="清除内容"
+    onclick="uexInput.clearText();"/>  
+    <span>3.close</span> 
+    <input class="btn" type="button" value="关闭"
+    onclick=" uexInput.close();"/>  
+        
+<input class="btn" type="button" value="返回" onclick="uexWindow.back();">
+</body>
+</html>

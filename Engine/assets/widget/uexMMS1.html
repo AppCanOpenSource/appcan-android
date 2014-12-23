@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="css/index.css">
+<title>彩信功能</title>
+<script type="text/javascript">
+
+	window.uexOnload = function() {	
+		uexFileMgr.cbExplorer=function (opCode,dataType,data){
+			document.getElementById('file').innerHTML = data;
+			document.getElementById('hidfile').value = data;
+		}
+		uexWidgetOne.onError=function(opCode,errorCode,errorDesc){
+			alert(errorCode+":"+errorDesc);
+			}
+	}
+</script>
+</head>
+
+<body>
+	<div class="tit">彩信功能</div>
+	<div class="conbor">
+		<div class="consj">
+			<span>输入电话号码：</span>
+			<input class="textbox" type="text" id="telnm" value="13436827900"><br>
+			<input  class="btn" type="button" value="选择资源文件" onclick="uexFileMgr.explorer('')">
+			<span>资源文件的路径为：</span>
+			<div class="tcxx" id="file"></div>
+			<input type="hidden" id="hidfile">
+			<span>输入发送的主题：</span>
+			<textarea class="tcxx" id="subject">欢迎进入WidgetOne!</textarea>
+			<span>输入发送的内容：</span>
+			<textarea class="tcxx" id="uexMMS.open.data">您好!</textarea>
+			<span>1.打开彩信界面</span>
+			<input class="btn" type="button" value="打开彩信界面" onclick="uexMMS.open(document.getElementById('telnm').value, document.getElementById('subject').value, document.getElementById('uexMMS.open.data').value, document.getElementById('hidfile').value)">
+			<input class="btn" type="button" value="返回" onclick="uexWindow.back();">
+		</div>
+	</div>
+</body>
+</html>

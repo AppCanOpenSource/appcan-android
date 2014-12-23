@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport"
+	content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="css/index.css">
+<title>剪贴板功能</title>
+<script type="text/javascript">
+	window.uexOnload = function() {
+
+		uexClipboard.cbGetContent = function(opCode, dataType, data) {
+			document.getElementById('show_content').innerHTML = data;
+		}
+
+		uexWidgetOne.onError = function(opCode, errorCode, errorDesc) {
+			alert(errorCode + ":" + errorDesc);
+		}
+	}
+
+	function copyText() {
+		var text = document.getElementById('input_text').value;
+		uexClipboard.copy(text);
+	}
+
+	function pasteText() {
+		uexClipboard.getContent();
+	}
+	
+</script>
+</head>
+
+<body>
+	<div class="tit">剪贴板功能</div>
+	<div class="conbor">
+		<div class="consj">
+			<span>输入文字并复制到剪贴板：</span>
+			
+			 <input class="textbox" type="text" id="input_text"> 
+			 		
+				<input class="btn" type="button" value="复制到剪贴板" onclick="copyText()">
+
+			<div class="tcxx" id="show_content"></div>
+
+			<input class="btn" type="button" value="粘贴剪贴板内容"
+				onclick="pasteText()"> <br>
+				
+				<div>长按下面的输入框粘贴剪贴板内容</div>
+				 <input class="textbox" type="text">
+				 	<input class="btn" type="button" value="返回" onclick="uexWindow.back();">
+		</div>
+	</div>
+</body>
+</html>

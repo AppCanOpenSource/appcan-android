@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="css/index.css">
+<title>语音识别功能</title>
+<script type="text/javascript">
+var cText = 0;
+var cJson = 1;
+var cInt = 2;
+	function mscSuccessCallBack(opCode, dataType, data) {
+		var obj = eval('('+data+')');
+		switch(dataType){
+			case cText:
+				alert("uex.cText");
+				break;
+			case cJson:
+			  document.getElementById('scanner').innerHTML = "Result:" + obj.code + "<br>Format:"+obj.type;
+			  break;
+			case cInt:
+			    alert("uex.cInt");
+			    break;
+			  default:
+			    alert("error");
+			}
+			
+	}
+	function mscFailedCallBack(data){
+		alert(data);
+	}
+	function onRecognizeResult(ret) {
+		alert(ret);
+        document.getElementById('scanner').innerHTML =ret;
+	}
+	
+	function test(ret) {
+		alert(ret);
+	}
+
+	window.uexOnload = function(){
+		uexMSC.cbOpen = mscSuccessCallBack;
+		uexMSC.onRecognizeResult = onRecognizeResult;
+		uexWidgetOne.cbError = mscFailedCallBack;
+	}
+    
+    function createPlay(){
+        var contextStr = document.getElementById('context').value;
+        uexMSC.play(contextStr);
+	}
+    
+</script>
+</head>
+
+<body>
+	<div class="tit">语音识别功能</div>
+	<div class="conbor">
+			<div class="consj">
+				<span>1.打开语音识别窗口</span>
+				<input class="btn" type="button" value="打开语音识别窗口" onclick="uexMSC.open(0,0);">
+				<span>语音识别返回Index为:</span>
+				<div class="tcxx" id="scanner"></div>
+                <span>2.关闭语音识别窗口</span>
+                <input class="btn" type="button" value="关闭语音识别窗口" onclick="uexMSC.close();">
+                <span>3.输入要语音读出的内容:</span>
+                <input class="textbox" type="text" id="context" value="顾客您好 very good">
+                <input class="btn" type="button" value="打开语音" onclick="createPlay()">
+				<span>4.关闭语音读出的窗口:</span>
+                <input class="btn" type="button" value="关闭语音读出窗口" onclick="uexMSC.closePlay();">
+			</div>
+			<input class="btn" type="button" value="返回" onclick="uexWindow.back();">
+		</div>
+</body>
+</html>

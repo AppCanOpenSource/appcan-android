@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+  <head>
+    <title>
+    </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+    <link rel="stylesheet" href="css/ui-color.css">
+	<link rel="stylesheet" href="css/ui-res.css">
+    <link rel="stylesheet" href="css/ui-btn.css">
+    <link rel="stylesheet" href="css/index.css">
+    <script src="js/zy_control.js">
+    </script>
+    <script src="js/zy_click.js">
+    </script>
+    <script type="text/javascript">
+		window.uexOnload = function() {
+		uexWidgetOne.onError = function(opCode, errorCode, errorDesc) {
+			alert(errorCode + ":" + errorDesc);
+		}
+
+	}
+
+    function createDocumentReader(){
+        var documentPath = document.getElementById('filePath').value;
+        uexDocumentReader.openDocumentReader(documentPath);
+    }
+    
+    function close1(){
+        uexDocumentReader.close();
+    }
+		</script>
+  </head>
+<body class="um-vp " ontouchstart>
+	<div class="conbor">
+            <div class="consj">
+                <span>输入文件路径</span>
+                <input class="textbox" type="text" id="filePath" value="res://Doc Document.doc">
+                <input class="btn" type="button" value="打开Document文件" onclick="createDocumentReader();"/>
+                <span>说明</span>
+                <span>可以打开DOC,PDF,PPT,EXCEL,TXT格式的文件</span>
+                <input class="btn" type="button" value="关闭" onclick = "close1();"/>
+                
+            </div>
+        </div>
+</body>
+<script>
+
+</script>
+</html>

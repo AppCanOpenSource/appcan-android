@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport"
+	content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="css/index.css">
+<title>ActionSheet</title>
+<script type="text/javascript">
+    window.uexOnload = function() {
+		uexWidgetOne.onError = function(opCode, errorCode, errorDesc) {
+			alert(errorCode + ":" + errorDesc);
+		}
+	}
+    
+    function onClickItem(dateType){
+        alert("itemIndex:"+dateType);
+    }
+    
+    function createActionSheet(){
+        uexActionSheet.onClickItem = onClickItem;
+        
+        var x = 20;
+        var y = 80;//没有用
+        var width = 200;//如果传0，默认是屏幕宽度
+        var height = 200;//没用的高度
+        
+        var JsonData = '{"actionSheet_style":{"frameBgColor":"#ffffff","frameBroundColor":"#ff0000","frameBgImg":"","btnSelectBgImg":"res://btn-act.png","btnUnSelectBgImg":"res://btn.png","cancelBtnSelectBgImg":"res://cancel-act.png","cancelBtnUnSelectBgImg":"res://cancel.png","textSize":"17","textColor":"#ffffff","actionSheetList":[{"name":"新浪微博"},{"name":"腾讯微博"},{"name":"分享"}]}}';
+        uexActionSheet.open(x,y,width,height,JsonData);
+    }
+        function createActionSheet2(){
+        uexActionSheet.onClickItem = onClickItem;
+        
+        var x = 20;
+        var y = 80;//没有用
+        var width = 200;//如果传0，默认是屏幕宽度
+        var height = 200;//没用的高度
+        //var JsonData = '{"actionSheet_style":{"frameBgColor":"#ffffff","frameBroundColor":"#ff0000","frameBgImg":"res://pano_u.jpg","btnSelectBgImg":"res://btn-act.png","btnUnSelectBgImg":"res://btn.png","cancelBtnSelectBgImg":"res://cancel-act.png","cancelBtnUnSelectBgImg":"res://cancel.png","textSize":"17","textColor":"#ffffff","actionSheetList":[{"name":"新浪微博"},{"name":"腾讯微博"},{"name":"分享"}]}}';
+        var JsonData = '{"actionSheet_style":{"frameBgColor":"","frameBroundColor":"#ff0000","frameBgImg":"res://pano_u.jpg","btnSelectBgImg":"res://btn-act.png","btnUnSelectBgImg":"res://btn.png","cancelBtnSelectBgImg":"res://cancel-act.png","cancelBtnUnSelectBgImg":"res://cancel.png","textSize":"17","textColor":"#ffffff","actionSheetList":[{"name":"新浪微博"},{"name":"腾讯微博"},{"name":"分享"}]}}';
+        uexActionSheet.open(x,y,width,height,JsonData);
+    }
+</script>
+</head>
+
+<body>
+	<div class="tit">ActionSheet(IOS)</div>
+        <div class="conbor">
+            <div class="consj">
+                <input class="btn" type="button" value="ActionSheet" onclick="createActionSheet();"/>
+				<input class="btn" type="button" value="ActionSheetWithBgImg" onclick="createActionSheet2();"/>
+                <input class="btn" type="button" value="返回" onclick="uexWindow.back();"/>
+            </div>
+        </div>
+</body>
+</html>

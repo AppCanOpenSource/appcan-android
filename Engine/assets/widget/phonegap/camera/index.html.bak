@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>	
+<title>Device Properties Example</title>
+
+<script type="text/javascript" charset="utf-8" src="cordova-1.6.0.js"></script>
+<script type="text/javascript" charset="utf-8" src="main.js"></script>
+</head>
+<body>
+	<button onclick="capturePhoto();">Capture Photo</button> <br>
+	<button onclick="capturePhotoEdit();">Capture Editable Photo</button> <br>
+	<button onclick="getPhoto(pictureSource.PHOTOLIBRARY);">From Photo Library</button><br>
+	<button onclick="getPhoto(pictureSource.SAVEDPHOTOALBUM);">From Photo Album</button><br>
+	<img style="display:none;width:60px;height:60px;" id="smallImage" src="" />
+	<img style="display:none;" id="largeImage" src="" /><br>
+	<a href="../index.html">·µ»Ø</a>
+</body>
+</html>

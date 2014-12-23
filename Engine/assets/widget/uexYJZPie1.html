@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="css/index.css">
+<title>云记账饼状图功能</title>
+<script type="text/javascript">
+    function pieOpen(){
+        alert(1111);
+//        var jsonStr = '{"id":"111","longitude":"116.404","latitude":"39.915","imageUrl":"","imageWidth":"60.0","imageHeight":"60.0","message":"this is beij","title":"我的位置"}';
+        var x=document.getElementById("aa").value;
+	    var y=document.getElementById("bb").value;
+		var w=document.getElementById("cc").value;
+	    var h=document.getElementById("dd").value;
+        uexYJZPie.open(500,x,y,w,h);
+     }
+    function pieOpen1(){
+        var x=document.getElementById("aa").value;
+	    var y=document.getElementById("bb").value;
+		var w=document.getElementById("cc").value;
+	    var h=document.getElementById("dd").value;
+        uexYJZPie.open(510,x,y,w,h);//第二个
+    }
+    function pieClose(){
+        var idarr = ["500","510"];//        var idarr = ["500","510"];
+        uexYJZPie.close(idarr);
+    }
+	window.uexOnload = function(){
+        uexWidgetOne.cbError = function(opid,type,error){
+            alert(error);
+        }
+        //open的回调函数,
+        uexYJZPie.loadData = function(id){
+//            alert('id:'+id);
+            var jsonStr ='{"id":"'+id+'","data":[{"title":"高美梅","subTitle":"1254","value":"10","color":"#FF6600"},{"title":"瑞吉","subTitle":"1254","value":"20","color":"#660099"},{"title":"铂尔曼","subTitle":"1254","value":"50","color":"#FF33FF"},{"title":"仙人掌","subTitle":"1254","value":"60","color":"#66CCFF"},{"title":"苏州街","subTitle":"1254","value":"40","color":"#FFFF00"},{"title":"银川市","subTitle":"1254","value":"80","color":"#009933"},{"title":"上官丽珍","subTitle":"1254","value":"70","color":"#FF3333"},{"title":"唐老二三","subTitle":"54","value":"120","color":"#00CCFF"}]}';
+            uexYJZPie.setJsonData(jsonStr);
+        }
+	}
+</script>
+</head>
+<body>
+	<div class="tit">金融工厂之云记账饼状图功能</div>
+	<div class="conbor">
+			<div class="consj">
+				<span>饼状图</span>
+				x<input type="text" id="aa" value="100"/><br>
+				y<input type="text" id="bb" value="300"/><br>
+				w<input type="text" id="cc" value="300"/><br>
+				h<input type="text" id="dd" value="300"/><br>
+				<input class="btn" type="button" value="打开饼状图1" onclick="pieOpen();">
+                <input class="btn" type="button" value="关闭" onclick="pieClose();">
+			</div>
+			<input class="btn" type="button" value="返回" onclick="uexWindow.back();">
+		</div>
+</body>
+</html>

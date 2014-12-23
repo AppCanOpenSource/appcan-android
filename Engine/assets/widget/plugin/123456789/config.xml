@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<widget widgetId="" appId="123456789" channelCode="000" version="00.00.0000">
+	<name>插件测试</name>
+	<description>plugin 插件</description>
+	<author email="3g2win@mail.com">3g2win</author>
+	<icon src="icon.png"></icon>
+	<license href="http://3g2win.com"></license>
+	<content src="index.html" encoding="utf-8"></content>
+	<logserverip>192.168.1.28</logserverip>
+	<obfuscation>true</obfuscation>
+	<updateurl>http://192.168.1.28:8080/widget/update</updateurl>
+	<showmyspace>true</showmyspace>
+	<bgcolor>#fefefe</bgcolor>
+	<widgetOne version="[widgetOneVersion]" />
+	<orientation>15</orientation>
+</widget>

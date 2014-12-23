@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+  <head>
+    <title>
+    </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+    <link rel="stylesheet" href="css/ui-color.css">
+	<link rel="stylesheet" href="css/ui-res.css">
+    <link rel="stylesheet" href="css/ui-btn.css">
+    <link rel="stylesheet" href="css/index.css">
+    <script src="js/zy_control.js">
+    </script>
+    <script src="js/zy_click.js">
+    </script>
+    <script type="text/javascript">
+		var cText = 0;
+var cJson = 1;
+var cInt = 2;
+
+window.uexOnload = function() {
+	uexVideo.cbRecord = function(opCode,dataType,data){
+		alert("recordCallback:"+dataType+","+data);
+		switch(dataType){
+			case cText:
+				document.getElementById('videorecord').innerHTML  = data;
+				document.getElementById('hidPath').value = data;
+			break;
+			case cJson:
+				alert("uex.cJSON");
+				break;
+			case cInt:
+				alert("uex.cInt");
+				break;
+			default:
+				alert("Error");
+		}
+	};
+	
+	uexFileMgr.cbExplorer=function (opCode,dataType,data){
+		document.getElementById('file').innerHTML = data;
+		document.getElementById('hidText').value = data;
+	}
+	uexWidgetOne.onError=function(opCode,errorCode,errorDesc){
+		alert(errorCode+":"+errorDesc);
+		}
+}
+		</script>
+  </head>
+<body class="um-vp " ontouchstart>
+	<div class="conbor">
+<div class="consj"><input class="btn" type="button" value="选择视频文件"
+	onclick="uexFileMgr.explorer('');"> <span>选择好的视频文件为：</span>
+<div class="tcxx" id="file"></div>
+<input id="hidText" type="hidden" value=""> <span>8.打开视频播放界面</span>
+<input class="btn" type="button" value="打开视频播放界面"
+	onclick="uexVideo.open(document.getElementById('hidText').value);">
+<span>2.录制视频</span> <input class="btn" type="button" value="录视频"
+	onclick="uexVideo.record();"> <span>录制好的视频文件地址为：</span>
+<div class="tcxx" id="videorecord"></div>
+<input type="hidden" id="hidPath"> <input class="btn"
+	type="button" value="播放选择的视频"
+	onclick="uexVideo.open(document.getElementById('hidPath').value);">
+	<br>
+</div>
+</div>
+</body>
+<script>
+
+</script>
+</html>

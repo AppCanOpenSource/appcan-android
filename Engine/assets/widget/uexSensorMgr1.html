@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="css/index.css">
+
+<title>传感器测试</title>
+<script type="text/javascript">
+	function accelerometerChange(x, y, z){
+			document.getElementById('accelerometer').innerHTML = "X=" + x + ";<br>Y=" + y + ";<br>Z=" + z;
+	}
+	function orientation(x, y, z){
+			document.getElementById('orientation').innerHTML = "X=" + x + ";<br>Y=" + y + ";<br>Z=" + z;
+	}
+	function magneticChange(x, y, z){
+			document.getElementById('field').innerHTML = "X=" + x + ";<br>Y=" + y + ";<br>Z=" + z;
+	}
+	function temperature(data){
+			document.getElementById('temperature').innerHTML = data;
+	}
+	function pressure(data){
+			document.getElementById('pressure').innerHTML = data;
+	}
+	function light(data){
+			document.getElementById('light').innerHTML = data;
+	}
+
+	function stop(type){
+		uexSensor.close(type);
+	}
+
+	window.uexOnload = function(){
+		uexSensor.onAccelerometerChange = accelerometerChange;
+		uexSensor.onOrientationChange = orientation;
+		uexSensor.onMagneticChange = magneticChange;
+		uexSensor.onTemperatureChange = temperature;
+		uexSensor.onPressureChange = pressure;
+		uexSensor.onLightChange = light;
+		uexWidgetOne.cbError = function(opCode, errorCode, errorInfo){
+			alert("errorCode:" + errorCode + "\nerrorInfo:" + errorInfo);
+		}
+	}
+</script>
+</head>
+
+<body>
+	<div class="tit">传感器测试</div>
+	<div class="conbor">
+		<div class="consj">
+			<span>1.传感器-加速度</span>
+			<input class="btn" type="button" value="开始加速度传感器" onclick="uexSensor.open(1,3);">
+			<input class="btn" type="button" value="停止加速度传感器" onclick="stop('1');">
+			<span>当前的加速度值（X，Y，Z）为：</span>
+			<div class="tcxx" id="accelerometer"></div>
+			<span>2.传感器-方向</span>
+			<input class="btn" type="button" value="开始方向传感器" onclick="uexSensor.open(2,3);">
+			<input class="btn" type="button" value="停止方向传感器" onclick="stop('2');">
+			<span>当前的方向值（X，Y，Z）为：</span>
+			<div class="tcxx" id="orientation"></div>
+			<span>3.传感器-磁场</span>
+			<input class="btn" type="button" value="开始磁场传感器" onclick="uexSensor.open(3,3);">
+			<input class="btn" type="button" value="停止磁场传感器" onclick="stop('3');">
+			<span>当前的磁场值（X，Y，Z）为：</span>
+			<div class="tcxx" id="field"></div>
+			<span>4.传感器-温度</span>
+			<input class="btn" type="button" value="开始温度传感器" onclick="uexSensor.open(4,3);">
+			<input class="btn" type="button" value="停止温度传感器" onclick="stop('4');">
+			<span>当前的温度值为：</span>
+			<div class="tcxx" id="temperature"></div>
+			<span>5.传感器-压力</span>
+			<input class="btn" type="button" value="开始压力传感器" onclick="uexSensor.open(5,3);">
+			<input class="btn" type="button" value="停止压力传感器" onclick="stop('5');">
+			<span>当前的压力值为：</span>
+			<div class="tcxx" id="pressure"></div>
+			<span>6.传感器-光亮</span>
+			<input class="btn" type="button" value="开始光亮传感器" onclick="uexSensor.open(6,3);">
+			<input class="btn" type="button" value="停止光亮传感器" onclick="stop('6');">
+			<span>当前的光亮度值为：</span>
+			<div class="tcxx" id="light"></div>
+			<input class="btn" type="button" value="返回" onclick="uexWindow.back();">
+		</div>
+	</div>
+</body>
+</html>

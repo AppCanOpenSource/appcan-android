@@ -1,0 +1,30 @@
+.swi
+{	
+	width:4.6em;
+	position:relative;
+	height:1.625em;
+	overflow:hidden;
+	background-image:url('switch/on-off.png');
+	background-size:auto 100%;
+	background-repeat:no-repeat;
+	background-origin:border-box;
+}
+
+.swi-btn
+{
+	background-image:url('switch/swi.png');	
+	-webkit-transition: all 200ms linear;
+	transition: all 200ms linear;
+	width:2.45em;
+	height:100%;
+	-webkit-border-radius:0.2em;
+	border-radius:0.2em;
+}
+input+ div>div.swi-btn{
+ 	-webkit-transform:translate(-0em);
+}
+
+input:checked  + div>div.swi-btn
+{
+	-webkit-transform:translate(2.15em);
+}

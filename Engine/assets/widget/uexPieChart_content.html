@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+  <head>
+    <title>
+    </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+    <link rel="stylesheet" href="css/ui-color.css">
+	<link rel="stylesheet" href="css/ui-res.css">
+    <link rel="stylesheet" href="css/ui-btn.css">
+    <link rel="stylesheet" href="css/index.css">
+	<style>
+		input[type="text"]{
+			margin:.8em;
+			font-size:1em;
+		}
+	</style>
+    <script src="js/zy_control.js">
+    </script>
+    <script src="js/zy_click.js">
+    </script>
+    <script type="text/javascript">
+	var cText = 0;
+	var cJson = 1;
+	var cInt = 2;
+	function ScannerSuccessCallBack(opCode, dataType, data) {
+		var obj = eval('('+data+')');
+		switch(dataType){
+			case cText:
+//				alert(data);
+				break;
+			case cJson:
+			  	document.getElementById('scanner').innerHTML = "Result:" + obj.code + "<br>Format:"+obj.type;
+			  	break;
+			case cInt:
+			    alert("uex.cInt");
+			    break;
+			default:
+			    alert("error");
+		}
+	}
+	function ScannerFailedCallBack(data){
+		alert(data);
+	}
+    function cbOpen(a,b,c){
+        alert(a+b+c);
+    }
+    function pieOpen(){
+//        var jsonStr = '{"id":"111","longitude":"116.404","latitude":"39.915","imageUrl":"","imageWidth":"60.0","imageHeight":"60.0","message":"this is beij","title":"我的位置"}';
+        var x = 10;
+//		var y = 140;
+		var w = 300;
+		var h = 300;
+		var pie = window.getComputedStyle(document.getElementById("pie"),null);
+		var pie1 = window.getComputedStyle(document.getElementById("pie1"),null);
+		var y = parseInt(pie.height) + parseInt(pie1.height) + parseInt(localStorage["header"])+50;
+        uexPieChart.open(500,x,y,w,h);
+     }
+    function pieOpen1(){
+        var x = 10;
+//		var y = 140;
+		var w = 300;
+		var h = 300;
+		var pie = window.getComputedStyle(document.getElementById("pie"),null);
+		var pie1 = window.getComputedStyle(document.getElementById("pie1"),null);
+		var y = parseInt(pie.height) + parseInt(pie1.height) + parseInt(localStorage["header"])+50;
+        uexPieChart.open(510,x,y,w,h);//第二个
+    }
+    function pieClose(){
+        //var idarr = ["500"];
+		var idarr = ["500","510"];
+        uexPieChart.close(idarr);
+    }
+	window.uexOnload = function(){
+        uexWidgetOne.cbError = function(opid,type,error){
+            alert(error);
+        }
+        //open的回调函数,
+        uexPieChart.loadData = function(id){
+            var jsonStr ='{"id":"'+id+'","data":[{"title":"高美梅","subTitle":"1254","value":"10","color":"#FF6600"},{"title":"瑞吉","subTitle":"1254","value":"20","color":"#660099"},{"title":"铂尔曼","subTitle":"1254","value":"50","color":"#FF33FF"},{"title":"仙人掌","subTitle":"1254","value":"60","color":"#66CCFF"},{"title":"苏州街","subTitle":"1254","value":"40","color":"#FFFF00"},{"title":"银川市","subTitle":"1254","value":"80","color":"#009933"},{"title":"仙人掌","subTitle":"1254","value":"120","color":"#66CCFF"},{"title":"瑞吉","subTitle":"1254","value":"20","color":"#660099"},{"title":"铂尔曼","subTitle":"1254","value":"50","color":"#FF33FF"},{"title":"上官丽珍","subTitle":"1254","value":"70","color":"#FF3333"},{"title":"瑞吉","subTitle":"1254","value":"20","color":"#660099"},{"title":"铂尔曼","subTitle":"1254","value":"50","color":"#FF33FF"}]}';
+                uexPieChart.setJsonData(jsonStr);
+        }
+        uexPieChart.callBackData = function(opId,dataType,data){
+//            alert('data:'+data);
+        }
+        uexPieChart.pieChartStop = function(opId,dataType,data){//动画停止
+            //            alert('data:'+data);
+        }
+	}
+		</script>
+  </head>
+<body class="um-vp " ontouchstart>
+	<div class="conbor">
+		<div class="consj">
+			<span id="pie">饼状图</span>
+			<input id="pie1" class="btn" type="button" value="打开饼状图1" onclick="pieOpen();" style="float:left;">
+            <!--<input id="pie1" class="btn" type="button" value="打开饼状图2" onclick="pieOpen1();" style="float: left; margin-left: .7em;.em;">-->
+            <input class="btn" type="button" value="关闭" onclick="pieClose();" style="float: left; margin-left: 0.7em;">
+		</div>
+	</div>
+</body>
+<script>
+
+</script>
+</html>

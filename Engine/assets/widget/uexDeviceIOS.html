@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport"
+	content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="css/index.css">
+<title>获得UDID、序列号</title>
+<script type="text/javascript">
+    window.uexOnload = function() {
+		uexWidgetOne.onError = function(opCode, errorCode, errorDesc) {
+			alert(errorCode + ":" + errorDesc);
+		}
+        //回调
+        uexDeviceIOS.callBackDeviceIOSUDID = function(UDID){
+            alert("UDID:"+UDID);
+            document.getElementById('UDID').innerHTML = UDID;
+        }
+        
+        uexDeviceIOS.callBackDeviceIOSSN = function(SN){
+            alert("SN:"+SN);
+            document.getElementById('SN').innerHTML = SN;
+        }
+        
+	}
+
+    function getUDID(){
+        uexDeviceIOS.getDeviceUDID();
+    }
+    
+    function getSN(){
+        uexDeviceIOS.getDeviceSN();
+    }
+    
+    
+</script>
+</head>
+
+<body>
+	<div class="tit">获得UDID、序列号(IOS)</div>
+        <div class="conbor">
+            <div class="consj">
+                <input class="btn" type="button" value="getUDID" onclick="getUDID();"/>
+                <span>UDID</span>
+                <div class="tcxx" id="UDID"></div>
+                <input class="btn" type="button" value="getSN" onclick="getSN();"/>
+                <span>SerialNumber</span>
+                <div class="tcxx" id="SN"></div>
+                <input class="btn" type="button" value="返回" onclick="uexWindow.back();"/>
+            </div>
+        </div>
+</body>
+</html>

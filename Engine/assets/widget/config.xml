@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<widget appId="11242276" channelCode="000" height="480" pid="" sreensize="4.5" version="00.02.002" viewmode="application" widgetId="" width="320"> 
+  <name>掌上岳阳</name>  
+  <description/>  
+  <author email=""/>  
+  <icon src="icon.png"/>  
+  <license href=""/>  
+  <content encoding="utf-8" src="index.html"/>  
+  <updateurl/>  
+  <logserverip/>  
+  <showmyspace>false</showmyspace>  
+  <obfuscation>false</obfuscation>  
+  <bgcolor>#fefefe</bgcolor>  
+  <orientation>5</orientation> 
+</widget>

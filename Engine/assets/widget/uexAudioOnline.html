@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="css/index.css">
+<title>在线音乐播放功能</title>
+<script type="text/javascript">
+    function ShakeOver()
+    {
+        alert(121);
+    }
+	window.uexOnload = function()
+    {
+        uexShake.onEvent=ShakeOver;
+	}
+    function backes()
+    {
+         uexAudioOnline.closePlayer();
+    }
+    function resendsmsess()
+    {
+        uexAudioOnline.openPlayer("http://y1.eoews.com/assets/ringtones/2012/6/29/36195/mx8an3zgp2k4s5aywkr7wkqtqj0dh1vxcvii287a.mp3");
+    }
+    function resendsmse()
+    {
+        uexAudioOnline.startOnline();
+    }
+    function stopminite()
+    {
+        uexAudioOnline.pauseOnline();
+    }
+    function stop()
+    {
+        uexAudioOnline.stopOnline();
+    }
+</script>
+</head>
+
+<body>
+	<div class="tit">
+        <table width="320" border="1">
+            <tr>
+                <td colspan="4"> 在线音乐播放</td>
+            </tr>
+            <tr>
+                <td> <input  class="btn" type="button" value="打    开" onclick="resendsmsess();" ></td>
+                <td> <input  class="btn" type="button" value="开    始" onclick="resendsmse();" ></td>
+                <td> <input  class="btn" type="button" value="暂    停 " onclick="stopminite();" ></td>
+                <td> <input  class="btn" type="button" value="停    止" onclick="stop();" ></td>
+                <td> <input  class="btn" type="button" value="关    闭" onclick="backes();" ></td>
+            </tr>
+        </table>
+    </div>
+    <a href="index.html">返 回 首 页</a>
+</body>
+</html>

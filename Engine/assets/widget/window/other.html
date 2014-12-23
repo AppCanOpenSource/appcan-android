@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="../css/index.css">
+<link rel="stylesheet" type="text/css" href="../css/ui-box.css">
+<title>弹出框功能</title>
+<script type="text/javascript">
+	window.uexOnload = function(type){
+		uexWindow.onKeyPressed = function(keyCode){
+				document.getElementById('key').innerHTML = "点击了：" + keyCode + " 键";
+		}
+		uexWindow.cbGetState = getCurState;		
+		uexWindow.cbGetUrlQuery = getQuery;
+		uexWindow.onStateChange=stateChange;
+		uexWindow.onWindowUrlChange = getSuc;
+		
+	}
+	function getSuc(windName, url){
+			alert("name:" + windName + ",url:" + url);
+	}
+	function stateChange(state){
+		if(state == 0){
+			alert("state:前台");
+		}else{
+			alert("state:后台");
+		}
+	}
+	
+	function getCurState(opcode,datatype,data){
+		if(data == 0){
+			alert("state:前台");
+		}else{
+			alert("state:后台");
+		}
+	}
+	function getQuery(opcode,datatype,data){
+		alert(data);
+	}
+	
+</script>
+</head>
+
+<body>
+	<div class="tit ut ub-f1 ulev0 ut-s tx-c ub ub-pc" style="font-size:1.5em;">Window功能</div>
+	<div class="conbor">
+		<div class="consj">
+			<span>1.关闭窗口，打开窗口处调用才生效</span>
+			<input class="btn" type="button" value="关闭" onclick="uexWindow.close()"><br><br>
+			
+			<span>1.按键拦截（android平台）</span>
+			<input class="btn" type="button" value="开始拦截back键" onclick="uexWindow.setReportKey('0', '1');alert('拦截成功，此后back键将交给应用处理')">
+			<div class="tcxx" id="key"></div>
+			<input class="btn" type="button" value="取消拦截back键" onclick="uexWindow.setReportKey('0', '0');alert('取消成功，此后back键将交还给平台处理')"><br><br>
+			
+			<span>2.当前window在前台还是在后台</span>
+			<input class="btn" type="button" value="获取" onclick="uexWindow.getState()"><br><br>		
+			
+			<span>3.获取上一个页面传入网页的参数</span>
+			<p>因android3.0后，android平台浏览器不支持打开沙箱内带参数的网页，如：index.heml?xx=aa&yy=bb.故增添此接口</p>
+			<input class="btn" type="button" value="获取" onclick="uexWindow.getUrlQuery()"><br><br>
+			
+			<span>4.状态栏通知</span>
+			<input class="btn" type="button" value="发送通知" onclick="uexWindow.statusBarNotification('救命啊', '光天化日有人抢劫啦！！')">	
+			<br><br>
+			
+			<span>5.onstatechange测试，打开新窗口,则本窗口进入后台</span>
+			<input class="btn" type="button" value="打开新窗口" onclick="uexWindow.open('dg', '0', 'windowback.html', 1, '', '', 0);">	
+			<br>
+			
+			<span>6.获取window Url</span>
+			<span>需要连接38服务器上的测试cese，请将手机连WIFI后访问本case。表现效果为：点击登录后片刻会跳到新浪博客的授权页面，此时若授权页面url发生变化时，会有对话框弹出。不明白，未测试成功,api中不包含此功能</span>
+			<a class="btn" href="http://192.168.1.38:8080/bug/oauth/index.html" >进入测试页面</a><br><br>
+		
+		</div>
+	</div>
+</body>
+</html>

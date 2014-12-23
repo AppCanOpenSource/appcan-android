@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+  <head>
+    <title>
+    </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+    <link rel="stylesheet" href="css/ui-color.css">
+	<link rel="stylesheet" href="css/ui-res.css">
+    <link rel="stylesheet" href="css/ui-btn.css">
+    <link rel="stylesheet" href="css/index.css">
+    <script src="js/zy_control.js">
+    </script>
+    <script src="js/zy_click.js">
+    </script>
+    <script type="text/javascript">
+		function cbOpen(a,b,c){
+        alert(a+b+c);
+    }
+    function pieOpen(){
+        alert(1111);
+//        var jsonStr ='{"id":"111","longitude":"116.404","latitude":"39.915","imageUrl":"","imageWidth":"60.0","imageHeight":"60.0","message":"this is beij","title":"我的位置"}';
+        uexCoverFlow2.open("500","100","100","220","300");
+     }
+    function pieOpen1(){
+        uexCoverFlow2.open("510","0","0","320","360");//第二个
+    }
+    function pieClose(){
+        var idarr = ["500"];//        var idarr = ["500","510"];
+        uexCoverFlow2.close(idarr);
+    }
+	window.uexOnload = function(){
+        uexWidgetOne.cbError = function(opid,type,error){
+            alert(error);
+        }
+        //open的回调函数,
+        uexCoverFlow2.loadData = function(id){
+            alert('id:'+id);
+//            http://www.cmkjz.com/uploads/allimg/100116/0134423.jpg
+//            http://82238.com/uploads/allimg/110519/2-110519130404.jpg
+//            http://www.qqhead.com/UploadFiles/2010-04/2010458740103062.gif
+            var jsonStr ='{"id":"'+id+'","data":[{"title":"123","imageUrl":"http://www.cmkjz.com/uploads/allimg/100116/0134423.jpg"},{"title":"456","imageUrl":"http://82238.com/uploads/allimg/110519/2-110519130404.jpg"},{"title":"","imageUrl":"http://www.qqhead.com/UploadFiles/2010-04/2010458740103062.gif"},{"title":"","imageUrl":"http://a4.att.hudong.com/06/63/01300001216886130487639263274.jpg"}]}';
+            uexCoverFlow2.setJsonData(jsonStr,"res://uexCoverFlow2_tupian.png");
+        }
+        uexCoverFlow2.onItemSelected = function(opId,index){
+            alert("opId:"+opId+"index:"+index)
+        }
+	}
+	
+		</script>
+  </head>
+<body class="um-vp " ontouchstart>
+	<div class="conbor">
+			<div class="consj">
+				<span>CoverFlow2</span>
+				<input class="btn" type="button" value="打开CoverFlow2" onclick="pieOpen();">
+                <input class="btn" type="button" value="打开CoverFlow2" onclick="pieOpen1();">
+                <input class="btn" type="button" value="关闭" onclick="pieClose();">
+			</div>
+			
+		</div>
+</body>
+<script>
+
+</script>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="css/index.css">
+	
+	<script type="text/javascript">
+
+	function funcD1(opCode, dataType, data){
+		document.getElementById('f1').innerHTML = "浠ヤ笅鏄疦ative plugin杩斿洖鐨勫�锛�br><p style='color:red;'>" + data + "</p>";
+	}
+	
+	function funcD3(opCode, dataType, data){
+		document.getElementById('f3').innerHTML = "浠ヤ笅鏄敤鎴疯緭鍏ョ殑杩斿洖鐨勫�锛�br>" + data;
+	}
+	
+	function onCb(info){
+		document.getElementById('f2').innerHTML = "浠ヤ笅鏄痮nCallBack鐨勮繑鍥炲�锛�br>" + info;
+	}
+
+	window.uexOnload = function(type){
+		if(type == 0){  
+			uexPhotoBrowser.cbOpen = funcD1; 
+		}
+	}
+	
+	 
+	
+	function openMyView1(){ 
+		uexPhotoBrowser.Open('[{"imageUrlSet":"https://lh4.googleusercontent.com/-eneb2x2HfAk/TPN5wN9oX0I/AAAAAAAAPCE/2-9NpJGgT-g/s720/DSC_0775.jpg","title":"name1"},{"imageUrlSet":"https://lh4.googleusercontent.com/-eneb2x2HfAk/TPN5wN9oX0I/AAAAAAAAPCE/2-9NpJGgT-g/s720/DSC_0775.jpg","title":"name2"},{"imageUrlSet":"http://html5cn.org/data/attachment/forum/201304/12/2030351s71ibvkfd7nfkrn.png","title":"name3"},{"imageUrlSet":"http://html5cn.org/data/attachment/forum/201304/12/2030339qlo08x0198ub40q.png","title":"name10"},{"imageUrlSet":"http://html5cn.org/data/attachment/forum/201304/12/203032d7ey1duo7pcoop0d.png","title":"name11"},{"imageUrlSet":"http://html5cn.org/data/attachment/forum/201304/12/140859uyypithby66ppyht.jpg","title":"name12"}]', 1, 1, 1);
+	}
+	function openMyView2(){ 
+		uexPhotoBrowser.Open('[{"imageUrlSet":"http://html5cn.org/data/attachment/forum/201304/12/203034kgliiqalzepwrizx.png","title":"name4"},{"imageUrlSet":"http://html5cn.org/data/attachment/forum/201304/12/203034kkttdnhhke6ntiz6.png","title":"name5"},{"imageUrlSet":"http://html5cn.org/data/attachment/forum/201304/12/203033re5421hjxh2zg2ur.png","title":"name6"},{"imageUrlSet":"http://html5cn.org/data/attachment/forum/201304/12/203033rk7575whm7mu359m.png","title":"name7"},{"imageUrlSet":"http://html5cn.org/data/attachment/forum/201304/12/203033zjsnsz1k3ncnx11c.png","title":"name8"},{"imageUrlSet":"http://html5cn.org/data/attachment/forum/201304/12/203033kte3ot3ntgjn32kn.png","title":"name9"}]', 1, 1, 1);
+	}
+	function clearCacheF(){ 
+		uexPhotoBrowser.CleanCache(0, 1, 1, 1);
+	}
+</script>
+</head>
+
+<body>
+	<div class="tit">uexDemo瀵硅薄</div>
+	<div class="conbor">
+		<div class="consj">
+		<a class="btn" href = "uexPhotoBrowser.html">uexPhotoBrowser</a><br><br>
+		 <input class="btn" type="button" value="Open" onclick="openMyView1();"><br><br>
+		 <input class="btn" type="button" value="Open" onclick="openMyView2();"><br><br>
+		 
+		 
+			<input class="btn" type="button" value="CleanCache" onclick="clearCacheF();"><br><br>
+		 <input class="btn" type="button" value="返回" onclick="uexWindow.back();"/>
+		</div>
+	</div>
+</body>
+</html>

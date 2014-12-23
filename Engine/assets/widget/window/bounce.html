@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <meta name="viewport" id="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;minimum-scale=1.0; user-scalable=no;" />
+	<link rel="stylesheet" type="text/css" href="../css/index1.css" />
+	<script type="text/javascript">
+	var tmp="";	
+		function bounceState(type,status){
+			switch(type) {
+			case 0:
+				if (status == 1) {
+					
+				}
+				if (status == 2) {
+					alert("顶部刷新完成");
+					uexWindow.resetBounceView('0')
+				}
+				break;
+			case 1:
+			  	if (status == 2) {
+			  		uexWindow.resetBounceView('1')
+					alert("底部刷新完成");
+				}
+				break;
+		}
+	}
+		
+		window.uexOnload = function(slibing_type){		
+			uexWindow.onBounceStateChange = bounceState;		
+		}
+		function setv(){
+			var json = "{'textColor':'#FF0','releaseToReloadText':'11松开刷新','loadingText':'loading11...','pullToReloadText':'11继续下拉刷新'}";
+			uexWindow.setBounceParams(0, json);
+		}
+	</script>
+</head>
+<body style="background:#a2a2a2;">
+<div class="vancl">
+<br>
+<div style="color:#ff00ff;font-size:2.5em;">这是Main</div><br><br>
+ <a href="javascript:void(0);" onclick="uexWindow.close(-1)">关闭页面</a><br><br>
+ <a href="javascript:void(0);" onclick="uexWindow.setBounce('1')">支持弹动</a><br><br>
+ <a href="javascript:void(0);" onclick="uexWindow.setBounce('0')">禁止弹动</a><br><br>
+ 
+ <a href="javascript:void(0);" onclick="uexWindow.showBounceView('0','#00F', 1);uexWindow.notifyBounceEvent('0','1');">开启顶部弹动效果</a><br><br>
+ <a href="javascript:void(0);" onclick="uexWindow.hiddenBounceView('0')">隐藏顶部弹动效果</a><br><br>
+ <a  href="javascript:void(0);" onclick=setv()>设置顶部bounceView参数</a><br><br>
+  
+ <a href="javascript:void(0);" onclick="uexWindow.showBounceView('1','rgba(15, 155, 155, 100)', 1);uexWindow.notifyBounceEvent('1','1');">开启底部弹动效果</a><br><br>
+ <a href="javascript:void(0);" onclick="uexWindow.hiddenBounceView('1')">隐藏底部弹动效果</a><br><br>
+
+  
+</body>
+</html>

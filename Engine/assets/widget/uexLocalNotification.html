@@ -1,0 +1,52 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="css/index.css">
+<title>本地通知功能</title>
+<script type="text/javascript">
+	function addNotification() {
+		alert("已经设置闹钟，十秒钟后将会提醒！");
+		var d = new Date();
+    d = d.getTime() + 10*1000;
+		//non1-id, weekly, d, ""-ring Url 
+		//non1
+	  uexLocalNotification.add("alarm_6", d, 1, "message body", "ok", "", "daily", "5");
+	}
+	
+	function onActiveCallBack(notificationID) {
+		alert(notificationID + " active");
+	}
+	
+	function cbGetData(notificationID, msg) {
+		alert(msg);
+	}
+	
+	function test(ret) {
+		alert(ret);
+	}
+
+	window.uexOnload = function(){
+		uexLocalNotification.onActive = onActiveCallBack;
+		uexLocalNotification.cbGetData = cbGetData;
+	}
+	
+</script>
+</head>
+
+<body>
+	<div class="tit">本地通知功能</div>
+	<div class="conbor">
+			<div class="consj">
+				<span>1.添加本地通知</span>
+				<input class="btn" type="button" value="添加本地通知" onclick="addNotification()">
+				<span>2.删除指定本地通知:</span>
+				<input class="btn" type="button" value="删除指定本地通知" onclick="alert(1111);uexLocalNotification.remove('non1')">
+				<span>3.删除全部本地通知</span>
+				<input class="btn" type="button" value="删除全部本地通知" onclick="uexLocalNotification.removeAll()">
+			</div>
+			<input class="btn" type="button" value="返回" onclick="uexWindow.back();">
+		</div>
+</body>
+</html>

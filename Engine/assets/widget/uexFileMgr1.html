@@ -1,0 +1,586 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport"
+	content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="css/index.css">
+<title>文件管理</title>
+<script type="text/javascript">
+	var cText = 0;
+	var cJson = 1;
+	var cInt = 2;
+
+	function createFile(path) {
+		if (!isnum('1')) {
+			alert("Error");
+			return;
+		}
+		uexFileMgr.createFile('1', path);
+		uexFileMgr.closeFile('1');
+	}
+	function createSecureFile(path, code) {
+		uexFileMgr.createSecure('100', path, code);
+		uexFileMgr.openSecure('100', path, '1', code);
+		uexFileMgr.writeFile('100', '0', 'success');
+		uexFileMgr.closeFile('100');
+	}
+	function readSecureFile(path, size, code) {
+		uexFileMgr.openSecure('100', path, '1', code);
+		uexFileMgr.readFile('100', size);
+		uexFileMgr.closeFile('100');
+
+	}
+	function isnum(num) {
+		if (num) {
+			return true;
+		} else {
+			false;
+		}
+	}
+	function createDir(path) {
+		if (!isnum('1')) {
+			alert("Error");
+			return;
+		}
+		uexFileMgr.createDir('20', path);
+
+		uexFileMgr.closeFile('20');
+	}
+	function writeFile(path, data) {
+		if (!isnum('1')) {
+			alert("Error");
+			return;
+		}
+		uexFileMgr.openFile('1', path, '1');
+		uexFileMgr.writeFile('1', '0', data);
+		uexFileMgr.closeFile('1');
+
+	}
+
+	function readFile(path, size) {
+		if (!isnum('1')) {
+			alert("Error");
+			return;
+		}
+		uexFileMgr.openFile('1', path, '1');
+		uexFileMgr.readFile('1', size);
+		uexFileMgr.closeFile('1');
+
+	}
+
+	function isFileExistByID(path) {
+		if (!isnum('2')) {
+			alert("Error");
+			return;
+		}
+		uexFileMgr.createFile('2', path);
+		uexFileMgr.isFileExistByID('2');
+		uexFileMgr.closeFile('2');
+	}
+
+	function deleteFileById() {
+		if (!isnum('3')) {
+			alert("Error");
+			return;
+		}
+		uexFileMgr.createFile('3', document.getElementById('dirPath').value);
+		uexFileMgr.deleteFileByID('3');
+		uexFileMgr.closeFile('3');
+	}
+
+	function getFileTypeByID() {
+		if (!isnum('4')) {
+			alert("Error");
+			return;
+		}
+		uexFileMgr.createFile('4', document.getElementById('dirPath').value);
+		uexFileMgr.getFileTypeByID('4');
+		uexFileMgr.closeFile('4');
+	}
+
+	function seekFile() {
+		if (!isnum('5')) {
+			alert("Error");
+			return;
+		}
+		uexFileMgr.openFile('5', document.getElementById('dirPath').value, '1');
+		uexFileMgr.seekFile('5', '1');
+		uexFileMgr.closeFile('5');
+	}
+
+	function seekBeginOfFile() {
+		if (!isnum('6')) {
+			alert("Error");
+			return;
+		}
+		uexFileMgr.openFile('6', document.getElementById('dirPath').value, '1');
+		uexFileMgr.seekBeginOfFile('6');
+		uexFileMgr.closeFile('6');
+	}
+
+	function seekEndOfFile() {
+		if (!isnum('7')) {
+			alert("Error");
+			return;
+		}
+		uexFileMgr.openFile('7', document.getElementById('dirPath').value, '1');
+		uexFileMgr.seekEndOfFile('7');
+		uexFileMgr.closeFile('7');
+	}
+
+	function getFileSize() {
+		if (!isnum('8')) {
+			alert("Error");
+			return;
+		}
+		uexFileMgr.openFile('8', document.getElementById('dirPath').value, '1');
+		uexFileMgr.getFileSize('8');
+		uexFileMgr.closeFile('8');
+	}
+
+	function getFilePath() {
+		if (!isnum('9')) {
+			alert("Error");
+			return;
+		}
+		uexFileMgr.openFile('9', document.getElementById('dirPath').value, '1');
+		uexFileMgr.getFilePath('9');
+		uexFileMgr.closeFile('9');
+	}
+	function getFileRealPath() {
+		uexFileMgr.getFileRealPath(document.getElementById('filePath2').value);
+	}
+	window.uexOnload = function() {
+		uexWidgetOne.cbError = function(opCode, errorCode, errorInfo) {
+			alert(errorInfo);
+		}
+
+		uexFileMgr.cbReadFile = function(opCode, dataType, data) {
+			switch (dataType) {
+			case cText:
+				if (opCode == 1 && dataType == 0) {
+					document.getElementById('readData').value = data;
+				}
+				if (opCode == 100 && dataType == 0) {
+					document.getElementById('readData2').value = data;
+				}
+				break;
+			case cJson:
+				alert("uex.cJson");
+				break;
+			case cInt:
+				alert("uex.cInt");
+				break;
+			default:
+				alert("error");
+
+			}
+
+		}
+		uexFileMgr.cbIsFileExistByPath = function(opCode, dataType, data) {
+			switch (dataType) {
+			case cText:
+				alert("uex.cText");
+				break;
+			case cJson:
+				alert("uex.cJson");
+				break;
+			case cInt:
+				if (data == 0) {
+					alert("文件不存在");
+				} else if (data == 1) {
+					alert("文件存在");
+				} else {
+					alert(data);
+				}
+				break;
+			default:
+				alert("error");
+			}
+		}
+
+		uexFileMgr.cbIsFileExistById = function(opCode, dataType, data) {
+			switch (dataType) {
+			case cText:
+				alert("uex.cText");
+				break;
+			case cJson:
+				alert("uex.cJson");
+				break;
+			case cInt:
+				if (data == 0) {
+					alert("文件不存在");
+				} else if (data == 1) {
+					alert("文件存在");
+				} else {
+					alert(data);
+				}
+				break;
+			default:
+				alert("error");
+			}
+
+		}
+
+		uexFileMgr.cbDeleteFileByPath = function(opCode, dataType, data) {
+			switch (dataType) {
+			case cText:
+				alert("uex.cText");
+				break;
+			case cJson:
+				alert("uex.cJson");
+				break;
+			case cInt:
+				if (data == 0) {
+					alert("删出成功");
+				} else {
+					alert("删出失败");
+				}
+				break;
+			default:
+				alert("error");
+			}
+		}
+
+		uexFileMgr.cbDeleteFileByID = function(opCode, dataType, data) {
+            alert(data);
+			switch (dataType) {
+			case cText:
+				alert("uex.cText");
+				break;
+			case cJson:
+				alert("uex.cJson");
+				break;
+			case cInt:
+				if (data == 0) {
+					alert("删出成功");
+				} else {
+					alert("删出失败");
+				}
+				break;
+			default:
+				alert("error");
+			}
+		}
+		uexFileMgr.cbGetFileTypeByPath = function(opCode, dataType, data) {
+			switch (dataType) {
+			case cText:
+				alert("uex.cText");
+				break;
+			case cJson:
+				alert("uex.cJson");
+				break;
+			case cInt:
+				if (data == 1) {
+					alert("是文件夹");
+				} else if (data == 0) {
+					alert("是文件");
+				} else {
+					alert(data);
+				}
+				break;
+			default:
+				alert("error");
+			}
+
+		}
+		uexFileMgr.cbGetFileTypeById = function(opCode, dataType, data) {
+			switch (dataType) {
+			case cText:
+				alert("uex.cText");
+				break;
+			case cJson:
+				alert("uex.cJson");
+				break;
+			case cInt:
+				if (data == 1) {
+					alert("是文件夹");
+				} else if (data == 0) {
+					alert("是文件");
+				} else {
+					alert(data);
+				}
+				break;
+			default:
+				alert("error");
+			}
+
+		}
+
+		uexFileMgr.cbGetFileSize = function(opCode, dataType, data) {
+			switch (dataType) {
+			case cText:
+				alert("uex.cText");
+				break;
+			case cJson:
+				alert("uex.cJson");
+				break;
+			case cInt:
+				alert("文件长度：" + data);
+				break;
+			default:
+				alert("error");
+			}
+		}
+		uexFileMgr.cbGetFilePath = function(opCode, dataType, data) {
+			switch (dataType) {
+			case cText:
+				alert("文件路径：" + data);
+				break;
+			case cJson:
+				alert("uex.cJson");
+				break;
+			case cInt:
+				alert("uex.cInt");
+				break;
+			default:
+				alert("error");
+			}
+
+		}
+		uexFileMgr.cbGetFileRealPath = function(opCode, dataType, data) {
+			switch (dataType) {
+			case cText:
+				alert("文件的真实路径：" + data);
+				break;
+			case cJson:
+				alert("uex.cJson");
+				break;
+			case cInt:
+				alert("uex.cInt");
+				break;
+			default:
+				alert("error");
+
+			}
+
+		}
+		uexFileMgr.cbExplorer = function(opCode, dataType, data) {
+			switch (dataType) {
+			case cText:
+				document.getElementById('filePath1').innerHTML = data;
+				break;
+			case cJson:
+				alert("uex.cJson");
+				break;
+			case cInt:
+				alert("uex.cInt");
+				break;
+			default:
+				alert("error");
+
+			}
+
+		}
+
+		uexFileMgr.cbMultiExplorer = function(opCode, dataType, data) {
+			switch (dataType) {
+			case cText:
+				alert("uex.cText");
+				break;
+			case cJson:                                                           
+				var text="";
+			    var jsonList=eval("("+data+")");
+				  if(jsonList.length == 0){
+					  alert("无数据");
+				  }				 
+	 　　　　		for(var key in jsonList){　　　　	　　			
+	 　　　　		text+=jsonList[key]+"<br>";
+					}
+		
+				document.getElementById('filePath1').innerHTML = text;
+				break;
+			case cInt:
+				alert("uex.cInt");
+				break;
+			default:
+				alert("error");
+			}
+		}
+		uexFileMgr.cbCreateSecure = function(opCode, dataType, data) {
+			switch (dataType) {
+			case cText:
+				alert("uex.cText");
+				break;
+			case cJson:
+				alert("uex.cJson");
+				break;
+			case cInt:
+				if (data == 0) {
+					alert("创建加密文件成功");
+				} else {
+					alert("创建加密文件失败");
+				}
+				break;
+			default:
+				alert("error");
+			}
+
+		}
+		uexFileMgr.cbCreateFile = function(opCode, dataType, data) {
+			switch (dataType) {
+			case cText:
+				alert("uex.cText");
+				break;
+			case cJson:
+				alert("uex.cJson");
+				break;
+			case cInt:
+				if (data == 0) {
+					alert("创建文件成功");
+				} else {
+					alert("创建文件失败");
+				}
+				break;
+			default:
+				alert("error");
+			}
+
+		}
+		uexFileMgr.cbCreateDir = function(opCode, dataType, data) {
+			switch (dataType) {
+			case cText:
+				alert("uex.cText");
+				break;
+			case cJson:
+				alert("uex.cJson");
+				break;
+			case cInt:
+				if (data == 0) {
+					alert("创建文件夹成功");
+				} else {
+					alert("创建文件夹失败");
+				}
+				break;
+			default:
+				alert("error");
+			}
+		}
+		uexFileMgr.cbOpenFile = function(opCode, dataType, data) {
+			switch (dataType) {
+			case cText:
+				alert("uex.cText");
+				break;
+			case cJson:
+				alert("uex.cJson");
+				break;
+			case cInt:
+				if (data == 0) {
+					alert("打开文件成功");
+				} else {
+					alert("打开文件失败");
+				}
+				break;
+			default:
+				alert("error");
+
+			}
+
+		}
+		uexFileMgr.cbOpenSecure = function(opCode, dataType, data) {
+			switch (dataType) {
+			case cText:
+				alert("uex.cText");
+				break;
+			case cJson:
+				alert("uex.cJson");
+				break;
+			case cInt:
+				if (data == 0) {
+					alert(opCode+"打开加密文件成功");
+				} else {
+					alert(opCode+"打开加密文件失败");
+				}
+				break;
+			default:
+				alert("error");
+
+			}
+
+		}
+	}
+</script>
+</head>
+
+<body>
+	<div class="tit">文件管理</div>
+	<div class="conbor">
+		<div class="consj">
+			<span>1.创建文件</span> <span>输入文件名称：</span> <input class="textbox"
+				id="dirPath" type="text" value="wgt://data/test.txt"> <input
+				class="btn" type="button" value="创建文件"
+				onclick="createFile(document.getElementById('dirPath').value);">
+			<span>2.创建文件夹</span> <span>输入文件夹名称：</span> <input class="textbox"
+				id="dir" type="text" value="wgt://data/test2/"> <input
+				class="btn" type="button" value="创建文件夹"
+				onclick="createDir(document.getElementById('dir').value);">
+			<span>3.写文件</span> <span>输入文件内容：</span>
+			<textarea class="tcxx" id="data">test</textarea>
+			<input class="btn" type="button" value="写文件"
+				onclick="writeFile(document.getElementById('dirPath').value,document.getElementById('data').value);">
+			<span>4.读文件</span> <input class="btn" type="button" value="读文件"
+				onclick="readFile(document.getElementById('dirPath').value,-1);">
+			<span>取得的文件内容为：</span>
+			<textarea class="tcxx" id="readData"></textarea>
+			<!-- 
+			<span>5.关闭文件</span>
+			<input  class="btn" type="button" value="关闭文件" onclick="uexFileMgr.closeFile(1);">
+			-->
+			<span>5.通过路径判断文件是否存在</span> <span>文件路径：</span> <input class="textbox"
+				id="filePath" type="text" value="wgt://data/test.txt"> <input
+				class="btn" type="button" value="测试文件"
+				onclick="uexFileMgr.isFileExistByPath(document.getElementById('filePath').value);">
+			<span>6.通过id判断文件是否存在</span> <input class="btn" type="button"
+				value="测试文件"
+				onclick="isFileExistByID(document.getElementById('filePath').value);">
+			<span>7.删除文件（根据路径）</span> <input class="textbox" id="deletePath"
+				type="text" value="wgt://data/test.txt"> <input class="btn"
+				type="button" value="删除文件（根据路径）"
+				onclick="uexFileMgr.deleteFileByPath(document.getElementById('deletePath').value);">
+			<span>8.删除文件（根据文件id）</span> <input class="btn" type="button"
+				value="删除文件（根据文件id）" onclick="deleteFileById();"> <span>9.根据路径判断是文件还是文件夹</span>
+			<input class="btn" type="button" value="判断"
+				onclick="uexFileMgr.getFileTypeByPath(document.getElementById('dirPath').value);">
+			<span>10.根据文件id判断是文件还是文件夹</span> <input class="btn" type="button"
+				value="判断" onclick="getFileTypeByID();"> <span>11.设置文件偏移值</span>
+			<input class="btn" type="button" value="设置" onclick="seekFile()">
+			<span>12.把指针重新指向第一位</span> <input class="btn" type="button"
+				value="设置" onclick="seekBeginOfFile()"> <span>13.设置文件偏移值为文件结束</span>
+			<input class="btn" type="button" value="设置" onclick="seekEndOfFile()">
+			<span>14.获取文件长度</span> <input class="btn" type="button" value="获取"
+				onclick="getFileSize();"> <span>15.获取文件路径值</span> <input
+				class="btn" type="button" value="获取" onclick="getFilePath();">
+			<span>16.获取文件真实路径</span> <span>输入文件路径：</span> <input class="textbox"
+				id="filePath2" type="text" value="wgt://data/test.txt"> <input
+				class="btn" type="button" value="获取真实路径"
+				onclick="getFileRealPath();">
+			<span>17.启动文件浏览器</span> <span>为文件管理器指定初始路径</span>
+			<input class="textbox" type="text" id="file_path"
+				value="/sdcard/widgetone" /> <input class="btn" type="button"
+				value="单选文件"
+				onclick="uexFileMgr.explorer(document.getElementById('file_path').value);">
+
+			<input class="btn" type="button" value="多选文件"
+				onclick="uexFileMgr.multiExplorer(document.getElementById('file_path').value);">
+			<span>选择的文件路径为：</span>
+			<div class="tcxx" id="filePath1"></div>
+			<span>18.阅读器测试</span>
+			<a class="btn" href="ReaderMgr.html">进入</a>
+			<span>19.创建加密文件</span> 
+			<span>输入加密文件名称：</span> 
+			<input class="textbox" id="dirPathSecure" type="text" value="wgt://data/test.txt"> 
+			<span>输入密码：</span>
+			<input class="textbox" id="codeSecure" type="text" value="123"> 
+			<input class="btn" type="button" value="创建文件" onclick="createSecureFile(document.getElementById('dirPathSecure').value, document.getElementById('codeSecure').value);">
+			<span>20.打开加密文件</span> 
+			<span>输入密码：</span>
+			<input class="textbox" id="codeSecure2" type="text" value="123"> 
+			<input class="btn" type="button" value="读文件" onclick="readSecureFile(document.getElementById('dirPathSecure').value,-1, document.getElementById('codeSecure2').value);">
+			<span>取得的文件内容为：</span>
+			<textarea class="tcxx" id="readData2"></textarea>
+			<input class="btn" type="button" value="返回" onclick="uexWindow.back();">
+		</div>
+	</div>
+</body>
+</html>

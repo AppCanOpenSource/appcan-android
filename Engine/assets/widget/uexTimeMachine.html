@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="css/index.css">
+<title>旋转木马之Inverted Time Machine功能</title>
+<script type="text/javascript">
+    function cbOpen(a,b,c){
+        alert(a+b+c);
+    }
+    function pieOpen(){
+        alert(1111);
+//        var jsonStr = '{"id":"111","longitude":"116.404","latitude":"39.915","imageUrl":"","imageWidth":"60.0","imageHeight":"60.0","message":"this is beij","title":"我的位置"}';		var x=document.getElementById("aa").value;	    var y=document.getElementById("bb").value;	  var w=document.getElementById("cc").value;	    var h=document.getElementById("dd").value;		alert(x+" "+y+" "+w+" "+h);
+        uexTimeMachine.open("500",x,y,w,h);
+     }
+    function pieOpen1(){		var x=document.getElementById("aa").value;	    var y=document.getElementById("bb").value;	   var w=document.getElementById("cc").value;	    var h=document.getElementById("dd").value;		alert(x+" "+y+" "+w+" "+h);
+        uexTimeMachine.open("510",x,y,w,h);//第二个
+    }
+    function pieClose(){
+        var idarr = ["500","510"];//        var idarr = ["500","510"];
+        uexTimeMachine.close(idarr);
+    }
+	window.uexOnload = function(){
+        uexWidgetOne.cbError = function(opid,type,error){
+            alert(error);
+        }
+        //open的回调函数,
+        uexTimeMachine.loadData = function(id){
+            alert('id:'+id);
+            var jsonStr ='{"id":"'+id+'","data":[{"title":"title1","imageUrl":"res://uexTimeMachine_cunhuo.png"},{"title":"title2","imageUrl":"res://uexTimeMachine_daiban.png"}]}';
+            uexTimeMachine.setJsonData(jsonStr);
+        }
+        uexTimeMachine.onItemSelected = function(opId,index){
+            alert("opId:"+opId+"index:"+index)
+        }
+	}
+	
+</script>
+</head>
+<body>
+	<div class="tit">旋转木马之Inverted Time Machine功能</div>
+	<div class="conbor">
+			<div class="consj">
+				<span>中化logo旋转</span><div/>												x<input type="text" id="aa" value="300"/>				y<input type="text" id="bb" value="300"/>				w<input type="text" id="cc" value="300"/>				h<input type="text" id="dd" value="300"/>
+				<input class="btn" type="button" value="打开Time Machine" onclick="pieOpen();">
+                <input class="btn" type="button" value="打开Time Machine" onclick="pieOpen1();">
+                <input class="btn" type="button" value="关闭" onclick="pieClose();">
+			</div>
+			<input class="btn" type="button" value="返回" onclick="uexWindow.back();">
+		</div>
+</body>
+</html>

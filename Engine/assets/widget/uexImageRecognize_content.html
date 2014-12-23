@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+  <head>
+    <title>
+    </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+    <link rel="stylesheet" href="css/ui-color.css">
+	<link rel="stylesheet" href="css/ui-res.css">
+    <link rel="stylesheet" href="css/ui-btn.css">
+    <link rel="stylesheet" href="css/index.css">
+	<style>
+		input[type="text"]{
+			margin:.4em 0;
+		}
+	</style>
+    <script src="js/zy_control.js">
+    </script>
+    <script src="js/zy_click.js">
+    </script>
+    <script type="text/javascript">
+		 window.uexOnload = function() {
+		uexWidgetOne.onError = function(opCode, errorCode, errorDesc) {
+			alert(errorCode + ":" + errorDesc);
+		}
+        //回调
+        uexImageRecognize.callBackOpenImageRecognize = function(data){
+            //解码
+            var resultData = decodeURIComponent(data);
+            alert(resultData);
+            document.getElementById('ocrResult').innerHTML = resultData;
+//            uexImageRecognize.close();
+        }
+	}
+
+    function createImageRecognize(value){
+        var languageType = value;
+        var engPath = document.getElementById('picPath').value;
+        var engLang = "eng";
+        var chPath = document.getElementById('picPath').value;
+        var chLang = "chi_sim";
+        var jpnPath = document.getElementById('picPath').value;
+        var jpnLang = "jpn";
+        var korPath = document.getElementById('picPath').value;
+        var korLang = "kor";
+        switch (languageType){
+            case 'eng':
+                uexImageRecognize.openImageRecognize(engPath,engLang);
+                break;
+            case 'chi_sim':
+                uexImageRecognize.openImageRecognize(chPath,chLang);
+                break;
+            case 'jpn':
+                uexImageRecognize.openImageRecognize(jpnPath,jpnLang);
+                break;
+            case 'kor':
+                uexImageRecognize.openImageRecognize(korPath,korLang);
+                break;
+            default:
+                break;
+        }
+    }
+    
+    function close1(){
+        uexImageRecognize.close();
+    }
+		</script>
+  </head>
+<body class="um-vp " ontouchstart>
+	<div class="conbor">
+            <div class="consj">
+                <span>输入文件路径</span>
+                <input class="textbox" type="text" id="picPath" value="res://plugin_uexImageRecognize_e.png">
+                <div>
+                    <img id="enPic" src="wgtRes/plugin_uexImageRecognize_e.png" style="width: 400px; height: 50px;"/>
+                </div>
+                <input class="btn" type="button" value="英语识别" onclick="createImageRecognize('eng');"/>
+                <div>
+                    <img id="chPic" src="wgtRes/plugin_uexImageRecognize_c.png" style="width: 400px; height: 50px;"/>
+                </div>
+                <input class="btn" type="button" value="中文识别" onclick="createImageRecognize('chi_sim');"/>
+                <div>
+                    <img id="japanPic" src="wgtRes/plugin_uexImageRecognize_j.png" style="width: 400px; height: 50px;"/>
+                </div>
+                <input class="btn" type="button" value="日语识别" onclick="createImageRecognize('jpn');"/>
+                <div>
+                    <img id="koreaPic" src="wgtRes/plugin_uexImageRecognize_k.png" style="width: 400px; height: 50px;"/>
+                </div>
+                <input class="btn" type="button" value="韩语识别" onclick="createImageRecognize('kor');"/>
+                <input class="btn" type="button" value="关闭" onclick = "close1();"/>
+                
+                <span>识别结果</span>
+                <div class="tcxx" id="ocrResult"></div>
+            </div>
+        </div>
+</body>
+<script>
+
+</script>
+</html>

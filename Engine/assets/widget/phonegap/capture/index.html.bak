@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>	
+<title>Device Properties Example</title>
+
+<script type="text/javascript" charset="utf-8" src="cordova-1.6.0.js"></script>
+<script type="text/javascript" charset="utf-8" src="main.js"></script>
+</head>
+<body>
+	<button onclick="captureAudio();">Capture Audio</button><br>
+	<button onclick="captureImage();">captureImage</button><br>
+	<button onclick="captureVideo ();">captureVideo</button><br>
+	<a href="../index.html">·µ»Ø</a>
+</body>
+</html>

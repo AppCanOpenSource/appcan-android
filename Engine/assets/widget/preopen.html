@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="css/index.css">
+<title>Window功能</title>
+<script type="text/javascript">
+	
+	window.uexOnload = function(type){
+		if(type === 0){
+			uexWindow.preOpenStart();
+			uexWindow.openPopover("p1", "0", "../popAnimition.html", "", 250, 0, 320, 460, "5", "");
+			uexWindow.openPopover("p2", "0", "../uexCamera.html", "", 200, 0, 100, 100, "5", "");
+			uexWindow.openPopover("p3", "0", "../uexCall.html", "", 0, 200, 100, 100, "5", "");
+			uexWindow.openPopover("p4", "0", "../uexWindow.html", "", 200, 200, 100, 100, "5", "");
+			uexWindow.preOpenFinish();
+		}
+	}
+
+</script>
+</head>
+
+<body>
+	<div class="tit">预加载PopOver及动画功能</div>
+	<div class="conbor" style="text-align: center;">
+		
+	</div>
+	<input class="btn" type="button" value="关闭" onclick="uexWindow.close();"><br><br>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>	
+<title>Device Properties Example</title>
+
+<script type="text/javascript" charset="utf-8" src="cordova-1.6.0.js"></script>
+<script type="text/javascript" charset="utf-8" src="main.js"></script>
+</head>
+<body>
+    <button onclick="selectMusic">selectMusic</button><br>
+	<!--
+	<a href="#" class="btn large" onclick="playAudio('bg.mp3')">Play Audio</a><br>
+	-->
+	<!--
+	<a href="#" class="btn large" onclick="pauseAudio();">Pause Playing Audio</a><br>
+	-->
+	<a href="#" class="btn large" onclick="stopAudio();">Stop Playing Audio</a><br>
+	<p id="audio_position"></p><br>
+	<a href="../index.html">reback</a>
+	</body>
+</html>

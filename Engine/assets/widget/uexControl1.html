@@ -1,0 +1,208 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" /><link rel="stylesheet" type="text/css" href="css/index.css">
+<title>日期时间功能</title>
+<script type="text/javascript">
+var cText = 0;
+var cJson = 1;
+var cInt = 2;
+
+	window.uexOnload = function(){
+		uexControl.cbOpenDatePicker=function(opCode,dataType,data){
+			switch(dataType){
+				case cText:
+				  alert("uex.cText");
+				  break;
+				case cJson:
+				  if(dataType==1){
+				    var obj = eval('('+data+')');
+				    document.getElementById('date').innerHTML ="年：" +obj.year+"<br>月："+obj.month+"<br>日："+obj.day;
+			    }
+			    break;
+			  case cInt:
+			    alert("uex.cInt");
+			    break;
+			  default:
+			    alert("error");
+				}
+			
+		};
+		uexControl.cbOpenTimePicker=function(opCode,dataType,data){
+			switch(dataType){
+				case cText:
+				  alert("uex.cText");
+				  break;
+				case cJson:
+				  if(dataType==1){
+				    var obj = eval('('+data+')');
+				    document.getElementById('systime').innerHTML ="小时：" +obj.hour+"<br>分钟："+obj.minute+"<br>";	
+			    }
+			    break;
+			  case cInt:
+			    alert("uex.cInt");
+			    break;
+			  default:
+			    alert("error");
+				}
+			
+		};
+        uexControl.cbOpenCalendar = function(opCode,dataType,data){
+            switch(dataType){
+				case cText:
+                alert("selectTime="+data);
+                document.getElementById("calendar").innerHTML = data;
+                break;
+				case cJson:
+                alert("json");
+			    break;
+                case cInt:
+			    alert("uex.cInt");
+			    break;
+                default:
+			    alert("error");
+            }
+        };
+		uexControl.cbOpenTableView = function(opCode,dataType,data){
+			 switch(dataType){
+				case cText:
+                alert("text");
+                break;
+				case cJson:
+                //alert("json");
+				var resultObj =eval('('+data+')');
+				document.getElementById("resultCity").innerHTML="id:"+resultObj.id+"<br>name: "+resultObj.name+"<br> code "+resultObj.code;
+			    break;
+                case cInt:
+			    alert("uex.cInt");
+			    break;
+                default:
+			    alert("error");
+            }
+		};
+        uexControl.cbOpenCommonPicker = function(opCode,dataType,data){
+            if(data.length==0){
+                document.getElementById("selectItem").innerHTML ="未选择";
+            }else{
+                var resultObj =eval('('+data+')');
+                document.getElementById("selectItem").innerHTML = resultObj.brand +","+resultObj.models;
+            }
+            
+        };
+	}
+    function openCalendar(){
+        //显示标题
+        var title = document.getElementById("initTitle").value;
+        //不能点击
+        var canttouchDate = ["2012-07-20","2012-07-23","2012-07-28","2012-07-29","2012-07-20","2012-08-20","2012-09-23","2012-10-28","2012-11-29","2013-01-20","2013-02-23","2013-03-28","2013-04-29"];
+        //start 
+        var startDate = "2012-07-10";
+        //end
+        var endDate = "2013-07-10";
+        
+        uexControl.openCalendar(title,startDate,endDate,canttouchDate);
+    }
+    function openCommonPicker(){
+        var jsonStr ='{"A": [{"id": "3", "brand": "奥迪","models": "一汽大众奥迪A4L,一汽大众奥迪A6L,奥迪A1,一汽大众奥迪Q5,奥迪A3,奥迪A5轿跑,奥迪S5轿跑,奥迪A5掀背,奥迪S5掀背,奥迪A5敞篷,奥迪S5敞篷,奥迪A8L,奥迪S8,奥迪A7,奥迪Q5,奥迪Q7,奥迪TT 轿跑,奥迪TT 敞篷,奥迪R8,奥迪R8 Spyder,奥迪A8L(2007-2010),一汽大众奥迪A6L(2004-2011),奥迪Q3"},{ "id": "516","brand": "阿斯顿·马丁","models": "阿斯顿马丁DBS,阿斯顿马丁DB9,阿斯顿马丁V8 Vantage,阿斯顿马丁V12 Vantage,阿斯顿马丁One-77" }], "B": [{"id": "4","brand": "宾利","models": "宾利欧陆GT,宾利欧陆飞驰,宾利雅致728,宾利穆尚"},{ "id": "5", "brand": "宝马", "models": "华晨宝马5系Li,宝马1系,华晨宝马3系(2008-2011),华晨宝马5系Li(2005-2010),宝马1系(2007-2011),宝马3系轿跑,华晨宝马3系Li,宝马3系敞篷,宝马5系,宝马M5,宝马5系GT,宝马6系轿跑（2005-2010）,宝马6系敞篷(2005-2010),宝马6系敞篷（第三代）,宝马6系轿跑（第三代）,宝马7系Li,宝马X1,宝马X3,宝马X5,宝马X5 M,宝马X6,宝马X6 M,宝马Z4,宝马M3,宝马1系M轿跑,宝马5系旅行轿车,宝马7系Li(2004-2008),宝马X3(2005-2011),宝马Z4轿跑(2004-2009)"}, { "id": "10", "brand": "别克","models": "上海通用别克凯越,上海通用别克英朗GT,上海通用别克英朗XT,上海通用别克君威,上海通用别克君越,上海通用别克新GL8,上海通用别克GL8/陆尊,别克林荫大道,别克昂科雷,上海通用别克凯越HRV,上海通用别克荣御"}, {"id": "11","brand": "比亚迪","models": "比亚迪F0,比亚迪F3,比亚迪F3R,比亚迪F3DM,比亚迪G3,比亚迪L3,比亚迪F6,比亚迪M6,比亚迪S8,比亚迪e6,比亚迪S6,比亚迪G6"},{"id": "52","brand": "奔驰","models": "奔驰唯雅诺Viano,奔驰威霆Vito,北京奔驰C级,北京奔驰E级加长,奔驰A级,奔驰B级,奔驰C级旅行版,奔驰E级,奔驰凌特,奔驰E级Coupe,奔驰R级,奔驰S级,奔驰CLK敞篷,奔驰CLK轿跑,奔驰CL级,奔驰SLK级,奔驰SL级,奔驰GLK级,奔驰ML级,奔驰GL级,奔驰E级敞篷,奔驰G级,奔驰CLS级,奔驰SLS AMG,奔驰CLS级（2006-2011）,北京奔驰E级(2006-2009)"},{"id": "56","brand": "标致","models": "东风标致207三厢,东风标致207两厢,东风标致307三厢,东风标致307两厢,东风标致408三厢,标致207CC,东风标致307 Cross,标致308CC,标致308 SW,标致407,标致407 SW,标致407轿跑,标致607,标致RCZ,东风标致308三厢,东风标致508,东风标致206(2006-2009),标致307CC,标致307 SW,标致206CC(2006-2008)" },{"id": "57","brand": "保时捷","models": "保时捷Boxster,保时捷Cayman,保时捷911（2005-2011）,保时捷911敞篷(2005-2011),保时捷Panamera,保时捷卡宴,保时捷911,保时捷911敞篷"},{"id": "536", "brand": "一汽奔腾","models": "一汽奔腾B70,一汽奔腾B50"},{"id": "540", "brand": "布加迪","models": "布加迪 威航"},{"id": "618", "brand": "本田", "models": "广汽本田飞度,东风本田思域(2007-2011),本田Insight,本田CR-Z,东风本田CR-V,广汽本田锋范,东风本田思铂睿,广汽本田雅阁,东风本田思域,广汽本田歌诗图,东风本田新CR-V,广汽本田奥德赛,东风本田艾力绅,广汽本田思迪(2006-2008)"},{"id": "624", "brand": "宝骏","models": "宝骏630" },{"id": "629", "brand": "北汽","models": "北京汽车E系列" }]}';
+        
+        uexControl.openCommonPicker(jsonStr);
+	}
+	
+	function inputdlg(){
+		var inputdlgT=document.getElementById('inputdlgType').value;
+		var inputdlgD=document.getElementById('inputdlgData').value;
+		var inputdlgB=document.getElementById('inputdlgBtn').value;
+		uexControl.cbInputCompleted=function(i,t,d){
+            alert(i+"  "+d);
+        }
+        setTimeout(function(){uexControl.openInputDialog(inputdlgT,inputdlgD,inputdlgB);},100);
+	}
+	
+	function editdlglg(){
+		var editX=document.getElementById('editdlgX').value;
+		var editY=document.getElementById('editdlgY').value;
+		var editW=document.getElementById('editdlgW').value;
+		var editH=document.getElementById('editdlgH').value;
+		var editT=document.getElementById('editdlgType').value;
+		var editHint=document.getElementById('editdlgHint').value;
+		var editText=document.getElementById('editdlgText').value;
+		
+        uexControl.cbEditCompleted =function(i,t,d){
+		alert(i+"  "+d);
+        }
+        uexControl.openEditDialog(editX,editY,editW,editH,editT,editHint,editText,140);
+	}
+	
+</script>
+</head>
+
+<body>
+	<div class="tit">日期时间功能</div>
+	<div class="conbor">
+		<div class="consj">
+			<span>1.打开日期</span>
+			年份：<input class="textbox" type="text" value="1900" id="addYear"><br>
+			月份：<input class="textbox" type="text" value="10" id="addMonth"><br>
+			天数：<input class="textbox" type="text" value="19" id="addDay"><br>
+			<input class="btn" type="button" value="打开日期" onclick="uexControl.openDatePicker(document.getElementById('addYear').value,document.getElementById('addMonth').value,document.getElementById('addDay').value);">
+			<span>日期为：</span>
+			<div class="tcxx" id="date"></div>
+			<span>2.打开时间</span>
+			小时：<input class="textbox" type="text" value="10" id="addHour"><br>
+			分钟：<input class="textbox" type="text" value="10" id="addMinute"><br>
+			<input class="btn" type="button" value="打开时间" onclick="uexControl.openTimePicker(document.getElementById('addHour').value,document.getElementById('addMinute').value);">
+                
+			<span>时间为：</span>
+			<div class="tcxx" id="systime"></div>
+               <!-- <spa>以下为《爱日租》项目测试控件</span>
+                <span>3.打开日历控件</span>
+                显示标题：<input class="textbox" type="text" value="入住时间" id="initTitle"><br/>
+                传入初始日期：<input class="textbox" type="text" value="开始日期" id="sDate"><br/>
+                 传入截止日期：<input class="textbox" type="text" value="截止日期" id="eDate"><br/>
+                禁止点击日期数组：<input class="textbox" type="text" value="" id="dateArr"><br/>
+                <input class="btn" type="button" value="打开日历" onclick="openCalendar();">
+                </br>
+                <div class="tcxx" id="calendar"></div></br>
+                <span>4.打开TableView控件</span>
+                显示标题：<input class="textbox" type="text" value="选择城市" id="initCity"><br/>             
+                        <input class="btn" type="button" value="打开tableview" onclick="uexControl.openTableView();"> </br>
+                <div class="tcxx" id="resultCity"></div></br>-->
+	     <!--   <span>3.汽车选择控件</span>
+	        <input class="btn" type="button" value="打开控件" onclick="openCommonPicker();">
+	        <div class="tcxx" id="selectItem"></div><br> -->
+			
+			
+			
+	        <span>4.输入框测试</span>
+	        <span>输入框类型：0为标准键盘；1为数字键盘;其他视为标准</span> 
+					<input class="textbox"id="inputdlgType" type="text" value="0"> 
+					<span>输入框内默认数据</span> 
+					<input class="textbox"id="inputdlgData" type="text" value="默认数据"> 
+					<span>按钮内容为</span> 
+					<input class="textbox"id="inputdlgBtn" type="text" value="按钮"> 
+	        <input class="btn" type="button" value="打开输入框" onclick="inputdlg();">
+	        
+	       <!-- <span>5.编辑框测试</span>
+	        <span>输入编辑框左上坐标x</span> 
+					<input class="textbox"id="editdlgX" type="text" value="50"> 
+					<span>输入编辑框左上坐标y</span> 
+					<input class="textbox"id="editdlgY" type="text" value="50"> 
+					<span>输入编辑框宽度w</span> 
+					<input class="textbox"id="editdlgW" type="text" value="300"> 
+					<span>输入编辑框高度h</span> 
+					<input class="textbox"id="editdlgH" type="text" value="300"> 				
+	        <span>输入编辑框类型：0为标准键盘；1为数字键盘;其他视为标准</span> 
+					<input class="textbox"id="editdlgType" type="text" value="0"> 
+					<span>inputHint</span> 
+					<input class="textbox"id="editdlgHint" type="text" value="inputHint"> 
+					<span>defaultText</span> 
+					<input class="textbox"id="editdlgText" type="text" value="defaultText"> 
+	        <input class="btn" type="button" value="打开编辑框" onclick="editdlglg();">-->
+
+			<input class="btn" type="button" value="返回" onclick="uexWindow.back();">
+					
+		</div>
+	</div>
+</body>
+</html>

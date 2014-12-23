@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport"
+	content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="css/index.css">
+<title>Document阅读器</title>
+<script type="text/javascript">
+    window.uexOnload = function() {
+		uexWidgetOne.onError = function(opCode, errorCode, errorDesc) {
+			alert(errorCode + ":" + errorDesc);
+		}
+
+	}
+
+    function createDocumentReader(){
+        var documentPath = document.getElementById('filePath').value;
+        uexDocumentReader.openDocumentReader(documentPath);
+    }
+    
+    function close1(){
+        uexDocumentReader.close();
+    }
+</script>
+</head>
+
+<body>
+	<div class="tit">文件阅读器插件(ios)</div>
+        <div class="conbor">
+            <div class="consj">
+                <span>输入文件路径</span>
+                <input class="textbox" type="text" id="filePath" value="res://Doc Document.doc">
+                <input class="btn" type="button" value="打开Document文件" onclick="createDocumentReader();"/>
+                <span>说明</span>
+                <span>可以打开DOC,PDF,PPT,EXCEL,TXT格式的文件</span>
+                <input class="btn" type="button" value="关闭" onclick = "close1();"/>
+                <input class="btn" type="button" value="返回" onclick="uexWindow.back();"/>
+            </div>
+        </div>
+</body>
+</html>

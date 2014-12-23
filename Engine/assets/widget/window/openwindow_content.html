@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+  <head>
+    <title>
+    </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="../css/ui-base.css">
+    <link rel="stylesheet" href="../css/ui-box.css">
+    <link rel="stylesheet" href="../css/ui-color.css">
+	<link rel="stylesheet" href="../css/ui-res.css">
+    <link rel="stylesheet" href="../css/ui-btn.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <script src="../js/zy_control.js">
+    </script>
+    <script src="../js/zy_click.js">
+    </script>
+   <script type="text/javascript">
+	function openn(){
+		var anim = document.getElementById('opp').value;
+		var time = document.getElementById('tim').value;
+		var html=document.getElementById('html').value;
+		var inflag= document.getElementById('inflag').value;
+		uexWindow.open('dd', '0', html, anim, '', '', inflag, time);
+	}
+	
+	window.uexOnload = function(type){
+	}
+</script>
+  </head>
+<body class="um-vp" ontouchstart>
+	<div class="conbor">
+		<div class="consj">
+			<span>1.打开一个新窗口,只是打开一个新窗口，不用管新窗口中的内容,更改输入框的内容可测试打开窗口动画、flag标志等，其中加密网页是xx.html</span>
+			<span>地址:</span>
+			<input class="textbox" type="text" id="html" value="other.html?xx=aa&yy=bb">
+			<span>动画:</span>
+			<input class="textbox" id="opp" type="text" value="1"><br>
+			<span>打开标识inflag:</span>
+			<input class="textbox" id="inflag" type="text" value="0"><br>
+			<span>动画时长:</span>
+			<input class="textbox" id="tim" type="text" value="500"><br>
+			<input class="btn"  type="button" value="打开新窗口" onclick="openn()">
+			
+			<span>window Open动画集中测试</span>
+			<a class="btn" href="windowAnim.html">进入</a>
+				
+			<span>2.返回测试，点击打开之后，在新进入的页面点击返回按钮</span>
+			<div class="con">		
+				<a href="historyback.html">测试窗口</a>
+			</div>	
+			<input class="btn" type="button" value="historyforward" onclick="uexWindow.forward();">
+			
+			<span>3.windowForward：此功能在打开的网页中点击windowback之后执行</span>
+			<input class="btn"  type="button" value="windowforward窗口" onclick="uexWindow.open('dg', '0', 'windowback.html', 1, '', '', 0);">
+			<input class="btn" type="button" value="windowforward" onclick="uexWindow.windowForward(1)" /><br><br>
+			
+			<span>4.通过loadObfuscationData方式打开加密窗口</span>
+			<input class="btn" type="button" value="打开加密网页" onclick="uexWindow.loadObfuscationData('xx.html')" /><br>
+			
+		</div>
+	</div>
+</body>
+<script>
+zy_init();
+window.uexOnload=function(type)
+{
+	if(!type){
+		uexWindow.setBounce("1");
+		uexWindow.showBounceView("0","#FFF","0");
+		uexWindow.showBounceView("1","#FFF","0");
+	}
+}
+</script>
+</html>

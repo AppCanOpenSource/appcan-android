@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <meta name="viewport" id="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;minimum-scale=1.0; user-scalable=no;" />
+<link rel="stylesheet" type="text/css" href="css/index.css">
+<title>电话功能</title>
+	<script type="text/javascript" charset="utf-8">
+		var cText = 0;
+		var cJson = 1;
+		var cInt = 2;
+		window.uexOnload = function() {		
+			uexDevice.cbGetInfo = function(opId,dataType, data){
+		 		switch(dataType){
+					case cText:
+						alert("uex.cText");
+						break;
+					case cJson:{
+					alert(data);
+						var device = eval('('+data+')');
+						var jkDeviceType = device.deviceType;
+						var faceTimeNum = document.getElementById("uexCall.facetime").value;
+						alert("faceTimeNum"+faceTimeNum);
+						alert(jkDeviceType);
+						switch(parseInt(jkDeviceType)){
+							case 0:
+								alert("iphone");
+								uexCall.facetime(faceTimeNum);
+								break;
+							case 1:
+							  alert("ipad");
+							  break;
+							case 2:
+							  alert("ipodTouch");
+							  break;
+							default:
+								alert("error");
+						}
+						break;
+					}
+					case cInt:
+						alert("uex.cInt");
+						break;
+					default:
+						alert("Error");
+				}
+			};
+			
+			/*uexCall.dial = function(inPhoneNum){
+				var isnum="/^1[3|4|5|8][0-9]\d{4,8}$/";
+				if(!isnum.test(inPhoneNum)){
+					alert("您输入的号码格式不正确！");
+				} 
+			}*/
+			
+		}
+	</script>
+</head>
+
+<body>
+	<div class="tit">电话功能</div>
+	<div class="conbor">
+		<div class="consj">
+			<span>1.进入打电话界面</span>
+			<input id="uexCall.dial" type="text" class="textbox" value="13436827900">
+			<input class="btn" type="button" value="进入打电话界面" onclick="uexCall.dial(document.getElementById('uexCall.dial').value)">
+			<span>2.直接打电话</span>
+			<input class="btn"  type="button" value="打电话" onclick="uexCall.call(document.getElementById('uexCall.dial').value)">
+			<span>3.FaceTime</span>
+			<input id="uexCall.facetime" type="text" class="textbox" value="手机号或者邮箱">
+			<input class="btn" type="button" value="facetime" onclick="uexDevice.getInfo('12')">
+			<input class="btn" type="button" value="返回" onclick="uexWindow.back();">
+		</div>
+	</div>
+</body>
+</html>

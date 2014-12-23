@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <meta name="viewport" id="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;minimum-scale=1.0; user-scalable=no;" />
+<link rel="stylesheet" type="text/css" href="css/index.css">
+<title>获取/监听Window Name</title>
+<script type="text/javascript">
+	window.uexOnload = function(){
+		uexWindow.setReportKey('0', '1');
+	}
+</script>
+</head>
+
+<body>
+	<div class="tit">获取/监听Window Name</div>
+	<span>正确效果：点击"返回上一个window"，仍然会弹出相关window的url信息。说明正在监听.</span>
+	<br><br>
+	<input class="btn" type = "button" onclick=uexWindow.windowBack('4') value="返回上一个window"><br><br>
+
+	</div>
+</body>
+</html>

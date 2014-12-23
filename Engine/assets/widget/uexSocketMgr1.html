@@ -1,0 +1,140 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="css/index.css">
+<title>socket功能</title>
+<script type="text/javascript">
+	var socketUDP = 1;
+	var socketTCP = 2;
+	function creatUDP(port){
+		uexSocketMgr.createUDPSocket(socketUDP,port);	
+		
+	}
+	
+	
+	function setUDPIPandPort(ip,port){
+		uexSocketMgr.setInetAddressAndPort(socketUDP,ip,port);
+	}
+	
+
+	function sendUDP(data){			
+		uexSocketMgr.sendData(socketUDP,data);	
+	}
+	
+
+	
+	function creatTCP(){
+		uexSocketMgr.createTCPSocket(socketTCP);
+		//tcp.setInetAddressAndPort('192.168.1.28',2009);
+	}
+	
+	
+	function setTCPIPandPort(ip,port){
+		uexSocketMgr.setInetAddressAndPort(socketTCP,ip,port);
+	}
+	function sendTCP(data){
+		
+		
+		uexSocketMgr.sendData(socketTCP,data);
+		
+	}
+	
+	
+	function closeUDP(){
+		
+		uexSocketMgr.closeSocket(socketUDP);
+	}
+	
+	function closeTCP(){
+		
+		uexSocketMgr.closeSocket(socketTCP);
+	}
+	window.uexOnload = function(){
+		uexWidgetOne.cbError = function(opCode,errorCode,errorInfo){
+				alert(errorInfo);
+		}
+		uexSocketMgr.onData = function(opCode,text){
+			if(opCode == socketUDP){
+				document.getElementById('getUDPData').innerHTML = text;
+			}
+			if(opCode == socketTCP){
+				document.getElementById('getTCPData').innerHTML =text;
+			}
+		}
+		uexSocketMgr.cbCreateTCPSocket = function(opCode,dataType,data){
+			if(data == 0){
+				alert("创建TCP成功");
+			}else{
+				alert("创建TCP失败");
+			}
+			
+		}
+		uexSocketMgr.cbCreateUDPSocket = function(opCode,dataType,data){
+			if(data == 0){
+				alert("创建UDP成功");
+			}else{
+				alert("创建UDP失败");
+			}
+		}
+		uexSocketMgr.cbSendData = function(opCode,dataType,data){
+			
+			if(data == 0){
+				alert("发送成功");
+			}else{
+				alert("发送失败");
+			}
+		}
+		uexSocketMgr.cbConnected = function(opCode,dataType,data){
+			if(data == 0){
+				alert("连接成功");
+			}else{
+				alert("连接失败");
+			}
+			
+		}
+		uexSocketMgr.onDisconnected = function(opCode){
+			alert("连接断开");
+		}
+	}
+</script>
+</head>
+
+<body>
+	<div class="tit">socket功能</div>
+	<div class="conbor">
+		<div class="consj">
+			<span>1.UDP功能测试：</span>
+			<span>绑定本地的UDP端口号：</span>
+			<input class="textbox" type="text" id = "localPort" value="45666" >
+			<input class="btn" type="button" value="创建UDP" onclick="creatUDP(document.getElementById('localPort').value);">
+			<span>对方的ip：</span>
+			<input class="textbox" type="text" id = "udpId" value="192.168.1.28" >
+			<span>对方的port：</span>
+			<input class="textbox" type="text" id = "udpPort" value="22222">
+			<input class="btn" type="button" value="设置ip和port" onclick="setUDPIPandPort(document.getElementById('udpId').value,document.getElementById('udpPort').value);">
+			<span>输入要发送的UDP数据：</span>
+			<textarea class="tcxx" id="udpData">发送给UDP服务器的数据</textarea>
+			<input class="btn" type="button" value="发送UDP" onclick="sendUDP(document.getElementById('udpData').value);">
+			<span>接收到的UDP数据为：</span>
+			<div class="tcxx" id="getUDPData"></div>
+			<input class="btn" type="button" value="关闭UDP" onclick="closeUDP();">
+			<span>2.TCP功能测试：</span>
+			<input class="btn" type="button" value="创建TCP" onclick="creatTCP();">
+			<span>对方的ip：</span>
+			<input class="textbox" type="text" id = "tcpId" value="192.168.1.28" >
+			<span>对方的port：</span>
+			<input class="textbox" type="text" id = "tcpPort" value="2009">
+			<input class="btn" type="button" value="设置ip和port" onclick="setTCPIPandPort(document.getElementById('tcpId').value,document.getElementById('tcpPort').value);">
+			<span>输入要发送的TCP数据：</span>
+			<textarea class="tcxx" id="tcpData">发送给TCP服务器的数据</textarea>
+			<input class="btn" type="button" value="发送TCP" onclick="sendTCP(document.getElementById('tcpData').value)">
+			<span>接收到的TCP数据为：</span>
+			<div class="tcxx" id="getTCPData"></div>
+			<input class="btn" type="button" value="关闭TCP" onclick="closeTCP();">
+			<input class="btn" type="button" value="返回" onclick="uexWindow.back();">
+		</div>
+	</div>
+</body>
+</html>

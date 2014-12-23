@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="css/index.css">
+<title>邮件功能</title>
+<script type="text/javascript">
+
+window.uexOnload = function() {	
+	uexFileMgr.cbExplorer=function (opCode,dataType,data){
+		document.getElementById('attachmentPath').value = data;
+	}
+
+	uexWidgetOne.onError=function(opCode,errorCode,errorDesc){
+		alert(errorCode+":"+errorDesc);
+		}
+}
+function emailOpen(){
+	
+  var Email = document.getElementById('receiverEmail').value;
+			if(!/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(Email))
+			{
+				alert('Email格式不正确');
+				return;
+			}
+			
+	uexEmail.open(Email,document.getElementById('subject').value,document.getElementById('content').value,document.getElementById('attachmentPath').value);
+	
+}
+</script>
+</head>
+
+<body>
+<div class="tit">邮件功能</div>
+<div class="conbor">
+<div class="consj"><span>1.进入发邮件界面</span> <span>收件人</span> <input
+	id="receiverEmail" type="text" class="textbox" value="test@163.com">
+<span>邮件主题</span> <input id="subject" type="text" class="textbox"
+	value="测试邮件"> <span>邮件内容</span> <input id="content" type="text"
+	class="textbox" value="我是邮件"> <span> 附件路径(基于file协议)</span> <input
+	class="btn" type="button" value="启动文件浏览器"
+	onclick="uexFileMgr.explorer('');"> <input id="attachmentPath"
+	type="text" class="textbox" readOnly="true"> <input class="btn"
+	type="button" value="进入发邮件界面"
+	onclick="emailOpen();">
+<input class="btn" type="button" value="返回" onclick="uexWindow.back();">
+</div>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+  <head>
+    <title>
+    </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+    <link rel="stylesheet" href="css/ui-color.css">
+	<link rel="stylesheet" href="css/ui-res.css">
+    <link rel="stylesheet" href="css/ui-btn.css">
+    <link rel="stylesheet" href="css/index.css">
+    <script src="js/zy_control.js">
+    </script>
+    <script src="js/zy_click.js">
+    </script>
+    <script type="text/javascript">
+		var partner = "2088501923710512";
+	var seller = "2088501923710512";
+	var rsaPrivate = "MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBANY6sXzRlqgmngX6m1G2BJQzsZuvAE2iXVB/e/T4CBHnvp63dQUesPZM1gyWm+wGjmYEr3QP4DiXJHSsCtUHUWbGiKeuodwUFr25LX9kDKBA/Vkol6NtTL/bkzPO48Epr5pb8jhcfFN0xUQfxcZR4p7oLcLA4sSY7H+dSAUL7NlVAgMBAAECgYEAjPpjArkKY+3F4DljLQqTSNQb9U/c6zoGHotGj5cJ+H6BOwGPyKbB3dQCqJYUVeaanxhGPiKUc6lDHGR7XGVMcxk1ckFHniGY7SGeddDs1wODyMVRXUuZleZ0I2QdhxuyK3RQzMiD9tRuSttq8wj+MKcXoYRN9bY+GOrtnQuHfAECQQD4/ytu7q9CvDCNpONUzjBXFVfAbQOAv5dWvBDyoS9aN9wicZ9EaJIcjozqUyyXqMek1/+v+ehnwr++NNo9reI1AkEA3EEwtI2d4EUkfp0gjPj29p22CgkVbHyfweVfBjuR5evaTFRJWzf9yuksogPS1JLeTqKXczW6mBdgj05iEr3+oQJBAI3Hli6rYEZKrAbrXbqbUXE0qOvb5wO3lHAB1FCjsTfY2NMQCZVFSfVSwjBnPdv5cfyONXw5e7khblba923phgUCQGO4gDy/AYPQyj0pFtu8vNPbg9f3VOPRaON43hUMU3ot1qBIaQ4Lw7Ri7fpMkN/9vvkLVFatNNY3f1hivLSPoQECQQDEaP8VLsUVd3QdoDruH4oIpqVbQ8xj3aEZKiA01w8QqLkElPG14+7EFA+gDKWjTghOduomnXDleVX34tVlAuCn";
+	var rsaPublic = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCq8+Q1EiRE9Chp3RtNo4Iftx/i1nWyxecEfDRZK+v3UsxZ3Zdo1kbMXH3fAcNgNlfNhlE3vGb/AWdehp4bBqweQiyuhxBLBRnDGNd6iuqksEJfgxq/iBgGSQKiGcM8XzGGHU7Tbe/HL8s532hCNOAUwvJYCXSodWwaMSOsWBy/nwIDAQAB";
+	var notifyUrl = null;
+	
+	function setInfo(){
+		uexPay.setPayInfo(partner, seller, rsaPrivate, rsaPublic, notifyUrl);
+	}
+	
+	function pay(){
+		setInfo();
+		var subject = document.getElementById("subject").value;
+		var body = document.getElementById("bodyy").value;
+		var fee = document.getElementById("fee").value;
+		var num = document.getElementById("num").value;
+		uexPay.pay(num, subject, body, fee);
+		
+	}
+	function paySuccess(status, des){
+		document.getElementById('adre').innerHTML  = des;
+	}
+
+	function payFailed(opCode, errorCode, des){
+
+		document.getElementById('adre').innerHTML  = des;
+	}
+
+	window.uexOnload = function(){
+		uexPay.onStatus = paySuccess;
+		uexWidgetOne.cbError = payFailed;
+	}
+		</script>
+  </head>
+<body class="um-vp " ontouchstart>
+	<div class="conbor">
+		<div class="consj">	
+			<span>支付接口测试：</span>
+			<span style="color:red;">注意：因公司暂未与支付宝无线支付服务签约，没有获得相关支付公钥，所以此功能默认定向支付宝公司开发测试帐户，所花费的钱款为真实花费，无法退回，<br><br>且登录支付宝后，支付宝将绑定手机，请谨慎测试！！<br><br>
+			代码中已经写死了,每笔交易额为0.01元。 ^_^<br><br>
+			此功能需安装支付宝插件，没有安装支付宝插件的同事请自行安装，此版本(0.70版)默认捆绑安装一个支付宝插件。
+			</span>
+			<span>商品信息：</span>
+			<div class="tcxx" id="payy">
+			商品名称：珍珠项链。<br>
+			商品描述：韩版,韩国流行饰品小太阳花小巧雏菊 珍珠项链2M15。<br>
+			价格：一口价 &nbsp;&nbsp; 0.01元。<br>
+			商品编号：xxxxxxxxxxxxx&nbsp;（调试用,客户端随机生成）.
+			</div>
+			<input type="hidden" id="subject" value="珍珠项链">
+			<input type="hidden" id="bodyy" value="韩版,韩国流行饰品小太阳花小巧雏菊 珍珠项链2M15。">
+			<input type="hidden" id="fee" value="0.01">
+			<input type="hidden" id="num" value="200155555">
+			<br>
+			<input class="btn" type="button" value="点击购买" onclick=pay()>
+			<span>支付结果：</span>
+			<div class="tcxx" id="adre"></div>
+			<br>
+		</div>
+	</div>
+</body>
+<script>
+
+</script>
+</html>

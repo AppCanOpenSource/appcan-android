@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="css/index.css">
+<title>文件管理</title>
+<script type="text/javascript">
+
+
+	function createFile(path){
+			uexFileMgr.createFile(1,path);
+			uexFileMgr.closeFile(1);
+	}
+	
+	
+	function writeFile(path,data){
+		uexFileMgr.openFile(1,path,1);
+		uexFileMgr.writeFile(1,0,data);
+		uexFileMgr.closeFile(1);
+
+	}
+	
+
+	function readFile(path,size){
+		uexFileMgr.openFile(1,path,1);
+		uexFileMgr.readFile(1,size);
+		uexFileMgr.closeFile(1);
+		
+	}
+
+	function getFileRealPath(){
+		uexFileMgr.getFileRealPath(document.getElementById('filePath2').value);
+	}
+	window.uexOnload = function(){
+		uexWidget.cbGetOpenerInfo = function(opCode,dataType,data){
+			document.getElementById('pluginData').value = data;
+		}
+		uexFileMgr.cbReadFile = function(opCode,dataType,data){
+					if(opCode == 1 && dataType == 0){
+						document.getElementById('readData').value = data;
+					}
+		}
+
+		uexFileMgr.cbGetFileRealPath = function(opCode,dataType,data){
+			alert("文件的真实路径："+data);
+		}
+		uexFileMgr.cbExplorer = function(opCode,dataType,data){
+			document.getElementById('filePath1').innerHTML = data;
+		}
+		uexFileMgr.cbCreateFile = function(opCode,dataType,data){
+			if(data == 0){
+				alert("创建文件成功");
+			}else{
+				alert("创建文件失败");
+			}
+			
+		}
+		uexFileMgr.cbOpenFile = function(opCode,dataType,data){
+			if(data == 0){
+				alert("打开文件成功");
+			}else{
+				alert("打开文件失败");
+			}
+		}
+	}
+	
+</script>
+</head>
+
+<body>
+	<div class="tit">文件管理(插件测试)</div>
+	<div class="conbor">
+		<div class="consj">
+			<span>1.获取调用该插件传入的值：</span><br><br>
+			<input  class="btn" type="button" value="获取" onclick="uexWidget.getOpenerInfo();"></input>
+			<span>取得的传入的值为：</span>
+			<textarea class="tcxx" id="pluginData"></textarea><br/>
+			<span>2.创建文件</span>
+			<span>输入文件名称：</span>
+			<input class="textbox" id="dirPath" type="text" value="wgt://data/test.txt">
+			<input class="btn" type="button" value="创建文件" onclick="createFile(document.getElementById('dirPath').value);">
+			
+			<span>3.写文件</span>
+			<span>输入文件内容：</span>
+			<textarea class="tcxx" id="data">test</textarea>
+			<input  class="btn" type="button" value="写文件" onclick="writeFile(document.getElementById('dirPath').value,document.getElementById('data').value);">
+			<span>4.读文件</span>
+			<input  class="btn" type="button" value="读文件" onclick="readFile(document.getElementById('dirPath').value,-1);">
+			<span>取得的文件内容为：</span>
+			<textarea class="tcxx" id="readData"></textarea><br/>
+			<span>5.获取文件真实路径</span>
+			<span>输入文件路径：</span>
+			<input class="textbox" id="filePath2" type="text" value="wgt://data/test.txt">
+			<input class="btn" type="button" value="获取真实路径" onclick="getFileRealPath();">
+			<span>6.启动文件浏览器</span>
+			<span>为文件管理器指定初始路径</span>
+			<input  class="textbox"type="text" id="file_path" value="/sdcard/widgetone"/>
+			<input  class="btn" type="button" value="启动文件浏览器" onclick="uexFileMgr.explorer(document.getElementById('file_path').value);">
+			<span>选择的文件路径为：</span>
+			<div class="tcxx" id="filePath1"></div>
+			<input class="btn" type="button" value="关闭插件" onclick="uexWidget.finishWidget('AppCan-03-06');">
+		</div>
+	</div>
+</body>
+</html>

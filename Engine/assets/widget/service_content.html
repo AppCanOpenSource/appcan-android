@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" /><link rel="stylesheet" type="text/css" href="css/index.css">
+<title>无标题文档</title>
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript">
+window.uexOnAuthorize = function(authId){
+        alert("uexOnAuthorize ="+authId);
+};
+	window.uexOnload = function(){
+//			xmlHttpGet();
+//			uexDataAnalysis.cbGetAuthorizeID = getAuthorizeID;
+	}
+	function xmlHttpGet(){
+		var url = "http://211.157.108.145/9888quan/rpc/member.php?mod=logging&ac=login&username=15801621166&password=111111&macaddress=98:03:D8:EE:C7:07&deviceToken=&platform=0&manufacturer=Apple&version=1.0";
+		uexXmlHttpMgr.open("1", "get", url, "");
+		uexXmlHttpMgr.send("1");
+	}
+	function openNewWindow(src){
+		uexWindow.open(src,'0',src,0,'','',0x0);
+	}
+
+    window.uexStart = function(){
+       // alert("启动测试");
+        uexLottery.startReport("aaaa","bbbb");
+        uexLottery.userEvent("1000");
+    };
+	 function getAuthorizeID(opCode,dataType,data){
+        alert("uexDataAnalysis.cbGetAuthorizeID="+data);
+    }
+	
+	function openTest(name){
+			openNewWin(name, name+".html");
+	}
+</script>
+</head>
+
+<body>
+	<!--<div class="tit" style="padding: .5em;.; text-align: center; -webkit-box-pack: center; box-sizing: border-box;">平台插件</div>-->
+	<div class="con">
+		<div onclick="openTest('uexBaiduMap')" class="test" >百度地图</div>
+		<div onclick="openTest('uexPay')" class="test" >支付</div>
+		
+		<div onclick="openTest('uexWeiXin')" class="test" >微信分享</div>
+		<div onclick="openTest('uexSina')" class="test" >sina分享</div>
+		<div onclick="openTest('uexTencent')" class="test" >腾讯分享</div>
+		<div onclick="openTest('uexDocumentReader')" class="test" >Document阅读器</div>
+		<div onclick="openTest('uexPDFReader')" class="test" >pdf阅读器</div>
+		<div onclick="openTest('uexImageRecognize')" class="test" >图片识别</div>
+		<div onclick="openTest('uexIndexBar')" class="test" >索引条</div>
+		<div onclick="openTest('uexCreditCardRec')" class="test" >信用卡识别插件</div>
+		<div onclick="openTest('uexScratchCard')" class="test" >刮刮卡</div>
+	</div>
+</body>
+</html>

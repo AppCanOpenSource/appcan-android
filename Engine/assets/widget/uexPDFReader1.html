@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport"
+	content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="css/index.css">
+<title>PDF阅读器</title>
+<script type="text/javascript">
+    window.uexOnload = function() {
+		uexWidgetOne.onError = function(opCode, errorCode, errorDesc) {
+			alert(errorCode + ":" + errorDesc);
+		}
+
+	}
+
+    function createPDFReader(){
+        var pdfFilePath = document.getElementById('pdfPath').value;
+        uexPDFReader.openPDFReader(pdfFilePath);
+    }
+    
+    function close1(){
+        uexPDFReader.close();
+    }
+</script>
+</head>
+
+<body>
+	<div class="tit">PDF阅读器插件</div>
+        <div class="conbor">
+            <div class="consj">
+                <span>输入文件路径</span>
+                <input class="textbox" type="text" id="pdfPath" value="res://PDF Document.pdf">
+                <input class="btn" type="button" value="打开PDF文件" onclick="createPDFReader();"/>
+                <input class="btn" type="button" value="关闭" onclick = "close1();"/>
+                <input class="btn" type="button" value="返回" onclick="uexWindow.back();"/>
+            </div>
+        </div>
+</body>
+</html>

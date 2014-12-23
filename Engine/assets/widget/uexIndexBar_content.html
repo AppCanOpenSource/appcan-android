@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+  <head>
+    <title>
+    </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+    <link rel="stylesheet" href="css/ui-color.css">
+	<link rel="stylesheet" href="css/ui-res.css">
+    <link rel="stylesheet" href="css/ui-btn.css">
+    <link rel="stylesheet" href="css/index.css">
+	<style>
+		input[type="text"]{
+			margin:.4em 0;
+		}
+	</style>
+    <script src="js/zy_control.js">
+    </script>
+    <script src="js/zy_click.js">
+    </script>
+    <script type="text/javascript">
+		 var cText = 0;
+var cJson = 1;
+var cInt = 2;
+    window.uexOnload=function(){
+        uexIndexBar.onTouchResult = function(opId,dataType,data){
+            alert(opId+":"+dataType+":"+data);
+        }
+    }
+		</script>
+  </head>
+<body class="um-vp " ontouchstart>
+	<div class="conbor">
+		<div class="consj">
+			<span>1.显示 列表</span>
+			<input class="btn" type="button" value="设置" onclick="uexIndexBar.open(100,100,220,300);">
+			<div class="tcxx" id="selectItem"></div><br>
+            <span>1.关闭 列表</span>
+            <input class="btn" type="button" value="设置" onclick="uexIndexBar.close();">
+                    <div class="tcxx" id="selectItem"></div><br>
+			<br>	
+		</div>
+	</div>
+</body>
+<script>
+
+</script>
+</html>

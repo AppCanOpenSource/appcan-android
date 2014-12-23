@@ -1,0 +1,15 @@
+    .ui-footer .dis-btn-right {
+	position: absolute;
+	right: 10px;
+	top: .05em
+	}
+	.dis-thumb-star{
+	    position: absolute;
+		top:0em;
+	    right:0em;
+	    width: 2.5em;
+	    height: 2.5em;
+	    -webkit-background-size:contain;
+	    background-repeat:no-repeat;
+	    background-position:center;
+	}

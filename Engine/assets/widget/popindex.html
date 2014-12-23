@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="css/index.css">
+<title>Window功能</title>
+<script type="text/javascript">
+	
+	window.uexOnload = function(type){
+		if(type === 0){
+			uexWindow.preOpenStart();
+			uexWindow.openPopover("a", "0", "popl.html", "", '20', '50', '300', '200', "17", "0");
+			uexWindow.openPopover("b", "0", "popt.html", "", '20', '100', '300', '200', "17", "0");
+			//uexWindow.openPopover("c", "0", "popr.html", "", '20', '150', '300', '200', "17", "0");
+			//uexWindow.openPopover("d", "0", "popb.html", "", '20', '200', '300', '200', "17", "0");
+			uexWindow.openPopover("c", "0", "popr.html", "", '20', '200', '300', '200', "17", "0");
+			uexWindow.preOpenFinish();
+		}
+	}
+
+</script>
+</head>
+
+<body>
+	<div class="tit">预加载PopOver及PopOver Index</div>
+	<div class="conbor" style="text-align: center;">
+		为了和谐<br><br>
+		为了和谐<br><br>
+		为了和谐<br><br>
+		为了和谐<br><br>
+		为了和谐<br><br>
+		为了和谐<br><br>
+		为了和谐<br><br>
+		为了和谐<br><br>
+		为了和谐<br><br>
+		为了和谐<br><br>
+		为了和谐<br><br>
+		为了和谐<br><br>
+		为了和谐<br><br>
+		为了和谐<br><br>
+		为了和谐<br><br>
+		<input class="btn" type="button" value="bring A popover to front" onclick="uexWindow.bringPopoverToFront('a')">	
+		<input class="btn" type="button" value="send A popover to back" onclick="uexWindow.sendPopoverToBack('a')">	
+		<!--input class="btn" type="button" value="insert popover B above popover C" onclick="uexWindow.insertPopoverAbovePopover('b','c')">	
+		<input class="btn" type="button" value="insert popover A below popover D" onclick="uexWindow.insertPopoverBelowPopover('a','d')"-->	
+		<input class="btn" type="button" value="insert popover B above popover C" onclick="uexWindow.insertPopoverAbovePopover('b','c')">
+		<input class="btn" type="button" value="insert popover B below popover C" onclick="uexWindow.insertPopoverBelowPopover('b','c')">
+		<input class="btn" type="button" value="返回" onclick="uexWindow.close()">	
+	</div>
+</body>
+</html>

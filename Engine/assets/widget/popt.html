@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+<script type="text/javascript">
+	
+	var state = 0;
+	function anim(){
+		if(state == 0){
+			state = 1;
+			document.getElementById('hand').innerHTML = "切回";
+			uexWindow.beginAnimition();
+			uexWindow.setAnimitionDelay('0');
+			uexWindow.setAnimitionDuration('350');
+			uexWindow.setAnimitionCurve('3');
+			uexWindow.setAnimitionRepeatCount('0');
+			uexWindow.setAnimitionAutoReverse('0');
+			uexWindow.makeTranslation('0', '300', '0');
+			uexWindow.commitAnimition();
+		}else{
+			document.getElementById('hand').innerHTML = "切出";
+			state = 0;
+			uexWindow.beginAnimition();
+			uexWindow.setAnimitionDelay('0');
+			uexWindow.setAnimitionDuration('350');
+			uexWindow.setAnimitionCurve('3');
+			uexWindow.setAnimitionRepeatCount('0');
+			uexWindow.setAnimitionAutoReverse('0');
+			uexWindow.makeTranslation('0', '-300', '0');
+			uexWindow.commitAnimition();
+		}
+		
+		
+	}
+</script>
+<style>
+	body{
+		background:#FFA73F;
+	}
+	a{
+	  font-size:1.5em;
+	  color:#fff;
+	  background:-webkit-gradient(linear, left top, left bottom, from(#a2a2a2), to(#010101), color-stop(0.5, #585858), color-stop(0.5, #2c2c2c));
+	  border:1px solid #000; 
+	  -webkit-border-radius:5px;
+	  -webkit-tap-highlight-color:rgba(0,0,0,0);
+	}
+	.out{
+		text-align:right;
+	}
+	.in{
+	  text-align:left;
+	}
+	
+	div{
+		text-align: center;
+	}
+
+	</style>
+</head>
+
+<body>
+  <div style="color:#ff00ff;font-size:1em;" id="tit">这是PopOver B</div><br><br>
+<div>  
+<span>关闭当前PopOver<br>
+  <a href="javascript:void(0);" onclick=uexWindow.close("")>关闭</a><br><br><br>
+  </span>
+  为了和谐<br>
+  为了和谐<br>
+  为了和谐<br>
+  为了和谐<br>
+  为了和谐<br>
+  为了和谐<br>
+  为了和谐<br>
+  为了和谐<br>
+
+<br> 
+</div>
+  <div ><a  href="javascript:void(0);" onclick="anim()" id="hand">切出</a></div>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html class="ui-mobile landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+  <head>
+    <title>
+    </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-apple.css">
+    <script src="js/zy_anim.js">
+    </script>
+    <script src="js/zy_control.js">
+    </script>
+    <script>
+    zy_fix('head',null);
+    </script>
+
+  </head>
+  <body class="ui-mobile-viewport" >
+   
+<div id="page_0" class="ui-page ui-body-d ui-page-active">
+
+<div data-role="header" id="head"
+		class="ui-header ui-bar-iphone ui-header-fixed ui-bar-glass ">
+		<div class="ui-btn ui-btn-limit ui-btn-left "
+			onClick="uexWindow.close();">
+			<div class="ui-btn-iphone-l">
+				<div class="ui-btn-iphone-r">
+					<div class="ui-btn-iphone-c">
+						<span class="ui-btn-inner "> <span class="ui-btn-text">返回</span>
+							<span class="ui-icon ui-icon-back ui-icon-shadow"></span>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<h1 class="ui-title" tabindex="0" style="margin: .4em 4em">
+			<div class="ui-select">
+				<div class="ui-btn ui-btn-icon-right ui-btn-corner-all ">
+					<span class="ui-btn-inner ui-btn-corner-all"
+						style="padding: 0.4em 2em 0.4em .5em;"> <span
+						class="ui-btn-text ui-big">主版块</span> <span
+						class="ui-icon ui-icon-arrow-d ui-btn-corner-right "
+						style="background-color: rgba(0, 0, 0, 0);"> </span> </span> <select
+						name="select-choice-6" id="select-choice-6"
+						onchange="dis_slectmenu('select-choice-6',changepage)">
+						<option value="item1">主版块</option>
+						<option value="item2">全部子版块</option>
+
+					</select>
+				</div>
+			</div>
+		</h1>
+	</div>
+
+<div class="ui-content ui-body-d">
+<div data-role="button" class=" ui-corner-all ui-btn  ui-btn-b   ui-shadow" onclick=""> <span class="ui-btn-inner ui-corner-all"> <span class="ui-btn-text">改变</span> </span></div> 
+
+</div>
+
+
+
+</div>
+
+  </body>
+  <script type="text/javascript">
+  function changepage_forum(indexNumber) {
+
+			alert('test'+indexNumber);
+
+	}
+
+  </script>
+</html>

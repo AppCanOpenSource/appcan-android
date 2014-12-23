@@ -1,0 +1,231 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport"
+	content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="css/index.css">
+<title>设备信息功能</title>
+<script type="text/javascript">
+
+window.uexOnload = function() {	
+
+	uexDevice.onOrientationChange = function(mode){
+		if(mode == 1){
+			document.getElementById('data').innerHTML ="正竖屏";
+		}else if(mode == 2){
+			document.getElementById('data').innerHTML ="左横屏";
+		}else if(mode == 4){
+			document.getElementById('data').innerHTML ="倒竖屏";
+		}else if(mode == 8){
+			document.getElementById('data').innerHTML ="右横屏";
+		}
+	};
+	uexDevice.cbGetInfo=function (opCode,dataType,data){
+		var device = eval('('+data+')');
+		
+		var cpuFrequency=device.cpu;
+		if(cpuFrequency!=null&&cpuFrequency.length>0){
+			document.getElementById('cpuinfo').innerHTML = cpuFrequency;
+		}
+		
+        var osVersion=device.os;
+		if(osVersion!=null&&osVersion.length>0){
+			document.getElementById('osver').innerHTML =osVersion;
+		}
+		var manufacturer=device.manufacturer;
+		if(manufacturer!=null&&manufacturer.length>0){
+			document.getElementById('manufacturer').innerHTML = manufacturer;
+		}
+
+		var keyboard= device.keyboard;
+		if(keyboard!=null&&keyboard.length>0){
+			document.getElementById('keyboard').innerHTML = keyboard;
+		}
+		
+		var bluetooth=device.blueTooth;
+		if(bluetooth!=null&&bluetooth.length>0){
+			document.getElementById('bluetooth').innerHTML = bluetooth;
+		}
+
+		var wifi=device.wifi;
+		if(wifi!=null&&wifi.length>0){
+			document.getElementById('wifi').innerHTML = wifi;
+		}
+		var camera=device.camera;
+		if(camera!=null&&camera.length>0){
+			document.getElementById('camera').innerHTML = camera;
+		}
+
+		var gps=device.gps;
+		if(gps!=null&&gps.length>0){
+			document.getElementById('gps').innerHTML = gps;
+		}
+		var gprs=device.gprs;
+		if(gprs!=null&&gprs.length>0){
+			document.getElementById('gprs').innerHTML = gprs;
+		}
+
+		var touch=device.touch;
+		if(touch!=null&&touch.length>0){
+			document.getElementById('touch').innerHTML = touch;
+		}
+		
+		var imei=device.imei;
+		if(imei!=null&&imei.length>0){
+			document.getElementById('imei').innerHTML = imei;
+		}   
+		var deviceToken = device.deviceToken;
+		if(deviceToken!=null&&deviceToken.length>0){
+			document.getElementById('deviceToken').innerHTML = deviceToken;
+		}
+			var softToken = device.softToken;
+		if(softToken!=null&&softToken.length>0){
+			document.getElementById('softToken').innerHTML = softToken;
+		}
+		var connectStatus=device.connectStatus;
+		if(connectStatus!=null&&connectStatus.length>0){
+			alert("ConnectStatus:"+connectStatus);
+			if(connectStatus==-1){
+				document.getElementById('connectStatus').innerHTML = "网络不可用";		
+			}else if(connectStatus==0){
+				document.getElementById('connectStatus').innerHTML = "WIFI网络";		
+			}else if(connectStatus==1){
+				document.getElementById('connectStatus').innerHTML = "3G网络";	
+			}else if(connectStatus==2){
+				document.getElementById('connectStatus').innerHTML = "2G网络";		
+			}
+		}
+		var restDiskSize = device.restDiskSize;
+		if(restDiskSize!=null&&restDiskSize.length>0){
+			alert("RestDiskSize:"+restDiskSize);
+			document.getElementById('restDiskSize').innerHTML = restDiskSize;
+		}
+		var operatorName=device.mobileOperatorName;
+		if(operatorName!=null&&operatorName.length>0){
+			alert("mobileOperatorName:"+operatorName);
+			document.getElementById('mobileOperatorName').innerHTML = operatorName;		
+		}	
+		
+		var macAddress=device.macAddress;
+		if(macAddress!=null&&macAddress.length>0){
+			document.getElementById('macAddress').innerHTML = macAddress;		
+		}	
+		
+		var deviceToken=device.deviceToken;
+		if(deviceToken!=null&&deviceToken.length>0){
+			document.getElementById('deviceToken').innerHTML = deviceToken;		
+		}
+        var model=device.model;
+		if(model!=null&&model.length>0){
+			document.getElementById('model').innerHTML = model;
+		}
+        var resolutionRatio=device.resolutionRatio;
+		if(resolutionRatio!=null&&resolutionRatio.length>0){
+			document.getElementById('resolutionRatio').innerHTML = resolutionRatio;
+		}
+	}
+	
+	   uexWidgetOne.cbError=function(opCode,errorCode,errorInfo){
+	       alert(errorInfo);
+	       }
+}
+</script>
+</head>
+
+<body>
+	<div class="tit">设备信息功能</div>
+	<div class="conbor">
+		<div class="consj">
+			<span>1.获取CPU信息：</span> <input class="btn" type="button"
+				value="CPU信息" onclick="uexDevice.getInfo('0');">
+			<div class="tcxx" id="cpuinfo"></div>
+			<span>2.获取系统版本:</span> <input class="btn" type="button" value="系统版本"
+				onclick="uexDevice.getInfo('1');">
+			<div class="tcxx" id="osver"></div>
+			<span>3.获取厂商信息：</span> <input class="btn" type="button" value="厂商信息"
+				onclick="uexDevice.getInfo('2');">
+			<div class="tcxx" id="manufacturer"></div>
+			<span>4.获取键盘信息：</span> <input class="btn" type="button" value="键盘信息"
+				onclick="uexDevice.getInfo('3');">
+			<div class="tcxx" id="keyboard"></div>
+			<span>5.获取蓝牙信息：</span> <input class="btn" type="button" value="蓝牙信息"
+				onclick="uexDevice.getInfo('4');">
+			<div class="tcxx" id="bluetooth"></div>
+			<span>6.获取WIFI信息：</span> <input class="btn" type="button"
+				value="WIFI信息" onclick="uexDevice.getInfo('5');">
+			<div class="tcxx" id="wifi"></div>
+			<span>7.获取摄像头信息：</span> <input class="btn" type="button"
+				value="摄像头信息" onclick="uexDevice.getInfo('6');">
+			<div class="tcxx" id="camera"></div>
+			<span>8.获取GPS信息：</span> <input class="btn" type="button"
+				value="GPS信息" onclick="uexDevice.getInfo('7');">
+			<div class="tcxx" id="gps"></div>
+			<span>9.获取GPRS信息：</span> <input class="btn" type="button"
+				value="GPRS信息" onclick="uexDevice.getInfo('8');">
+			<div class="tcxx" id="gprs"></div>
+			<span>10.获取触屏信息：</span> <input class="btn" type="button" value="触屏信息"
+				onclick="uexDevice.getInfo('9');">
+			<div class="tcxx" id="touch"></div>
+			<span>11.获取IMEI信息：</span> <input class="btn" type="button"
+				value="IMEI信息" onclick="uexDevice.getInfo('10');">
+			<div class="tcxx" id="imei"></div>
+
+			<span>12.获取网络状态：</span> <input class="btn" type="button" value="网络状态"
+				onclick="uexDevice.getInfo('13');">
+			<div class="tcxx" id="connectStatus"></div>
+
+			<span>13.获取磁盘剩余空间：</span> <input class="btn" type="button"
+				value="磁盘空间" onclick="uexDevice.getInfo('14');">
+			<div class="tcxx" id="restDiskSize"></div>
+			
+				<span>14.获取电信运营商的名称：</span> <input class="btn" type="button"
+				value="运营商名称" onclick="uexDevice.getInfo('15');">
+			<div class="tcxx" id="mobileOperatorName"></div>
+			
+				<span>15.获取WIFI mac地址：</span> <input class="btn" type="button"
+				value="mac地址" onclick="uexDevice.getInfo('16');">
+			<div class="tcxx" id="macAddress"></div>
+			
+            <span>16.获取DeviceToken：</span> <input class="btn" type="button"
+				value=DeviceToken onclick="uexDevice.getInfo('11');">
+			<div class="tcxx" id="deviceToken"></div>
+			
+			 <span>20.获取SoftToken：</span> <input class="btn" type="button"
+				value=SoftToken onclick="uexDevice.getInfo('20');">
+			<div class="tcxx" id="softToken"></div>
+			
+            <span>17.获取硬件型号：</span> <input class="btn" type="button"
+                    value=型号 onclick="uexDevice.getInfo('17');">
+                <div class="tcxx" id="model"></div>
+                <span>18.获取手机分辨率：</span> <input class="btn" type="button"
+                    value=分辨率 onclick="uexDevice.getInfo('18');">
+                    <div class="tcxx" id="resolutionRatio"></div>
+			<div class="tit">手机震动测试</div>
+			<div class="conbor">
+				<div class="consj">
+					<span>1.震动</span> <span>输入震动持续时间（毫秒为单位）：</span> <input type="text"
+						class="textbox" id="time" value="500"></input> <input class="btn"
+						type="button" value="震动"
+						onclick="uexDevice.vibrate(document.getElementById('time').value);">
+					<input class="btn" type="button" value="停止震动"
+						onclick="uexDevice.cancelVibrate();">
+				</div>
+			</div>
+			<div class="tit">屏幕方向切换测试</div>
+			<div class="conbor">
+				<div class="consj">
+					<span>1. 屏幕方向切换</span> <span>当前的屏幕方向为：</span>
+					<div class="tcxx" id="data"></div>
+				</div>
+			</div>
+			<span>12.获取iphone平台deviceToken：</span> <input class="btn"
+				type="button" value="获取device-token"
+				onclick="uexDevice.getInfo('11');">
+			<div class="tcxx" id="deviceToken"></div>
+			<input class="btn" type="button" value="返回"
+				onclick="uexWindow.back();">
+		</div>
+	</div>
+</body>
+</html>

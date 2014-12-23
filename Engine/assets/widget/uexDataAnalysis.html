@@ -1,0 +1,102 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" /><link rel="stylesheet" type="text/css" href="css/index.css">
+<title>音乐功能</title>
+<script type="text/javascript">
+	//自定义次数事件
+	function setEvent(){
+        //report 
+        //var eventId = "iOSeventClick";
+        var reportStr = '{"次数统计":"1","test":"是的","12":"55"}';
+        //uexDataAnalysis.setEvent(inEventId,inAttri);
+        uexDataAnalysis.setEvent(document.getElementById('SetEvent').value,reportStr);
+	}
+	function beginEvent(){
+		//var inEventId ="iOSeventDuration";//从appcan注册
+		var inLabel = '{"时长统计":"2","test2":"是的","12":"55"}';
+        var keyword = "music";
+        //uexDataAnalysis.beginEvent(inEventId,[inKeyWord,inAttri]);
+        //inEventId 从appcan平台注册；
+        //inKeyWord 自行命名以区别注册统一EventId上报数据，在客户端认为inEventid 与inkeyword 共同组成唯一的键，但在服务器段识别EventId为唯一键，不受影响；[可选]
+        //inAttri  自定义事件属性；json字符串；[可选]
+        uexDataAnalysis.beginEvent(document.getElementById('BeginAndEndEvent').value,document.getElementById('BeginAndEndEvent').value,inLabel);
+	}
+    function endEvent(){
+		//var inEventId ="eventDuration";//从appcan注册
+		var inLabel = '{"时长统计":"2","test2":"是的","12":"55"}';
+        var keyword = "music";
+        //uexDataAnalysis.beginEvent(inEventId,[inKeyWord,inAttri]);
+        //inEventId 从appcan平台注册；
+        //inKeyWord 自行命名以区别注册统一EventId上报数据，在客户端认为inEventid 与inkeyword 共同组成唯一的键，但在服务器段识别EventId为唯一键，不受影响；[可选]
+        //inAttri  自定义事件属性；json字符串；[可选]
+        uexDataAnalysis.endEvent(document.getElementById('BeginAndEndEvent').value,document.getElementById('BeginAndEndEvent').value);
+	}
+    window.uexOnload = function(){
+        uexDataAnalysis.cbGetAuthorizeID = getAuthorizeID;
+		uexDataAnalysis.cbUpdateParams = upParams;
+		uexDataAnalysis.cbGetDisableWindows= getDisableWindows;
+		uexDataAnalysis.cbGetDisablePlugins= getDisablePlugins;
+		uexDataAnalysis.cbGetUserInfo=getUserInfo;
+		uexDataAnalysis.cbUpdateParams=function(opCode,dataType,data){
+            //console.log('在线参数：'+data);
+			alert(data);
+        };
+    }
+	function getUserInfo(opId, dataType, data){
+		alert(data);
+	}
+	function getDisableWindows(opId, dataType, data){
+		alert(data);
+	}
+	function getDisablePlugins(opId, dataType, data){
+		alert(data);
+	}
+    function getAuthorizeID(opCode,dataType,sID){
+        alert("sID="+sID);
+    }
+	function upParams(opCode,dataType,data){
+	alert(""+data);
+	}
+</script>
+</head>
+
+<body>
+	<div class="tit">数据统计分析</div>
+	<div class="conbor">
+		<div class="consj">
+			<span>1.自定义事件上报，需要从AppCan平台注册自定义事件eventID，统计事件发生次数</span>
+			<span>事件ID：</span>
+			<input class="textbox" id="SetEvent" type="text" value="SetEvent">
+			<input class="btn" type="button" value="点击" id="clickId" onclick="setEvent();"><br/>
+            <span>2.自定义事件，开始自定义，从平台注册eventId,统计时长，可以用keyword 来区别注册同一个EventId,但是上报不同的数据，attri是json字符串，上报到服务器的属性值</span>
+			<span>事件ID：</span>
+			<input class="textbox" id="BeginAndEndEvent" type="text" value="BeginAndEndEvent">
+            <input class="btn" type="button" value="开始自定义事件" id="clickStartId" onclick="beginEvent();"><br/>
+            <span>3.关闭自定义统计时长事件</span>
+            <input class="btn" type="button" value="结束自定义事件" id="clickEndId" onclick="endEvent();"><br/>
+            <span>4.获取服务器配置策略</span>
+            <input class="btn" type="button" value="获取参数" id="clickEndId" onclick="uexDataAnalysis.updateParams();"><br/>
+            <span>2012.11.27###################################################</span>   
+            <span>5.企业MAM管理 获取AuthorizeID，可以自己调用，在应用开启首页如果获取到ID,会主动回调首页的js,如果有需要自己处理</span>
+            <input class="btn" type="button" value="获取授权id" id="clickEndId" onclick="uexDataAnalysis.getAuthorizeID();"><br/>
+           
+		    <span>6.获取授权信息</span>
+            <input class="btn" type="button" value="获取授权信息" id="clickEndId" onclick="uexDataAnalysis.getUserInfo();"><br/>
+			 <span>7.获取禁用窗口</span>
+            <input class="btn" type="button" value="获禁用窗口" id="clickEndId" onclick="uexDataAnalysis.getDisableWindows();"><br/>
+			 <span>8.获取禁用插件</span>
+            <input class="btn" type="button" value="获取禁用插件" id="clickEndId" onclick="uexDataAnalysis.getDisablePlugins();"><br/>
+		   
+		    <span>9.企业MAM管理 获取AuthorizeID，失效以后重新获得申请</span>
+            <input class="btn" type="button" value="重新获取授权id" id="clickEndId" onclick="uexDataAnalysis.refreshGetAuthorizeID();"><br/>
+			 <span>10.应用崩溃日志上报，前提是开启启动上报功能，否则无法上报，开发版本默认是为开启状态，标准版则提供开放JS，配置是否启动上报，只需在应用每次启动配置一次即可</span>
+            <input class="btn" type="button" value="配置上报" id="clickEndId" onclick="uexDataAnalysis.setErrorReport(1);"><br/>
+			<input class="btn" type="button" value="返回" onclick="uexWindow.back();">
+     
+			
+		</div>
+	</div>
+</body>
+</html>

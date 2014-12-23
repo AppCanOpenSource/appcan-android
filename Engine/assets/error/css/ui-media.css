@@ -1,0 +1,124 @@
+
+@media all
+{
+	html
+	{
+		font-size:16px;
+	}
+}
+@media all and (min-width:140px) and (min-height:220px)
+{
+	html
+	{
+		font-size:9px;
+	}
+}
+
+@media all and (min-width: 220px) and  (min-height: 140px){
+	html {
+		font-size: 9px;
+	}
+}
+@media all and (min-width:210px) and (min-height:280px),(min-width:280px) and (min-height:210px),(min-width:280px) and (min-height:280px)
+{
+	html
+	{
+		font-size:14px;
+	}
+}
+
+@media all and (min-width:300px) and (min-height:460px),(min-width:460px) and (min-height:300px)
+{
+	html
+	{
+		font-size:16px;
+	}
+}
+
+@media all and (min-width:340px) and (min-height:620px),(min-width:620px) and (min-height:340px)
+{
+	html
+	{
+		font-size:20px;
+	}
+}
+
+@media all and (min-width:420px) and (min-height:760px) and (max-height:900px),
+			   (min-width:760px) and (max-width:900px) and (min-height:420px)
+{
+	html
+	{
+		font-size:24px;
+	}
+}
+@media all and (min-width:500px) and (min-height:900px) ,(min-width:900px) and (min-height:500px)
+{
+	html
+	{
+		font-size:28px;
+	}
+}
+@media all and (min-width:1000px) and (min-height:740px),(min-width:740px) and (min-height:1000px)
+{
+	html
+	{
+		font-size:20px;
+	}
+}
+
+@media all and (min-width:1200px) and (min-height:600px),(min-width:600px) and (min-height:1200px)
+{
+	html
+	{
+		font-size:32px;
+	}
+}
+
+@media all and (device-width:1024px) ,(device-width:768px)
+{
+	html
+	{
+		font-size:20px;
+	}
+}
+
+@media all and (device-width:960px) and (device-height:640px),(device-width:640px) and (device-height:960px)
+{
+	html
+	{
+		font-size:32px;
+	}
+}
+
+@media all and (device-width:480px) and (min-device-height:800px) and (max-device-height:900px),
+			   (min-device-width:800px) and (max-device-width:900px) and (device-height:480px)
+{
+	html
+	{
+		font-size:24px;
+	}
+}
+
+@media all and (device-width:360px) and (device-height:640px),(device-width:640px) and (device-height:360px)
+{
+	html
+	{
+		font-size:20px;
+	}
+}
+
+@media all and (device-width:320px) and (device-height:480px),(device-width:480px) and (device-height:320px)
+{
+	html
+	{
+		font-size:16px;
+	}
+}
+
+@media all and (device-width:240px) and (device-height:320px),(device-width:320px) and (device-height:240px),(device-width:320px) and (device-height:320px)
+{
+	html
+	{
+		font-size:14px;
+	}
+} 

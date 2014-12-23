@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="css/index.css">
+<title>图片标注经纬度</title>
+<script type="text/javascript">
+
+	window.uexOnload = function(){
+        uexPhotoMarkGPS.cbDidFinishPhotoMarkGPS = function(mid,type,data){
+         	alert(data);
+         }
+	}
+	
+</script>
+</head>
+<body>
+	<div class="tit">图片标注经纬度</div>
+	<div class="conbor">
+			<div class="consj">
+				<input class="btn" type="button" value="调用相机" onclick="uexPhotoMarkGPS.open();">
+			    <input class="btn" type="button" value="返回" onclick="uexWindow.back();">
+			 </div>
+		</div>
+</body>
+</html>

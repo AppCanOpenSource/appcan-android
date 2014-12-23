@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+  <head>
+    <title>
+    </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+    <link rel="stylesheet" href="css/ui-color.css">
+	<link rel="stylesheet" href="css/ui-res.css">
+    <link rel="stylesheet" href="css/ui-btn.css">
+    <link rel="stylesheet" href="css/index.css">
+	<style>
+		input[type="text"]{
+			margin:.8em;
+			font-size:1em;
+		}
+	</style>
+    <script src="js/zy_control.js">
+    </script>
+    <script src="js/zy_click.js">
+    </script>
+    <script type="text/javascript">
+		function Open(){
+        uexScratchCard.open("50","150","50","100","res://icon.png","res://pano_sphere.jpg","189");
+    }
+    function Close(){
+        uexScratchCard.close();
+    }
+    window.uexOnload = function() {
+        uexScratchCard.cbFinish = function(id,per){
+            alert("id:"+id+"\nper"+per);
+        }
+    }
+		</script>
+  </head>
+<body class="um-vp " ontouchstart>
+	<div class="conbor">
+		<div class="consj ub">
+		<input class="btn"  type="button"value="打开刮刮卡" onclick="Open();">
+        <input class="btn" style="margin-left:20px;" type="button" value="close" onclick="Close();">
+        
+		</div>
+	</div>
+</body>
+<script>
+
+</script>
+</html>

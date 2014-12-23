@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+
+    <!-- common use通用字符串 -->
+    <string name="app_name">appcantemplate</string>
+    <string name="back">Back</string>
+    <string name="confirm">Ok</string>
+    <string name="cancel">Cancel</string>
+    <string name="prompt">Prompt</string>
+    <string name="complete">complete</string>
+    <string name="path_error">Path error!</string>
+    <string name="settings">Settings</string>
+    <string name="save">Save</string>
+
+    <!-- browser use -->
+    <string name="browser_exitdialog_app_text">exit application?</string>
+    <string name="browser_exitdialog_msg">Exit Application</string>
+    <string name="browser_dialog_error">Error</string>
+    <string name="browser_init_error">Application broken!</string>
+    <string name="widgetone_version">4030.1.02.001.00.00.9999.000</string>
+
+    <!-- WidgetOne use -->
+    <string name="can_not_find_suitable_app_perform_this_operation">can not  find app perform this operation</string>
+    <string name="exit">exit</string>
+    <string name="confirm_delete">confirm delete</string>
+    <string name="ma">ma?</string>
+    <string name="exit_message_server">app stop server</string>
+    <string name="exit_message_appid">app id forbidden</string>
+    
+
+
+
+    <!-- error callback use string -->
+    <string name="error_parameter">parameter error!</string>
+    <string name="error_sdcard_is_not_available">sdcard is not avaliable!</string>
+     <string name="error_file_does_not_exist">file does not exist</string>
+     
+      <!-- error no permisson -->
+    <string name="error_no_permisson_RW">no permisson read</string>
+    <string name="error_no_permisson_INTERNET">no permission write</string>
+</resources>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+  <head>
+    <title>
+    </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+    <link rel="stylesheet" href="css/ui-color.css">
+	<link rel="stylesheet" href="css/ui-res.css">
+    <link rel="stylesheet" href="css/ui-btn.css">
+    <link rel="stylesheet" href="css/index.css">
+	<style>
+		input[type="text"]{
+			margin:.4em 0;
+		}
+	</style>
+    <script src="js/zy_control.js">
+    </script>
+    <script src="js/zy_click.js">
+    </script>
+    <script type="text/javascript">
+		window.uexOnload = function() {
+		uexWidgetOne.onError = function(opCode, errorCode, errorDesc) {
+			alert(errorCode + ":" + errorDesc);
+		}
+        //回调
+        uexImageFilter.onCallBack = function(data){
+            alert(data);
+            document.getElementById('imageResult').innerHTML = data;
+        }
+	uexFileMgr.cbExplorer=function (opCode,dataType,data){
+			document.getElementById('fromPhotoPath').value = data;
+	}
+	
+    }
+    //三个参数：上传路径，保存路径，保存图片名
+    function openImgFilter(phoneType){
+		if(1 == phoneType){
+		    var openPath = document.getElementById('imagePath').value;
+	            var savePath = "res://";
+	            var imageName = "image123.png";
+	            uexImageFilter.openImageFilter(openPath,savePath,imageName);
+		}else if(2 == phoneType){
+		   alert(phoneType)
+		   var fromPhotoPath = document.getElementById("fromPhotoPath").value;
+		   var toPhotoPath = document.getElementById("toPhotoPath").value;
+		   var toPhotoName = document.getElementById("photoName").value;
+	       uexImageFilter.openImageFilter(fromPhotoPath,toPhotoPath,toPhotoName);
+		}
+ 
+        //alert("open");
+    }
+        
+    function close1(){
+        uexImageFilter.close();
+    }
+		</script>
+  </head>
+<body class="um-vp " ontouchstart>
+	<div class="conbor">
+            <div class="consj">
+                <span>打开图片路径(IOS)</span>
+                <input type="text" class="textbox" id="imagePath" value="res://pano_l.jpg">
+                <input class="btn" type="button" value="打开图片" onclick="openImgFilter('1');"/>
+                <span>保存路径(IOS)</span>
+                <div class="tcxx" id="imageResult"></div>
+                <input class="btn" type="button" value="关闭" onclick = "close1();"/>
+            </div>
+            <br><br>
+            <span>Android测试Case</span>
+	    	<div class="consj">
+				<span>需处理的图片路径(Android)</span>
+				<input class="btn" type="button" value="选择图片" onclick="uexFileMgr.explorer('');">
+		        <span>选择好的图片路径(Android)</span>
+				<input id="fromPhotoPath" type="text" class="textbox" value="">
+				<span>保存的图片路径(Android)</span>
+				<input class="textbox" type="text" id="toPhotoPath" value="/mnt/sdcard/abc/">
+				<span>图片名(Android)</span>
+				<input class="textbox" type="text" id="photoName" value="2.png">
+		        <input class="btn" type="button" value="打开图片" onclick="openImgFilter('2');"/> 
+				<br>  
+            </div>
+        </div>
+</body>
+<script>
+
+</script>
+</html>

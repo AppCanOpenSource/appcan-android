@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="css/index.css">
+<title>输入框</title>
+<script type="text/javascript">
+var cText = 0;
+var cJson = 1;
+var cInt = 2;
+
+window.uexOnload = function() {
+	uexInput.cbCreate = function(opCode,dataType,data){
+		switch(dataType){
+			case cText:
+			break;
+			case cJson:
+				alert("uex.cJSON");
+				break;
+			case cInt:
+            if(data == '0')
+				alert("创建成功");
+				break;
+			default:
+				alert("Error");
+		}
+	};
+	
+	uexInput.onButtonClick=function (btnType,btnName,textContent){
+        alert(textContent);
+	};
+	uexInput.onError=function(opCode,errorCode,errorDesc){
+		alert(errorCode+":"+errorDesc);
+    };
+}
+    function create(){
+        var jsstr = '{"background": "bg-img.png","inputType": "0", "items": [{"type": "0","name": "itemFace","emotion": {"normal": "face.png",                      "pressed": "face-act.png",   "default":"true"       }, "keyboard": { "normal": "keyb.png","pressed": "keyb-act.png" } },{"type": "1",                               "name": "itemInput",        "defText": "默认文字",            "defHint": "提示语",                  "bg": "input_bg.png",                "autofill": "true"}, { "type": "2", "name": "itemBtn","label": "", "bg": "res://face.png"  }, { "type": "2", "name": "itemBtn2","label": "", "bg": "res://face.png"  }]}'
+        uexInput.create(jsstr);
+    }
+</script>
+</head>
+
+<body>
+    <span>1.create</span>
+    <input class="btn" type="button" value="创建输入框" onclick="create();"/>
+    <span>2.cleartext</span> 
+    <input class="btn" type="button" value="清除内容"
+    onclick=" uexInput.clearText();"/>  
+    <span>3.close</span> 
+    <input class="btn" type="button" value="关闭"
+    onclick=" uexInput.close();"/>  
+        
+<input class="btn" type="button" value="返回" onclick="uexWindow.back();">
+</body>
+</html>

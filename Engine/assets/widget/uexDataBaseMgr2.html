@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="css/index.css">
+<title>数据库功能</title>
+<script type="text/javascript">
+var cText = 0;
+var cJson = 1;
+var cInt = 2;
+
+	var dbName; 
+	function createDB(){
+		dbName = document.getElementById('name').value;
+		uexDataBaseMgr.openDataBase(dbName,1);
+		uexDataBaseMgr.cbOpenDataBase = createDBCallBack;
+	}	
+	function transaction(){
+		alert("hello");
+		uexDataBaseMgr.transaction(dbName,1,inFunc);
+		uexDataBaseMgr.cbTransaction = transactionCallBack;
+		//uexDataBaseMgr.beginTransaction(1);
+		//uexDataBaseMgr.cbBeginTransaction = beginTransactionCallBack;
+		//drop table testTable是删除表；DELETE FROM testTable WHERE _id = 1删除第一项
+	}
+	function inFunc(){
+		uexDataBaseMgr.executeSql(dbName,1,document.getElementById('transactiontData').value);
+		uexDataBaseMgr.cbExecuteSql = null;
+	}
+
+	function transactionCallBack(opid,type,data){
+		alert("back");
+	}
+
+</script>
+</head>
+
+<body>
+	<div class="tit">数据库功能</div>
+	<div class="conbor">
+		<div class="consj">
+		<span>1.打开数据库：</span>
+		<span>数据库名称：</span>
+		<input class="textbox" id="name" type="text" value="uexDB" >
+		<!--<span>数据库版本号：</span>
+		<input class="textbox" id="ver" type="text" value="1" > -->
+		<input class="btn" type="button" value="打开数据库"
+		onclick="createDB();">
+		<!--<span>2.创建表：</span>
+		<textarea class="tcxx" id = "createTable">
+CREATE TABLE testTable (_id  INTEGER PRIMARY KEY,name TEXT)</textarea>
+		<input class="btn" type="button" value="创建表"
+		onclick="createTable();">
+		<span>3.插入数据：</span>
+		<textarea class="tcxx" id = "insertData">
+INSERT INTO testTable (name) VALUES ('这是测试')</textarea>
+		<input class="btn" type="button" value="插入数据"
+		onclick="insertData();">
+		<span>4.查询数据：</span>
+		<textarea class="tcxx" id = "selectData">
+SELECT * FROM testTable</textarea>
+		<input class="btn" type="button" value="查询数据"
+		onclick="selectData();">-->
+		<span>5.事务：</span>
+		<textarea class="tcxx" id = "transactiontData">
+			DELETE FROM testTable WHERE _id = 1</textarea>
+		<input class="btn" type="button" value="事务"
+		onclick="transaction();"/>
+		<input class="btn" type="button" value="返回" onclick="uexWindow.back();">
+		</div>
+	</div>
+</body>
+</html>

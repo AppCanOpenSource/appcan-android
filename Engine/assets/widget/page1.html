@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    <head>
+        <title></title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-btn.css">
+        <link rel="stylesheet" href="css/ui-base.css">
+        <link rel="stylesheet" href="css/ui-box.css">
+        <link rel="stylesheet" href="css/ui-color.css">
+		<link rel="stylesheet" href="css/ui-res.css">
+        <script src="js/zy_control.js">
+        </script>
+        <script src="js/zy_click.js">
+        </script>
+        <script>
+        </script>
+    </head>
+    <body class="um-vp c-wh" ontouchstart>
+        <div id="page_0" class="up ub ub-ver" tabindex="0">
+            <!--header开始-->
+            <div id="header" class="uh c-org c-m1 t-wh ub">
+            	<div class="umw4" ontouchstart="zy_touch()" onclick="">
+               <!--按钮开始-->
+ <div class="btn btn-l btn-a ub ub-ac " onclick="goback();">       
+              <div class="ulim">返回</div>       
+          </div>
+<!--按钮结束--> <!--插入按钮控件-->
+            	</div>
+                <h1 class="ut ub-f1 ulev0 ut-s tx-c" tabindex="0">窗口二</h1>
+				<div class="umw4" ontouchstart="zy_touch()" onclick="">
+                <!--插入按钮控件-->
+            	</div>
+            </div>
+            <!--header结束--><!--content开始-->
+            <div id="content" class="ub-f1 tx-l t-bla ub-img6 res10">
+                
+            </div>
+            <!--content结束--><!--footer开始-->
+            <div id="footer" class="uf c-m2 c-bla t-wh">
+                <h1 class="ut ulev-2 tx-c" tabindex="0">(c) Copyright 3G2WIN and others 2011.
+                    <br>
+                    All rights reserved.
+                </h1>
+            </div>
+            <!--footer结束-->
+        </div>
+    </body>
+    <script>
+    	zy_init();
+        window.uexOnload = function(type){
+            if (!type) {
+                zy_con("content", "page1_content.html", 0, $$("header").offsetHeight);
+            }
+			window.onorientationchange=window.onresize=function()
+			{
+				zy_resize("content",0,$$("header").offsetHeight);				
+			}
+        }
+		function goback(){
+			uexWindow.close('-1');
+		}
+    </script>
+</html>

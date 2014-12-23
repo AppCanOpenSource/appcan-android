@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uexplugins>
+    <plugin className="org.zywx.wbpalmstar.plugin.uexmultiHttp.EUExXmlHttpMgr" uexName="uexXmlHttpMgr">
+        <method name="open" />
+        <method name="setPostData" />
+        <method name="setCertificate" />
+        <method name="send" />
+        <method name="setInputStream" />
+        <method name="close" />
+        <method name="setHeaders" />
+        <method name="setBody" />
+        <method name="setAppVerify" />
+    </plugin>
+    <plugin className="org.zywx.wbpalmstar.plugin.uexuploadermgr.EUExUploaderMgr" uexName="uexUploaderMgr" version="3.0" build="0">
+        <method name="createUploader" />
+        <method name="closeUploader" />
+        <method name="uploadFile" />
+    </plugin>
+    <plugin className="org.zywx.wbpalmstar.plugin.uexupdate.AutoUpdateListener" startup="true" />
+    <plugin className="org.zywx.wbpalmstar.plugin.uexupdate.EUExUpdate" uexName="uexUpdate">
+        <method name="doUpdate" />
+    </plugin>
+    <plugin className="org.zywx.wbpalmstar.plugin.uexsms.EUExSMS" uexName="uexSMS" version="3.0" build="0">
+        <method name="open" />
+        <method name="send" />
+    </plugin>
+    <plugin className="org.zywx.wbpalmstar.plugin.uexlocation.EUExLocation" uexName="uexLocation" version="3.0" build="0">
+        <method name="openLocation" />
+        <method name="getAddress" />
+        <method name="closeLocation" />
+    </plugin>
+    <plugin className="org.zywx.wbpalmstar.plugin.ueximagebrowser.EUExImageBrowser" uexName="uexImageBrowser" version="3.0" build="0">
+        <method name="pick" />
+        <method name="open" />
+        <method name="save" />
+        <method name="cleanCache" />
+    </plugin>
+    <plugin className="org.zywx.wbpalmstar.plugin.uexfilemgr.EUExFileMgr" uexName="uexFileMgr" version="3.0" build="0">
+        <method name="createFile" />
+        <method name="createDir" />
+        <method name="openFile" />
+        <method name="deleteFileByPath" />
+        <method name="deleteFileByID" />
+        <method name="isFileExistByPath" />
+        <method name="isFileExistByID" />
+        <method name="getFileTypeByPath" />
+        <method name="getFileTypeByID" />
+        <method name="explorer" />
+        <method name="multiExplorer" />
+        <method name="seekFile" />
+        <method name="seekBeginOfFile" />
+        <method name="seekEndOfFile" />
+        <method name="writeFile" />
+        <method name="readFile" />
+        <method name="getFileSize" />
+        <method name="getFilePath" />
+        <method name="getFileRealPath" />
+        <method name="closeFile" />
+        <method name="getReaderOffset" />
+        <method name="readPercent" />
+        <method name="readNext" />
+        <method name="readPre" />
+        <method name="openSecure" />
+        <method name="createSecure" />
+    </plugin>
+    <plugin className="org.zywx.wbpalmstar.plugin.uexdownloadermgr.EUExDownloaderMgr" uexName="uexDownloaderMgr" version="3.0" build="0">
+        <method name="createDownloader" />
+        <method name="download" />
+        <method name="closeDownloader" />
+        <method name="getInfo" />
+        <method name="clearTask" />
+    </plugin>
+    <plugin className="org.zywx.wbpalmstar.plugin.uexdevice.EUExDevice" uexName="uexDevice" version="3.0" build="0">
+        <method name="vibrate" />
+        <method name="cancelVibrate" />
+        <method name="getInfo" />
+    </plugin>
+    <plugin className="org.zywx.wbpalmstar.plugin.uexdataanalysis.DataAnalysisEngineEventListener" startup="true" />
+    <plugin className="org.zywx.wbpalmstar.plugin.uexdataanalysis.EUExDataAnalysis" uexName="uexDataAnalysis">
+        <method name="setEvent" />
+        <method name="beginEvent" />
+        <method name="endEvent" />
+        <method name="setErrorReport" />
+    </plugin>
+    <plugin className="org.zywx.wbpalmstar.plugin.uexcontacts.EUExContact" uexName="uexContact" version="3.0" build="0">
+        <method name="open" />
+        <method name="multiOpen" />
+        <method name="addItem" />
+        <method name="deleteItem" />
+        <method name="searchItem" />
+        <method name="modifyItem" />
+        <method name="addItemWithVCard" />
+    </plugin>
+    <plugin className="org.zywx.wbpalmstar.plugin.uexcall.EUExCall" uexName="uexCall" version="3.0" build="0">
+        <method name="call" />
+        <method name="dial" />
+    </plugin>
+    <plugin className="org.zywx.wbpalmstar.plugin.uexbaidumap.EUExBaiduMap" uexName="uexBaiduMap" version="3.0" build="0">
+        <method name="open" />
+        <method name="clean" />
+        <method name="addMark" />
+        <method name="addMarkNewStyle" />
+        <method name="clearMarks" />
+        <method name="getCurrentLocation" />
+        <method name="hide" />
+        <method name="show" />
+        <method name="setCenter" />
+        <method name="setZoomLevel" />
+        <method name="setTrackBeginImage" />
+        <method name="setTrackEndImage" />
+        <method name="setTrackColor" />
+        <method name="addOneTrack" />
+        <method name="clearAllTrack" />
+        <method name="setType" />
+        <method name="setZoomEnable" />
+        <method name="zoomIn" />
+        <method name="zoomOut" />
+        <method name="removeMark" />
+        <method name="zoomToSpan" />
+        <method name="showUserLocation" />
+        <method name="hideUserLocation" />
+        <method name="addLineOverLayer" />
+        <method name="addCircleOverLayer" />
+        <method name="addPolygonOverLayer" />
+        <method name="clearOverLayers" />
+        <method name="suggestionSearch" />
+        <method name="poiSearchInCity" />
+        <method name="poiSearchNearBy" />
+        <method name="poiMultiSearchNearBy" />
+        <method name="poiSearchInBounds" />
+        <method name="poiMultiSearchInBounds" />
+        <method name="geocode" />
+        <method name="reverseGeocode" />
+        <method name="busLineSearch" />
+        <method name="setPoiPageCapacity" />
+        <method name="showRoutePlan" />
+        <method name="clearRoutePlan" />
+        <method name="showBubbleView1" />
+        <method name="showBubbleView2" />
+        <method name="showBubbleView3" />
+        <method name="updateMark" />
+        <method name="addAreaMark" />
+        <method name="updateAreaMark" />
+        <method name="clearAreaMarks" />
+        <method name="fastGetLocation" />
+        <method name="addMarkNewStyle" />
+        <method name="showBubbleView4" />
+        <method name="getBaiduFromGoogle" />
+    </plugin>
+</uexplugins>

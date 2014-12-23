@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+  <head>
+    <title>
+    </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <!--<link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+    <link rel="stylesheet" href="css/ui-color.css">
+	<link rel="stylesheet" href="css/ui-res.css">
+    <link rel="stylesheet" href="css/ui-btn.css">-->
+    <link rel="stylesheet" href="css/index.css">
+	<style>
+		input{
+			color: black;
+			padding: 1px 6px;
+			margin-left:6px;
+		}
+		input[type="text"]{
+			padding: .2em .4em;
+			margin:.4em .6em;
+			font-size:1em;
+		}
+		input[type="button"]{
+			padding: .6em .8em;
+			margin:.4em .6em;
+			font-size:1.2em;
+		}
+	</style>
+    <script src="js/zy_control.js">
+    </script>
+    <script src="js/zy_click.js">
+    </script>
+    <script type="text/javascript">
+	function addMark(){
+       var jssonstr = '{"markInfo":[{"id":"111","longitude":"116.404","latitude":"39.915","imageUrl":"http://www.cmkjz.com/uploads/allimg/100116/0134423.jpg","imageWidth":"60.0","imageHeight":"60.0","message":"this is beij","title":"我的位置"},{"id":"112","longitude":"116.450","latitude":"39.989","imageUrl":"http://82238.com/uploads/allimg/110519/2-110519130404.jpg","imageWidth":"60.0","imageHeight":"60.0","message":"this is beij","title":"我的位置"},{"id":"113","longitude":"116.351","latitude":"39.854","imageUrl":"http://www.qqhead.com/UploadFiles/2010-04/2010458740103062.gif","imageWidth":"30.0","imageHeight":"30.0","message":"this is shangh","title":"我的位置"}],"canShowCallout":"1"}';/* */
+        uexBaiduMap.addMark(jssonstr);
+    }
+    
+    function clearMarks(){ 
+        var idarr = ["111","112","113","114"];
+        uexBaiduMap.clearMarks(idarr);
+    }
+    function goBack(){
+        uexBaiduMap.hide();
+        
+    }
+    function goFront(){
+        uexBaiduMap.show();
+    }
+    
+    function setCenter(){
+    	uexBaiduMap.setCenter("116.309","39.977");//公司位置；'116.401','39.925'是天安门位置
+    }
+    
+    function setZoomLevel(){
+    	uexBaiduMap.setZoomLevel("3");
+    }
+    
+    function getCurrentLocation(){
+    	uexBaiduMap.getCurrentLocation();
+    }
+    function setType(){
+        //type 为0（标准地图）,1（卫星地图），2（打开实时路况），3（关闭实时路况）
+        var t=document.getElementById("type").value;
+        uexBaiduMap.setType(t);
+    }
+    function setZoomEnable(){ 
+        //1为允许，0为不允许
+        uexBaiduMap.setZoomEnable("1");
+    }
+	function setZoomDisable(){ 
+        //1为允许，0为不允许
+        uexBaiduMap.setZoomEnable("0");
+    }
+	function setScrollEnable(){
+        //1为允许，0为不允许
+        uexBaiduMap.setScrollEnable("1");
+    }
+    function setScrollDisable(){
+        //1为允许，0为不允许
+        uexBaiduMap.setScrollEnable("0");
+    }
+    function zoomToSpan(){
+        uexBaiduMap.zoomToSpan("0.05","0.05");
+    }
+    function showUserLocation(){
+        uexBaiduMap.showUserLocation();
+    }
+    function hideUserLocation(){
+        uexBaiduMap.hideUserLocation();
+    }
+    function addLineOverLayer(){
+        var jssonstr = '{"id":"150","fillColor":"#990033","strokeColor":"#990033","lineWidth":"2.0","property":[{"longitude":"116.232323","latitude":"39.021514"},{"longitude":"118.345","latitude":"40.567"}]}';//,{"longitude":"117","latitude":"38"},{"longitude":"120","latitude":"39"}
+        uexBaiduMap.addLineOverLayer(jssonstr);
+    }
+    function addCircleOverLayer(){
+         var jssonstr = '{"id":"151","longitude":"116.404","latitude":"39.915","radius":"5000","fillColor":"#4169E1","strokeColor":"#990033","lineWidth":"2.0"}';
+        uexBaiduMap.addCircleOverLayer(jssonstr);
+    }
+    function addMultiOverLayer(){
+     var jssonstr = '{"id":"152","fillColor":"#990033","strokeColor":"#990033","lineWidth":"2.0","property":[{"longitude":"116","latitude":"39"},{"longitude":"115","latitude":"38"},{"longitude":"117","latitude":"38"},{"longitude":"120","latitude":"39"}]}';
+        uexBaiduMap.addPolygonOverLayer(jssonstr);
+    }
+    function clearOverLayer(type){
+    	var idarr = [type];
+  	 	uexBaiduMap.clearOverLayers(idarr);
+    }
+     function clearOverLayers(){
+        uexBaiduMap.clearOverLayers();
+    }
+    function zoomIn(){
+        uexBaiduMap.zoomIn();
+    }
+    function zoomOut(){
+        uexBaiduMap.zoomOut();
+    }
+    function poiSearchInCity(){
+        uexBaiduMap.poiSearchInCity("北京","电影院","0");
+    }
+    function poiSearchNearBy(){
+        uexBaiduMap.poiSearchNearBy("餐厅","116.404","39.915","500","0");
+    }
+    function poiMultiSearchNearBy(){
+       // var jssonstr = '{"pageIndex":"0","longitude":"116.404","latitude":"39.915","radius":"1000","list":["酒店","餐厅"]}';
+        uexBaiduMap.poiMultiSearchNearBy(["酒店","餐厅"],'116.404','39.915','1000','0');
+    }
+    function poiMultiSearchNearByIOS(){
+        var jssonstr = '{"pageIndex":"0","longitude":"116.404","latitude":"39.915","radius":"1000","list":["酒店","餐厅"]}';
+        uexBaiduMap.poiMultiSearchNearBy(jssonstr);
+    }
+    function poiSearchInBoundsIOS(){
+        var jssonstr = '{"pageIndex":"0","ltLongitude":"116.404","ltLatitude":"39.915","rbLongitude":"116.408","rbLatitude":"39.920","key":"餐厅"}';
+        uexBaiduMap.poiSearchInBounds(jssonstr);
+    }
+    function poiMultiSearchInBoundsIOS(){
+        var jssonstr = '{"pageIndex":"0","ltLongitude":"116.404","ltLatitude":"39.915","rbLongitude":"116.408","rbLatitude":"39.920","list":["餐厅","电影院"]}';
+        uexBaiduMap.poiMultiSearchInBounds(jssonstr);
+    }
+    function poiSearchInBounds(){
+       // var jssonstr = '{"pageIndex":"0","ltLongitude":"116.404","ltLatitude":"39.915","rbLongitude":"116.408","rbLatitude":"39.920","key":"餐厅"}';
+        uexBaiduMap.poiSearchInBounds('餐厅','116.404','39.915','116.408','39.920','0');
+    }
+    function poiMultiSearchInBounds(){
+        var jssonstr = '{"pageIndex":"0","ltLongitude":"116.404","ltLatitude":"39.915","rbLongitude":"116.408","rbLatitude":"39.920","list":["餐厅","电影院"]}';
+       //uexBaiduMap.poiMultiSearchInBounds(["餐厅","电影院"],'116.404','39.915','116.408','39.920','0');
+        uexBaiduMap.poiMultiSearchInBounds(jssonstr);
+    }
+    function suggestionSearch(){
+        uexBaiduMap.suggestionSearch("酒店");
+    }
+    function showBusLineSearch(){
+       uexBaiduMap.busLineSearch("北京","717");
+    }
+    function showBusLineSearchIOS(){
+        uexBaiduMap.busLineSearch("北京","717","111");
+    }
+    function geocode(){
+        uexBaiduMap.geocode("北京","东长安街33号");
+//        uexBaiduMap.geocode("河北省","唐山市迁安市五重安乡更新庄村");
+
+    }
+    function reverseGeocode(){
+        uexBaiduMap.reverseGeocode("116.403981","39.915101");
+    }
+    function layer(){
+        uexBaiduMap.addBaiduMapLayer();
+    }
+    function getBaiduFromGoogle(){
+        uexBaiduMap.getBaiduFromGoogle(116.401,39.925);
+    }
+    window.uexOnload = function() {
+        uexWidgetOne.cbError = function(opid,type,data){
+            alert(data);
+        }
+        uexBaiduMap.cbGetCurrentLocation =function(i,t,data){
+        alert(data);
+		//var obj = eval('('+data+')');
+			    //document.getElementById('moveState').innerHTML ="longitude:" +obj.jkLongitude+"<br>jkLatitude: "+obj.jkLatitude;
+		};
+        uexBaiduMap.onTouchMark = function(mid, longutitude, latitude){
+            alert("经度＝"+longutitude+"纬度＝"+latitude);
+            //setBuddleViewStyle3:黑色,setBuddleViewStyle2：浅色,setBuddleViewStyle1：带图标
+      // 	uexBaiduMap.showBubbleView1("111","","肯德基","北京市海淀区新中关大厦A座地下一层");
+         	uexBaiduMap.showBubbleView1("111","http://82238.com/uploads/allimg/110519/2-110519130404.jpg","北京市海淀区新中关大厦A座地下一层","肯德基");
+         	uexBaiduMap.showBubbleView2("112","北京市海淀区新中关大厦A座地下一层","肯德基");
+	        uexBaiduMap.showBubbleView3("113","肯德基","北京市海");
+          //  uexBaiduMap.showBubbleView4("111","http://82238.com/uploads/allimg/110519/2-110519130404.jpg","肯德基","content","res://style_1-left.png","res://style_1-right.png","res://style_2-left.png","res://style_2-right.png","#FF3366","#66FF00");
+        };
+        uexBaiduMap.onMapMove = function(state){
+            document.getElementById('moveState').innerHTML = "onMapMove State："+state;
+        };
+        uexBaiduMap.onMapDrag = function(state){
+            document.getElementById('dragState').innerHTML = "onMapDrag State："+state;
+        };
+        //点击悬浮窗口跳转到下一页
+        uexBaiduMap.onTouchBubbleView = function(strId){
+            alert(strId);
+        }
+        //回调函数
+        uexBaiduMap.cbShowUserLocation = function(mid,type, data){
+        var obj = eval('('+data+')');
+            alert("经度:＝"+obj.longitude+"\n纬度＝"+obj.latitude);
+        };
+         uexBaiduMap.cbBaiduFromGoogle=function(longitude, latitude){
+            alert("经度:＝"+longitude+"\n纬度＝"+latitude);
+        };
+        uexBaiduMap.cbPoiSearchInCity = function(mid,type, data){
+            alert("1111111111"+data);
+        }
+        uexBaiduMap.cbPoiSearchArea = function(mid,type,data){
+            alert("1111111111"+data);
+        }
+        uexBaiduMap.cbPoiMultiSearchArea = function(mid,type,data){
+            alert("1111111111"+data);
+        }
+        uexBaiduMap.cbGeocode = function(mid,type,data){
+            alert(data);
+        }
+        uexBaiduMap.cbReverseGeocode = function(mid,type,data){
+            alert(data);
+        }
+        uexBaiduMap.cbShowRoutePlan = function(mid,type,data){
+            var obj = eval('('+data+')');
+            alert("id:="+obj.id+"\nresult:="+obj.result);
+//            obj.id
+//            obj.result;(1,0)
+        }
+        uexBaiduMap.cbSuggestionSearch = function(mid,type,data){
+            var obj = eval('('+data+')');
+            alert(data);
+        }
+        uexBaiduMap.cbBusLineSearch = function(mid,type,data){
+            alert(data);
+        }
+        //apiKey授权失败，回调函数
+        uexBaiduMap.onPermissionDenied = function(){
+            alert(onPermissionDenied);
+        }
+        uexBaiduMap.onNetworkError = function(){
+            alert(onNetworkError);
+        }
+    }
+    function showRoutePlan(){
+    	var type=document.getElementById("routetype").value;
+        var jssonstr = '{"id":"rp345","type":"'+type+'","start":{"city":"北京","name":"天安门"},"end":{"city":"北京","name":"百度大厦","longitude":"116.307827","latitude":"40.056957"}}';
+        alert(jssonstr);
+        uexBaiduMap.showRoutePlan(jssonstr);
+    }
+    function cleanRoutePlan(){
+        uexBaiduMap.clearRoutePlan();
+    }
+   
+    function updateMark1(){
+      //  var json = '{"markInfo":[{"id":"112","longitude":"121.467803","latitude":"31.249531","imageUrl":"res://kafjld.png","imageWidth":"80","imageHeight":"80","message":"这里是新中关大厦","title":"我的位置"}],"canShowCallout":"1"}';
+      //  uexBaiduMap.addMark(json);
+      //  var lonlat = '{"id":"112","imageUrl":"res://kafjld.png","timer":"3","imageWidth":"80","imageHeight":"80","message":"这里是新中关大厦","title":"我的位置","canShowCallout":"1","property":[{"longitude":"121.467803","latitude":"31.249531"},{"longitude":"121.357419","latitude":"31.375897"},{"longitude":"121.302227","latitude":"31.502092"},{"longitude":"121.155049","latitude":"31.659594"},{"longitude":"121.044665","latitude":"31.785402"},{"longitude":"120.915884","latitude":"31.942419"},{"longitude":"120.8055","latitude":"32.083503"},{"longitude":"120.695116","latitude":"32.177437"},{"longitude":"120.60313","latitude":"32.271273"},{"longitude":"120.511143","latitude":"32.365012"},{"longitude":"120.455951","latitude":"32.42745"},{"longitude":"120.40076","latitude":"32.505436"},{"longitude":"120.32717","latitude":"32.598929"},{"longitude":"120.069608","latitude":"32.863291"},{"longitude":"119.940827","latitude":"32.971916"},{"longitude":"119.848841","latitude":"33.080406"},{"longitude":"119.591278","latitude":"33.34332"},{"longitude":"119.499292","latitude":"33.482186"},{"longitude":"119.24173","latitude":"33.774611"},{"longitude":"119.168141","latitude":"33.912778"},{"longitude":"119.149743","latitude":"34.127256"},{"longitude":"119.03936","latitude":"34.280119"},{"longitude":"118.984168","latitude":"34.463185"},{"longitude":"118.836989","latitude":"34.585004"},{"longitude":"118.726606","latitude":"34.828103"},{"longitude":"118.616222","latitude":"35.025089"},{"longitude":"118.524235","latitude":"35.176291"},{"longitude":"118.340262","latitude":"35.553058"},{"longitude":"118.28507","latitude":"35.733274"},{"longitude":"118.119495","latitude":"36.002829"},{"longitude":"118.101097","latitude":"36.167102"},{"longitude":"118.027508","latitude":"36.345912"},{"longitude":"117.898727","latitude":"36.746724"},{"longitude":"117.696357","latitude":"37.115974"},{"longitude":"117.696357","latitude":"37.21904"},{"longitude":"117.549179","latitude":"37.454087"},{"longitude":"117.420397","latitude":"37.805264"},{"longitude":"117.346808","latitude":"37.965661"},{"longitude":"117.291616","latitude":"38.154766"},{"longitude":"117.126041","latitude":"38.603717"},{"longitude":"117.070849","latitude":"38.920621"},{"longitude":"116.99726","latitude":"39.064199"},{"longitude":"116.905273","latitude":"39.264714"},{"longitude":"116.886876","latitude":"39.350472"},{"longitude":"116.776492","latitude":"39.535919"},{"longitude":"116.666108","latitude":"39.706658"},{"longitude":"116.482135","latitude":"39.848617"}]}';
+      //  uexBaiduMap.updateMark(lonlat);
+     	var jstr="{\"id\":\"111\",\"longitude\":\"116.404\",\"latitude\":\"39.415\",\"imageUrl\":\"http://img.cnbeta.com/topics/apple.png\",\"imageWidth\":\"100\",\"imageHeight\":\"100\",\"message\":\"this is beij\"}";
+     	uexBaiduMap.updateMark(jstr);
+    }
+      function updateMark2(){
+      // var json = '{"markInfo":[{"id":"112","longitude":"121.467803","latitude":"31.249531","imageUrl":"res://kafjld.png","imageWidth":"80","imageHeight":"80","message":"这里是新中关大厦","title":"我的位置"}],"canShowCallout":"1"}';
+       // uexBaiduMap.addMark(json);
+       var lonlat = '{"id":"112","imageUrl":"res://kafjld.png","timer":"3","imageWidth":"80","imageHeight":"80","message":"这里是新中关大厦","title":"我的位置","canShowCallout":"1","property":[{"longitude":"121.467803","latitude":"31.249531"},{"longitude":"121.357419","latitude":"31.375897"},{"longitude":"121.302227","latitude":"31.502092"},{"longitude":"121.155049","latitude":"31.659594"},{"longitude":"121.044665","latitude":"31.785402"},{"longitude":"120.915884","latitude":"31.942419"},{"longitude":"120.8055","latitude":"32.083503"},{"longitude":"120.695116","latitude":"32.177437"},{"longitude":"120.60313","latitude":"32.271273"},{"longitude":"120.511143","latitude":"32.365012"},{"longitude":"120.455951","latitude":"32.42745"},{"longitude":"120.40076","latitude":"32.505436"},{"longitude":"120.32717","latitude":"32.598929"},{"longitude":"120.069608","latitude":"32.863291"},{"longitude":"119.940827","latitude":"32.971916"},{"longitude":"119.848841","latitude":"33.080406"},{"longitude":"119.591278","latitude":"33.34332"},{"longitude":"119.499292","latitude":"33.482186"},{"longitude":"119.24173","latitude":"33.774611"},{"longitude":"119.168141","latitude":"33.912778"},{"longitude":"119.149743","latitude":"34.127256"},{"longitude":"119.03936","latitude":"34.280119"},{"longitude":"118.984168","latitude":"34.463185"},{"longitude":"118.836989","latitude":"34.585004"},{"longitude":"118.726606","latitude":"34.828103"},{"longitude":"118.616222","latitude":"35.025089"},{"longitude":"118.524235","latitude":"35.176291"},{"longitude":"118.340262","latitude":"35.553058"},{"longitude":"118.28507","latitude":"35.733274"},{"longitude":"118.119495","latitude":"36.002829"},{"longitude":"118.101097","latitude":"36.167102"},{"longitude":"118.027508","latitude":"36.345912"},{"longitude":"117.898727","latitude":"36.746724"},{"longitude":"117.696357","latitude":"37.115974"},{"longitude":"117.696357","latitude":"37.21904"},{"longitude":"117.549179","latitude":"37.454087"},{"longitude":"117.420397","latitude":"37.805264"},{"longitude":"117.346808","latitude":"37.965661"},{"longitude":"117.291616","latitude":"38.154766"},{"longitude":"117.126041","latitude":"38.603717"},{"longitude":"117.070849","latitude":"38.920621"},{"longitude":"116.99726","latitude":"39.064199"},{"longitude":"116.905273","latitude":"39.264714"},{"longitude":"116.886876","latitude":"39.350472"},{"longitude":"116.776492","latitude":"39.535919"},{"longitude":"116.666108","latitude":"39.706658"},{"longitude":"116.482135","latitude":"39.848617"}]}';
+        uexBaiduMap.updateMark(lonlat);
+     	//var jstr="{\"id\":\"111\",\"longitude\":\"116.404\",\"latitude\":\"39.415\",\"imageUrl\":\"http://img.cnbeta.com/topics/apple.png\",\"imageWidth\":\"100\",\"imageHeight\":\"100\",\"message\":\"this is beij\"}";
+     	//suexBaiduMap.updateMark(jstr);
+    }
+     
+    function addAreaMark(){
+    	alert();
+		var ltLo = "-191.993965";
+		var ltla = "84.109426";
+		var rbLo = "201.266653";
+		var rbLa = "-46.314504";
+        var json = '{"markInfo":[{"id":"114","ltLongitude":"'+ltLo+'","ltLatitude":"'+ltla+'","rbLongitude":"'+rbLo+'","rbLatitude":"'+rbLa+'","imageUrl":"res://pano_b.jpg"}]}';
+        uexBaiduMap.addAreaMark(json);
+    }
+    function addAreaMarkIOS(){
+        var ltLo = "-191.993965";
+		var ltla = "84.109426";
+		var rbLo = "201.266653";
+		var rbLa = "-46.314504";
+        var json = '{"markInfo":[{"id":"111","ltLongitude":"'+ltLo+'","ltLatitude":"'+ltla+'","rbLongitude":"'+rbLo+'","rbLatitude":"'+rbLa+'","imageUrl":"res://0.png"}]}';
+        uexBaiduMap.addAreaMark(json);
+        var jsons = [];
+        for(var i=0;i<9;i++){
+            var item = {"ltLongitude":ltLo,"ltLatitude":ltla,"rbLongitude":rbLo,"rbLatitude":rbLa,"imageUrl":"res://"+i+".png"}
+            jsons.push(item);
+        }
+        var json = {"id":"111","timer":"3","property":jsons}
+        var temjson = JSON.stringify(json);
+        uexBaiduMap.updateAreaMark(temjson);
+    }
+   
+    function updateAreaMark(){
+    	alert();
+//    	var jsons = [];
+//        for(var i=0;i<9;i++){
+//            var item = {"ltLongitude":ltLo,"ltLatitude":ltla,"rbLongitude":rbLo,"rbLatitude":rbLa,"imageUrl":"res://pano_l.jpg"}
+//            jsons.push(item);
+//        }
+//        var json = {"id":"114","timer":"3","property":jsons}
+//        var temjson = JSON.stringify(json);
+		var ltLo = "-191.993965";
+		var ltla = "84.109426";
+		var rbLo = "201.266653";
+		var rbLa = "-46.314504";
+        var json = '{"id":"114","ltLongitude":"'+ltLo+'","ltLatitude":"'+ltla+'","rbLongitude":"'+rbLo+'","rbLatitude":"'+rbLa+'","imageUrl":"res://uexTimeMachine_cunhuo.png"}';
+		
+        uexBaiduMap.updateAreaMark(json);
+    }
+    function updateAreaMarkIOS(){
+        var json = '{"markInfo":[{"id":"112","longitude":"121.467803","latitude":"31.249531","imageUrl":"res://kafjld.png","imageWidth":"80","imageHeight":"80","message":"这里是新中关大厦","title":"我的位置"}],"canShowCallout":"0"}';
+        uexBaiduMap.addMark(json);
+        var lonlat = '{"id":"112","imageUrl":"res://kafjld.png","timer":"3","imageWidth":"80","imageHeight":"80","message":"这里是新中关大厦","title":"我的位置","canShowCallout":"0","property":[{"longitude":"121.467803","latitude":"31.249531"},{"longitude":"121.357419","latitude":"31.375897"},{"longitude":"121.302227","latitude":"31.502092"},{"longitude":"121.155049","latitude":"31.659594"},{"longitude":"121.044665","latitude":"31.785402"},{"longitude":"120.915884","latitude":"31.942419"},{"longitude":"120.8055","latitude":"32.083503"},{"longitude":"120.695116","latitude":"32.177437"},{"longitude":"120.60313","latitude":"32.271273"},{"longitude":"120.511143","latitude":"32.365012"},{"longitude":"120.455951","latitude":"32.42745"},{"longitude":"120.40076","latitude":"32.505436"},{"longitude":"120.32717","latitude":"32.598929"},{"longitude":"120.069608","latitude":"32.863291"},{"longitude":"119.940827","latitude":"32.971916"},{"longitude":"119.848841","latitude":"33.080406"},{"longitude":"119.591278","latitude":"33.34332"},{"longitude":"119.499292","latitude":"33.482186"},{"longitude":"119.24173","latitude":"33.774611"},{"longitude":"119.168141","latitude":"33.912778"},{"longitude":"119.149743","latitude":"34.127256"},{"longitude":"119.03936","latitude":"34.280119"},{"longitude":"118.984168","latitude":"34.463185"},{"longitude":"118.836989","latitude":"34.585004"},{"longitude":"118.726606","latitude":"34.828103"},{"longitude":"118.616222","latitude":"35.025089"},{"longitude":"118.524235","latitude":"35.176291"},{"longitude":"118.340262","latitude":"35.553058"},{"longitude":"118.28507","latitude":"35.733274"},{"longitude":"118.119495","latitude":"36.002829"},{"longitude":"118.101097","latitude":"36.167102"},{"longitude":"118.027508","latitude":"36.345912"},{"longitude":"117.898727","latitude":"36.746724"},{"longitude":"117.696357","latitude":"37.115974"},{"longitude":"117.696357","latitude":"37.21904"},{"longitude":"117.549179","latitude":"37.454087"},{"longitude":"117.420397","latitude":"37.805264"},{"longitude":"117.346808","latitude":"37.965661"},{"longitude":"117.291616","latitude":"38.154766"},{"longitude":"117.126041","latitude":"38.603717"},{"longitude":"117.070849","latitude":"38.920621"},{"longitude":"116.99726","latitude":"39.064199"},{"longitude":"116.905273","latitude":"39.264714"},{"longitude":"116.886876","latitude":"39.350472"},{"longitude":"116.776492","latitude":"39.535919"},{"longitude":"116.666108","latitude":"39.706658"},{"longitude":"116.482135","latitude":"39.848617"}]}';
+        uexBaiduMap.updateMark(lonlat);
+    }
+    
+    function clearAreaMarks(){
+//        var idarr = ["114"];
+        uexBaiduMap.clearAreaMarks();
+    }
+     /*
+    function addNewMark(){
+        var idarr = '{"background":"res://style-1-1.png","fontcolor":"#bb9b8a","markInfo":[{"id":"111","longitude":"116.404","latitude":"39.915","imageWidth":"84","imageHeight":"64","title":"测试1","star":"1"},{"id":"112","longitude":"116.232321","latitude":"39.021514","imageWidth":"84","imageHeight":"64","title":"测试2","star":"4"}]}'（
+        uexBaiduMap.addMarkNewStyle(idarr);
+    }
+   
+    */
+    function clean(){
+	alert(1);
+        uexBaiduMap.clean();
+		alert(2);
+    }
+    function openmap(){
+    	alert("open");
+    	var x=document.getElementById("aa").value;
+	    var y=document.getElementById("bb").value;
+		var w=document.getElementById("cc").value;
+	    var h=document.getElementById("dd").value;
+	    uexBaiduMap.open('6643147DF56BD40F6140AB3ABA5A3FFBE12C439F',x,y,w,h,'116.401','39.925');
+    }
+
+		
+
+		</script>
+  </head>
+<body class="um-vp " ontouchstart>
+
+	<div class="conbor">
+		<div class="consj">
+			<div>
+				<div>x: <input type="text" id="aa" value="0" style="margin:.4em .6em;"/></div>
+				<div>y: <input type="text" id="bb" value="180" style="margin:.4em .6em;"/></div>
+				<div>w: <input type="text" id="cc" value="800" style="margin:.4em .6em;"/></div>
+				<div>h: <input type="text" id="dd" value="590" style="margin:.4em .6em;"/><br></div>
+			</div>
+		type:type 为0（标准地图）,1（卫星地图），2（打开实时路况），3（关闭实时路况）<input type="text" id="type" value="1"/><br>
+		<input   type="button" value="打开" onclick="openmap();">
+		<input type="button" value="类型" onclick="setType();">
+		<input type="button" value="关闭" onclick="clean();">
+		<p></p><br> 
+        
+        iOS<input type="button" value="允许地图缩放" onclick="setZoomEnable();">
+		<input type="button" value="不允许地图缩放" onclick="setZoomDisable();">
+        <input type="button" value="允许地图拖动" onclick="setScrollEnable();">
+		<input type="button" value="不允许地图拖动" onclick="setScrollDisable();">
+		<p></p><br> 
+		
+		<input type="button" value="获得当前位置" onclick="getCurrentLocation();">
+        <input type="button" value="显示所持者位置的经纬度" onclick="showUserLocation();">
+        <input type="button" value="隐藏所持者位置的经纬度" onclick="hideUserLocation();">
+       	<input type="button" value="设置地图中心经纬度" onclick="setCenter();">
+         <input type="button" value="谷歌百度经纬度转换" onclick="getBaiduFromGoogle();">
+         <p></p><br> 
+        
+        
+        <input type="button" value="缩放指定经纬度跨度" onclick="zoomToSpan();">
+        <input type="button" value="缩小" onclick="zoomIn();">
+        <input type="button" value="放大" onclick="zoomOut();">
+        <input type="button" value="缩放3倍" onclick="setZoomLevel();">
+        <p></p><br> 
+              
+         <input type="button" value="添加线型覆盖物" onclick="addLineOverLayer();">
+         <input type="button" value="清除线型覆盖物" onclick="clearOverLayer('150');">
+        <input type="button" value="添加圆型覆盖物" onclick="addCircleOverLayer();">
+        <input type="button" value="清除圆型覆盖物" onclick="clearOverLayer('151');">        
+        <input type="button" value="添加多边型覆盖物" onclick="addMultiOverLayer();">
+        <input type="button" value="清除多边型覆盖物" onclick="clearOverLayer('152');">   
+        <input type="button" value="清除overlayers" onclick="clearOverLayers();">
+        <p></p><br> 
+        
+        <input type="button" value="添加标注" onclick="addMark();">
+        <input type="button" value="android更新表注" onclick="updateMark1();">
+		 <input type="button" value="iOS更新表注" onclick="updateMark2();">
+        <input type="button" value="添加覆盖指定区域的标注" onclick="addAreaMark();">
+        <input type="button" value="更新覆盖指定区域的标注" onclick="updateAreaMark();">
+        <input type="button" value="IOS添加覆盖指定区域的标注" onclick="addAreaMarkIOS();">
+        <input type="button" value="IOS更新覆盖指定区域的标注" onclick="updateAreaMarkIOS();">
+        <input type="button" value="清楚覆盖指定区域的标注" onclick="clearAreaMarks();">
+        <input type="button" value="清除标注" onclick="clearMarks();">
+        <p></p><br>          
+        
+        <input type="button" value="隐藏map" onclick = "goBack();">
+        <input type="button" value="显示map" onclick = "goFront();">
+        <p></p><br>        
+
+        <input type = "button" value="联想词搜索" onclick = "suggestionSearch();">
+        <input type = "button" value="地理编码" onclick = "geocode();">
+        <input type = "button" value="反地理编码" onclick = "reverseGeocode();">
+        <input type = "button" value="指定城市内搜索兴趣点（单）" onclick = "poiSearchInCity();">
+        <input type = "button" value="指定范围内（圆心、半径）搜索兴趣点（单）" onclick = "poiSearchNearBy();">
+        <input type = "button" value="指定范围内（圆心、半径）搜索兴趣点（多）" onclick = "poiMultiSearchNearBy();">
+        <input type = "button" value="指定范围（经纬度）搜索单兴趣点" onclick = "poiSearchInBounds();">
+        <input type = "button" value="指定范围（经纬度）搜索多兴趣点" onclick = "poiMultiSearchInBounds();">
+            
+        <input type = "button" value="指定范围内（圆心、半径）搜索兴趣点（多）IOS" onclick = "poiMultiSearchNearByIOS();">
+        <input type = "button" value="指定范围（经纬度）搜索单兴趣点IOS" onclick = "poiSearchInBoundsIOS();">
+        <input type = "button" value="指定范围（经纬度）搜索多兴趣点IOS" onclick = "poiMultiSearchInBoundsIOS();">
+        <p></p><br>
+        <input type="text" value="2" id="routetype">0驾车，1公交，2步行
+        <input type = "button" value="显示路线" onclick = "showRoutePlan();">
+        <input type = "button" value="清除路线" onclick = "cleanRoutePlan();">
+        <input type = "button" value="显示公交路线" onclick = "showBusLineSearch();">
+        <input type = "button" value="显示公交路线IOS" onclick = "showBusLineSearchIOS();">
+        <input   type="button" value="返回" onclick="uexWindow.back();">
+		</div>
+		 <div class="tcxx" id="moveState"></div>
+		<div class="tcxx" id="dragState"></div>
+		<div class="tcxx" ></div>
+		<div class="tcxx" ></div>
+		<div class="tcxx" ></div>
+		<div class="tcxx" ></div>
+		<div class="tcxx" ></div>
+		<div class="tcxx" ></div><div class="tcxx" ></div>
+		<div class="tcxx" ></div>
+		<div class="tcxx" ></div>
+		 
+	</div>
+</body>
+<script>
+
+</script>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="css/index.css">
+<title>摇一摇功能</title>
+<script type="text/javascript">
+    function ShakeOver()
+    {
+        alert(121);
+    }
+	window.uexOnload = function()
+    {
+        uexShake.onEvent=ShakeOver;
+	}
+    function backes()
+    {
+        uexShake.close();
+    }
+    function resendsmse()
+    {
+        uexShake.open("100","180","300","370","res://Shake_up.png","res://Shake_down.png","res://viewbackground.png");
+        uexShake.setActivity("1");
+        uexShake.setInitType("3","res://dogbark.mp3");
+    }
+    <!-- 触发摇动事件 -->
+    function  touchOffShakeEvent()
+    {
+        uexShake.selfShake();
+    }
+    <!-- 此方法只供开发者测试用 -->
+    function  test()
+    {
+        uexShake.test();
+    }
+</script>
+</head>
+
+<body>
+	<div class="tit">
+        <table width="320" border="1">
+            <tr>
+                <td colspan="4"> 摇一摇功能</td>
+            </tr>
+            <tr>
+                <td> <input  class="btn" type="button" value="开启" onclick="resendsmse();" ></td>
+                <td> <input  class="btn" type="button" value="test" onclick="touchOffShakeEvent();" ></td>
+                <td> <input  class="btn" type="button" value="关闭" onclick="backes();" ></td>
+                <td> <a href="index.html">返 回 首 页</a></td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

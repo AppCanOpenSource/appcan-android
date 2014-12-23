@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+  <head>
+    <title>
+    </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+    <link rel="stylesheet" href="css/ui-color.css">
+    <script src="js/zy_control.js">
+    </script>
+    <script src="js/zy_click.js">
+    </script>
+    <script>
+	</script>
+  </head>
+<body class="um-vp" ontouchstart>
+	我是窗口二的浮动窗口,可以设置成上下弹动，且有下拉效果<br/><br/>
+	<!--按钮开始-->
+<div ontouchstart="zy_touch('btn-act')" onclick="openwind()" class="btn uba b-bla uinn5 c-blu c-m1 uc-a t-wh">打开窗口三:淡入淡出效果</div>
+<!--按钮结束-->
+<br/>
+</body>
+<script>
+zy_init();
+window.uexOnload=function(type)
+{
+	if(!type){
+		uexWindow.setBounce("1");
+		uexWindow.showBounceView("0","rgba(142,201,96,30)","1");
+		uexWindow.showBounceView("1","rgba(142,201,96,30)","0");
+		uexWindow.notifyBounceEvent('0','1');
+		uexWindow.onBounceStateChange = function(type,state){						
+			if(type == '0' && state == "2"){
+				setTimeout(function(){
+					uexWindow.resetBounceView("0");	
+				},3000);
+			}　
+		}
+	}
+}
+function openwind(){
+	uexWindow.open("page2",0,"page2.html",5,"","",0,600);
+}
+</script>
+</html>

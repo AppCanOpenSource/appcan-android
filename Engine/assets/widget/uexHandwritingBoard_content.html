@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+  <head>
+    <title>
+    </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+    <link rel="stylesheet" href="css/ui-color.css">
+	<link rel="stylesheet" href="css/ui-res.css">
+    <link rel="stylesheet" href="css/ui-btn.css">
+    <link rel="stylesheet" href="css/index.css">
+    <script src="js/zy_control.js">
+    </script>
+    <script src="js/zy_click.js">
+    </script>
+    <script type="text/javascript">
+		var cText = 0;
+var cJson = 1;
+var cInt = 2;
+	function open1(){
+		alert(1111);
+//        var x=document.getElementById("aa").value;
+//	    var y=document.getElementById("bb").value;
+//		var w=document.getElementById("cc").value;
+//	    var h=document.getElementById("dd").value;
+		
+		var x = 100;
+		var y = 100;
+		var w = 520;
+		var h = 880;
+		uexHandwritingBoard.open(x,y,w,h);
+	}
+    window.uexOnload=function(){
+       uexHandwritingBoard.cbFinish = function(opId,dataType,data){
+            alert(data);
+        }
+    }
+		</script>
+  </head>
+<body class="um-vp " ontouchstart>
+	<div class="conbor">
+		<div class="consj">
+			<!--x<input type="text" id="aa" value="100"/><br>
+			y<input type="text" id="bb" value="100"/><br>
+			w<input type="text" id="cc" value="520"/><br>
+			h<input type="text" id="dd" value="880"/><br>-->
+			<span>显示 </span>
+			<input class="btn" type="button" value="设置" onclick="open1();">
+			 
+            <span>关闭</span>
+            <input class="btn" type="button" value="关闭" onclick="uexHandwritingBoard.close();">
+			
+			<span>清除</span>
+			<input class="btn" type="button" value="清除" onclick="uexHandwritingBoard.cleanData();">	
+                    
+            <span>完成</span>
+			<input class="btn" type="button" value="完成" onclick="uexHandwritingBoard.finish();">	
+			<br>
+		</div>
+	</div>
+</body>
+<script>
+
+</script>
+</html>

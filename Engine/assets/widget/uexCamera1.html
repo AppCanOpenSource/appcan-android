@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" /><link rel="stylesheet" type="text/css" href="css/index.css">
+<title>照相机功能</title>
+<script type="text/javascript">
+var cText = 0;
+var cJson = 1;
+var cInt = 2;
+	window.uexOnload = function(){
+        uexWidgetOne.onMemoryWarning=function(isWarning,level){
+            alert("warning");
+            //alert("isWarning"+isWarning+"level"+level);
+        };
+		uexCamera.cbOpen = function(opCode, dataType, data){
+			switch(dataType){
+				case cText:
+				  document.getElementById('zxj').innerHTML = data;
+			    document.getElementById('picc').src = data;
+			    break;
+			  case cJson:
+				  alert("uex.cJson");
+				  break;
+				case cInt:
+			    alert("uex.cInt");
+			    break;
+			  default:
+			    alert("error"); 
+				}
+			
+		}
+		uexWidgetOne.cbError = function(opCode, errorCode, errorInfo){
+			alert("errorCode:" + errorCode + "\nerrorInfo:" + errorInfo);
+		}
+	}
+	
+</script>
+</head>
+
+<body>
+	<div class="tit">照相机功能</div>
+	<div class="conbor">
+		<div class="consj">
+			<span>1.打开照相机</span>
+			<input class="btn" type="button" value="打开照相机" onclick="uexCamera.open();">
+			<span>照片保存地址为：</span>
+			<div class="tcxx" id="zxj"></div><br>
+			<div ><img id="picc" src="" style="width:85%;height:150px;"/></div>
+			<input class="btn" type="button" value="返回" onclick="uexWindow.back();">
+		</div>
+	</div>
+</body>
+</html>

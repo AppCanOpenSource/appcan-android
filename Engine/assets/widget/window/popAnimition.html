@@ -1,0 +1,141 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" /><link rel="stylesheet" type="text/css" href="../css/index.css">
+<title>pop动画</title>
+<style>
+	body{
+		background:#27A73F;
+	}
+</style>
+<script type="text/javascript">
+window.uexOnload = function(type){
+	uexWindow.onAnimationFinish = animiFinish;
+}
+
+
+function animiFinish() {
+	uexWindow.alert("应用名称","动画完毕","ok");
+}
+
+function translation(){
+	var delay = document.getElementById('delay').value;
+	var reverse = document.getElementById('reverse').value;
+	var curve = document.getElementById('curve').value;
+	var duration = document.getElementById('duration').value;
+	var repeat = document.getElementById('repeat').value;
+	uexWindow.beginAnimition();
+	uexWindow.setAnimitionDelay(delay);
+	uexWindow.setAnimitionDuration(duration);
+	uexWindow.setAnimitionAutoReverse(reverse);
+	uexWindow.setAnimitionRepeatCount(repeat);
+	uexWindow.setAnimitionCurve(curve);
+	uexWindow.makeTranslation(100,150,30);
+	uexWindow.commitAnimition();
+}
+
+function scale(){
+	var delay = document.getElementById('delay').value;
+	var reverse = document.getElementById('reverse').value;
+	var curve = document.getElementById('curve').value;
+	var duration = document.getElementById('duration').value;
+	var repeat = document.getElementById('repeat').value;
+	uexWindow.beginAnimition();
+	uexWindow.setAnimitionDelay(delay);
+	uexWindow.setAnimitionDuration(duration);
+	uexWindow.setAnimitionAutoReverse(reverse);
+	uexWindow.setAnimitionRepeatCount(repeat);
+	uexWindow.setAnimitionCurve(curve);
+	uexWindow.makeScale(2,1,1);	
+	uexWindow.commitAnimition();
+}
+
+function rotate(){
+	var delay = document.getElementById('delay').value;
+	var reverse = document.getElementById('reverse').value;
+	var curve = document.getElementById('curve').value;
+	var duration = document.getElementById('duration').value;
+	var repeat = document.getElementById('repeat').value;
+	uexWindow.beginAnimition();
+	uexWindow.setAnimitionDelay(delay);
+	uexWindow.setAnimitionDuration(duration);
+	uexWindow.setAnimitionAutoReverse(reverse);
+	uexWindow.setAnimitionRepeatCount(repeat);
+	uexWindow.setAnimitionCurve(curve);
+	uexWindow.makeRotate(90, 2, 0, 1);
+	uexWindow.commitAnimition();
+}
+
+function alpha(){
+	var delay = document.getElementById('delay').value;
+	var reverse = document.getElementById('reverse').value;
+	var curve = document.getElementById('curve').value;
+	var duration = document.getElementById('duration').value;
+	var repeat = document.getElementById('repeat').value;
+	uexWindow.beginAnimition();
+	uexWindow.setAnimitionDelay(delay);
+	uexWindow.setAnimitionDuration(duration);
+	uexWindow.setAnimitionAutoReverse(reverse);
+	uexWindow.setAnimitionRepeatCount(repeat);
+	uexWindow.setAnimitionCurve(curve);
+	uexWindow.makeAlpha(0.9) 
+	uexWindow.commitAnimition();
+}
+
+function all(){
+	var delay = document.getElementById('delay').value;
+	var reverse = document.getElementById('reverse').value;
+	var curve = document.getElementById('curve').value;
+	var duration = document.getElementById('duration').value;
+	var repeat = document.getElementById('repeat').value;
+	uexWindow.beginAnimition();
+	uexWindow.setAnimitionDelay(delay);
+	uexWindow.setAnimitionDuration(duration);
+	uexWindow.setAnimitionAutoReverse(reverse);
+	uexWindow.setAnimitionRepeatCount(repeat);
+	uexWindow.setAnimitionCurve(curve);
+	uexWindow.makeTranslation(100,150,30);
+	uexWindow.makeRotate(90, 2, 0, 1);
+	uexWindow.makeScale(2,1,1);	
+	uexWindow.makeAlpha(0.9) 
+	uexWindow.commitAnimition();
+}
+		
+</script>
+</head>
+
+<body>
+	<div class="tit">音乐功能</div>
+	<div class="conbor">
+		<div class="consj">
+			<span>android只支持translation动画</span>
+			<span>延迟执行时间(ms):</span>
+			<input class="textbox" id="delay" type="text" value="1000"><br>
+			<span>执行时间(ms):</span>
+			<input class="textbox" id="duration" type="text" value="10000"><br>
+			<span>曲线类型:0/1/2/3/4/</span>
+			<input class="textbox" id="curve" type="text" value="0"><br>
+			<span>重复次数</span>
+			<input class="textbox" id="repeat" type="text" value="1"><br>
+			<span>是否恢复到动画前状态</span>
+			<input class="textbox" id="reverse" type="text" value="1"><br>
+			
+			<span>1.Translation动画</span>
+			<input class="btn" type="button" value="Translation动画" onclick="translation();">
+			<span>2.Scale动画</span>
+			<input class="btn" type="button" value="Scale动画" onclick="scale();">
+			<span>3.Rotate动画</span>
+			<input class="btn" type="button" value="Rotate动画" onclick="rotate();">
+			<span>4.Alpha动画</span>
+			<input class="btn" type="button" value="Alpha动画" onclick="alpha();">
+			<span>5.组合效果动画</span>
+			<input class="btn" type="button" value="组合动画" onclick="all();">
+		
+			
+			<input class="btn" type="button" value="关闭" onclick="uexWindow.close('-1');">
+			
+		</div>
+	</div>
+</body>
+</html>

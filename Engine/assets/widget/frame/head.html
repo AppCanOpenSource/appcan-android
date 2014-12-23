@@ -1,0 +1,28 @@
+  
+  <head>
+    <title>
+    </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-apple.css">
+    <link rel="stylesheet" href="css/forum.css">
+    <script src="js/zy_anim.js"></script>
+    <script src="js/zy_control.js"></script>
+    <script src="js/dis_control.js"></script>
+    
+    <script type="text/javascript">
+    function changepage(indexNumber) {
+    	alert('head'+indexNumber);
+    	if (indexNumber == 0)
+			uexWindow.evaluateScript('test','0','changepage_forum(0);');
+		if (indexNumber == 1)
+			uexWindow.evaluateScript('test','0','changepage_forum(1);');
+	}
+	//uexLog.sendLog('');
+    </script>
+    <style>
+
+    </style>
+  </head>
+<body class="ui-mobile-viewport">  

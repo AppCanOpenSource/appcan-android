@@ -1,0 +1,132 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" /><link rel="stylesheet" type="text/css" href="css/index.css">
+<title>联系人功能</title>
+<script type="text/javascript">
+	var cText = 0;
+	var cJson = 1;
+	var cInt = 2;
+	window.uexOnload = function(){
+
+	uexContact.cbOpen = function(opCode, dataType, data) {
+			switch (dataType) {
+			case cText:
+				alert("uex.cText");
+				break;
+			case cJson:
+				var obj = eval('(' + data + ')');
+				document.getElementById('data').innerHTML = "姓名：" + obj.name
+						+ "<br>电话：" + obj.num + "<br>邮箱：" + obj.email;
+				break;
+			case cInt:
+				alert("uex.cInt");
+				break;
+			default:
+				alert("error");
+
+			}
+		}
+		uexContact.cbMultiOpen = function(opCode, dataType, data) {
+			
+			switch (dataType) {
+			case cText:
+				break;
+			case cJson:
+				var array = eval('(' + data + ')');
+				var str = "";
+				for ( var i = 0; i < array.length; i++) {
+					str = str + "姓名：" + array[i].name + "<br>电话："
+							+ array[i].num + "<br>邮箱：" + array[i].email
+							+ "<br>";
+				}
+				document.getElementById('multidata').innerHTML = str;
+				break;
+			case cInt:
+				break;
+			default:
+				alert('error');
+				break;
+			}
+		};
+
+		uexContact.cbSearchItem = function(opCode, dataType, data) {
+		var array = eval('(' + data + ')');
+				var str = "";
+				for ( var i = 0; i < array.length; i++) {
+					str = str + "姓名：" + array[i].name + "<br>电话："
+							+ array[i].num + "<br>邮箱：" + array[i].email
+							+ "<br>";
+				}
+			
+			document.getElementById('resData').innerHTML = str;
+		}
+		uexContact.cbAddItem = function(opCode, dataType, data) {
+			if (data == 0) {
+				alert("添加成功");
+			} else {
+				alert("添加失败");
+			}
+		}
+		uexContact.cbModifyItem = function(opCode, dataType, data) {
+			if (data == 0) {
+				alert("修改成功");
+			} else {
+				alert("修改失败");
+			}
+		}
+		uexContact.cbDeleteItem = function(opCode, dataType, data) {
+			if (data == 0) {
+				alert("删除成功");
+			} else {
+				alert("删除失败");
+			}
+
+		}
+	}
+</script>
+</head>
+
+<body>
+	<div class="tit">联系人功能</div>
+	<div class="conbor">
+		<div class="consj">
+			<span>1.打开联系人</span>
+			<input class="btn" type="button" value="打开联系人" onclick="uexContact.open();">
+			<span>选择的联系人信息为：</span>
+			<div class="tcxx" id="data"></div>
+			<span>2.添加联系人</span>
+			联系人姓名：<input class="textbox" type="text" value="张三" id="addName"><br>
+			联系人电话：<input class="textbox" type="text" value="13436827900" id="addTel"><br>
+			联系人邮箱：<input class="textbox" type="text" value="widgetone@3g2win.com" id="addMail"><br>
+			<input class="btn" type="button" value="添加联系人" onclick="uexContact.addItem(document.getElementById('addName').value,document.getElementById('addTel').value,document.getElementById('addMail').value);">
+			<span>3.删除联系人</span>
+			联系人姓名：<input class="textbox" type="text" value="张三" id="delName">
+			<input class="btn" type="button" value="删除联系人" onclick="uexContact.deleteItem(document.getElementById('delName').value);">
+			<span>4.查找联系人</span>
+			联系人姓名：<input class="textbox" type="text" value="张三" id="serchName">
+			<input class="btn" type="button" value="查找联系人" onclick="uexContact.searchItem(document.getElementById('serchName').value);">
+			<span>查找联系人的信息为：</span>
+			<div class="tcxx" id="resData"></div>
+			<span>5.修改联系人</span>
+			联系人姓名：<input class="textbox" type="text" value="张三" id="modifyName"><br>
+			联系人电话：<input class="textbox" type="text" value="13436820000"id="modifyTel"><br>
+			联系人邮箱：<input class="textbox" type="text" value="widgetone1@3g2win.com"id="modifyMail"><br>
+			<input class="btn" type="button" value="修改联系人" onclick="uexContact.modifyItem(document.getElementById('modifyName').value,document.getElementById('modifyTel').value,
+			document.getElementById('modifyMail').value);">
+			
+			<span>6.打开联系人，多选</span>
+            <input class="btn" type="button" value="打开联系人，多选" onclick="uexContact.multiOpen();">
+            <span>选择的联系人信息为：</span>
+            <div class="tcxx" id="multidata"></div>
+
+			<span>7.VCard方式添加联系人：</span>
+                <span> 添加的联系人信息格式: BEGIN:VCARD\nVERSION:3.0\nN:韩;超\nTEL:22334752\nEMAIL:zhuliang@ceair.com\nADR:;;绥宁路628号;;上海;200335\nORG:中国东方航空股有限公司\nTITLE:项目经理\nURL:mp.ceair.com\nNOTE:名\347\211\214二维码\nEND:VCARD" id="VCcardInfo"</span>
+            <input class="btn" type="button" value="VCard添加联系人" onclick="uexContact.addItemWithVCard('BEGIN:VCARD\nVERSION:3.0\nN:韩;超\nTEL:22334752\nEMAIL:zhuliang@ceair.com\nADR:;;绥宁路628号;;上海;200335\nORG:中国东方航空股有限公司\nTITLE:项目经理\nURL:mp.ceair.com\nNOTE:名\347\211\214二维码\nEND:VCARD','');">
+			
+			<input class="btn" type="button" value="返回" onclick="uexWindow.back();">
+		</div>
+	</div>
+</body>
+</html>
