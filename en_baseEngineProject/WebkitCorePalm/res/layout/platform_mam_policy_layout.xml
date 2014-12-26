@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <RelativeLayout
+        android:id="@+id/shelter"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/mam_scrollview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <RelativeLayout
+                android:id="@+id/policyRelativeLayout"
+                android:layout_width="270dip"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true" >
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/passiveRelativeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/policyRelativeLayout"
+                android:layout_margin="20dip" >
+
+                <TextView
+                    android:id="@+id/passiveTextView"
+                    android:layout_width="270dip"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center" />
+
+                <RelativeLayout
+                    android:id="@+id/passiveTextView_relativelayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/passiveTextView"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/platform_mam_login_bg_shape" >
+
+                    <TextView
+                        android:id="@+id/passiveTextViewLabel"
+                        android:layout_width="100dip"
+                        android:layout_height="50dip"
+                        android:layout_marginTop="5dip"
+                        android:gravity="center" />
+
+                    <EditText
+                        android:id="@+id/passiveEditText"
+                        android:layout_width="170dip"
+                        android:layout_height="50dip"
+                        android:layout_marginTop="5dip"
+                        android:layout_toRightOf="@+id/passiveTextViewLabel"
+                        android:singleLine="true" />
+                </RelativeLayout>
+
+                <Button
+                    android:id="@+id/passiveButton"
+                    android:layout_width="270dip"
+                    android:layout_height="50dip"
+                    android:layout_below="@+id/passiveTextView_relativelayout"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="5dip"
+                    android:background="@drawable/platform_mam_button_selector"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

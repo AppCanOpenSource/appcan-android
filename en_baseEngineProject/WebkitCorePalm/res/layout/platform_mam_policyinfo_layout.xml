@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/platform_mam_bg_shape" >
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="30dip"
+        android:background="@android:color/black" />
+
+    <RelativeLayout
+        android:id="@+id/title_relativelayout"
+        android:layout_width="match_parent"
+        android:layout_height="60dip"
+        android:background="@drawable/platform_mam_title_bg" >
+
+        <ImageView
+            android:id="@+id/title_back_imageview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dip"
+            android:background="@drawable/platform_mam_title_back_selector" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/title_back_imageview" >
+
+            <TextView
+                android:id="@+id/title_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                android:textSize="20sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/mam_scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title_relativelayout"
+        android:layout_centerInParent="true"
+         android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+        android:layout_marginTop="10dip" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"       
+            android:layout_height="wrap_content" >
+
+            <RelativeLayout
+                android:id="@+id/lvRelativeLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:visibility="gone" >
+
+                <TextView
+                    android:id="@+id/lvRelative_textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center" />
+
+                <EditText
+                    android:id="@+id/lvRelative_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/lvRelative_textView" />
+
+                <Button
+                    android:id="@+id/lvRelative_Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dip"
+                    android:layout_below="@+id/lvRelative_edittext"
+                    android:background="@drawable/platform_mam_button_selector"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/formRelativeLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/lvRelativeLayout"
+                android:layout_centerHorizontal="true" >
+            </RelativeLayout>
+			<TextView android:id="@+id/sms_textView"
+			     android:layout_width="match_parent"
+			     android:layout_height="wrap_content"
+			      android:textColor="@android:color/black"
+			       android:layout_centerHorizontal="true"
+			       android:layout_below="@+id/formRelativeLayout"
+			     android:visibility="gone"/>
+            <Button
+                android:id="@+id/activeButton"
+                android:layout_width="match_parent"
+                android:layout_height="50dip"
+                android:layout_below="@+id/sms_textView"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dip"
+                android:background="@drawable/platform_mam_button_selector"
+                android:textColor="@android:color/white"
+                android:textSize="20sp" />
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

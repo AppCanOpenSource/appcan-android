@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.zywx.wbpalmstar.widgetone.uex"
+    android:versionCode="190"
+    android:versionName="2.2.41" 
+    android:installLocation="internalOnly" >
+
+    <application
+        android:name="org.zywx.wbpalmstar.widgetone.WidgetOneApplication"
+        android:allowClearUserData="false"
+        android:debuggable="false"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name" 
+		android:hardwareAccelerated="false"
+		android:vmSafeMode="true">
+        <activity
+            android:name="org.zywx.wbpalmstar.engine.EBrowserActivity"
+            android:alwaysRetainTaskState="true"
+            android:configChanges="keyboardHidden|orientation"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/browser_main_theme"
+            android:windowSoftInputMode="stateHidden|adjustPan" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+			<intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="appcanscheme"/>
+            </intent-filter>
+        </activity>
+         <activity
+            android:name="org.zywx.wbpalmstar.platform.mam.PolicyActivity"
+            android:configChanges="orientation|keyboardHidden|navigation" android:windowSoftInputMode="adjustPan"/>
+         <activity
+            android:name="org.zywx.wbpalmstar.platform.mam.PolicyInfoActivity"
+            android:configChanges="orientation|keyboardHidden|navigation" android:windowSoftInputMode="adjustPan"/>
+
+        <receiver
+            android:name="org.zywx.wbpalmstar.platform.push.PushRecieveMsgReceiver">
+            <intent-filter>
+                <action android:name="org.zywx.push.receive" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+    <uses-sdk android:minSdkVersion="4"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:xlargeScreens="true"
+        android:normalScreens="true"
+        android:resizeable="true"
+        android:smallScreens="true" />
+
+</manifest>

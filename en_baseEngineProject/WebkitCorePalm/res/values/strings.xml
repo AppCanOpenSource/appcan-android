@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+
+<!-- common use通用字符串 -->
+    <string name="app_name">appcantemplate</string>
+    <string name="back">返回</string>
+    <string name="confirm">确定</string>
+    <string name="cancel">取消</string>
+    <string name="prompt">提示</string>
+    <string name="path_error">路径错误!</string>
+    <string name="settings">设置</string>
+    <string name="save">保存</string>
+    <string name="select_all">全选</string>
+    <string name="cancel_select_all">取消选定</string>
+    <string name="select">选择</string>
+    <string name="can_not_find_suitable_app_perform_this_operation">找不到适合的程序执行此操作!</string>
+    <string name="exit">退出</string>
+    <string name="confirm_delete">确定删除</string>
+    <string name="ma">吗?</string>
+    <string name="exit_message_server">该应用暂停服务</string>
+    <string name="exit_message_appid">当前应用ID非法</string>
+    <string name="error_parameter">参数错误</string>
+    <string name="no_have_read_limits_power">没有读取权限</string>
+    <string name="no_have_write_limits_power">没有写入权限</string>
+    <string name="error_sdcard_is_not_available">SD卡不可用</string>
+    <string name="error_file_does_not_exist">文件不存在</string>
+    <string name="error_no_permisson_RW">没有读写权限</string>
+    <string name="error_no_permisson_INTERNET">没有网络访问权限</string>
+    <string name="no_permisson_declare">没有申明相关权限</string>
+
+    <!-- browser use -->
+    <string name="browser_exitdialog_app_text">确定要退出程序吗？</string>
+    <string name="browser_exitdialog_msg">退出提示</string>
+    <string name="browser_dialog_error">错误提示</string>
+    <string name="browser_init_error">程序不完整</string>
+
+    <string name="appkey">26cf1a0e-6d52-41aa-bb54-f4efe8a35d33</string>
+    <string name="appstatus">4A0D7476B2A39662BE3B27</string>
+    <string name="push">true</string>
+    <string name="certificate_psw"></string>
+    <string name="widget_startup_report_host">http://newdc.appcan.cn/</string>
+    <string name="push_host">newpush.appcan.cn:1883</string>
+    <string name="bindUser_host">http://newpush.appcan.cn/</string>
+    <string name="analytics_host">http://newdc.appcan.cn/</string>
+    <string name="mam_host">http://newdc.appcan.cn/</string>
+    <string name="mam_push_host_and_port">newpush.appcan.cn:1883</string>
+
+    <!-- platform myspace  use -->
+    <string name="platform_myspace_app_center">应用中心</string>
+    <string name="platform_myspace_recommend_apps">推荐应用</string>
+    <string name="platform_myspace_my_apps">我的应用</string>
+    <string name="platform_myspace_pull_to_refresh">下拉刷新推荐列表</string>
+    <string name="platform_myspace_release_to_refresh">释放刷新推荐列表</string>
+    <string name="platform_myspace_loading">加载中...</string>
+    <string name="platform_myspace_tap_to_refresh">点击刷新推荐列表</string>
+
+</resources>
