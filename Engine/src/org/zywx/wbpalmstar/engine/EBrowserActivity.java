@@ -18,12 +18,26 @@
 
 package org.zywx.wbpalmstar.engine;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Iterator;
-import java.util.Set;
-
+import android.app.ActivityGroup;
+import android.app.AlertDialog;
+import android.app.LocalActivityManager;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.os.*;
+import android.os.Process;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.Window;
+import android.webkit.WebChromeClient.CustomViewCallback;
+import android.widget.FrameLayout;
+import android.widget.TextView;
+import com.slidingmenu.lib.SlidingMenu;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.zywx.wbpalmstar.engine.external.Compat;
@@ -34,30 +48,13 @@ import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.platform.push.PushRecieveMsgReceiver;
 import org.zywx.wbpalmstar.widgetone.WidgetOneApplication;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
+import org.zywx.wbpalmstar.widgetone.uex.R;
 
-import android.app.ActivityGroup;
-import android.app.AlertDialog;
-import android.app.LocalActivityManager;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
-import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.Process;
-import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.Window;
-import android.webkit.WebChromeClient.CustomViewCallback;
-import android.widget.FrameLayout;
-import android.widget.TextView;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Iterator;
+import java.util.Set;
 
 @SuppressWarnings("deprecation")
 public final class EBrowserActivity extends ActivityGroup {
@@ -82,6 +79,9 @@ public final class EBrowserActivity extends ActivityGroup {
 	public static boolean analytics = true;
 	private JSONObject OtherAppData;
 	public static boolean isForground = false;
+	
+	public SlidingMenu globalSlidingMenu;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +120,23 @@ public final class EBrowserActivity extends ActivityGroup {
 		
 	    handleIntent(getIntent());
 	    PushRecieveMsgReceiver.setContext(this);
+
+
+        globalSlidingMenu = new SlidingMenu(this);
+        globalSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+        globalSlidingMenu.setShadowWidthRes(R.dimen.shadow_width);
+        globalSlidingMenu.setShadowDrawable(R.drawable.shadow);
+//        globalSlidingMenu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+        globalSlidingMenu.setFadeDegree(0.35f);
+//        globalSlidingMenu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
+//        globalSlidingMenu.setMenu(R.layout.menu_frame);
+//        globalSlidingMenu.setMode(SlidingMenu.LEFT_RIGHT);
+//
+//        globalSlidingMenu.setSecondaryMenu(R.layout.menu_frame_two);
+//        globalSlidingMenu.setSecondaryShadowDrawable(R.drawable.shadowright);
+//        globalSlidingMenu.setBehindWidthRes(R.dimen.slidingmenu_width);
+//        globalSlidingMenu.setBehindWidthRes(0);
+
 	}
 
 	private final void initInternalBranch() {

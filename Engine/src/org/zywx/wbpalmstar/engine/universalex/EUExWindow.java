@@ -18,27 +18,6 @@
 
 package org.zywx.wbpalmstar.engine.universalex;
 
-import java.security.MessageDigest;
-import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.zywx.wbpalmstar.base.BUtility;
-import org.zywx.wbpalmstar.engine.EBrowser;
-import org.zywx.wbpalmstar.engine.EBrowserActivity;
-import org.zywx.wbpalmstar.engine.EBrowserAnimation;
-import org.zywx.wbpalmstar.engine.EBrowserView;
-import org.zywx.wbpalmstar.engine.EBrowserWidget;
-import org.zywx.wbpalmstar.engine.EBrowserWindow;
-import org.zywx.wbpalmstar.engine.EBrwViewEntry;
-import org.zywx.wbpalmstar.engine.EDialogTask;
-import org.zywx.wbpalmstar.engine.ESystemInfo;
-import org.zywx.wbpalmstar.engine.EViewEntry;
-import org.zywx.wbpalmstar.platform.window.ActionSheetDialog;
-import org.zywx.wbpalmstar.platform.window.ActionSheetDialog.ActionSheetDialogItemClickListener;
-import org.zywx.wbpalmstar.platform.window.PromptDialog;
-import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -52,6 +31,20 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
+import com.slidingmenu.lib.SlidingMenu;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.zywx.wbpalmstar.base.BUtility;
+import org.zywx.wbpalmstar.engine.*;
+import org.zywx.wbpalmstar.platform.window.ActionSheetDialog;
+import org.zywx.wbpalmstar.platform.window.ActionSheetDialog.ActionSheetDialogItemClickListener;
+import org.zywx.wbpalmstar.platform.window.PromptDialog;
+import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
+import org.zywx.wbpalmstar.widgetone.uex.R;
+
+import java.security.MessageDigest;
+import java.util.ArrayList;
 
 public class EUExWindow extends EUExBase {
 	public static final String tag = "uexWindow_";
@@ -113,6 +106,10 @@ public class EUExWindow extends EUExBase {
     private static final int MSG_FUNCTION_INSERTWINDOWABOVEWINDOW = 30;
     private static final int MSG_FUNCTION_INSERTWINDOWBELOWWINDOW = 31;
     private static final int MSG_FUNCTION_SETORIENTATION = 32;
+    private static final int MSG_FUNCTION_SETSLIDINGWIN = 33;
+    private static final int MSG_FUNCTION_SETSLIDINGWIN_ENABLE = 34;
+    private static final int MSG_FUNCTION_TOGGLE_SLIDINGWIN = 35;
+
     
 	private AlertDialog.Builder mAlert;
 	private AlertDialog.Builder mConfirm;
@@ -582,6 +579,247 @@ public class EUExWindow extends EUExBase {
 		}
 		curWind.setFlag(EBrowserWindow.F_WINDOW_FLAG_OPPOP_END);
 	}
+
+
+
+
+    public void toggleSlidingWindow(String[] param) {
+        if (param.length <= 0) {
+            return;
+        }
+        Message msg = new Message();
+        msg.obj = this;
+        msg.what = MSG_FUNCTION_TOGGLE_SLIDINGWIN;
+        Bundle bd = new Bundle();
+        bd.putStringArray(TAG_BUNDLE_PARAM, param);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
+    }
+
+    public void hanldeToggleSlidingWindow(String[] param) {
+        try {
+            int value = Integer.parseInt(param[0]);
+
+            EBrowserActivity activity = (EBrowserActivity) mContext;
+
+            SlidingMenu slidingMenu = activity.globalSlidingMenu;
+
+            if (slidingMenu.isMenuShowing()) {
+
+                slidingMenu.toggle();
+            }  else {
+                if (value == 0) { //left
+
+                    slidingMenu.showMenu();
+
+                } else if (value == 1) { // right
+                    slidingMenu.showSecondaryMenu();
+                }
+
+            }
+
+
+
+
+
+        } catch (Exception e) {
+        }
+    }
+
+
+    public void setSlidingWindowEnabled(String[] param) {
+        if (param.length <= 0) {
+            return;
+        }
+        Message msg = new Message();
+        msg.obj = this;
+        msg.what = MSG_FUNCTION_SETSLIDINGWIN_ENABLE;
+        Bundle bd = new Bundle();
+        bd.putStringArray(TAG_BUNDLE_PARAM, param);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
+    }
+
+    public void hanldeSetSlidingWindowEnabled(String[] param) {
+        try {
+            int value = Integer.parseInt(param[0]);
+            boolean enable = (value == 1) ? true : false;
+            EBrowserActivity activity = (EBrowserActivity) mContext;
+
+            activity.globalSlidingMenu.setSlidingEnabled(enable);
+
+        } catch (Exception e) {
+        }
+    }
+
+	
+	public void setSlidingWindow(String[] param) {
+		if (param.length <= 0) {
+			return;
+		}
+        Message msg = new Message();
+        msg.obj = this;
+        msg.what = MSG_FUNCTION_SETSLIDINGWIN;
+        Bundle bd = new Bundle();
+        bd.putStringArray(TAG_BUNDLE_PARAM, param);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
+	}
+	
+	public void handleSetSlidingWin(String[] param) {
+        String jsonStr = param[0];
+        EBrowserActivity activity = (EBrowserActivity) mContext;
+
+
+        try {
+            JSONObject jsonObject = new JSONObject(jsonStr);
+
+            int with = 0;
+            String url;
+            int slidingMode = SlidingMenu.LEFT;
+            boolean isAttach = false;
+            JSONObject leftJsonObj = null;
+            JSONObject rightJsonObj = null;
+
+
+            if (jsonObject.has("leftSliding"))  {
+
+                leftJsonObj = new JSONObject(jsonObject.getString("leftSliding"));
+
+
+                if(leftJsonObj != null) {
+
+                    slidingMode = SlidingMenu.LEFT;
+
+                    with = leftJsonObj.getInt("width");
+                    url = leftJsonObj.getString("url");
+
+                    if (with > 0) {
+                        activity.globalSlidingMenu.setBehindWidth(with);
+                    }
+
+                    activity.globalSlidingMenu.setMenu(R.layout.menu_frame);
+
+                    addBrowserWindowToSldingWin(url, EBrowserWindow.rootLeftSlidingWinName);
+
+                    isAttach = true;
+
+                }
+
+            }
+
+            if (jsonObject.has("rightSliding")) {
+
+                rightJsonObj = new JSONObject(jsonObject.getString("rightSliding"));
+
+
+                if(rightJsonObj != null) {
+
+                    slidingMode = SlidingMenu.RIGHT;
+
+                    with = rightJsonObj.getInt("width");
+                    url = rightJsonObj.getString("url");
+
+
+                    if (with > 0) {
+                        activity.globalSlidingMenu.setBehindWidth(with);
+                    }
+
+                    activity.globalSlidingMenu.setSecondaryMenu(R.layout.menu_frame_two);
+                    activity.globalSlidingMenu.setSecondaryShadowDrawable(R.drawable.shadowright);
+
+                    addBrowserWindowToSldingWin(url, EBrowserWindow.rootRightSlidingWinName);
+
+
+                    isAttach = true;
+
+                }
+
+            }
+
+
+            if (leftJsonObj !=null && rightJsonObj != null) {
+                slidingMode = SlidingMenu.LEFT_RIGHT;
+            }
+
+            if (isAttach == true) {
+                activity.globalSlidingMenu.setMode(slidingMode);
+                activity.globalSlidingMenu.attachToActivity(activity, SlidingMenu.SLIDING_CONTENT);
+            }
+
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
+    public void addBrowserWindowToSldingWin(String url, String winName) {
+        EBrowserWindow curWind = mBrwView.getBrowserWindow();
+        if (null == curWind) {
+            return;
+        }
+        String inWindowName = winName;
+        String inData = url;
+
+        String bgPath = null;
+
+        String cUrl = mBrwView.getCurrentUrl();
+        boolean eq = curWind.getName().equals(inWindowName);
+        if (eq) {
+            return;
+        }
+
+        int dataType = 0;
+
+
+        WWidgetData wgt = mBrwView.getCurrentWidget();
+        EBrwViewEntry windEntry = new EBrwViewEntry(EBrwViewEntry.VIEW_TYPE_MAIN);
+        String data = null;
+        if (EBrwViewEntry.isData(dataType)) {
+            data = inData;
+        } else {
+            String wgtroot = "wgtroot://";
+            if (inData.startsWith(wgtroot)) {
+                String initUrl = wgt.m_indexUrl;
+                inData = inData.substring(wgtroot.length());
+                inData = BUtility.makeUrl(initUrl, inData);
+                data = inData;
+            } else {
+                data = BUtility.makeUrl(cUrl, inData);
+            }
+            windEntry.mRelativeUrl = inData;
+        }
+        String query = null;
+        if (Build.VERSION.SDK_INT >= 11) {
+            if (EBrwViewEntry.isUrl(dataType) && data.startsWith("file")) {
+                int index = data.indexOf("?");
+                if (index > 0) {
+                    query = data.substring(index + 1);
+                    data = data.substring(0, index);
+                }
+            }
+        }
+        if (null != bgPath) {
+            if (bgPath.contains("://")) {
+                bgPath = BUtility.makeRealPath(bgPath, wgt.m_widgetPath, wgt.m_wgtType);
+            } else {
+                bgPath = BUtility.makeUrl(cUrl, bgPath);
+                bgPath = BUtility.makeRealPath(bgPath, wgt.m_widgetPath, wgt.m_wgtType);
+            }
+        }
+        windEntry.mQuery = query;
+        windEntry.mWindName = inWindowName;
+        windEntry.mDataType = dataType;
+        windEntry.mData = data;
+        windEntry.mBgPath = bgPath;
+        curWind.createSlidingWindow(windEntry);
+    }
+	
+	
 
 	public void openPopover(String[] parm) {
 		if (parm.length < 10) {
@@ -2421,6 +2659,14 @@ public class EUExWindow extends EUExBase {
         case MSG_FUNCTION_SETORIENTATION:
             if(param != null) setOrientationMsg(param);
             break;
+        case MSG_FUNCTION_SETSLIDINGWIN:
+        	handleSetSlidingWin(param);
+        	break;
+        case MSG_FUNCTION_SETSLIDINGWIN_ENABLE:
+            hanldeSetSlidingWindowEnabled(param);
+            break;
+        case MSG_FUNCTION_TOGGLE_SLIDINGWIN:
+            hanldeToggleSlidingWindow(param);
         default:
             break;
         }

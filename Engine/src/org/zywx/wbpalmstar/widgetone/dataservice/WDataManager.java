@@ -18,28 +18,6 @@
 
 package org.zywx.wbpalmstar.widgetone.dataservice;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.zip.ZipException;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.zywx.wbpalmstar.base.BDebug;
-import org.zywx.wbpalmstar.base.BUtility;
-import org.zywx.wbpalmstar.base.ResoureFinder;
-import org.zywx.wbpalmstar.base.zip.CnZipInputStream;
-import org.zywx.wbpalmstar.base.zip.ZipEntry;
-import org.zywx.wbpalmstar.engine.ESystemInfo;
-import org.zywx.wbpalmstar.platform.encryption.PEncryption;
-import org.zywx.wbpalmstar.platform.myspace.CommonUtility;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -50,6 +28,21 @@ import android.database.Cursor;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Xml;
+import org.xmlpull.v1.XmlPullParser;
+import org.zywx.wbpalmstar.base.BDebug;
+import org.zywx.wbpalmstar.base.BUtility;
+import org.zywx.wbpalmstar.base.ResoureFinder;
+import org.zywx.wbpalmstar.base.zip.CnZipInputStream;
+import org.zywx.wbpalmstar.base.zip.ZipEntry;
+import org.zywx.wbpalmstar.engine.ESystemInfo;
+import org.zywx.wbpalmstar.platform.encryption.PEncryption;
+import org.zywx.wbpalmstar.platform.myspace.CommonUtility;
+
+import java.io.*;
+import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.zip.ZipException;
 
 public class WDataManager {
 	private Context m_context;
@@ -216,7 +209,6 @@ public class WDataManager {
 	/**
 	 * 检查注册
 	 * 
-	 * @param widgetId
 	 * @param ver
 	 */
 	public ReData ChekeUpdate(Context context, String udateurl, String appId,
@@ -226,8 +218,7 @@ public class WDataManager {
 
 	/**
 	 * Widget 上报
-	 * 
-	 * @param widgetId
+	 *
 	 *            应用程序标识
 	 */
 	// public void widgetReport(WWidgetData widgetData) {

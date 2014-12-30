@@ -164,4 +164,11 @@ public class EUExUtil {
 		int valuePixels = (int)(dip * density + 0.5f); 
 		return valuePixels;
 	}
+
+
+    public static int px2dip(float pxValue) {
+
+        final float scale = resources.getDisplayMetrics().density;
+        return (int) (pxValue / scale + 0.5f);
+    }
 }

@@ -1,0 +1,91 @@
+h1,div,p,span,a,img,ul,li,ol,var,em{margin:0;padding:0;}
+a img{border:none;}
+ul,ol{list-style-type:none;}
+.clear{height:0;clear:both;}
+a{text-decoration:none;}
+var,em{font-style:normal;font-weight:noraml;}
+
+@media screen and (min-width:769px) {
+body,p,div,ul,ol,li,dl,dt,dd,span,var,em,a,img,strong,table,td,tr,h2,h3,h4,h5,input{font-family: Arial, Helvetica, sans-serif;margin:0;padding:0;font-size:40px;font-family:微软雅黑; color:#f0ecf3;}
+.tit{ font-size:1.7em;}
+.con a{ font-size:1.5em;}
+.consj span{ font-size:1.3em;}
+.textbox{ font-size:1.3em;}
+.btn{ font-size:1.3em;}
+.tcxx{ font-size:1.3em;}
+}
+@media screen and (min-width:480px) and (max-width:768px) {
+body,p,div,ul,ol,li,dl,dt,dd,span,var,em,a,img,strong,table,td,tr,h2,h3,h4,h5,input{font-family: Arial, Helvetica, sans-serif;margin:0;padding:0;font-size:32px;font-family:微软雅黑;color:#f0ecf3;}
+.tit{ font-size:1.7em;}
+.con a{ font-size:1.5em;}
+.consj span{ font-size:1.3em;}
+.textbox{ font-size:1.3em;}
+.btn{ font-size:1.3em;}
+.tcxx{ font-size:1.3em;}
+}
+@media screen and (min-width:320px) and (max-width:480px) {
+body,p,div,ul,ol,li,dl,dt,dd,span,var,em,a,img,strong,table,td,tr,h2,h3,h4,h5,input{font-family: Arial, Helvetica, sans-serif;margin:0;padding:0;font-size:16px;font-family:微软雅黑;color:#f0ecf3;}
+.tit{ font-size:1.7em;}
+.con a{ font-size:1.5em;}
+.consj span{ font-size:1.3em;}
+.textbox{ font-size:1.3em;}
+.btn{ font-size:1.3em;}
+.tcxx{ font-size:1.3em;}
+}
+@media screen and (min-width:240px) and (max-width:320px) {
+body,p,div,ul,ol,li,dl,dt,dd,span,var,em,a,img,strong,table,td,tr,h2,h3,h4,h5,input{font-family: Arial, Helvetica, sans-serif;margin:0;padding:0;font-size:12px;font-family:微软雅黑;color:#f0ecf3;}
+.tit{ font-size:1.7em;}
+.con a{ font-size:1.5em;}
+.consj span{ font-size:1.3em;}
+.textbox{ font-size:1.3em;}
+.btn{ font-size:1.3em;}
+.tcxx{ font-size:1.3em;}
+}
+
+body{ background:#077CE3; width:100%; height:100%;}
+
+.con{ padding:5px;}
+.tit{ background:#27A73F; width:100%; text-align:center;}
+.con a{ background:-webkit-gradient(linear,0 0,0 100%,from(#FFCD00),color-stop(50%,#FFBC00),color-stop(50%,#FFA500)); border:1px solid #FFA700; display:block; -webkit-border-radius:8px; margin:10% 25%; text-align:center; padding:2%; color:#712000;}
+.conbor{ margin:3%; width:90%; display:block;}
+.consj{ margin:0 0 0 5%;}
+.consj span{ width:85%; display:block; margin:4% 0 3% 0;}
+.textbox{display:block; width:85%;color:#bebdbf; padding:1.5% 1%;}
+.btn{ margin:3% 0; background:-webkit-gradient(linear,0 0,0 100%,from(#FFCD00),color-stop(50%,#FFBC00),color-stop(50%,#FFA500)); border:1px solid #FFA700; display:block; -webkit-border-radius:8px;text-align:center; padding:2%; color:#712000; display:block;}
+.tcxx{ width:85%; color:#bebdbf; height:100px; border:1px dashed #C6C6C6;padding:1%;}
+#payy{ width:85%; color:#bebdbf; height:200px; border:1px dashed #C6C6C6;padding:1%;}
+.tit{display:-webkit-box;display:box;
+    -webkit-box-orient: horizontal;
+    box-orient: horizontal;}
+.umw4{min-width:4em;}
+h1{padding:0;margin:0;font-weight:normal;}
+.ulev0{font-size:1em;padding:0.35em 0;}
+.btnzd-left{background:url(../images/back.png) 0 0 no-repeat;position:absolute;left:0.5em;top:0.5em;border:none;
+	font-size: 0.9em;
+padding: 0.4em 0.4em 0.4em 0.8em;
+	background-size:100% 100%;-webkit-background-size:100% 100%;}
+.btnzd-right{background:url(../images/button.png) 0 0 no-repeat;position:absolute;right:0.5em;top:0.5em;border:none;
+	font-size: 0.9em;
+padding: 0.4em;
+	background-size:100% 100%;-webkit-background-size:100% 100%;}
+.tx-c{text-align:center;}
+.ub-f1{box-flex:1;-webkit-box-flex:1;}
+.c-bg{background-image:url(../images/head.png);background-size:100% 100%;-webkit-background-size:100% 100%;}
+
+.test{background: -webkit-gradient(linear,0 0,0 100%,from(#FFCD00),color-stop(50%,#FFBC00),color-stop(50%,orange));
+border: 1px solid #FFA700;
+display: block;
+-webkit-border-radius: 8px;
+margin: 10% 25%;
+text-align: center;
+padding: 2%;
+color: #712000;
+font-size: 1.5em;}
+
+input[type="text"]{
+	color: black;
+}
+
+#header{
+	background: #2294c3 !important;
+}

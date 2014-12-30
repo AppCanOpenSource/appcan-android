@@ -1,0 +1,31 @@
+# view res/layout/slidingmenumain.xml #generated:2
+-keep class com.slidingmenu.lib.SlidingMenu { <init>(...); }
+
+# view AndroidManifest.xml #generated:17
+-keep class org.zywx.wbpalmstar.engine.EBrowserActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:38
+-keep class org.zywx.wbpalmstar.platform.memoryControl.KeepForeService { <init>(...); }
+
+# view res/layout/platform_myspace_main.xml #generated:104
+# view res/layout/platform_myspace_main.xml #generated:77
+-keep class org.zywx.wbpalmstar.platform.myspace.DisScrollGridView { <init>(...); }
+
+# view res/layout/platform_myspace_main.xml #generated:43
+-keep class org.zywx.wbpalmstar.platform.myspace.RefreshableView { <init>(...); }
+
+# view AndroidManifest.xml #generated:54
+-keep class org.zywx.wbpalmstar.platform.push.PushBroadCastReceiver { <init>(...); }
+
+# view AndroidManifest.xml #generated:61
+-keep class org.zywx.wbpalmstar.platform.push.PushRecieveMsgReceiver { <init>(...); }
+
+# view AndroidManifest.xml #generated:49
+-keep class org.zywx.wbpalmstar.platform.push.PushService { <init>(...); }
+
+# view AndroidManifest.xml #generated:31
+-keep class org.zywx.wbpalmstar.wbpalm.V8PalmActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:8
+-keep class org.zywx.wbpalmstar.widgetone.WidgetOneApplication { <init>(...); }
+

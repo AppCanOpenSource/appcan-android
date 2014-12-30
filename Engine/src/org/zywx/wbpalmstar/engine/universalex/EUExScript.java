@@ -165,7 +165,12 @@ public class EUExScript {
 				+ "makeRotate:function(){uexWindow_.makeRotate(jo(arguments));},"
 				+ "makeAlpha:function(){uexWindow_.makeAlpha(jo(arguments));},"
 				+ "commitAnimition:function(){uexWindow_.commitAnimition(jo(arguments));},"
-				
+
+
+                + "setSlidingWindow:function(){uexWindow_.setSlidingWindow(jo(arguments));},"
+                + "setSlidingWindowEnabled:function(){uexWindow_.setSlidingWindowEnabled(jo(arguments));},"
+                + "toggleSlidingWindow:function(){uexWindow_.toggleSlidingWindow(jo(arguments));},"
+
 				+ "setBounce:function(){uexWindow_.setBounce(jo(arguments));},"
 				+ "notifyBounceEvent:function(){uexWindow_.notifyBounceEvent(jo(arguments));},"
 				+ "showBounceView:function(){uexWindow_.showBounceView(jo(arguments));},"
@@ -173,6 +178,7 @@ public class EUExScript {
 				+ "setBounceParams:function(){uexWindow_.setBounceParams(jo(arguments));},"
 				+ "hiddenBounceView:function(){uexWindow_.hiddenBounceView(jo(arguments));},"
 				+ "getUrlQuery:function(){return uexWindow_.getUrlQuery(jo(arguments))}};"
+
 				+
 //				// DataAnalysis 
 //				"window.uexDataAnalysis={"

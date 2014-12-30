@@ -18,16 +18,17 @@
 
 package org.zywx.wbpalmstar.base.cache;
 
-import java.util.LinkedList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import org.zywx.wbpalmstar.base.BDebug;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Process;
+import org.zywx.wbpalmstar.base.BDebug;
+
+import java.util.LinkedList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * 图片异步加载与缓存管理
@@ -56,9 +57,7 @@ public class ImageLoaderManager {
 	 * 
 	 * @param maxConcurrentThreads
 	 *            最大并发线程数
-	 * @param cacheCapacity
-	 *            内存文件缓存大小
-	 */
+     */
 	private ImageLoaderManager(int maxConcurrentThreads, int memoryCacheSize) {
 		memoryCache = new LruCache<String, Bitmap>(memoryCacheSize) {
 			/**

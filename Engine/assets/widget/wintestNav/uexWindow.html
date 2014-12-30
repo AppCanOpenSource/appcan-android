@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    <head>
+        <title></title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    	<link rel="stylesheet" href="../css/ui-btn.css">
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <link rel="stylesheet" href="../css/ui-box.css">
+        <link rel="stylesheet" href="../css/ui-color.css">
+		<link rel="stylesheet" href="../css/ui-res.css">
+        <script src="../js/zy_control.js">
+        </script>
+        <script src="../js/zy_click.js">
+        </script>
+        <script src="../js/zy_control.js"></script>
+        <script>
+        </script>
+    </head>
+    <body class="um-vp c-wh" ontouchstart>
+        <div id="page_0" class="up ub ub-ver" tabindex="0">
+            <!--header开始-->
+            <div id="header" class="uh t-wh ub" style="background: #27A73F;">
+            	<div class="umw4 ub ub-ac ub-pc" ontouchstart="zy_touch()" onclick="uexWindow.close(-1)">
+					<div ontouchstart="zy_touch('btn-act')" class="btn uba b-bla uinn5 c-blu c-m1 uc-a t-wh" style="background: -webkit-gradient(linear,0 0,0 100%,from(#FFCD00),color-stop(50%,#FFBC00),color-stop(50%,orange));border: 1px solid #FFA700;-webkit-border-radius: 8px;  text-align: center;color: #712000;  display: block; font-size: 1em; padding: 0.2em;">返回</div>
+            	</div>
+                <h1 class="ut ub-f1 ulev0 ut-s tx-c" tabindex="0">Window功能</h1>
+				<div class="umw4" ontouchstart="zy_touch()" onclick="">
+                <!--插入按钮控件-->
+            	</div>
+            </div>
+            <!--header结束--><!--content开始-->
+            <div id="content" class="ub-f1 tx-l t-bla">
+                
+            </div>
+        </div>
+    </body>
+    <script>
+    	zy_init();
+        
+        function zy_con1(id,url,x,y)
+        {
+            var s=window.getComputedStyle($$(id),null);
+            uexWindow.openPopover(id,"0",url,"",int(x),int(y),int(s.width),int(s.height),int(s.fontSize),"130");
+        }
+    
+        window.uexOnload = function(type){
+            if (!type) {
+                zy_con("content", "uexWindow_content.html", 0, $$("header").offsetHeight);
+            }
+		 	window.onorientationchange=window.onresize=function()
+			{
+				zy_resize("content",0,$$("header").offsetHeight);
+			}
+            
+            
+            
+            
+        }
+		function winBack(){
+//			uexWindow.back();	//同一个页面使用<a>标签的href跳转，之后可以用back()返回
+			uexWindow.close(-1);
+		}
+    
+    
+        function openpop(){
+            var x = 0;
+            var y = 0;
+            var w = 320;
+            var h = 480;
+            uexWindow.openPopover("sss", "0", "window/pop.html", "", x, y, w, h, "5", "130");
+        }
+    
+    function winPopOpen2() {
+        var x = 0;
+        var y = 0;
+        var w = 240;
+        var h = 240;
+        uexWindow.openPopover("pop2", "0", "window/popoverPage.html", "", x, y, w, h, "5", "130");
+    }
+    
+    function closeOpenPop2() {
+        uexWindow.closePopover("pop2");
+    }
+    
+        function winPopOpen(){
+        
+            openpop();
+        }
+    
+    
+    function winOpenMultiPop() {
+        
+        
+        var params ={
+                content: [
+                                {
+                                inPageName:"p1",
+                                inUrl:"window/popoverPage.html",
+                                inData:""
+                                },
+                                {
+                                inPageName:"p2",
+                                inUrl:"window/pop.html",
+                                inData:""
+                                }
+                          ]
+        };
+        
+        var paramStr = JSON.stringify(params);
+        
+        uexWindow.openMultiPopover(paramStr,"multipop",0,0,0,200,240,'',0,0);
+        uexWindow.setSelectedPopOverInMultiWindow("multipop", 1);
+    }
+    
+    function winCloseMultiPop() {
+        uexWindow.closeMultiPopover("multipop");
+    }
+    
+    </script>
+</html>

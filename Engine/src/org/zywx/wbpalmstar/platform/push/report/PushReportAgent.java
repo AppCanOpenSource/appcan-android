@@ -18,9 +18,12 @@
 
 package org.zywx.wbpalmstar.platform.push.report;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.util.Log;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
@@ -31,12 +34,8 @@ import org.zywx.wbpalmstar.platform.encryption.PEncryption;
 import org.zywx.wbpalmstar.platform.push.PushService;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.util.Log;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PushReportAgent implements PushReportConstants {
 
@@ -70,10 +69,8 @@ public class PushReportAgent implements PushReportConstants {
 
 	/**
 	 * 主应用启动时初始化推送
-	 * 
-	 * @param inAppKey
-	 *            从服务器注册的应用唯一标识
-	 */
+	 *
+     */
 
 	public void initPush(WWidgetData wData, Context context) {
 		// mContext = inActivity;

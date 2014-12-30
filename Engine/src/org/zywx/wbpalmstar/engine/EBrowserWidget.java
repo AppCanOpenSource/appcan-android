@@ -18,6 +18,8 @@
 
 package org.zywx.wbpalmstar.engine;
 
+import android.widget.FrameLayout;
+import com.slidingmenu.lib.SlidingMenu;
 import org.json.JSONObject;
 import org.zywx.wbpalmstar.base.BConstant;
 import org.zywx.wbpalmstar.engine.external.Compat;
@@ -125,6 +127,18 @@ public class EBrowserWidget extends AbsoluteLayout {
 		mWidgetLoop.sendMessage(msg);
 	}
 
+    public void createSlidingWindow(EBrwViewEntry entry) {
+
+        if (!entry.checkFlag(EBrwViewEntry.F_FLAG_HIDDEN)) {
+            EBrowser.setFlag(EBrowser.F_BRW_FLAG_OPENING);
+        }
+        Message msg = mWidgetLoop.obtainMessage();
+        msg.obj = entry;
+        msg.what = F_WIDGET_HANDLER_WINDOW_CREATE_SLIDING;
+        mWidgetLoop.sendMessage(msg);
+
+    }
+
 	public void createWindow(EBrowserWindow preWindow, EBrowserView target,
 			EBrwViewEntry entry) {
 
@@ -169,7 +183,12 @@ public class EBrowserWidget extends AbsoluteLayout {
 			boolean issame = window
 					.checkFlag(EBrowserWindow.F_WINDOW_FLAG_SAME);
 			boolean isnew = window.checkFlag(EBrowserWindow.F_WINDOW_FLAG_NEW);
-			if (issame || isnew) {
+            boolean isSliding = window.checkFlag(EBrowserWindow.F_WINDOW_FLAG_SLIDING_WIN);
+
+            if (isSliding) {
+                EBrowser.clearFlag();
+                window.clearHistory();
+            } else if (issame || isnew) {
 				showOnly(window, SHOW_TYPE_NEXT);
 				window.clearHistory();
 			} else if (checkFlag(F_WIDGET_FLAG_NEW)) {
@@ -669,8 +688,10 @@ public class EBrowserWidget extends AbsoluteLayout {
 	public static final int F_WIDGET_HANDLER_LOAD_DELAY = 4;
 	public static final int F_WIDGET_HANDLER_SET_WINDOW = 5;
 
+
 	public static final int F_WIDGET_HANDLER_INSERT_WINDOW_ABOVE_POPOVER = 6;
 	public static final int F_WIDGET_HANDLER_INSERT_WINDOW_BELOW_POPOVER = 7;
+    public static final int F_WIDGET_HANDLER_WINDOW_CREATE_SLIDING = 8;
 
 	public class WidgetHandler extends Handler {
 
@@ -687,11 +708,13 @@ public class EBrowserWidget extends AbsoluteLayout {
 			removeMessages(F_WIDGET_HANDLER_SET_WINDOW);
 			removeMessages(F_WIDGET_HANDLER_INSERT_WINDOW_ABOVE_POPOVER);
 			removeMessages(F_WIDGET_HANDLER_INSERT_WINDOW_BELOW_POPOVER);
+            removeMessages(F_WIDGET_HANDLER_WINDOW_CREATE_SLIDING);
 		}
 
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case F_WIDGET_HANDLER_WINDOW_CREATE:// create
+            {
 				EBrwViewEntry entry = (EBrwViewEntry) msg.obj;
 				boolean hidden = entry.checkFlag(EBrwViewEntry.F_FLAG_HIDDEN);
 				if (!hidden) {
@@ -750,6 +773,7 @@ public class EBrowserWidget extends AbsoluteLayout {
 				Delay ent = new Delay(newWindow, entry);
 				sendMessageDelayed(
 						obtainMessage(F_WIDGET_HANDLER_LOAD_DELAY, ent), 90);
+            }
 				break;
 			case F_WIDGET_HANDLER_WINDOW_HISTROY:// window histroy
 				if (0 == msg.arg1) {// back
@@ -833,6 +857,101 @@ public class EBrowserWidget extends AbsoluteLayout {
 				int j2 = indexOfChild(bo2);
 				addView(bo1, j2);
 				break;
+            case F_WIDGET_HANDLER_WINDOW_CREATE_SLIDING:
+            {
+                EBrowserActivity activity = (EBrowserActivity)mContext;
+
+                SlidingMenu slidingMenu = activity.globalSlidingMenu;
+
+                if (slidingMenu == null) {
+                    return;
+                }
+
+                EBrwViewEntry entry = (EBrwViewEntry) msg.obj;
+                boolean hidden = entry.checkFlag(EBrwViewEntry.F_FLAG_HIDDEN);
+                if (!hidden) {
+                    mEWindowStack.clearFractureLink();
+                }
+                if (checkWindow(entry)) {
+                    break;
+                }
+                EBrowserWindow newWindow = getInvalid();
+                if (null != newWindow) {
+                    newWindow.setEBrowserWidget(EBrowserWidget.this);
+                } else {
+                    newWindow = new EBrowserWindow(mContext,
+                            EBrowserWidget.this);
+                }
+                boolean prevHidden = entry
+                        .checkFlag(EBrwViewEntry.F_FLAG_NOT_HIDDEN);
+                newWindow.setPrevWindowWillHidden(prevHidden);
+                newWindow.setDateType(entry.mDataType);
+                newWindow.setWindPoType(F_WINDOW_POOL_TYPE_NEW);
+                newWindow.setAnimId(entry.mAnimId);
+                newWindow.setAnimDuration(entry.mAnimDuration);
+                newWindow.setHidden(hidden);
+                if (entry.checkFlag(EBrwViewEntry.F_FLAG_OAUTH)) {
+                    newWindow.setOAuth(true);
+                    newWindow.registUrlChangeNotify(entry.mPreWindName);
+                }
+
+                if (entry.checkFlag(EBrwViewEntry.F_FLAG_PREOP)) {
+                    newWindow.setFlag(EBrowserWindow.F_WINDOW_FLAG_OPPOP);
+                }
+                if (entry.checkFlag(EBrwViewEntry.F_FLAG_OPAQUE)) {
+                    newWindow.setBackgroundColor(0xFFFFFFFF);
+                }
+                FrameLayout.LayoutParams parm = new FrameLayout.LayoutParams(
+                        Compat.FILL, Compat.FILL);
+                newWindow.setLayoutParams(parm);
+                newWindow.init(mBrw, entry);
+                if (entry.checkFlag(EBrwViewEntry.F_FLAG_GESTURE)) {
+                    newWindow.setSupportZoom();
+                }
+                if (entry.checkFlag(EBrwViewEntry.F_FLAG_SHOULD_OP_SYS)) {
+                    newWindow.setShouldOpenUrlInSystem(true);
+                }
+                newWindow.setVisibility(INVISIBLE);
+                newWindow.setQuery(EBrwViewEntry.VIEW_TYPE_MAIN, entry.mQuery);
+                ViewParent parent = newWindow.getParent();
+                if (null == parent) {
+
+                     FrameLayout menuView = null;
+
+                    if (entry.mWindName.equals(EBrowserWindow.rootLeftSlidingWinName)) {
+
+                        slidingMenu.setMenu(newWindow);
+
+                    } else if (entry.mWindName.equals(EBrowserWindow.rootRightSlidingWinName)) {
+
+                        slidingMenu.setSecondaryMenu(newWindow);
+
+                    }
+
+
+
+                }
+
+
+//                windowStorage(newWindow);
+                newWindow.setFlag(EBrowserWindow.F_WINDOW_FLAG_SLIDING_WIN);
+
+//                Delay ent = new Delay(newWindow, entry);
+//                sendMessageDelayed(
+//                        obtainMessage(F_WIDGET_HANDLER_LOAD_DELAY, ent), 90);
+
+                if (EBrwViewEntry.isUrl(entry.mDataType)) {
+//					if (enty.checkFlag(EBrwViewEntry.F_FLAG_OBFUSCATION)) {
+                    if (getWidget().m_obfuscation == 1) {
+                        newWindow.needToEncrypt(entry.mData);
+                    } else {
+                        newWindow.start(entry.mData);
+                    }
+                } else {
+                    newWindow.newLoadData(entry.mData);
+                }
+            }
+                break;
 			}
 		}
 	}

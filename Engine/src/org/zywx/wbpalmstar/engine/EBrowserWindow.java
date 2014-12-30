@@ -18,25 +18,6 @@
 
 package org.zywx.wbpalmstar.engine;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.zywx.wbpalmstar.base.BHtmlDecrypt;
-import org.zywx.wbpalmstar.base.BUtility;
-import org.zywx.wbpalmstar.engine.EBrowserHistory.EHistoryEntry;
-import org.zywx.wbpalmstar.engine.external.Compat;
-import org.zywx.wbpalmstar.engine.universalex.EUExCallback;
-import org.zywx.wbpalmstar.engine.universalex.EUExScript;
-import org.zywx.wbpalmstar.engine.universalex.EUExWidget.SpaceClickListener;
-import org.zywx.wbpalmstar.engine.universalex.EUExWindow;
-import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -57,6 +38,19 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.Toast;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.zywx.wbpalmstar.base.BHtmlDecrypt;
+import org.zywx.wbpalmstar.base.BUtility;
+import org.zywx.wbpalmstar.engine.EBrowserHistory.EHistoryEntry;
+import org.zywx.wbpalmstar.engine.external.Compat;
+import org.zywx.wbpalmstar.engine.universalex.EUExCallback;
+import org.zywx.wbpalmstar.engine.universalex.EUExScript;
+import org.zywx.wbpalmstar.engine.universalex.EUExWidget.SpaceClickListener;
+import org.zywx.wbpalmstar.engine.universalex.EUExWindow;
+import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
+
+import java.util.*;
 
 public class EBrowserWindow extends FrameLayout implements AnimationListener {
 
@@ -67,6 +61,7 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 	public static final int F_WINDOW_FLAG_OPENING = 0x8;
 	public static final int F_WINDOW_FLAG_OPPOP = 0x10;
 	public static final int F_WINDOW_FLAG_OPPOP_END = 0x20;
+    public static final int F_WINDOW_FLAG_SLIDING_WIN = 0x40;
 	public static final String CALLBACK_POST_GLOBAL_NOTI = "javascript:if(uexWindow.onGlobalNotification)"
 			+ "{uexWindow.onGlobalNotification('";
 	public static final String CALLBACK_PUBLISH_GLOBAL_NOTI = "javascript:uexWindow.";
@@ -118,6 +113,9 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 	public static boolean isShowDialog = false;
 	private List<HashMap<String, String>> mChannelList = null;
 	private List<HashMap<String, Object>> mResumeJs = null;
+
+    public static String rootLeftSlidingWinName = "rootLeftSlidingWinName";
+    public static String rootRightSlidingWinName = "rootRightSlidingWinName";
 	
 	public EBrowserWindow(Context context, EBrowserWidget inParent) {
 		super(context);
@@ -192,6 +190,13 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 		msg.obj = child;
 		mWindLoop.sendMessage(msg);
 	}
+
+
+
+
+    public void createSlidingWindow(EBrwViewEntry entry) {
+        mBroWidget.createSlidingWindow(entry);
+    }
 
 	public void createWindow(EBrowserView target, EBrwViewEntry entry) {
         /*boolean b1 = entry.checkFlag(EBrwViewEntry.F_FLAG_OBFUSCATION);

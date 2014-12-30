@@ -1,104 +1,0 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-   <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
-<link rel="stylesheet" type="text/css" href="css/index.css">
-<title>Widget管理</title>
-<script type="text/javascript">
-	var inAnimiId = "2"; //动画id，淡入淡出效果。
-	function startWidget(appId){
-         uexWidget.startWidget(appId, inAnimiId, "pluginCallback", "plugin 插件调用");
-	}
-	function loadSuccess(arg){
-		alert("加载成功");
-	}
-	function loadFailed(arg){
-		alert("加载失败");
-	}
-	function finishWidget(){
-		uexWidget.finishWidget("uexWidget.finishWidget");
-	}
-	function delWidget(appId){
-		uexWidget.removeWidget(appId);
-	}
-	function del(opCode, dataType, data){		if(data == 0){			alert("删除成功！");		}else{			alert("删除失败！");		}	}	function checkSuc(opCode, dataType, jsonData){
-		var obj = eval('('+jsonData+')');
-		if(obj.result == 0){
-			document.getElementById('newWidget').innerHTML = "更新地址是：" + obj.url + "<br>文件名：" + obj.name + "<br>文件大小：" + obj.size + 
-			"<br>版本号：" + obj.version;
-		}else if(obj.result == 1){
-			document.getElementById('newWidget').innerHTML = "当前版本是最新的";		}else if(obj.result == 2){			document.getElementById('newWidget').innerHTML = "未知错误";		}else if(obj.result == 3){			document.getElementById('newWidget').innerHTML = "当前widget还没有注册";		}	}
-	function  checkFai(json){		document.getElementById('newWidget').innerHTML="更新错误";	}
-	function pluginCallback(resultInfo){		alert("pluginCallback"+resultInfo);	}
-	function loadappa(){		var appInfo = document.getElementById('android_appInfo').value; 		var filter =  document.getElementById('android_filter').value;		var dataInfo = document.getElementById('android_dataInfo').value;		uexWidget.loadApp(appInfo, filter, dataInfo);	}
-	function loadappo(){		var appInfo = document.getElementById('ios_appInfo').value; 		var filter =  document.getElementById('ios_filter').value;		var dataInfo = document.getElementById('ios_dataInfo').value;		uexWidget.loadApp(appInfo, filter, dataInfo);	}
-	function install(){		var path = document.getElementById('pp').value; 		uexWidget.installApp(path);	}
-	function install1(){		var path = document.getElementById('zz').value; 		uexWidget.installApp(path);	}
-   function getPushSuc(opCode,dataType,data){	if(data!=null&&data.length>0){		document.getElementById('getPush').innerHTML = data;	}   }
-   function aaa(){   		//alert("收到推送消息！！！！！！！！！");		document.getElementById('PushNotifyCallback').innerHTML = "PushNotifyCallback";
-   }
-	window.uexOnload = function() {		alert("onload");		uexWidget.setPushInfo('bbb','姓名');
-		uexWidget.cbGetPushInfo = getPushSuc;		uexWidget.cbGetPushState = getPushstate;
-		uexWidget.cbCheckUpdate = checkSuc;		uexWidget.cbRemoveWidget = del;		uexWidget.setPushNotifyCallback('aaa');		uexWidgetOne.cbError = function(opCode, errorCode, errorInfo){			alert("errorCode:" + errorCode + "\nerrorInfo:" + errorInfo);		}		uexWidget.onSuspend = function(){			document.getElementById('app').innerHTML = "程序进入暂停";		}		uexWidget.onResume = function(){			document.getElementById('app').innerHTML = "程序从暂停中恢复";		}
-		uexWidget.onTerminate = function(){			alert("程序即将退出！");		}	}    function getPushstate(opId, dataType, data){		alert(data);	}
-	
-	function ss(){		var x=document.getElementById("aaa").value;
-		uexWidget.setPushState(x);		uexWidget.getPushState();
-	}
-</script>
-</head>
-<body>
-	<div class="tit">Widget管理</div>
-	<div class="conbor">
-		<div class="consj">
-			<span>1.加载一个新的widget</span>
-			<span>注意：本测试case仅供本版本上测试用，开发过程中的具体操作请结合产品需求和API文档的具体要求。
-			本操作默认将"我的空间"这个widget调起来。</span>
-			<span>请输widget的AppId：</span>
-			<input class="btn" type="button" value="加载widget" onclick=startWidget("123456789")>
-			<span>2.结束当前widget</span>
-			<span>结束当前widget</span>
-			<input class="btn" type="button" value="结束widget" onclick=finishWidget()><br>
-		<!--	<span>3.删除一个widget</span>
-			<span>删除功能需有widget才可以删除，此版本下只有主widget和我的空间，都是不能删除的，要想测试此功能，请结合需求往sd上拷入widget后方可测试</span>
-			<input class="btn" type="button" value="删除widget" onclick=delWidget("11111111111")><br> -->
-			<span>4.通过App信息启动应用（Android和IOS有所区分，具体请参考API文档）</span>
-			<span>请输入要启动的应用的信息：</span>
-			<span>Android:(本例调用手机上UC浏览器打开38服务器上的测试case)没安装UC的请自行下载安装</span>
-			<span>可将action换成：android.intent.action.VIEW看看不同的效果。</span>
-			action:<input type="text" class="textbox" id="android_appInfo" value="android.intent.action.VIEW"></input>
-			filter:<input type="text" class="textbox" id="android_filter" value="text/html"></input>
-			dataInfo:<input type="text" class="textbox" id="android_dataInfo" value="http://www.baidu.com"></input>
-			<input class="btn" type="button" value="通过appInfo启动Android应用" onclick=loadappa()>
-			<span>IOS:</span>
-			action:<input type="text" class="textbox" id="ios_appInfo" value="alipay://"></input>
-			filter:<input type="text" class="textbox" id="ios_filter" value="IOS上此项不起作用"></input>
-			dataInfo:<input type="text" class="textbox" id="ios_dataInfo" value="http://www.baidu.com"></input>
-			<input class="btn" type="button" value="通过appInfo启动IOS应用" onclick=loadappo()> 
-			<span>5.检查widget更新</span>
-			<input class="btn" type="button" value="检查widget更新" onclick="uexWidget.checkUpdate();">
-			<div class="tcxx" id="newWidget"></div>
-			<span>6.应用生命周期</span>
-			<span>请让手机在不退出本应用的情况下回到手机主界面，再重新进入本应用，即可看到相关变化</span>
-			<div class="tcxx" id="app"></div>
-			<span>7.安装apk(android专用)</span>
-			<p>从res下安装，即：widget打包的时候需将apk包拷贝至widget根目录下的wgtRes目录中。若没有则会报“解析包出错”的警告</p>
-			<input type="text" class="textbox" id="pp" value="res://pay.apk"></input><br><br>
-			<input class="btn" type="button" value="安装" onclick=install()><br><br>
-			<p>从widget目录安装（一般位于sd卡上，支持绝对路径，如：/sdcard/xx.apk，支持wgt://路径，如：wgt://data/pay.apk）</p>
-			<p>本例默认为安装sd卡根目录(绝对路径)下的xx.apk。若sd卡上没有此文件，会报“解析包出错”的警告</p>
-			<input type="text" class="textbox" id="zz" value="/sdcard/xx.apk"></input><br><br>
-			<input class="btn" type="button" value="安装" onclick=install1()><br><br>
-		</div>
-			<span>8.获取推送消息数据</span>
-			<input class="btn" type="button" value="获取推送消息数据" onclick="uexWidget.getPushInfo();">
-			<div class="tcxx" id="getPush"></div>			state<input type="text" id="aa" value="0"/><br>
-			<input class="btn" type="button" onclick="ss()" value="设置消息推送状态"/>			<span>推送回调</span>
-			<div class="tcxx" id="PushNotifyCallback"></div>
-			<span>9widget插件测试：</span>
-			<input  class="btn" type="button" value="跳转" onclick="startWidget('123456789')"></input><br><br>		<input class="btn" type="button" value="自动升级" onclick="update()">
-		<input class="btn" type="button" value="返回" onclick="uexWindow.back();">
-	</div>
-</body><script>		function update(){		alert("自动升级");		  uexWidget.checkMAMUpdate();	}</script>
-</html>
