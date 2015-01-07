@@ -902,7 +902,6 @@ public class EBrowserWidget extends AbsoluteLayout {
                 if (entry.checkFlag(EBrwViewEntry.F_FLAG_OPAQUE)) {
                     newWindow.setBackgroundColor(0xFFFFFFFF);
                 }
-                newWindow.setBackgroundColor(0xFFEF8857);
                 FrameLayout.LayoutParams parm = new FrameLayout.LayoutParams(
                         Compat.FILL, Compat.FILL);
                 newWindow.setLayoutParams(parm);
@@ -946,7 +945,6 @@ public class EBrowserWidget extends AbsoluteLayout {
 //					if (enty.checkFlag(EBrwViewEntry.F_FLAG_OBFUSCATION)) {
                     if (getWidget().m_obfuscation == 1) {
                         newWindow.needToEncrypt(entry.mData);
-//                    	newWindow.start("http://www.baidu.com");
                     } else {
                         newWindow.start(entry.mData);
                     }
