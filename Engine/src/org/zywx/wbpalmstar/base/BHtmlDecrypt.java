@@ -27,6 +27,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class BHtmlDecrypt {
+	
+	private static String contentSuffix = "3G2WIN Safe Guard";
+	
 	public static String decrypt(String inUrl, Context context,
 			boolean isSdcardWidget, String strData) {
 		if (inUrl == null || inUrl.length() == 0) {
@@ -103,7 +106,7 @@ public class BHtmlDecrypt {
 		return reStr.toString();
 	}
 	
-	private static String getFileNameWithNoSuffix(String path){
+	public static String getFileNameWithNoSuffix(String path){
     	String name = null;
     	int index = path.lastIndexOf('/');
 		if(index > 0){
@@ -176,4 +179,43 @@ public class BHtmlDecrypt {
         } 
 		return result;
 	}
+	
+	public static boolean isEncrypted(InputStream inStream) {
+		
+		boolean isV = false;
+		
+		if (inStream == null) {
+			return isV;
+		}
+		
+		try {
+			
+			String text = InputStreamTOString(inStream, "UTF-8");
+			
+			String lastStr = text.substring(text.length() - 17, text.length());
+			
+			if (lastStr.equals(contentSuffix)) {
+				isV = true;
+			}
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		return isV;
+	}
+	
+	public static String InputStreamTOString(InputStream in,String encoding) throws Exception{
+    	
+		ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+	       byte[] data = new byte[4096];
+	       int count = -1;
+	       while((count = in.read(data,0,4096)) != -1)
+	           outStream.write(data, 0, count);
+
+	       data = null;
+	       return new String(outStream.toByteArray(),encoding);
+       
+   }
 }

@@ -39,6 +39,8 @@ public class ThirdPluginObject {
 	public StringBuffer uexScript;
 	public String jclass;
 	public Constructor<?> jobject;
+	public boolean isGlobal = false;
+	public EUExBase pluginObj = null;
 	
 	public ThirdPluginObject(Constructor<?> javaObj){
 		jobject = javaObj;

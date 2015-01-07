@@ -48,7 +48,7 @@ import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.platform.push.PushRecieveMsgReceiver;
 import org.zywx.wbpalmstar.widgetone.WidgetOneApplication;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
-import org.zywx.wbpalmstar.widgetone.uex.R;
+//import org.zywx.wbpalmstar.widgetone.uex.R;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -81,6 +81,7 @@ public final class EBrowserActivity extends ActivityGroup {
 	public static boolean isForground = false;
 	
 	public SlidingMenu globalSlidingMenu;
+	public boolean isEncryptcj = false;
 
 
 	@Override
@@ -124,8 +125,13 @@ public final class EBrowserActivity extends ActivityGroup {
 
         globalSlidingMenu = new SlidingMenu(this);
         globalSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-        globalSlidingMenu.setShadowWidthRes(R.dimen.shadow_width);
-        globalSlidingMenu.setShadowDrawable(R.drawable.shadow);
+        
+        
+        globalSlidingMenu.setShadowWidthRes(EUExUtil.getResDimenID("shadow_width"));
+        globalSlidingMenu.setShadowDrawable(EUExUtil.getResDrawableID("shadow"));
+        
+//        globalSlidingMenu.setShadowWidthRes(R.dimen.shadow_width);
+//        globalSlidingMenu.setShadowDrawable(R.drawable.shadow);
 //        globalSlidingMenu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
         globalSlidingMenu.setFadeDegree(0.35f);
 //        globalSlidingMenu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);

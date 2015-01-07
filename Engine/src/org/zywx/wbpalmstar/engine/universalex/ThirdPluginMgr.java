@@ -68,8 +68,10 @@ public class ThirdPluginMgr {
 		String classNameAttr = "className";
 		String nameAttr = "name";
 		String startupAttr = "startup";
+		String globalAttr = "global";
 		int eventType = -1;
 		String jsName = "", javaName = "", startup = "";
+		String globalStr = "";
 		ThirdPluginObject scriptObj = null;
 
 		try {
@@ -97,11 +99,22 @@ public class ThirdPluginMgr {
 									scriptObj = new ThirdPluginObject(object);
 									scriptObj.oneObjectBegin(jsName);
 									scriptObj.jclass = javaName;
+									
+									globalStr = plugins.getAttributeValue(null, globalAttr);
+									if (null != globalStr && "true".equals(globalStr)) {
+										
+										scriptObj.isGlobal = true;
+										
+									}
 								}
 
 							}
-						}
+							
+							
 
+						}
+						
+						
 					} else if (strNode.equals(methodNode)) {
 						String methodValue = plugins.getAttributeValue(null,
 								nameAttr);

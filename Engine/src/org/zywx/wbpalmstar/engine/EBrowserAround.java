@@ -106,22 +106,30 @@ public class EBrowserAround  implements android.view.View.OnClickListener{
 	}
 	
 	public void hiddenSplashScreen(int flag){
-		Animation nin = new AlphaAnimation(1.0f, 0.0f);
-		nin.setDuration(300);
-		nin.setAnimationListener(new AnimationListener() {
-			public void onAnimationStart(Animation animation) {}
-			public void onAnimationRepeat(Animation animation) {}
-			public void onAnimationEnd(Animation animation) {
-				mScreenSplash.setVisibility(View.GONE);
-				ViewGroup parent = (ViewGroup) mScreenSplash.getParent();
-				if(null != parent){
-					parent.removeView(mScreenSplash);
-					mScreenSplash = null;
-				}
-				onReady();
-			}
-		});
-		mScreenSplash.startAnimation(nin);
+//		Animation nin = new AlphaAnimation(1.0f, 0.0f);
+//		nin.setDuration(300);
+//		nin.setAnimationListener(new AnimationListener() {
+//			public void onAnimationStart(Animation animation) {}
+//			public void onAnimationRepeat(Animation animation) {}
+//			public void onAnimationEnd(Animation animation) {
+//				mScreenSplash.setVisibility(View.GONE);
+//				ViewGroup parent = (ViewGroup) mScreenSplash.getParent();
+//				if(null != parent){
+//					parent.removeView(mScreenSplash);
+//					mScreenSplash = null;
+//				}
+//				onReady();
+//			}
+//		});
+//		mScreenSplash.startAnimation(nin);
+		
+		mScreenSplash.setVisibility(View.GONE);
+		ViewGroup parent = (ViewGroup) mScreenSplash.getParent();
+		if(null != parent){
+			parent.removeView(mScreenSplash);
+			mScreenSplash = null;
+		}
+		onReady();
 		if(ESystemInfo.getIntence().mIsDevelop || !checkSpaceFlag(WWidgetData.F_SPACESTATUS_CLOSE)){
 			checkHover();
 			mHover.setVisibility(View.VISIBLE);

@@ -60,7 +60,7 @@ public abstract class EUExBase {
 	 * 本js扩展对象所在的WebView.
 	 * 
 	 */
-	protected EBrowserView mBrwView;
+	public EBrowserView mBrwView;
 
 	protected boolean mDestroyed;
 	protected boolean mStopped;

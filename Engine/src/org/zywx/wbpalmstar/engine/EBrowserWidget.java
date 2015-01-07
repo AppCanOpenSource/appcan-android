@@ -18,8 +18,6 @@
 
 package org.zywx.wbpalmstar.engine;
 
-import android.widget.FrameLayout;
-import com.slidingmenu.lib.SlidingMenu;
 import org.json.JSONObject;
 import org.zywx.wbpalmstar.base.BConstant;
 import org.zywx.wbpalmstar.engine.external.Compat;
@@ -41,6 +39,9 @@ import android.view.animation.Animation.AnimationListener;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.webkit.WebView;
+import android.widget.FrameLayout;
+
+import com.slidingmenu.lib.SlidingMenu;
 
 public class EBrowserWidget extends AbsoluteLayout {
 
@@ -901,6 +902,7 @@ public class EBrowserWidget extends AbsoluteLayout {
                 if (entry.checkFlag(EBrwViewEntry.F_FLAG_OPAQUE)) {
                     newWindow.setBackgroundColor(0xFFFFFFFF);
                 }
+                newWindow.setBackgroundColor(0xFFEF8857);
                 FrameLayout.LayoutParams parm = new FrameLayout.LayoutParams(
                         Compat.FILL, Compat.FILL);
                 newWindow.setLayoutParams(parm);
@@ -911,7 +913,7 @@ public class EBrowserWidget extends AbsoluteLayout {
                 if (entry.checkFlag(EBrwViewEntry.F_FLAG_SHOULD_OP_SYS)) {
                     newWindow.setShouldOpenUrlInSystem(true);
                 }
-                newWindow.setVisibility(INVISIBLE);
+                newWindow.setVisibility(VISIBLE);
                 newWindow.setQuery(EBrwViewEntry.VIEW_TYPE_MAIN, entry.mQuery);
                 ViewParent parent = newWindow.getParent();
                 if (null == parent) {
@@ -944,6 +946,7 @@ public class EBrowserWidget extends AbsoluteLayout {
 //					if (enty.checkFlag(EBrwViewEntry.F_FLAG_OBFUSCATION)) {
                     if (getWidget().m_obfuscation == 1) {
                         newWindow.needToEncrypt(entry.mData);
+//                    	newWindow.start("http://www.baidu.com");
                     } else {
                         newWindow.start(entry.mData);
                     }

@@ -2,7 +2,9 @@ package com.slidingmenu.lib;
 
 import java.lang.reflect.Method;
 
-import org.zywx.wbpalmstar.widgetone.uex.R;
+import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
+
+//import org.zywx.wbpalmstar.widgetone.uex.R;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -233,29 +235,56 @@ public class SlidingMenu extends RelativeLayout {
 		});
 
 		// now style everything!
-		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.SlidingMenu);
+		
+		// Styleables from XML
+		
+		int[] styleAttrs = new int[] { EUExUtil.getResStyleableID("mode"),
+						EUExUtil.getResStyleableID("viewAbove"), 
+						EUExUtil.getResStyleableID("viewBehind"),
+						EUExUtil.getResStyleableID("behindOffset"), 
+						EUExUtil.getResStyleableID("behindWidth"),
+						EUExUtil.getResStyleableID("behindScrollScale"), 
+						EUExUtil.getResStyleableID("touchModeAbove"), 
+						EUExUtil.getResStyleableID("touchModeBehind"),
+						EUExUtil.getResStyleableID("shadowDrawable"), 
+						EUExUtil.getResStyleableID("shadowWidth"),
+						EUExUtil.getResStyleableID("fadeEnabled"), 
+						EUExUtil.getResStyleableID("fadeDegree"),
+						EUExUtil.getResStyleableID("selectorEnabled"),
+						EUExUtil.getResStyleableID("selectorDrawable")};
+		
+		TypedArray ta = context.obtainStyledAttributes(attrs, styleAttrs);
+//		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.SlidingMenu);
 		// set the above and behind views if defined in xml
-		int mode = ta.getInt(R.styleable.SlidingMenu_mode, LEFT);
+//		int mode = ta.getInt(R.styleable.SlidingMenu_mode, LEFT);
+		int mode = ta.getInt(EUExUtil.getResStyleableID("SlidingMenu_mode"), LEFT);
+		
 		setMode(mode);
-		int viewAbove = ta.getResourceId(R.styleable.SlidingMenu_viewAbove, -1);
+//		int viewAbove = ta.getResourceId(R.styleable.SlidingMenu_viewAbove, -1);
+		int viewAbove = ta.getResourceId(EUExUtil.getResStyleableID("SlidingMenu_viewAbove"), -1);
 		if (viewAbove != -1) {
 			setContent(viewAbove);
 		} else {
 			setContent(new FrameLayout(context));
 		}
-		int viewBehind = ta.getResourceId(R.styleable.SlidingMenu_viewBehind, -1);
+//		int viewBehind = ta.getResourceId(R.styleable.SlidingMenu_viewBehind, -1);
+		int viewBehind = ta.getResourceId(EUExUtil.getResStyleableID("SlidingMenu_viewBehind"), -1);
 		if (viewBehind != -1) {
 			setMenu(viewBehind); 
 		} else {
 			setMenu(new FrameLayout(context));
 		}
-		int touchModeAbove = ta.getInt(R.styleable.SlidingMenu_touchModeAbove, TOUCHMODE_MARGIN);
+//		int touchModeAbove = ta.getInt(R.styleable.SlidingMenu_touchModeAbove, TOUCHMODE_MARGIN);
+		int touchModeAbove = ta.getInt(EUExUtil.getResStyleableID("SlidingMenu_touchModeAbove"), TOUCHMODE_MARGIN);
 		setTouchModeAbove(touchModeAbove);
-		int touchModeBehind = ta.getInt(R.styleable.SlidingMenu_touchModeBehind, TOUCHMODE_MARGIN);
+//		int touchModeBehind = ta.getInt(R.styleable.SlidingMenu_touchModeBehind, TOUCHMODE_MARGIN);
+		int touchModeBehind = ta.getInt(EUExUtil.getResStyleableID("SlidingMenu_touchModeBehind"), TOUCHMODE_MARGIN);
 		setTouchModeBehind(touchModeBehind);
 
-		int offsetBehind = (int) ta.getDimension(R.styleable.SlidingMenu_behindOffset, -1);
-		int widthBehind = (int) ta.getDimension(R.styleable.SlidingMenu_behindWidth, -1);
+//		int offsetBehind = (int) ta.getDimension(R.styleable.SlidingMenu_behindOffset, -1);
+//		int widthBehind = (int) ta.getDimension(R.styleable.SlidingMenu_behindWidth, -1);
+		int offsetBehind = (int) ta.getDimension(EUExUtil.getResStyleableID("SlidingMenu_behindOffset"), -1);
+		int widthBehind = (int) ta.getDimension(EUExUtil.getResStyleableID("SlidingMenu_behindWidth"), -1);
 		if (offsetBehind != -1 && widthBehind != -1)
 			throw new IllegalStateException("Cannot set both behindOffset and behindWidth for a SlidingMenu");
 		else if (offsetBehind != -1)
@@ -264,21 +293,28 @@ public class SlidingMenu extends RelativeLayout {
 			setBehindWidth(widthBehind);
 		else
 			setBehindOffset(0);
-		float scrollOffsetBehind = ta.getFloat(R.styleable.SlidingMenu_behindScrollScale, 0.33f);
+//		float scrollOffsetBehind = ta.getFloat(R.styleable.SlidingMenu_behindScrollScale, 0.33f);
+		float scrollOffsetBehind = ta.getFloat(EUExUtil.getResStyleableID("SlidingMenu_behindScrollScale"), 0.33f);
 		setBehindScrollScale(scrollOffsetBehind);
-		int shadowRes = ta.getResourceId(R.styleable.SlidingMenu_shadowDrawable, -1);
+//		int shadowRes = ta.getResourceId(R.styleable.SlidingMenu_shadowDrawable, -1);
+		int shadowRes = ta.getResourceId(EUExUtil.getResStyleableID("SlidingMenu_shadowDrawable"), -1);
 		if (shadowRes != -1) {
 			setShadowDrawable(shadowRes);
 		}
-		int shadowWidth = (int) ta.getDimension(R.styleable.SlidingMenu_shadowWidth, 0);
+//		int shadowWidth = (int) ta.getDimension(R.styleable.SlidingMenu_shadowWidth, 0);
+		int shadowWidth = (int) ta.getDimension(EUExUtil.getResStyleableID("SlidingMenu_shadowWidth"), 0);
 		setShadowWidth(shadowWidth);
-		boolean fadeEnabled = ta.getBoolean(R.styleable.SlidingMenu_fadeEnabled, true);
+//		boolean fadeEnabled = ta.getBoolean(R.styleable.SlidingMenu_fadeEnabled, true);
+		boolean fadeEnabled = ta.getBoolean(EUExUtil.getResStyleableID("SlidingMenu_fadeEnabled"), true);
 		setFadeEnabled(fadeEnabled);
-		float fadeDeg = ta.getFloat(R.styleable.SlidingMenu_fadeDegree, 0.33f);
+//		float fadeDeg = ta.getFloat(R.styleable.SlidingMenu_fadeDegree, 0.33f);
+		float fadeDeg = ta.getFloat(EUExUtil.getResStyleableID("SlidingMenu_fadeDegree"), 0.33f);
 		setFadeDegree(fadeDeg);
-		boolean selectorEnabled = ta.getBoolean(R.styleable.SlidingMenu_selectorEnabled, false);
+//		boolean selectorEnabled = ta.getBoolean(R.styleable.SlidingMenu_selectorEnabled, false);
+		boolean selectorEnabled = ta.getBoolean(EUExUtil.getResStyleableID("SlidingMenu_selectorEnabled"), false);
 		setSelectorEnabled(selectorEnabled);
-		int selectorRes = ta.getResourceId(R.styleable.SlidingMenu_selectorDrawable, -1);
+//		int selectorRes = ta.getResourceId(R.styleable.SlidingMenu_selectorDrawable, -1);
+		int selectorRes = ta.getResourceId(EUExUtil.getResStyleableID("SlidingMenu_selectorDrawable"), -1);
 		if (selectorRes != -1)
 			setSelectorDrawable(selectorRes);
 		ta.recycle();

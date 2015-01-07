@@ -563,8 +563,8 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
            <tr><td><code>{@link #Carousel_Items org.zywx.wbpalmstar.widgetone.uex:Items}</code></td><td></td></tr>
            <tr><td><code>{@link #Carousel_SelectedItem org.zywx.wbpalmstar.widgetone.uex:SelectedItem}</code></td><td></td></tr>
            <tr><td><code>{@link #Carousel_UseReflection org.zywx.wbpalmstar.widgetone.uex:UseReflection}</code></td><td></td></tr>
-           <tr><td><code>{@link #Carousel_android_animationDuration android:animationDuration}</code></td><td></td></tr>
-           <tr><td><code>{@link #Carousel_android_gravity android:gravity}</code></td><td></td></tr>
+           <tr><td><code>{@link #Carousel_android_animationDuration org.zywx.wbpalmstar.widgetone.uex:android_animationDuration}</code></td><td></td></tr>
+           <tr><td><code>{@link #Carousel_android_gravity org.zywx.wbpalmstar.widgetone.uex:android_gravity}</code></td><td></td></tr>
            <tr><td><code>{@link #Carousel_maxQuantity org.zywx.wbpalmstar.widgetone.uex:maxQuantity}</code></td><td></td></tr>
            <tr><td><code>{@link #Carousel_maxTheta org.zywx.wbpalmstar.widgetone.uex:maxTheta}</code></td><td></td></tr>
            <tr><td><code>{@link #Carousel_minQuantity org.zywx.wbpalmstar.widgetone.uex:minQuantity}</code></td><td></td></tr>
@@ -593,7 +593,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name org.zywx.wbpalmstar.widgetone.uex:Items
+          @attr name android:Items
         */
         public static final int Carousel_Items = 3;
         /**
@@ -607,7 +607,7 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name org.zywx.wbpalmstar.widgetone.uex:SelectedItem
+          @attr name android:SelectedItem
         */
         public static final int Carousel_SelectedItem = 4;
         /**
@@ -621,19 +621,19 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name org.zywx.wbpalmstar.widgetone.uex:UseReflection
+          @attr name android:UseReflection
         */
         public static final int Carousel_UseReflection = 2;
         /**
-          <p>This symbol is the offset where the {@link android.R.attr#animationDuration}
+          <p>This symbol is the offset where the {@link org.zywx.wbpalmstar.widgetone.uex.R.attr#android_animationDuration}
           attribute's value can be found in the {@link #Carousel} array.
-          @attr name android:animationDuration
+          @attr name android:android_animationDuration
         */
         public static final int Carousel_android_animationDuration = 1;
         /**
-          <p>This symbol is the offset where the {@link android.R.attr#gravity}
+          <p>This symbol is the offset where the {@link org.zywx.wbpalmstar.widgetone.uex.R.attr#android_gravity}
           attribute's value can be found in the {@link #Carousel} array.
-          @attr name android:gravity
+          @attr name android:android_gravity
         */
         public static final int Carousel_android_gravity = 0;
         /**
@@ -647,7 +647,7 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name org.zywx.wbpalmstar.widgetone.uex:maxQuantity
+          @attr name android:maxQuantity
         */
         public static final int Carousel_maxQuantity = 7;
         /**
@@ -661,7 +661,7 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name org.zywx.wbpalmstar.widgetone.uex:maxTheta
+          @attr name android:maxTheta
         */
         public static final int Carousel_maxTheta = 5;
         /**
@@ -675,7 +675,7 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name org.zywx.wbpalmstar.widgetone.uex:minQuantity
+          @attr name android:minQuantity
         */
         public static final int Carousel_minQuantity = 6;
         /** Attributes that can be used with a PullToRefresh.
@@ -744,7 +744,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 <p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
           <p>This is a private symbol.
-          @attr name org.zywx.wbpalmstar.widgetone.uex:ptrAdapterViewBackground
+          @attr name android:ptrAdapterViewBackground
         */
         public static final int PullToRefresh_ptrAdapterViewBackground = 16;
         /**
@@ -763,7 +763,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 <tr><td><code>flip</code></td><td>0x1</td><td></td></tr>
 </table>
           <p>This is a private symbol.
-          @attr name org.zywx.wbpalmstar.widgetone.uex:ptrAnimationStyle
+          @attr name android:ptrAnimationStyle
         */
         public static final int PullToRefresh_ptrAnimationStyle = 12;
         /**
@@ -775,7 +775,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
           <p>This is a private symbol.
-          @attr name org.zywx.wbpalmstar.widgetone.uex:ptrDrawable
+          @attr name android:ptrDrawable
         */
         public static final int PullToRefresh_ptrDrawable = 6;
         /**
@@ -785,7 +785,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
-          @attr name org.zywx.wbpalmstar.widgetone.uex:ptrDrawableBottom
+          @attr name android:ptrDrawableBottom
         */
         public static final int PullToRefresh_ptrDrawableBottom = 18;
         /**
@@ -797,7 +797,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
           <p>This is a private symbol.
-          @attr name org.zywx.wbpalmstar.widgetone.uex:ptrDrawableEnd
+          @attr name android:ptrDrawableEnd
         */
         public static final int PullToRefresh_ptrDrawableEnd = 8;
         /**
@@ -809,7 +809,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
           <p>This is a private symbol.
-          @attr name org.zywx.wbpalmstar.widgetone.uex:ptrDrawableStart
+          @attr name android:ptrDrawableStart
         */
         public static final int PullToRefresh_ptrDrawableStart = 7;
         /**
@@ -819,7 +819,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
-          @attr name org.zywx.wbpalmstar.widgetone.uex:ptrDrawableTop
+          @attr name android:ptrDrawableTop
         */
         public static final int PullToRefresh_ptrDrawableTop = 17;
         /**
@@ -833,7 +833,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 <p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
           <p>This is a private symbol.
-          @attr name org.zywx.wbpalmstar.widgetone.uex:ptrHeaderBackground
+          @attr name android:ptrHeaderBackground
         */
         public static final int PullToRefresh_ptrHeaderBackground = 1;
         /**
@@ -847,7 +847,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 <p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
           <p>This is a private symbol.
-          @attr name org.zywx.wbpalmstar.widgetone.uex:ptrHeaderSubTextColor
+          @attr name android:ptrHeaderSubTextColor
         */
         public static final int PullToRefresh_ptrHeaderSubTextColor = 3;
         /**
@@ -859,7 +859,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
           <p>This is a private symbol.
-          @attr name org.zywx.wbpalmstar.widgetone.uex:ptrHeaderTextAppearance
+          @attr name android:ptrHeaderTextAppearance
         */
         public static final int PullToRefresh_ptrHeaderTextAppearance = 10;
         /**
@@ -873,7 +873,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 <p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
           <p>This is a private symbol.
-          @attr name org.zywx.wbpalmstar.widgetone.uex:ptrHeaderTextColor
+          @attr name android:ptrHeaderTextColor
         */
         public static final int PullToRefresh_ptrHeaderTextColor = 2;
         /**
@@ -890,7 +890,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
 <p>May be a boolean value, either "<code>true</code>" or "<code>false</code>".
           <p>This is a private symbol.
-          @attr name org.zywx.wbpalmstar.widgetone.uex:ptrListViewExtrasEnabled
+          @attr name android:ptrListViewExtrasEnabled
         */
         public static final int PullToRefresh_ptrListViewExtrasEnabled = 14;
         /**
@@ -914,7 +914,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 <tr><td><code>pullUpFromBottom</code></td><td>0x2</td><td></td></tr>
 </table>
           <p>This is a private symbol.
-          @attr name org.zywx.wbpalmstar.widgetone.uex:ptrMode
+          @attr name android:ptrMode
         */
         public static final int PullToRefresh_ptrMode = 4;
         /**
@@ -927,7 +927,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
 <p>May be a boolean value, either "<code>true</code>" or "<code>false</code>".
           <p>This is a private symbol.
-          @attr name org.zywx.wbpalmstar.widgetone.uex:ptrOverScroll
+          @attr name android:ptrOverScroll
         */
         public static final int PullToRefresh_ptrOverScroll = 9;
         /**
@@ -941,7 +941,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 <p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
           <p>This is a private symbol.
-          @attr name org.zywx.wbpalmstar.widgetone.uex:ptrRefreshableViewBackground
+          @attr name android:ptrRefreshableViewBackground
         */
         public static final int PullToRefresh_ptrRefreshableViewBackground = 0;
         /**
@@ -957,7 +957,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
 <p>May be a boolean value, either "<code>true</code>" or "<code>false</code>".
           <p>This is a private symbol.
-          @attr name org.zywx.wbpalmstar.widgetone.uex:ptrRotateDrawableWhilePulling
+          @attr name android:ptrRotateDrawableWhilePulling
         */
         public static final int PullToRefresh_ptrRotateDrawableWhilePulling = 15;
         /**
@@ -970,7 +970,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
 <p>May be a boolean value, either "<code>true</code>" or "<code>false</code>".
           <p>This is a private symbol.
-          @attr name org.zywx.wbpalmstar.widgetone.uex:ptrScrollingWhileRefreshingEnabled
+          @attr name android:ptrScrollingWhileRefreshingEnabled
         */
         public static final int PullToRefresh_ptrScrollingWhileRefreshingEnabled = 13;
         /**
@@ -983,7 +983,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
 <p>May be a boolean value, either "<code>true</code>" or "<code>false</code>".
           <p>This is a private symbol.
-          @attr name org.zywx.wbpalmstar.widgetone.uex:ptrShowIndicator
+          @attr name android:ptrShowIndicator
         */
         public static final int PullToRefresh_ptrShowIndicator = 5;
         /**
@@ -995,7 +995,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
           <p>This is a private symbol.
-          @attr name org.zywx.wbpalmstar.widgetone.uex:ptrSubHeaderTextAppearance
+          @attr name android:ptrSubHeaderTextAppearance
         */
         public static final int PullToRefresh_ptrSubHeaderTextAppearance = 11;
         /** Attributes that can be used with a SlidingMenu.
@@ -1053,7 +1053,7 @@ in (inches), mm (millimeters).
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name org.zywx.wbpalmstar.widgetone.uex:behindOffset
+          @attr name android:behindOffset
         */
         public static final int SlidingMenu_behindOffset = 3;
         /**
@@ -1067,7 +1067,7 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name org.zywx.wbpalmstar.widgetone.uex:behindScrollScale
+          @attr name android:behindScrollScale
         */
         public static final int SlidingMenu_behindScrollScale = 5;
         /**
@@ -1083,7 +1083,7 @@ in (inches), mm (millimeters).
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name org.zywx.wbpalmstar.widgetone.uex:behindWidth
+          @attr name android:behindWidth
         */
         public static final int SlidingMenu_behindWidth = 4;
         /**
@@ -1097,7 +1097,7 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name org.zywx.wbpalmstar.widgetone.uex:fadeDegree
+          @attr name android:fadeDegree
         */
         public static final int SlidingMenu_fadeDegree = 11;
         /**
@@ -1111,7 +1111,7 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name org.zywx.wbpalmstar.widgetone.uex:fadeEnabled
+          @attr name android:fadeEnabled
         */
         public static final int SlidingMenu_fadeEnabled = 10;
         /**
@@ -1128,7 +1128,7 @@ containing a value of this type.
 <tr><td><code>left</code></td><td>0</td><td></td></tr>
 <tr><td><code>right</code></td><td>1</td><td></td></tr>
 </table>
-          @attr name org.zywx.wbpalmstar.widgetone.uex:mode
+          @attr name android:mode
         */
         public static final int SlidingMenu_mode = 0;
         /**
@@ -1138,7 +1138,7 @@ containing a value of this type.
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
-          @attr name org.zywx.wbpalmstar.widgetone.uex:selectorDrawable
+          @attr name android:selectorDrawable
         */
         public static final int SlidingMenu_selectorDrawable = 13;
         /**
@@ -1152,7 +1152,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name org.zywx.wbpalmstar.widgetone.uex:selectorEnabled
+          @attr name android:selectorEnabled
         */
         public static final int SlidingMenu_selectorEnabled = 12;
         /**
@@ -1162,7 +1162,7 @@ containing a value of this type.
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
-          @attr name org.zywx.wbpalmstar.widgetone.uex:shadowDrawable
+          @attr name android:shadowDrawable
         */
         public static final int SlidingMenu_shadowDrawable = 8;
         /**
@@ -1178,7 +1178,7 @@ in (inches), mm (millimeters).
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name org.zywx.wbpalmstar.widgetone.uex:shadowWidth
+          @attr name android:shadowWidth
         */
         public static final int SlidingMenu_shadowWidth = 9;
         /**
@@ -1196,7 +1196,7 @@ containing a value of this type.
 <tr><td><code>fullscreen</code></td><td>1</td><td></td></tr>
 <tr><td><code>none</code></td><td>2</td><td></td></tr>
 </table>
-          @attr name org.zywx.wbpalmstar.widgetone.uex:touchModeAbove
+          @attr name android:touchModeAbove
         */
         public static final int SlidingMenu_touchModeAbove = 6;
         /**
@@ -1214,7 +1214,7 @@ containing a value of this type.
 <tr><td><code>fullscreen</code></td><td>1</td><td></td></tr>
 <tr><td><code>none</code></td><td>2</td><td></td></tr>
 </table>
-          @attr name org.zywx.wbpalmstar.widgetone.uex:touchModeBehind
+          @attr name android:touchModeBehind
         */
         public static final int SlidingMenu_touchModeBehind = 7;
         /**
@@ -1224,7 +1224,7 @@ containing a value of this type.
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
-          @attr name org.zywx.wbpalmstar.widgetone.uex:viewAbove
+          @attr name android:viewAbove
         */
         public static final int SlidingMenu_viewAbove = 1;
         /**
@@ -1234,7 +1234,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
-          @attr name org.zywx.wbpalmstar.widgetone.uex:viewBehind
+          @attr name android:viewBehind
         */
         public static final int SlidingMenu_viewBehind = 2;
     };

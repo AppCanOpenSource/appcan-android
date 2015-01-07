@@ -1,6 +1,8 @@
 package com.slidingmenu.lib.app;
 
-import org.zywx.wbpalmstar.widgetone.uex.R;
+//import org.zywx.wbpalmstar.widgetone.uex.R;
+
+import org.zywx.wbpalmstar.base.ResoureFinder;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -31,6 +33,8 @@ public class SlidingActivityHelper {
 	private boolean mOnPostCreateCalled = false;
 
 	private boolean mEnableSlide = true;
+	
+	private ResoureFinder finder;
 
 	/**
 	 * Instantiates a new SlidingActivityHelper.
@@ -39,6 +43,8 @@ public class SlidingActivityHelper {
 	 */
 	public SlidingActivityHelper(Activity activity) {
 		mActivity = activity;
+		
+		finder = ResoureFinder.getInstance();
 	}
 
 	/**
@@ -47,7 +53,9 @@ public class SlidingActivityHelper {
 	 * @param savedInstanceState the saved instance state (unused)
 	 */
 	public void onCreate(Bundle savedInstanceState) {
-		mSlidingMenu = (SlidingMenu) LayoutInflater.from(mActivity).inflate(R.layout.slidingmenumain, null);
+//		mSlidingMenu = (SlidingMenu) LayoutInflater.from(mActivity).inflate(R.layout.slidingmenumain, null);
+		
+		mSlidingMenu = (SlidingMenu) LayoutInflater.from(mActivity).inflate(finder.getLayoutId("slidingmenumain"), null);
 	}
 
 	/**

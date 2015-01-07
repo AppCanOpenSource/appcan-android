@@ -30,11 +30,14 @@ import android.text.TextUtils;
 import android.util.Xml;
 import org.xmlpull.v1.XmlPullParser;
 import org.zywx.wbpalmstar.base.BDebug;
+import org.zywx.wbpalmstar.base.BHtmlDecrypt;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.ResoureFinder;
 import org.zywx.wbpalmstar.base.zip.CnZipInputStream;
 import org.zywx.wbpalmstar.base.zip.ZipEntry;
+import org.zywx.wbpalmstar.engine.EBrowserActivity;
 import org.zywx.wbpalmstar.engine.ESystemInfo;
+import org.zywx.wbpalmstar.engine.EUtil;
 import org.zywx.wbpalmstar.platform.encryption.PEncryption;
 import org.zywx.wbpalmstar.platform.myspace.CommonUtility;
 
@@ -45,7 +48,7 @@ import java.util.List;
 import java.util.zip.ZipException;
 
 public class WDataManager {
-	private Context m_context;
+	private static Context m_context;
 	// private static WDataBaseAdapter1 m_mdba = null;
 	private final static String WIDGET_REG_KEY_1 = "hd5lg[fq,xcnza!df/cv@m";
 	private final static String WIDGET_REG_KEY_2 = "ci8df|ape\"ew&d0(9Pdxm";
@@ -720,6 +723,7 @@ public class WDataManager {
 		
 		widgetData.m_appdebug = assetsData.m_appdebug;
 		widgetData.m_logServerIp = assetsData.m_logServerIp;
+		widgetData.m_obfuscation = assetsData.m_obfuscation;
 
 		m_rootWgt = widgetData;
 		if (m_wgtsPath == null) {
@@ -1087,7 +1091,44 @@ public class WDataManager {
 		try {
 
 			XmlPullParser parser = Xml.newPullParser();
-			parser.setInput(is, "utf-8");
+			
+			
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+			byte[] buffer = new byte[1024];
+			int len;
+			while ((len = is.read(buffer)) > -1 ) {
+			    baos.write(buffer, 0, len);
+			}
+			baos.flush();
+
+			
+			InputStream is1 = new ByteArrayInputStream(baos.toByteArray()); 
+			InputStream is2 = new ByteArrayInputStream(baos.toByteArray()); 
+			
+			boolean isV = BHtmlDecrypt.isEncrypted(is1);
+			
+			if (isV) {
+				
+				EBrowserActivity activity = (EBrowserActivity)m_context;
+				
+				activity.isEncryptcj = isV;
+				
+	 	    	InputStream resStream = null;
+	 	    	byte[] data = null;
+	 	    	String fileName = "config";
+	 	    	String result = null;
+
+ 	    		data = BUtility.transStreamToBytes(is2, is2.available());
+ 	    		result = EUtil.htmlDecode(data, fileName);
+ 	    		resStream = new ByteArrayInputStream(result.getBytes());
+ 	    		parser.setInput(resStream, "utf-8");
+			} else {
+				parser.setInput(is2, "utf-8");
+			}
+			
+			
+			
 			int tokenType = 0;
 			boolean needContinue = true;
 			do {

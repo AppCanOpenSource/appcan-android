@@ -71,8 +71,17 @@ public class EUExManager {
 			ThirdPluginObject scriptObj = entry.getValue();
 			EUExBase objectIntance = null;
 			try {
-				Constructor<?> init = scriptObj.jobject;
-				objectIntance = (EUExBase)init.newInstance(mContext, brwView);
+				
+				if (scriptObj.isGlobal == true && scriptObj.pluginObj != null) {
+					
+					objectIntance = scriptObj.pluginObj;
+					objectIntance.mBrwView = brwView;
+					
+				} else {
+					Constructor<?> init = scriptObj.jobject;
+					objectIntance = (EUExBase)init.newInstance(mContext, brwView);
+				}
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -80,7 +89,13 @@ public class EUExManager {
 				String uexName = uName + symbol;
 				objectIntance.setUexName(uexName);
 				brwView.addJavascriptInterface(objectIntance, uexName);
-				mThirdPlugins.add(objectIntance);
+				
+				if (scriptObj.isGlobal == true) {
+					scriptObj.pluginObj = objectIntance;
+				} else {
+					mThirdPlugins.add(objectIntance);
+				}
+				
 			}
 		}
 	}

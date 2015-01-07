@@ -29,6 +29,8 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
 import com.slidingmenu.lib.SlidingMenu;
@@ -36,12 +38,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.zywx.wbpalmstar.base.BUtility;
+import org.zywx.wbpalmstar.base.ResoureFinder;
 import org.zywx.wbpalmstar.engine.*;
 import org.zywx.wbpalmstar.platform.window.ActionSheetDialog;
 import org.zywx.wbpalmstar.platform.window.ActionSheetDialog.ActionSheetDialogItemClickListener;
 import org.zywx.wbpalmstar.platform.window.PromptDialog;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
-import org.zywx.wbpalmstar.widgetone.uex.R;
 
 import java.security.MessageDigest;
 import java.util.ArrayList;
@@ -114,10 +116,12 @@ public class EUExWindow extends EUExBase {
 	private AlertDialog.Builder mAlert;
 	private AlertDialog.Builder mConfirm;
 	private PromptDialog mPrompt;
+	private ResoureFinder finder;
 
 	public EUExWindow(Context context, EBrowserView inParent) {
 		super(context, inParent);
 		inParent.setScrollCallBackContex(this);
+		finder = ResoureFinder.getInstance(context);
 
 	}
 
@@ -680,6 +684,7 @@ public class EUExWindow extends EUExBase {
             boolean isAttach = false;
             JSONObject leftJsonObj = null;
             JSONObject rightJsonObj = null;
+            View menuView;
 
 
             if (jsonObject.has("leftSliding"))  {
@@ -698,7 +703,10 @@ public class EUExWindow extends EUExBase {
                         activity.globalSlidingMenu.setBehindWidth(with);
                     }
 
-                    activity.globalSlidingMenu.setMenu(R.layout.menu_frame);
+                    menuView = LayoutInflater.from(mContext).inflate(finder.getLayoutId("menu_frame"), null);
+                    activity.globalSlidingMenu.setMenu(menuView);
+                    
+//                    activity.globalSlidingMenu.setMenu(R.layout.menu_frame);
 
                     addBrowserWindowToSldingWin(url, EBrowserWindow.rootLeftSlidingWinName);
 
@@ -725,8 +733,13 @@ public class EUExWindow extends EUExBase {
                         activity.globalSlidingMenu.setBehindWidth(with);
                     }
 
-                    activity.globalSlidingMenu.setSecondaryMenu(R.layout.menu_frame_two);
-                    activity.globalSlidingMenu.setSecondaryShadowDrawable(R.drawable.shadowright);
+                    
+                    menuView = LayoutInflater.from(mContext).inflate(finder.getLayoutId("menu_frame_two"), null);
+                    activity.globalSlidingMenu.setSecondaryMenu(menuView);
+                    activity.globalSlidingMenu.setSecondaryShadowDrawable(finder.getDrawable("shadowright"));
+
+//                    activity.globalSlidingMenu.setSecondaryMenu(R.layout.menu_frame_two);
+//                    activity.globalSlidingMenu.setSecondaryShadowDrawable(R.drawable.shadowright);
 
                     addBrowserWindowToSldingWin(url, EBrowserWindow.rootRightSlidingWinName);
 
