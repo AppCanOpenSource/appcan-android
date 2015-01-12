@@ -10,7 +10,6 @@
 
 # Generated files
 gen/
-bin/
 
 # Gradle files
 .gradle/
