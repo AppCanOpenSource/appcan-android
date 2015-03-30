@@ -38,6 +38,10 @@ public class WWidgetData implements Parcelable {
 	public static final int F_WIDGETADSTATUS_OPEN = 1;
 	// 广告关闭
 	public static final int F_WIDGETADSTATUS_CLOSE = 0;
+
+    public static final String TAG_WIN_BG = "windowbackground";
+    public static final String TAG_WIN_BG_OPAQUE = "opaque";
+    public static final String TAG_WIN_BG_COLOR = "bgColor";
 	// 数据库中的主键id
 	public int m_id;
 	// 手机端WidgetOne系统的唯一标识
@@ -98,6 +102,10 @@ public class WWidgetData implements Parcelable {
 	
 	public int m_appdebug = 0;
 
+    public String m_opaque = "";
+
+    public String m_bgColor = "#00000000";
+
 	public static final Parcelable.Creator<WWidgetData> CREATOR = new Creator<WWidgetData>() {
 		public WWidgetData createFromParcel(Parcel source) {
 			WWidgetData widget = new WWidgetData();
@@ -125,6 +133,8 @@ public class WWidgetData implements Parcelable {
 			widget.m_orientation = source.readInt();
 			widget.m_widgetAdStatus = source.readInt();
 			widget.m_webapp = source.readInt();
+            widget.m_opaque = source.readString();
+            widget.m_bgColor = source.readString();
 			if (widget.disablePlugins != null)
 				source.readStringArray(widget.disablePlugins);
 			if (widget.disableRootWindows != null)
@@ -148,6 +158,10 @@ public class WWidgetData implements Parcelable {
 
 		return m_widgetPath;
 	}
+
+    public boolean getOpaque() {
+        return Boolean.valueOf(m_opaque);
+    }
 
 	public int getSpaceStatus() {
 		if ((m_spaceStatus & F_SPACESTATUS_OPEN) == F_SPACESTATUS_OPEN) {
@@ -183,6 +197,8 @@ public class WWidgetData implements Parcelable {
 		parcel.writeString(m_widgetPath);
 		parcel.writeString(m_indexUrl);
 		parcel.writeInt(m_obfuscation);
+        parcel.writeString(m_opaque);
+        parcel.writeString(m_bgColor);
 		parcel.writeString(m_logServerIp);
 		parcel.writeInt(m_wgtType);
 		parcel.writeString(m_updateurl);
@@ -234,6 +250,10 @@ public class WWidgetData implements Parcelable {
 		sb.append("m_indexUrl: " + m_indexUrl);
 		sb.append("\n");
 		sb.append("m_obfuscation: " + m_obfuscation);
+        sb.append("\n");
+        sb.append("m_opaque: " + m_opaque);
+        sb.append("\n");
+        sb.append("m_bgColor: " + m_bgColor);
 		sb.append("\n");
 		sb.append("m_logServerIp: " + m_logServerIp);
 		sb.append("\n");

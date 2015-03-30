@@ -41,6 +41,8 @@ public class EBrwViewEntry {
 	public static final int F_FLAG_GESTURE			= 0x80;
 	public static final int F_FLAG_NOT_HIDDEN		= 0x100;
 	public static final int F_FLAG_WEBAPP			= 0x200;
+    public static final String TAG_EXTRAINFO = "extraInfo";
+    public static final String TAG_DELAYTIME = "delayTime";
 	
 	
 	public int mType;
@@ -62,7 +64,9 @@ public class EBrwViewEntry {
 	public String mPreWindName;
 	public String mQuery;
 	public String mRelativeUrl;
-	public String mBgPath;
+	public boolean hasExtraInfo = false;
+    public boolean mOpaque = false;
+    public String mBgColor = "#00000000";
 	public long mAnimDuration;
 	public Object mObj;
 	
@@ -106,7 +110,7 @@ public class EBrwViewEntry {
 		return mType + "," + mX + "," + mY + "," + mFontSize + "," + mViewName + "," + 
 		mWidth + "," + mHeight + "," + mDataType + "," + mFlag + "," + mAnimId + "," + 
 		mUrl + "," + mData + "," + mWindName + "," + mPreWindName + "," + mQuery +  
-		"," + mRelativeUrl + "," + mBgPath + "," + mAnimDuration + "," + mObj;
+		"," + mRelativeUrl + "," + mAnimDuration + "," + mObj;
 	}
 	
 }

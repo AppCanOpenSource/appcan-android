@@ -9,7 +9,7 @@
         android:name="org.zywx.wbpalmstar.widgetone.WidgetOneApplication"
         android:allowBackup="false"
         android:allowClearUserData="false"
-        android:hardwareAccelerated="false"
+        android:hardwareAccelerated="true"
         android:debuggable="true"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
@@ -64,9 +64,10 @@
                 <action android:name="org.zywx.push.receive" />
             </intent-filter>
         </receiver>
+        
+        <provider android:name="org.zywx.wbpalmstar.base.ACEContentProvider"
+          android:authorities="org.zywx.wbpalmstar.widgetone.uex.sp" android:exported="false"/>
     </application>
-
-    <uses-sdk android:minSdkVersion="4" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />

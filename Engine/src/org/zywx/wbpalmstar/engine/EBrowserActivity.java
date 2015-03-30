@@ -37,23 +37,31 @@ import android.view.Window;
 import android.webkit.WebChromeClient.CustomViewCallback;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
 import com.slidingmenu.lib.SlidingMenu;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.zywx.wbpalmstar.acedes.ACEDes;
 import org.zywx.wbpalmstar.engine.external.Compat;
 import org.zywx.wbpalmstar.engine.universalex.EUExBase;
 import org.zywx.wbpalmstar.engine.universalex.EUExCallback;
 import org.zywx.wbpalmstar.engine.universalex.EUExEventListener;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
+import org.zywx.wbpalmstar.engine.universalex.ThirdPluginMgr;
+import org.zywx.wbpalmstar.engine.universalex.ThirdPluginObject;
 import org.zywx.wbpalmstar.platform.push.PushRecieveMsgReceiver;
 import org.zywx.wbpalmstar.widgetone.WidgetOneApplication;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 //import org.zywx.wbpalmstar.widgetone.uex.R;
 
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Method;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 @SuppressWarnings("deprecation")
@@ -81,7 +89,6 @@ public final class EBrowserActivity extends ActivityGroup {
 	public static boolean isForground = false;
 	
 	public SlidingMenu globalSlidingMenu;
-	public boolean isEncryptcj = false;
 
 
 	@Override
@@ -104,6 +111,8 @@ public final class EBrowserActivity extends ActivityGroup {
 		mBrowserAround = new EBrowserAround(splash);
 		setContentView(mScreen);
 		initInternalBranch();
+		
+		ACEDes.setContext(this);
 
 		Message loadDelayMsg = mEHandler
 				.obtainMessage(EHandler.F_MSG_LOAD_HIDE_SH);
@@ -142,7 +151,27 @@ public final class EBrowserActivity extends ActivityGroup {
 //        globalSlidingMenu.setSecondaryShadowDrawable(R.drawable.shadowright);
 //        globalSlidingMenu.setBehindWidthRes(R.dimen.slidingmenu_width);
 //        globalSlidingMenu.setBehindWidthRes(0);
-
+        reflectionPluginMethod("onActivityCreate");
+	}
+	
+	private void reflectionPluginMethod(String method) {
+		WidgetOneApplication app = (WidgetOneApplication) getApplication();
+		ThirdPluginMgr tpm = app.getThirdPlugins();
+		Map<String, ThirdPluginObject> thirdPlugins = tpm.getPlugins();
+		Set<Map.Entry<String, ThirdPluginObject>> pluginSet = thirdPlugins
+				.entrySet();
+		for (Map.Entry<String, ThirdPluginObject> entry : pluginSet) {
+			try {
+				String javaName = entry.getValue().jclass;
+				Class c = Class.forName(javaName);
+				Method m = c.getMethod(method, new Class[] {});
+				if (null != m) {
+					m.invoke(c, new Object[] {});
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private final void initInternalBranch() {
@@ -160,6 +189,9 @@ public final class EBrowserActivity extends ActivityGroup {
 			loadResError();
 			return;
 		}
+		
+		ACEDes.getObfuscationList();
+	
 		WWidgetData rootWidget = (WWidgetData) resultMsg.obj;
 		// String[] plugins = {"uexXmlHttpMgr", "uexCamera"};
 		// rootWidget.disablePlugins = plugins;
@@ -288,6 +320,27 @@ public final class EBrowserActivity extends ActivityGroup {
 	}
 
 	@Override
+	protected void onStart() {
+		super.onStart();
+		EUtil.loge("App onStart");
+        reflectionPluginMethod("onActivityStart");
+	}
+	
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+		EUtil.loge("App onRestart");
+        reflectionPluginMethod("onActivityReStart");
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		EUtil.loge("App onStop");
+        reflectionPluginMethod("onActivityStop");
+	}
+	
+	@Override
 	protected void onResume() {
 		super.onResume();
 		EUtil.loge("App onResume");
@@ -299,12 +352,14 @@ public final class EBrowserActivity extends ActivityGroup {
 			mBrowserAround.onResume();
 		}
 		isForground = true;
+		reflectionPluginMethod("onActivityResume");
 	}
 
 	@Override
 	protected void onDestroy() {
 		EUtil.loge("App onDestroy");
 		super.onDestroy();
+		reflectionPluginMethod("onActivityDestroy");
 	}
 
 	@Override
@@ -322,6 +377,7 @@ public final class EBrowserActivity extends ActivityGroup {
 		if (null != mBrowserAround) {
 			mBrowserAround.onPause();
 		}
+		reflectionPluginMethod("onActivityPause");
 	}
 
 	@Override

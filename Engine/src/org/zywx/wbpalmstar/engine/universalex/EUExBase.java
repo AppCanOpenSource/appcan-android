@@ -24,18 +24,15 @@ import org.zywx.wbpalmstar.engine.EBrowserActivity;
 import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.EBrowserWindow;
 import org.zywx.wbpalmstar.engine.EWgtResultInfo;
-import org.zywx.wbpalmstar.engine.EBrowserWindow.WindowHander;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.webkit.CookieManager;
@@ -103,6 +100,14 @@ public abstract class EUExBase {
         callbackToJsAsyn(js);
     }
 
+    public final void jsSpeciCallback(String winName, String inCallbackName, int inOpCode,
+            int inDataType, String inData) {
+        String js = SCRIPT_HEADER + "if(" + inCallbackName + "){"
+                + inCallbackName + "(" + inOpCode + "," + inDataType + ",'"
+                + inData + "'" + SCRIPT_TAIL;
+        callbackToJsSpeci(winName, js);
+    }
+
 	public final void jsCallback(String inCallbackName, int inOpCode,
 			int inDataType, String inData) {
 		String js = SCRIPT_HEADER + "if(" + inCallbackName + "){"
@@ -134,6 +139,12 @@ public abstract class EUExBase {
     private void callbackToJsAsyn(String js) {
         if (null != mBrwView) {
             mBrwView.addUriTaskAsyn(js);
+        }
+    }
+
+    private void callbackToJsSpeci(String winName, String js) {
+        if (null != mBrwView) {
+            mBrwView.getBrowserWindow().addUriTaskSpeci(winName, js);
         }
     }
 

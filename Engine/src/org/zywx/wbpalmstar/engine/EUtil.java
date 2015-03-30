@@ -29,11 +29,14 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.List;
+
 import org.apache.http.HttpHost;
 import org.apache.http.util.ByteArrayBuffer;
+import org.zywx.wbpalmstar.acedes.ACEDes;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.ResoureFinder;
 import org.zywx.wbpalmstar.platform.encryption.PEncryption;
+
 import dalvik.system.DexClassLoader;
 import android.content.Context;
 import android.content.Intent;
@@ -117,7 +120,7 @@ public class EUtil {
 		}
 		byte[] bt = buffer.toByteArray();
 		long begin = System.currentTimeMillis();
-		String dec = htmlDecode(bt, "up");
+		String dec = ACEDes.htmlDecode(bt, "up");
 		long end = System.currentTimeMillis();
 		Log.e("ldx", "use time: " + (end - begin));
 		Log.e("ldx", dec);
@@ -287,40 +290,40 @@ public class EUtil {
 		return false;
 	}
 	
-	public static String htmlDecode(byte[] bit, String name){
-		String result = "";
-		
-		if(bit == null || 0 == bit.length){
-			return result;
-		}
-		String zywx = "3G2WIN Safe Guard";
-		int actualLen = bit.length;
-		int zyLen = zywx.length();
-		
-		if(actualLen <= zyLen){
-			return new String(bit); 
-		}
-		
-		int start = actualLen - zyLen;
-		String endStr = new String(bit, start, zyLen);
-		if(!zywx.equals(endStr)){
-			return new String(bit);
-		}
-		
-		int skip = zyLen + 256;
-		if(actualLen <= skip){
-			
-			return new String(bit);
-		}
-		int realLen = actualLen - skip;
-		result = nativeHtmlDecode(bit, name, Integer.toString(realLen));
-		return result;
-	}
-	
-	static{
-		System.loadLibrary("appcan");
-	}
-	
+//	public static String htmlDecode(byte[] bit, String name){
+//		String result = "";
+//		
+//		if(bit == null || 0 == bit.length){
+//			return result;
+//		}
+//		String zywx = "3G2WIN Safe Guard";
+//		int actualLen = bit.length;
+//		int zyLen = zywx.length();
+//		
+//		if(actualLen <= zyLen){
+//			return new String(bit); 
+//		}
+//		
+//		int start = actualLen - zyLen;
+//		String endStr = new String(bit, start, zyLen);
+//		if(!zywx.equals(endStr)){
+//			return new String(bit);
+//		}
+//		
+//		int skip = zyLen + 256;
+//		if(actualLen <= skip){
+//			
+//			return new String(bit);
+//		}
+//		int realLen = actualLen - skip;
+//		result = nativeHtmlDecode(bit, name, Integer.toString(realLen));
+//		return result;
+//	}
+//	
+//	static{
+//		System.loadLibrary("appcan");
+//	}
+//	
 	public static String getCertificatePsw(Context context,String appId){
 		String psw = ResoureFinder.getInstance().getString(
 				context, "certificate_psw");
@@ -444,7 +447,7 @@ public class EUtil {
 		return NETWORK_CLASS_UNKNOWN;
 	}
 	
-	private native static String nativeHtmlDecode(byte[] bit, String name, String lenStr);
+//	private native static String nativeHtmlDecode(byte[] bit, String name, String lenStr);
 	
 	public static void installApp(Context context, String inAppPath) {
 		if(null == inAppPath || 0 == inAppPath.trim().length()){

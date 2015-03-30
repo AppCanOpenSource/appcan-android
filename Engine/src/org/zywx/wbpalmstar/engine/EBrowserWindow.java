@@ -40,7 +40,7 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.zywx.wbpalmstar.base.BHtmlDecrypt;
+import org.zywx.wbpalmstar.acedes.ACEDes;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.engine.EBrowserHistory.EHistoryEntry;
 import org.zywx.wbpalmstar.engine.external.Compat;
@@ -54,6 +54,7 @@ import java.util.*;
 
 public class EBrowserWindow extends FrameLayout implements AnimationListener {
 
+	private static final String TAG = "EBrowserWindow";
 	public static final int F_WINDOW_FLAG_NONE = 0x0;
 	public static final int F_WINDOW_FLAG_NEW = 0x1;
 	public static final int F_WINDOW_FLAG_SAME = 0x2;
@@ -152,15 +153,27 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 		if (null == inEntry) {
 			setName("root");
 			mMainView.setRelativeUrl("index.html");
+			
+			if(!TextUtils.isEmpty(mBroWidget.getWidget().m_opaque)) {
+				mMainView.setBrwViewBackground(mBroWidget.getWidget().getOpaque(),
+	                    mBroWidget.getWidget().m_bgColor, mBroWidget.getWidget().m_indexUrl);
+			}
+            
 		} else {
 			setName(inEntry.mWindName);
 			setAnimId(inEntry.mAnimId);
 			mMainView.setRelativeUrl(inEntry.mRelativeUrl);
-			if (inEntry.checkFlag(EBrwViewEntry.F_FLAG_OPAQUE)) {
-                mMainView.setOpaque(true);
-            } else {
-                mMainView.setOpaque(false);
-            }
+			if(!inEntry.hasExtraInfo){
+	            if (inEntry.checkFlag(EBrwViewEntry.F_FLAG_OPAQUE)) {
+	                mMainView.setOpaque(true);
+	            } else {
+	                mMainView.setOpaque(false);
+	            }
+			}
+	        if(inEntry.hasExtraInfo){
+	            mMainView.setBrwViewBackground(inEntry.mOpaque,
+	                    inEntry.mBgColor, inEntry.mData);
+	        }
 		}
 	}
 
@@ -252,10 +265,10 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 
 	public void openPopover(EBrwViewEntry popEntry) {
 
-		Message msg = mWindLoop.obtainMessage();
-		msg.what = F_WHANDLER_POP_OPEN;
-		msg.obj = popEntry;
-		mWindLoop.sendMessage(msg);
+//		Message msg = mWindLoop.obtainMessage();
+//		msg.what = F_WHANDLER_POP_OPEN;
+//		msg.obj = popEntry;
+//		mWindLoop.sendMessage(msg);
 
 		boolean isRootWidget = mBroWidget
 				.checkWidgetType(EBrowserWidget.F_WIDGET_POOL_TYPE_ROOT);
@@ -263,13 +276,17 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 			String curl = getRelativeUrl();
 			mBrw.popOpenAnalytics(curl, popEntry.mRelativeUrl);
 		}
+
+        hPopOverOpen(popEntry);
 	}
 
 	public void closePopover(String inPopName) {
-		Message msg = mWindLoop.obtainMessage();
-		msg.what = F_WHANDLER_POP_CLOSE;
-		msg.obj = inPopName;
-		mWindLoop.sendMessage(msg);
+//		Message msg = mWindLoop.obtainMessage();
+//		msg.what = F_WHANDLER_POP_CLOSE;
+//		msg.obj = inPopName;
+//		mWindLoop.sendMessage(msg);
+
+        hPopOverClose(inPopName);
 	}
 
 	public void setPopoverFrame(String inPopName, int inX, int inY,
@@ -300,6 +317,54 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 		}
 	}
 
+	public void setMultiPopoverFrame(String inPopName, int inX, int inY,
+			int inWidth, int inHeight) {
+		EBrwViewEntry popEntry = new EBrwViewEntry(EBrwViewEntry.VIEW_TYPE_POP);
+		popEntry.mViewName = inPopName;
+		popEntry.mX = inX;
+		popEntry.mY = inY;
+		popEntry.mWidth = inWidth;
+		popEntry.mHeight = inHeight;
+		
+		Message msg = mWindLoop.obtainMessage();
+		msg.what = F_WHANDLER_MULTIPOP_SET;
+		msg.obj = popEntry;
+		mWindLoop.sendMessage(msg);
+	}
+	
+	private void hSetMultiPopOverFrame(EBrwViewEntry entity) {
+		ArrayList<EBrowserView> list = mMultiPopTable.get(entity.mViewName);
+		if (null == list || list.size() == 0) {
+			return;
+		}
+		View vParent = (View) list.get(0).getParent();
+		LayoutParams lParam = new LayoutParams(entity.mWidth, entity.mHeight);
+		lParam.gravity = Gravity.NO_GRAVITY;
+		lParam.leftMargin = entity.mX;
+		lParam.topMargin = entity.mY;
+		vParent.setLayoutParams(lParam);
+	}
+	
+	public void evaluateMultiPopoverScript(WebView inWhich, String inWndName,
+			String inMultiPopName, String inPopName, String inScript) {
+		if (null == inWndName || 0 == inWndName.length()) {
+			ArrayList<EBrowserView> list = mMultiPopTable.get(inMultiPopName);
+			if (null == list) {
+				return;
+			}
+			for (int i = 1; i < list.size(); i++) {
+				EBrowserView pop = list.get(i);
+				if (inPopName.equals(pop.getName())) {
+					addUriTask(pop, inScript);
+					break;
+				}
+			}
+		} else {
+			mBroWidget.evaluateMultiPopoverScript(inWhich, inWndName,
+					inMultiPopName, inPopName, inScript);
+		}
+	}
+	
 	public void bringToFront(EBrowserView child) {
 		View v = (View) child.getParent();
 		Message msg = mWindLoop.obtainMessage();
@@ -490,7 +555,7 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 			child.newLoadData(entity.mData);
 			break;
 		case EBrwViewEntry.WINDOW_DATA_TYPE_DATA_URL:
-			String data1 = BHtmlDecrypt.decrypt(entity.mUrl, mContext, false,
+			String data1 = ACEDes.decrypt(entity.mUrl, mContext, false,
 					entity.mData);
 			child.loadDataWithBaseURL(entity.mUrl, data1,
 					EBrowserView.CONTENT_MIMETYPE_HTML,
@@ -508,8 +573,10 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 		EBrowserView mainPop = childs.get(0);
 		EBrwViewEntry entity = entitys.get(0);
 		View parent = (View) mainPop.getParent();
+		if(entity.hasExtraInfo){
+	        mainPop.setBrwViewBackground(entity.mOpaque, entity.mBgColor, "");
+		}
 		removeView(parent);
-
 		LayoutParams popParm = new LayoutParams(entity.mWidth, entity.mHeight);
 		int parentRight = getRight();
 		int parentBottom = getBottom();
@@ -537,6 +604,9 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 			EBrowserView childTemp = childs.get(0);
 			childTemp.setDateType(entityTemp.mDataType);
 			childTemp.setQuery(entityTemp.mQuery);
+			if(entityTemp.hasExtraInfo){
+	            childTemp.setBrwViewBackground(entityTemp.mOpaque, entityTemp.mBgColor, "");
+			}
 			switch (entityTemp.mDataType) {
 			case EBrwViewEntry.WINDOW_DATA_TYPE_URL:
 //				if (entityTemp.checkFlag(EBrwViewEntry.F_FLAG_OBFUSCATION)) {
@@ -552,7 +622,7 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 				childTemp.newLoadData(entityTemp.mData);
 				break;
 			case EBrwViewEntry.WINDOW_DATA_TYPE_DATA_URL:
-				String data1 = BHtmlDecrypt.decrypt(entityTemp.mUrl, mContext,
+				String data1 = ACEDes.decrypt(entityTemp.mUrl, mContext,
 						false, entityTemp.mData);
 				childTemp.loadDataWithBaseURL(entityTemp.mUrl, data1,
 						EBrowserView.CONTENT_MIMETYPE_HTML,
@@ -579,6 +649,9 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 		popParm.topMargin = entity.mY;
 		popParm.bottomMargin = entity.mBottom;
 		parent.setLayoutParams(popParm);
+        if(entity.hasExtraInfo){
+            child.setBrwViewBackground(entity.mOpaque, entity.mBgColor, "");
+        }
 		addView(parent);
 		switch (entity.mDataType) {
 		case EBrwViewEntry.WINDOW_DATA_TYPE_URL:
@@ -596,7 +669,7 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 			child.newLoadData(entity.mData);
 			break;
 		case EBrwViewEntry.WINDOW_DATA_TYPE_DATA_URL:
-			String data1 = BHtmlDecrypt.decrypt(entity.mUrl, mContext, false,
+			String data1 = ACEDes.decrypt(entity.mUrl, mContext, false,
 					entity.mData);
 			child.loadDataWithBaseURL(entity.mUrl, data1,
 					EBrowserView.CONTENT_MIMETYPE_HTML,
@@ -650,7 +723,7 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 			mTopView.newLoadData(inEntry.mData);
 			break;
 		case EBrwViewEntry.WINDOW_DATA_TYPE_DATA_URL:
-			String date1 = BHtmlDecrypt.decrypt(inEntry.mUrl, mContext, false,
+			String date1 = ACEDes.decrypt(inEntry.mUrl, mContext, false,
 					inEntry.mData);
 			mTopView.loadDataWithBaseURL(inEntry.mUrl, date1,
 					EBrowserView.CONTENT_MIMETYPE_HTML,
@@ -687,7 +760,7 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 			mBottomView.newLoadData(inEntry.mData);
 			break;
 		case EBrwViewEntry.WINDOW_DATA_TYPE_DATA_URL:
-			String date1 = BHtmlDecrypt.decrypt(inEntry.mUrl, mContext, false,
+			String date1 = ACEDes.decrypt(inEntry.mUrl, mContext, false,
 					inEntry.mData);
 			mBottomView.loadDataWithBaseURL(inEntry.mUrl, date1,
 					EBrowserView.CONTENT_MIMETYPE_HTML,
@@ -1249,6 +1322,7 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 			break;
 		case EBrwViewEntry.VIEW_TYPE_POP:
 			String name = target.getName();
+//            target.setVisibility(VISIBLE);
 			boolean isFinish = popOverFinish(name, 0);
 			if (isFinish) {
 				mBroWidget.notifyWindowFinish(this, target, url);
@@ -1640,7 +1714,7 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 			return;
 		}
 		EBrowserView eView = new EBrowserView(mContext, entity.mType, this);
-		eView.setVisibility(VISIBLE);
+//		eView.setVisibility(INVISIBLE);
 		eView.setName(entity.mViewName);
 		eView.setRelativeUrl(entity.mRelativeUrl);
 		eView.setDateType(entity.mDataType);
@@ -1657,12 +1731,16 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 		if (entity.checkFlag(EBrwViewEntry.F_FLAG_SHOULD_OP_SYS)) {
 			eView.setShouldOpenInSystem(true);
 		}
-		if (entity.checkFlag(EBrwViewEntry.F_FLAG_OPAQUE)) {
-			eView.setOpaque(true);
-		} else {
-			eView.setOpaque(false);
+		if(!entity.hasExtraInfo){
+	        if (entity.checkFlag(EBrwViewEntry.F_FLAG_OPAQUE)) {
+	            eView.setOpaque(true);
+	        } else {
+	            eView.setOpaque(false);
+	        }
 		}
-		
+        if(entity.hasExtraInfo){
+            eView.setBrwViewBackground(entity.mOpaque, entity.mBgColor, "");
+        }
 		if (entity.checkFlag(EBrwViewEntry.F_FLAG_OAUTH)) {
 			eView.setOAuth(true);
 		}
@@ -1694,7 +1772,7 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 			eView.newLoadData(entity.mData);
 			break;
 		case EBrwViewEntry.WINDOW_DATA_TYPE_DATA_URL:
-			String date1 = BHtmlDecrypt.decrypt(entity.mUrl, mContext, false,
+			String date1 = ACEDes.decrypt(entity.mUrl, mContext, false,
 					entity.mData);
 			eView.loadDataWithBaseURL(entity.mUrl, date1,
 					EBrowserView.CONTENT_MIMETYPE_HTML,
@@ -1863,8 +1941,8 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 	public static final int F_WHANDLER_SLIBING_CLOSE = 4;
 	public static final int F_WHANDLER_HISTROY_BACK = 5;
 	public static final int F_WHANDLER_HISTROY_FORWARD = 6;
-	public static final int F_WHANDLER_POP_OPEN = 7;
-	public static final int F_WHANDLER_POP_CLOSE = 8;
+//	public static final int F_WHANDLER_POP_OPEN = 7;
+//	public static final int F_WHANDLER_POP_CLOSE = 8;
 	public static final int F_WHANDLER_POP_SET = 9;
 	public static final int F_WHANDLER_ADD_URL_TARGET = 10;
 	public static final int F_WHANDLER_OPEN_ADD = 11;
@@ -1874,7 +1952,7 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 	public static final int F_WHANDLER_REMOVE_VIEW = 15;
 	public static final int F_WHANDLER_BOUNCE_TASK = 16;
 
-	public static final int F_WHANDLER_MULTIPOP_OPEN = 17;
+//	public static final int F_WHANDLER_MULTIPOP_OPEN = 17;
 
 	public static final int F_WHANDLER_BRING_TO_FRONT = 18;
 	public static final int F_WHANDLER_SEND_TO_BACK = 19;
@@ -1890,6 +1968,7 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 	public static final int F_WHANDLER_MULTIPOP_CLOSE = 29;
 	public static final int F_WHANDLER_MULTIPOP_SELECTED_CHANGE = 30;
 	public static final int F_SHOW_SOFTKEYBOARD = 31;
+	public static final int F_WHANDLER_MULTIPOP_SET = 32;
 
 	public static final int TOTAL = F_WHANDLER_SET_VISIBLE + 1;
 
@@ -1924,20 +2003,23 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 			case F_WHANDLER_HISTROY_FORWARD:
 				mMainView.goForward();
 				break;
-			case F_WHANDLER_POP_OPEN:
-				hPopOverOpen((EBrwViewEntry) msg.obj);
-				break;
-			case F_WHANDLER_MULTIPOP_OPEN:
-				hMultiPopOverOpen((ArrayList<EBrwViewEntry>) msg.obj, msg.arg1);
-				break;
+//			case F_WHANDLER_POP_OPEN:
+//				hPopOverOpen((EBrwViewEntry) msg.obj);
+//				break;
+//			case F_WHANDLER_MULTIPOP_OPEN:
+//				hMultiPopOverOpen((ArrayList<EBrwViewEntry>) msg.obj, msg.arg1);
+//				break;
 			case F_WHANDLER_POP_SET:
 				hSetPopOverFrame((EBrwViewEntry) msg.obj);
 				break;
-			case F_WHANDLER_POP_CLOSE:
-				hPopOverClose((String) msg.obj);
-				break;
+//			case F_WHANDLER_POP_CLOSE:
+//				hPopOverClose((String) msg.obj);
+//				break;
 			case F_WHANDLER_MULTIPOP_CLOSE:
 				hMultiPopOverClose((String) msg.obj);
+				break;
+			case F_WHANDLER_MULTIPOP_SET:
+				hSetMultiPopOverFrame((EBrwViewEntry) msg.obj);
 				break;
 			case F_WHANDLER_MULTIPOP_SELECTED_CHANGE:
 				hSetMuliPopOverSelected((String) msg.obj, msg.arg1);
@@ -2101,6 +2183,15 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 		bounceView.setLayoutParams(newParm);
 		bounceView.addView(parentBrowerview);
 		addView(bounceView);
+        if(mainEntry.hasExtraInfo){
+            parentBrowerview.setBrwViewBackground(mainEntry.mOpaque, mainEntry.mBgColor, "");
+        } else {
+            if (mainEntry.checkFlag(EBrwViewEntry.F_FLAG_OPAQUE)) {
+                parentBrowerview.setOpaque(true);
+            } else {
+                parentBrowerview.setOpaque(false);
+            }
+        }
 		parentBrowerview.init();
 
 		for (int i = 1; i < entitys.size(); i++) {
@@ -2115,6 +2206,9 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 			EUtil.viewBaseSetting(bounceViewChild);
 			bounceViewChild.setLayoutParams(new LayoutParams(
 					LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+            if(entity.hasExtraInfo){
+                childView.setBrwViewBackground(entity.mOpaque, entity.mBgColor, "");
+            }
 			bounceViewChild.addView(childView);
 			viewList.add(bounceViewChild);
 
@@ -2143,9 +2237,13 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 			if (entity.checkFlag(EBrwViewEntry.F_FLAG_SHOULD_OP_SYS)) {
 				eView.setShouldOpenInSystem(true);
 			}
-			if (entity.checkFlag(EBrwViewEntry.F_FLAG_OPAQUE)) {
-				eView.setOpaque(true);
-			}
+            if(!entity.hasExtraInfo) {
+                if (entity.checkFlag(EBrwViewEntry.F_FLAG_OPAQUE)) {
+                    eView.setOpaque(true);
+                } else {
+                    eView.setOpaque(false);
+                }
+            }
 			if (entity.checkFlag(EBrwViewEntry.F_FLAG_OAUTH)) {
 				eView.setOAuth(true);
 			}
@@ -2173,7 +2271,7 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 				eView.newLoadData(entity.mData);
 				break;
 			case EBrwViewEntry.WINDOW_DATA_TYPE_DATA_URL:
-				String date1 = BHtmlDecrypt.decrypt(entity.mUrl, mContext,
+				String date1 = ACEDes.decrypt(entity.mUrl, mContext,
 						false, entity.mData);
 				eView.loadDataWithBaseURL(entity.mUrl, date1,
 						EBrowserView.CONTENT_MIMETYPE_HTML,
@@ -2226,11 +2324,14 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 			ArrayList<EBrwViewEntry> popEntrys, int inIndex) {
 		// TODO Auto-generated method stub
 		this.mWindowCallback = callback;
-		Message msg = mWindLoop.obtainMessage();
-		msg.what = F_WHANDLER_MULTIPOP_OPEN;
-		msg.obj = popEntrys;
-		msg.arg1 = inIndex;
-		mWindLoop.sendMessage(msg);
+//		Message msg = mWindLoop.obtainMessage();
+//		msg.what = F_WHANDLER_MULTIPOP_OPEN;
+//		msg.obj = popEntrys;
+//		msg.arg1 = inIndex;
+//		mWindLoop.sendMessage(msg);
+
+        hMultiPopOverOpen(popEntrys, inIndex);
+
 
 	}
 
@@ -2557,6 +2658,17 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 		// TODO Auto-generated method stub
 		
 		
+	}
+
+	public void addUriTaskSpeci(String winName, String js) {
+		Log.i(TAG, "winName = " + winName + ", js = " + js);
+		EBrowserWindow eBrwWin = mBroWidget.getEBrowserWindow(winName);
+		if(eBrwWin != null){
+			EBrowserView eBrwView = eBrwWin.mMainView;
+			if(eBrwView != null && !eBrwView.beDestroy()){
+				eBrwView.addUriTask(js);
+			}
+		}
 	}
 
 }

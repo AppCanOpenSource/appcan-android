@@ -30,9 +30,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.zywx.wbpalmstar.base.BHtmlDecrypt;
+import org.zywx.wbpalmstar.acedes.ACEDESBrowserWindow7;
 import org.zywx.wbpalmstar.base.BUtility;
-import org.zywx.wbpalmstar.engine.external.EXWebViewClient;
+import org.zywx.wbpalmstar.acedes.EXWebViewClient;
 import org.zywx.wbpalmstar.engine.universalex.EUExScript;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
@@ -56,64 +56,16 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.widget.Toast;
 
-public class CBrowserWindow7 extends EXWebViewClient {
+public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
 
 	protected String mReferenceUrl;
 	protected String mParms;
 	
-	private String contentPrefix = "contents:///android_asset/";
-
 	/**
 	 * android version >= 2.1 use
 	 */
 	public CBrowserWindow7() {
 		mReferenceUrl = "";
-	}
-	
-	public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-	    
-		EBrowserActivity activity = (EBrowserActivity) view.getContext();
-		
-		if (activity.isEncryptcj == false) {
-			return null;
-		}
-		
-		
-	    if (url.startsWith(contentPrefix)) {
-	    	 WebResourceResponse response = null;
-	    	 
-	 	    try {
-	 	    		
-	 	    	InputStream localCopy = null;
-	 	    	InputStream resStream = null;
-	 	    	byte[] data = null;
-	 	    	String fileName = null;
-	 	    	String result = null;
-	 	    	String filePath = url.substring(contentPrefix.length());
-	 	    	
-	 	    	localCopy = activity.getAssets().open(filePath);
-
- 	    		data = BUtility.transStreamToBytes(localCopy, localCopy.available());
- 	    		fileName = BHtmlDecrypt.getFileNameWithNoSuffix(url);
- 	    		result = EUtil.htmlDecode(data, fileName);
- 	    		resStream = new ByteArrayInputStream(result.getBytes()); 
-	 	    	
-	 	    	if (url.endsWith(".css")) {
-	 	    		
-	 	    		response = new WebResourceResponse("text/css", "UTF-8", resStream);
-				} else if (url.endsWith(".js")) {
-					
-		            response = new WebResourceResponse("text/js", "UTF-8", resStream);
-				}
-	 	    	
-	            return response;
-	             
-	 	    } catch (IOException e) {
-	 	    	//e.pri
-	 	    }
-	    } 
-	   
-	    return null;
 	}
 	
 	@SuppressLint("NewApi")

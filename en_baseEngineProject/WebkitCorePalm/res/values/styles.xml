@@ -4,10 +4,14 @@
     <style name="browser_main_theme" parent="@android:style/Theme.NoTitleBar">
         <item name="android:scrollbarThumbHorizontal">@drawable/engine_scroller_thumb_hor</item>
         <item name="android:scrollbarThumbVertical">@drawable/engine_scroller_thumb_ver</item>
-        <item name="android:windowBackground">@null</item>
-        <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowIsFloating">false</item>
-        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowIsTranslucent">true</item>
+
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowShowWallpaper">true</item>
+        <item name="android:windowActionBar">false</item>
     </style>
     <!-- WidgetOne use -->
     <style name="Style_platform_no_title_and_background" parent="android:Theme">

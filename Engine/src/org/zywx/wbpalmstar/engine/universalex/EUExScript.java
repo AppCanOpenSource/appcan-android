@@ -130,11 +130,14 @@ public class EUExScript {
                 + "subscribeChannelNotification:function(){uexWindow_.subscribeChannelNotification(jo(arguments));},"
                 + "publishChannelNotification:function(){uexWindow_.publishChannelNotification(jo(arguments));},"
                 + "closeAboveWndByName:function(){uexWindow_.closeAboveWndByName(jo(arguments));},"
+                + "setMultilPopoverFlippingEnbaled:function(){uexWindow_.setMultilPopoverFlippingEnbaled(jo(arguments));},"
 
 				+ "openAd:function(){uexWindow_.openAd(jo(arguments));},"
 				+ "closePopover:function(){if(uexWindow_.termination()){return;}uexWindow_.closePopover(jo(arguments));},"
 				+ "setPopoverFrame:function(){uexWindow_.setPopoverFrame(jo(arguments));},"
 				+ "evaluatePopoverScript:function(){if(uexWindow_.termination()){return;}uexWindow_.evaluatePopoverScript(jo(arguments));},"
+				+ "setMultiPopoverFrame:function(){uexWindow_.setMultiPopoverFrame(jo(arguments));},"
+				+ "evaluateMultiPopoverScript:function(){if(uexWindow_.termination()){return;}uexWindow_.evaluateMultiPopoverScript(jo(arguments));},"
 				+ "getState:function(){return uexWindow_.getState(jo(arguments))},"
 				+ "statusBarNotification:function(){uexWindow_.statusBarNotification(jo(arguments));},"
 				
@@ -172,11 +175,13 @@ public class EUExScript {
                 + "toggleSlidingWindow:function(){uexWindow_.toggleSlidingWindow(jo(arguments));},"
 
 				+ "setBounce:function(){uexWindow_.setBounce(jo(arguments));},"
+				+ "getBounce:function(){uexWindow_.getBounce(jo(arguments));},"
 				+ "notifyBounceEvent:function(){uexWindow_.notifyBounceEvent(jo(arguments));},"
 				+ "showBounceView:function(){uexWindow_.showBounceView(jo(arguments));},"
 				+ "resetBounceView:function(){uexWindow_.resetBounceView(jo(arguments));},"
 				+ "setBounceParams:function(){uexWindow_.setBounceParams(jo(arguments));},"
 				+ "hiddenBounceView:function(){uexWindow_.hiddenBounceView(jo(arguments));},"
+                + "refresh:function(){if(uexWindow_.termination()){return;}uexWindow_.refresh(jo(arguments));},"
 				+ "getUrlQuery:function(){return uexWindow_.getUrlQuery(jo(arguments))}};"
 
 				+

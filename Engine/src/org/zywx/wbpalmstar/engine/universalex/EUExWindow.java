@@ -60,6 +60,7 @@ public class EUExWindow extends EUExBase {
 	public static final String function_pageBack = "uexWindow.cbPageBack";
 	public static final String function_pageForward = "uexWindow.cbPageForward";
 	public static final String function_cbOpenMultiPopover = "uexWindow.cbOpenMultiPopover";
+	public static final String function_cbBounceState = "uexWindow.cbBounceState";
 	public static final String function_cbslipedUpward = "uexWindow.slipedUpward"; //不建议使用
 	public static final String function_cbslipedDownward = "uexWindow.slipedDownward";//不建议使用
 	public static final String function_cbslipedUpEdge = "uexWindow.slipedUpEdge";//不建议使用
@@ -111,7 +112,8 @@ public class EUExWindow extends EUExBase {
     private static final int MSG_FUNCTION_SETSLIDINGWIN = 33;
     private static final int MSG_FUNCTION_SETSLIDINGWIN_ENABLE = 34;
     private static final int MSG_FUNCTION_TOGGLE_SLIDINGWIN = 35;
-
+    private static final int MSG_FUNCTION_REFRESH= 36;
+    private static final int MSG_FUNCTION_SETMULTIPOPOVERFRAME = 37;
     
 	private AlertDialog.Builder mAlert;
 	private AlertDialog.Builder mConfirm;
@@ -155,12 +157,29 @@ public class EUExWindow extends EUExBase {
         String inHeight = parm[5];
         String inFlag = parm[6];
         String animDuration = null;
-        String bgPath = null;
-        if (parm.length == 8) {
+        boolean opaque = false;
+        String bgColor = null;
+        boolean hasExtraInfo = false;
+        if (parm.length > 7) {
             animDuration = parm[7];
         }
-        if (parm.length == 9) {
-            bgPath = parm[8];
+        if (parm.length > 8) {
+            String jsonData = parm[8];
+            try {
+                JSONObject json = new JSONObject(jsonData);
+                String extraInfo = json.getString(EBrwViewEntry.TAG_EXTRAINFO);
+                JSONObject data = new JSONObject(extraInfo);
+                if(data.has(WWidgetData.TAG_WIN_BG_OPAQUE)){
+                    opaque = Boolean.valueOf(data.getString(WWidgetData.TAG_WIN_BG_OPAQUE));
+                    hasExtraInfo = true;
+                }
+                if(data.has(WWidgetData.TAG_WIN_BG_COLOR)){
+                    bgColor = data.getString(WWidgetData.TAG_WIN_BG_COLOR);
+                    hasExtraInfo = true;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
         String cUrl = mBrwView.getCurrentUrl();
         boolean op = EBrowser.checkFlag(EBrowser.F_BRW_FLAG_OPENING);
@@ -218,14 +237,6 @@ public class EUExWindow extends EUExBase {
                 }
             }
         }
-        if (null != bgPath) {
-            if (bgPath.contains("://")) {
-                bgPath = BUtility.makeRealPath(bgPath, wgt.m_widgetPath, wgt.m_wgtType);
-            } else {
-                bgPath = BUtility.makeUrl(cUrl, bgPath);
-                bgPath = BUtility.makeRealPath(bgPath, wgt.m_widgetPath, wgt.m_wgtType);
-            }
-        }
         windEntry.mPreWindName = curWind.getName();
         windEntry.mQuery = query;
         windEntry.mWindName = inWindowName;
@@ -236,7 +247,9 @@ public class EUExWindow extends EUExBase {
         windEntry.mHeight = height;
         windEntry.mFlag = flag;
         windEntry.mAnimDuration = duration;
-        windEntry.mBgPath = bgPath;
+        windEntry.mOpaque = opaque;
+        windEntry.mBgColor = bgColor;
+        windEntry.hasExtraInfo = hasExtraInfo;
         curWind.createWindow(mBrwView, windEntry);
     }
 	
@@ -363,6 +376,12 @@ public class EUExWindow extends EUExBase {
         mHandler.sendMessage(msg);
 	}
 
+    public void exit(String[] parm) {
+        int len = parm.length;
+        boolean showDialog = !(len > 0 && "0".equals(parm[0]));
+        ((EBrowserActivity)mContext).exitApp(showDialog);
+    }
+
     public void closeMsg(String[] parm) {
         EBrowserWindow curWind = mBrwView.getBrowserWindow();
         if (null == curWind) {
@@ -379,6 +398,7 @@ public class EUExWindow extends EUExBase {
         }
 
         if ("root".equals(mBrwView.getWindowName())) {
+            ((EBrowserActivity)mContext).exitApp(true);
             return;
         }
         String inAnimitionID = null;
@@ -421,6 +441,13 @@ public class EUExWindow extends EUExBase {
         Bundle b = new Bundle();
         b.putString(TAG_BUNDLE_PARAM_NAME, windowName);
         msg.setData(b);
+        mHandler.sendMessage(msg);
+    }
+
+    public void refresh(String[] params){
+        Message msg = mHandler.obtainMessage();
+        msg.what = MSG_FUNCTION_REFRESH;
+        msg.obj = this;
         mHandler.sendMessage(msg);
     }
 
@@ -685,6 +712,10 @@ public class EUExWindow extends EUExBase {
             JSONObject leftJsonObj = null;
             JSONObject rightJsonObj = null;
             View menuView;
+            
+            if (activity.globalSlidingMenu.getParent() != null) {
+            	return;
+            }
 
 
             if (jsonObject.has("leftSliding"))  {
@@ -758,6 +789,7 @@ public class EUExWindow extends EUExBase {
             if (isAttach == true) {
                 activity.globalSlidingMenu.setMode(slidingMode);
                 activity.globalSlidingMenu.attachToActivity(activity, SlidingMenu.SLIDING_CONTENT);
+
             }
 
 
@@ -777,8 +809,6 @@ public class EUExWindow extends EUExBase {
         }
         String inWindowName = winName;
         String inData = url;
-
-        String bgPath = null;
 
         String cUrl = mBrwView.getCurrentUrl();
         boolean eq = curWind.getName().equals(inWindowName);
@@ -816,19 +846,10 @@ public class EUExWindow extends EUExBase {
                 }
             }
         }
-        if (null != bgPath) {
-            if (bgPath.contains("://")) {
-                bgPath = BUtility.makeRealPath(bgPath, wgt.m_widgetPath, wgt.m_wgtType);
-            } else {
-                bgPath = BUtility.makeUrl(cUrl, bgPath);
-                bgPath = BUtility.makeRealPath(bgPath, wgt.m_widgetPath, wgt.m_wgtType);
-            }
-        }
         windEntry.mQuery = query;
         windEntry.mWindName = inWindowName;
         windEntry.mDataType = dataType;
         windEntry.mData = data;
-        windEntry.mBgPath = bgPath;
         curWind.createSlidingWindow(windEntry);
     }
 	
@@ -844,7 +865,21 @@ public class EUExWindow extends EUExBase {
         Bundle bd = new Bundle();
         bd.putStringArray(TAG_BUNDLE_PARAM, parm);
         msg.setData(bd);
-        mHandler.sendMessage(msg);
+        if (parm.length > 11) {
+            //取第12个参数的延迟加载字段
+            long delay=0l;
+            try {
+                JSONObject json = new JSONObject(parm[11]);
+                JSONObject data = new JSONObject(json.getString(EBrwViewEntry.TAG_EXTRAINFO));
+                if(data.has(EBrwViewEntry.TAG_DELAYTIME)){
+                    delay = Long.valueOf(data.getString(EBrwViewEntry.TAG_DELAYTIME));
+                }
+            } catch (Exception e) {
+            }
+            mHandler.sendMessageDelayed(msg, delay);
+        } else {
+            mHandler.sendMessage(msg);
+        }
 	}
 
     public void openPopoverMsg(String[] parm) {
@@ -878,6 +913,27 @@ public class EUExWindow extends EUExBase {
         String marginBottom = null;
         if (parm.length > 10) {
             marginBottom = parm[10];
+        }
+        boolean opaque = false;
+        String bgColor = null;
+        boolean hasExtraInfo = false;
+        if (parm.length > 11) {
+            String jsonData = parm[11];
+            try {
+                JSONObject json = new JSONObject(jsonData);
+                String extraInfo = json.getString(EBrwViewEntry.TAG_EXTRAINFO);
+                JSONObject data = new JSONObject(extraInfo);
+                if(data.has(WWidgetData.TAG_WIN_BG_OPAQUE)){
+                    opaque = Boolean.valueOf(data.getString(WWidgetData.TAG_WIN_BG_OPAQUE));
+                    hasExtraInfo = true;
+                }
+                if(data.has(WWidgetData.TAG_WIN_BG_COLOR)){
+                    bgColor = data.getString(WWidgetData.TAG_WIN_BG_COLOR);
+                    hasExtraInfo = true;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
         int dType = 0;
         int x = 0;
@@ -952,6 +1008,9 @@ public class EUExWindow extends EUExBase {
         popEntry.mFontSize = fonts;
         popEntry.mFlag = flag;
         popEntry.mBottom = bottom;
+        popEntry.mOpaque = opaque;
+        popEntry.mBgColor = bgColor;
+        popEntry.hasExtraInfo = hasExtraInfo;
         String query = null;
         if (Build.VERSION.SDK_INT >= 11) {
             if (url != null && url.trim().length() != 0
@@ -1049,18 +1108,32 @@ public class EUExWindow extends EUExBase {
     }
 	
 	public void openMultiPopover(String[] parm) {
-		Log.d("multi", "open multi pop");
-		if (parm.length < 10) {
-			return;
-		}
+        Log.d("multi", "open multi pop");
+        if (parm.length < 10) {
+            return;
+        }
         Message msg = new Message();
         msg.obj = this;
         msg.what = MSG_FUNCTION_OPENMULTIPOPOVER;
         Bundle bd = new Bundle();
         bd.putStringArray(TAG_BUNDLE_PARAM, parm);
         msg.setData(bd);
-        mHandler.sendMessage(msg);		
-	}
+        if (parm.length > 10) {
+            //取第11个参数的延迟加载字段
+            long delay=0l;
+            try {
+                JSONObject json = new JSONObject(parm[10]);
+                JSONObject data = new JSONObject(json.getString(EBrwViewEntry.TAG_EXTRAINFO));
+                if(data.has(EBrwViewEntry.TAG_DELAYTIME)){
+                    delay = Long.valueOf(data.getString(EBrwViewEntry.TAG_DELAYTIME));
+                }
+            } catch (Exception e) {
+            }
+            mHandler.sendMessageDelayed(msg, delay);
+        } else {
+            mHandler.sendMessage(msg);
+        }
+    }
 
     public void openMultiPopoverMsg(String[] parm) {
         EBrowserWindow curWind = mBrwView.getBrowserWindow();
@@ -1093,6 +1166,28 @@ public class EUExWindow extends EUExBase {
         String inFlag = parm[8];
         String inIndexSelect = parm[9];
 
+        boolean opaque = false;
+        String bgColor = null;
+        boolean hasExtraInfo = false;
+        if (parm.length > 10) {
+            String jsonData = parm[10];
+            try {
+                JSONObject json = new JSONObject(jsonData);
+                String extraInfo = json.getString(EBrwViewEntry.TAG_EXTRAINFO);
+                JSONObject data = new JSONObject(extraInfo);
+                if(data.has(WWidgetData.TAG_WIN_BG_OPAQUE)){
+                    opaque = Boolean.valueOf(data.getString(WWidgetData.TAG_WIN_BG_OPAQUE));
+                    hasExtraInfo = true;
+                }
+                if(data.has(WWidgetData.TAG_WIN_BG_COLOR)){
+                    bgColor = data.getString(WWidgetData.TAG_WIN_BG_COLOR);
+                    hasExtraInfo = true;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        
         String windPopName = curWind.getName() + inMultiPopName;
         if (!checkWindPopPermission(windPopName)) {
             showPermissionDialog(windPopName);
@@ -1150,6 +1245,9 @@ public class EUExWindow extends EUExBase {
             mainPopEntry.mHeight = h;
             mainPopEntry.mFontSize = fonts;
             mainPopEntry.mFlag = flag;
+            mainPopEntry.mOpaque =opaque;
+            mainPopEntry.mBgColor = bgColor;
+            mainPopEntry.hasExtraInfo = hasExtraInfo;
             popEntrys.add(mainPopEntry);
 
             JSONObject content = new JSONObject(inContent);
@@ -1160,9 +1258,30 @@ public class EUExWindow extends EUExBase {
             childUrl = new String[j];
 
             for (int i = 0; i < jsonContent.length(); i++) {
-
                 EBrwViewEntry popEntry = new EBrwViewEntry(
                         EBrwViewEntry.VIEW_TYPE_POP);
+                boolean opaque1 = false;
+                String bgColor1 = null;
+                boolean hasExtraInfo1 = false;
+                if (jsonContent.getJSONObject(i).has(EBrwViewEntry.TAG_EXTRAINFO)) {
+                    try {
+                        String extraInfo = jsonContent.getJSONObject(i).getString(EBrwViewEntry.TAG_EXTRAINFO);
+                        JSONObject data = new JSONObject(extraInfo);
+                        if(data.has(WWidgetData.TAG_WIN_BG_OPAQUE)){
+                            opaque1 = Boolean.valueOf(data.getString(WWidgetData.TAG_WIN_BG_OPAQUE));
+                            hasExtraInfo1 = true;
+                        }
+                        if(data.has(WWidgetData.TAG_WIN_BG_COLOR)){
+                            bgColor1 = data.getString(WWidgetData.TAG_WIN_BG_COLOR);
+                            hasExtraInfo1 = true;
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                popEntry.mOpaque = opaque1;
+                popEntry.mBgColor = bgColor1;
+                popEntry.hasExtraInfo = hasExtraInfo1;
                 popEntry.mViewName = jsonContent.getJSONObject(i).getString(
                         "inPageName");
 
@@ -1265,7 +1384,72 @@ public class EUExWindow extends EUExBase {
         String multiPopName = parm[0];
         curWind.closeMultiPopover(multiPopName);
     }
-	
+
+	public void setMultiPopoverFrame(String[] parm) {
+		if (parm.length < 5) {
+			return;
+		}
+        Message msg = new Message();
+        msg.obj = this;
+        msg.what = MSG_FUNCTION_SETMULTIPOPOVERFRAME;
+        Bundle bd = new Bundle();
+        bd.putStringArray(TAG_BUNDLE_PARAM, parm);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
+	}
+
+    public void setMultiPopoverFrameMsg(String[] parm) {
+        EBrowserWindow curWind = mBrwView.getBrowserWindow();
+        if (null == curWind) {
+            return;
+        }
+        float nowScale = 1.0f;
+        int versionA = Build.VERSION.SDK_INT;
+        if (versionA <= 18) {
+            nowScale = mBrwView.getScale();
+        }
+        float sc = nowScale;
+        String inPopName = parm[0];
+        String inX = parm[1];
+        String inY = parm[2];
+        String inWidth = parm[3];
+        String inHeight = parm[4];
+        int x = 0, y = 0, w = -1, h = -1;
+        try {
+            if (null != inX && inX.length() != 0) {
+                x = (int) (Integer.valueOf(inX) * sc);
+            }
+            if (null != inY && inY.length() != 0) {
+                y = (int) (Integer.valueOf(inY) * sc);
+            }
+            if (null != inWidth && inWidth.length() != 0) {
+                w = (int) (Integer.valueOf(inWidth) * sc);
+            }
+            if (null != inHeight && inHeight.length() != 0) {
+                h = (int) (Integer.valueOf(inHeight) * sc);
+            }
+        } catch (Exception e) {
+            errorCallback(0, EUExCallback.F_E_UEXWINDOW_EVAL, "Illegal parameter");
+            return;
+        }
+        curWind.setMultiPopoverFrame(inPopName, x, y, w, h);
+    }
+    
+	public void evaluateMultiPopoverScript(String[] parm) {
+		if (parm.length < 4) {
+			return;
+		}
+		EBrowserWindow curWind = mBrwView.getBrowserWindow();
+		if (null == curWind) {
+			return;
+		}
+		String inWndName = parm[0];
+		String inMultiPopName = parm[1];
+		String inPopName = parm[2];
+		String inScript = parm[3];
+		curWind.evaluateMultiPopoverScript(mBrwView, inWndName, inMultiPopName, inPopName, SCRIPT_HEADER + inScript);
+	}
+    
 	public void evaluatePopoverScript(String[] parm) {
 		if (parm.length < 3) {
 			return;
@@ -2019,6 +2203,11 @@ public class EUExWindow extends EUExBase {
         }
         mBrwView.getBrowserWindow().windowGoForward(animId, duration);
     }
+
+	public void getBounce(String[] parm) {
+		int state = mBrwView.getBounce() ? 1 : 0;
+		jsCallback(function_cbBounceState, 0, EUExCallback.F_C_INT, state);
+	}
 	
 	public void setBounce(String[] parm) {
 		if (parm.length < 1) {
@@ -2564,6 +2753,19 @@ public class EUExWindow extends EUExBase {
 		curWind.publishChannelNotification(channelId, des);
 	}
 
+	public void setMultilPopoverFlippingEnbaled(String[] params) {
+		if (params.length < 1) {
+			return;
+		}
+		int enabled = 0;
+		try {
+			enabled = Integer.parseInt(params[0]);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		mBrwView.setIsMultilPopoverFlippingEnbaled(enabled == 1 ? true : false);
+	}
+	
     @Override
     public void onHandleMessage(Message msg) {
         if(mBrwView == null || mBrwView.getBrowserWindow() == null || msg == null){
@@ -2636,6 +2838,9 @@ public class EUExWindow extends EUExBase {
         case MSG_FUNCTION_CLOSEMULTIPOPOVER:
             if(param != null) closeMultiPopoverMsg(param);
             break;
+        case MSG_FUNCTION_SETMULTIPOPOVERFRAME:
+        	if(param != null) setMultiPopoverFrameMsg(param);
+        	break;
         case MSG_FUNCTION_SETSELECTEDPOPOVERINMULTIWINDOW:
             if(param != null) setSelectedPopOverInMultiWindowMsg(param);
             break;
@@ -2680,6 +2885,17 @@ public class EUExWindow extends EUExBase {
             break;
         case MSG_FUNCTION_TOGGLE_SLIDINGWIN:
             hanldeToggleSlidingWindow(param);
+            break;
+        case MSG_FUNCTION_REFRESH:
+            String url = mBrwView.getRelativeUrl();
+            mBrwView.loadUrl(url);
+			mBrwView.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					mBrwView.clearHistory();
+				}
+			}, 1000);
+            break;
         default:
             break;
         }

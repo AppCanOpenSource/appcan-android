@@ -41,7 +41,7 @@ public final class YAxisAnimation extends Animation {
 	}
 
 	protected final void applyTransformation(float paramFloat, Transformation transformation) {
-		float f1 = 0.0F + 360.0F * paramFloat;
+		float f1 = 0.0F - 360.0F * paramFloat;
 		float f2 = mWidth;
 		float f3 = mHeight;
 		final Camera camera = mCamera;

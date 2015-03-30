@@ -34,13 +34,17 @@ import org.zywx.wbpalmstar.engine.ELinkedList;
 import org.zywx.wbpalmstar.engine.EngineEventListener;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.engine.universalex.ThirdPluginMgr;
+import org.zywx.wbpalmstar.engine.universalex.ThirdPluginObject;
 import org.zywx.wbpalmstar.platform.push.PushEngineEventListener;
 import org.zywx.wbpalmstar.widgetone.dataservice.WDataManager;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
 import java.io.*;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class WidgetOneApplication extends Application {
 
@@ -73,7 +77,27 @@ public class WidgetOneApplication extends Application {
 		copyLib();
 		copyJar();
 		initClassLoader();
+		initPlugin();
+		reflectionPluginMethod("onApplicationCreate");
+	}
 
+	private void reflectionPluginMethod(String method) {
+		ThirdPluginMgr tpm = getThirdPlugins();
+		Map<String, ThirdPluginObject> thirdPlugins = tpm.getPlugins();
+		Set<Map.Entry<String, ThirdPluginObject>> pluginSet = thirdPlugins
+				.entrySet();
+		for (Map.Entry<String, ThirdPluginObject> entry : pluginSet) {
+			try {
+				String javaName = entry.getValue().jclass;
+				Class c = Class.forName(javaName);
+				Method m = c.getMethod(method, new Class[] {});
+				if (null != m) {
+					m.invoke(c, new Object[] {});
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private void copyLib() {
@@ -217,7 +241,6 @@ public class WidgetOneApplication extends Application {
 		new Thread("Appcan-WidgetOneInit") {
 			public void run() {
 				resultMsg.arg1 = 0;// default fail
-				initPlugin();
 				WDataManager wDataManager = new WDataManager(ctx);
 				WWidgetData widgetData = wDataManager.getWidgetData();
 				if (widgetData != null && widgetData.m_indexUrl != null) {

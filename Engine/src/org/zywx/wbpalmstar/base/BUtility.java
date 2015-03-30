@@ -18,18 +18,6 @@
 
 package org.zywx.wbpalmstar.base;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileDescriptor;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.zywx.wbpalmstar.widgetone.dataservice.WDataManager;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -39,10 +27,16 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.DisplayMetrics;
+import org.zywx.wbpalmstar.widgetone.dataservice.WDataManager;
+
+import java.io.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class BUtility {
 	public final static String F_SDCARD_PATH = "file:///sdcard/";
@@ -67,6 +61,9 @@ public class BUtility {
 	public final static String F_Widget_RES_path = "widget/wgtRes/";
 	public final static String F_Widget_RES_SCHEMA = "res://";
 	public final static String F_SBOX_SCHEMA = "box://";
+
+    public static boolean isDes = false;
+    public static String g_desPath = "";
 
 	// 缩放图片
 	public static Bitmap imageScale(Bitmap bitmap, int dst_w, int dst_h) {
@@ -230,26 +227,24 @@ public class BUtility {
 					int b = Integer.parseInt(rgba[2]);
 					int a = Integer.parseInt(rgba[3]);
 					reColor = (a << 24) | (r << 16) | (g << 8) | b;
-				}else{ // #
-					inColor = inColor.substring(1);
-					if(3 == inColor.length()){
+				}else if(inColor.startsWith("#")){ // #
+					String tmpColor = inColor.substring(1);
+					if(3 == tmpColor.length()){
 						char[] t = new char[6];
-						t[0] = inColor.charAt(0);
-						t[1] = inColor.charAt(0);
-						t[2] = inColor.charAt(1);
-						t[3] = inColor.charAt(1);
-						t[4] = inColor.charAt(2);
-						t[5] = inColor.charAt(2);
-						inColor = String.valueOf(t);
-					}else if(6 == inColor.length()){
-						;
+						t[0] = tmpColor.charAt(0);
+						t[1] = tmpColor.charAt(0);
+						t[2] = tmpColor.charAt(1);
+						t[3] = tmpColor.charAt(1);
+						t[4] = tmpColor.charAt(2);
+						t[5] = tmpColor.charAt(2);
+						inColor = "#" + String.valueOf(t);
 					}
-					long color = Long.parseLong(inColor, 16);
-					reColor = (int) (color | 0x00000000ff000000);
+					reColor = Color.parseColor(inColor);
 				}
 			}
 		}catch (Exception e) {
-			;
+            e.printStackTrace();
+            reColor = 0;
 		}
 		return reColor;
 	}
@@ -653,4 +648,56 @@ public class BUtility {
 
 	}
 
+    public static Bitmap getLocalImg(Context ctx, String imgUrl) {
+
+        if (imgUrl == null || imgUrl.length() == 0) {
+            return null;
+        }
+        Bitmap bitmap = null;
+        InputStream is = null;
+        try {
+            if (imgUrl.startsWith(BUtility.F_Widget_RES_SCHEMA)) {
+                is = BUtility.getInputStreamByResPath(ctx, imgUrl);
+                bitmap = BitmapFactory.decodeStream(is);
+            } else if (imgUrl.startsWith(BUtility.F_FILE_SCHEMA)) {
+                imgUrl = imgUrl.replace(BUtility.F_FILE_SCHEMA, "");
+                bitmap = BitmapFactory.decodeFile(imgUrl);
+            } else if (imgUrl.startsWith(BUtility.F_Widget_RES_path)) {
+                try {
+                    is = ctx.getAssets().open(imgUrl);
+                    if (is != null) {
+                        bitmap = BitmapFactory.decodeStream(is);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else if (imgUrl.startsWith("/")) {
+                bitmap = BitmapFactory.decodeFile(imgUrl);
+            }
+        } catch (OutOfMemoryError e) {
+            e.printStackTrace();
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return bitmap;
+    }
+
+    public static String getFileNameWithNoSuffix(String path) {
+		String name = null;
+		int index = path.lastIndexOf('/');
+		if (index > 0) {
+			name = path.substring(index + 1, path.length());
+		}
+		int index1 = name.lastIndexOf('.');
+		if (index1 > 0) {
+			name = name.substring(0, index1);
+		}
+		return name;
+	}
 }

@@ -9,7 +9,7 @@
 		var y = document.getElementById("yy").value;
 		var w = document.getElementById("ww").value;
 		var h = document.getElementById("hh").value;
-		uexWindow.setPopoverFrame("sss", x, y, w, h);
+		uexWindow.setPopoverFrame("pop2", x, y, w, h);
 	}
 
 	function evas(){
@@ -54,12 +54,12 @@
   <span>2.更改PopOver大小和位置</span><br>
   x：<input class="textbox" id="xx" type="text" value="0"><br>
   y：<input class="textbox" id="yy" type="text" value="0"><br>
-  width：<input class="textbox" id="ww" type="text" value="300"><br>
-  height：<input class="textbox" id="hh" type="text" value="200"><br>
+  width：<input class="textbox" id="ww" type="text" value="600"><br>
+  height：<input class="textbox" id="hh" type="text" value="600"><br>
   <a  href="javascript:void(0);" onclick=change()>更改</a><br><br> 
   <span>3.指定popover执行js脚本</span><br>
   <span>表现效果为当前PopOver的“这是PopOver”字段被更改</span><br>
-  <a  href="javascript:void(0);" onclick="uexWindow.evaluatePopoverScript('', 'sss', 'evas()')">执行</a><br><br>
+  <a  href="javascript:void(0);" onclick="uexWindow.evaluatePopoverScript('', 'pop2', 'evas()')">执行</a><br><br>
   
   <span>4.更改本popOver,验证OAuth功能(如果成功主window会有相应的值打出)</span><br>
   <a  href="javascript:void(0);" onclick='changeUrl()'>开始</a><br><br><br>

@@ -36,7 +36,7 @@ public class PushRecieveMsgReceiver extends BroadcastReceiver {
     public static final String ACTION_PUSH = "org.zywx.push.receive";
     private static Context mContext;
     public static final int F_TYPE_PUSH = 10;
-    private int notificationNB = 0;
+    private static int notificationNB = 0;
 
     @Override
     public void onReceive(Context context, Intent intent) {

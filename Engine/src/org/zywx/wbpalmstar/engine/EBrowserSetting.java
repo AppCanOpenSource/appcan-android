@@ -73,10 +73,10 @@ public class EBrowserSetting implements EBrowserBaseSetting {
 			invokeHtml5(mWebSetting);
 		}
 		if (webApp) {
-			mWebSetting.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+//			mWebSetting.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
 			return;
 		}
-		mWebSetting.setCacheMode(WebSettings.LOAD_NO_CACHE);
+//		mWebSetting.setCacheMode(WebSettings.LOAD_NO_CACHE);
 		// disables the actual onscreen controls from showing up
 		mWebSetting.setBuiltInZoomControls(false);
 	    // disables the ability to zoom

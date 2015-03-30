@@ -450,6 +450,10 @@ public class EBounceView extends LinearLayout {
 		}
 	}
 
+	public boolean getBounce() {
+		return mBounce;
+	}
+	
 	public void setBounce(boolean flag) {
 		mBounce = flag;
 		mHeaderView.setVisibility(VISIBLE);
@@ -550,21 +554,28 @@ public class EBounceView extends LinearLayout {
 			if (null != loadingImagePath && 0 != loadingImagePath.trim().length()) {
 				mHeaderView.setLoadingPic(loadingImagePath);
 			}
-			if (null != textColor && 0 != textColor.trim().length()) {
-				int color = mBrwView.parseColor(textColor);
-				mHeaderView.setTextColor(color);
-			}
-			if (null != levelText && 0 != levelText.trim().length()) {
-				mHeaderView.setLevelText(levelText);
-			}
-			if (null != pullToReloadText && 0 != pullToReloadText.trim().length()) {
-				mHeaderView.setPullToReloadText(pullToReloadText);
-			}
-			if (null != releaseToReloadText && 0 != releaseToReloadText.trim().length()) {
-				mHeaderView.setReleaseToReloadText(releaseToReloadText);
-			}
-			if (null != loadingText && 0 != loadingText.trim().length()) {
-				mHeaderView.setLoadingText(loadingText);
+			if ((null == textColor || 0 == textColor.trim().length())
+					&& (null == pullToReloadText || 0 == pullToReloadText.trim().length())
+					&& (null == releaseToReloadText || 0 == releaseToReloadText.trim().length())
+					&& (null == loadingText || 0 == loadingText.trim().length())) {
+				mHeaderView.setContentEmpty(true);
+			}else {
+				if (null != textColor && 0 != textColor.trim().length()) {
+					int color = mBrwView.parseColor(textColor);
+					mHeaderView.setTextColor(color);
+				}
+				if (null != levelText && 0 != levelText.trim().length()) {
+					mHeaderView.setLevelText(levelText);
+				}
+				if (null != pullToReloadText && 0 != pullToReloadText.trim().length()) {
+					mHeaderView.setPullToReloadText(pullToReloadText);
+				}
+				if (null != releaseToReloadText && 0 != releaseToReloadText.trim().length()) {
+					mHeaderView.setReleaseToReloadText(releaseToReloadText);
+				}
+				if (null != loadingText && 0 != loadingText.trim().length()) {
+					mHeaderView.setLoadingText(loadingText);
+				}
 			}
 			break;
 		case EViewEntry.F_BOUNCE_TYPE_BOTTOM:
@@ -574,21 +585,28 @@ public class EBounceView extends LinearLayout {
 			if (null != loadingImagePath && 0 != loadingImagePath.trim().length()) {
 				mTailView.setLoadingPic(loadingImagePath);
 			}
-			if (null != textColor && 0 != textColor.trim().length()) {
-				int color = mBrwView.parseColor(textColor);
-				mTailView.setTextColor(color);
-			}
-			if (null != levelText && 0 != levelText.trim().length()) {
-				mTailView.setLevelText(levelText);
-			}
-			if (null != pullToReloadText && 0 != pullToReloadText.trim().length()) {
-				mTailView.setPullToReloadText(pullToReloadText);
-			}
-			if (null != releaseToReloadText && 0 != releaseToReloadText.trim().length()) {
-				mTailView.setReleaseToReloadText(releaseToReloadText);
-			}
-			if (null != loadingText && 0 != loadingText.trim().length()) {
-				mTailView.setLoadingText(loadingText);
+			if ((null == textColor || 0 == textColor.trim().length())
+					&& (null == pullToReloadText || 0 == pullToReloadText.trim().length())
+					&& (null == releaseToReloadText || 0 == releaseToReloadText.trim().length())
+					&& (null == loadingText || 0 == loadingText.trim().length())) {
+				mTailView.setContentEmpty(true);
+			} else {
+				if (null != textColor && 0 != textColor.trim().length()) {
+					int color = mBrwView.parseColor(textColor);
+					mTailView.setTextColor(color);
+				}
+				if (null != levelText && 0 != levelText.trim().length()) {
+					mTailView.setLevelText(levelText);
+				}
+				if (null != pullToReloadText && 0 != pullToReloadText.trim().length()) {
+					mTailView.setPullToReloadText(pullToReloadText);
+				}
+				if (null != releaseToReloadText && 0 != releaseToReloadText.trim().length()) {
+					mTailView.setReleaseToReloadText(releaseToReloadText);
+				}
+				if (null != loadingText && 0 != loadingText.trim().length()) {
+					mTailView.setLoadingText(loadingText);
+				}
 			}
 			break;
 		}

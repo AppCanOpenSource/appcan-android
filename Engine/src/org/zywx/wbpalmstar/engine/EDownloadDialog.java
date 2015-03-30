@@ -34,6 +34,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.webkit.CookieManager;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
@@ -182,14 +183,26 @@ public class EDownloadDialog extends ProgressDialog implements Runnable{
                 contentLength = Long.parseLong(cLength);
             }
 		}
-		MimeTypeMap mtm = MimeTypeMap.getSingleton();
-		String extension = mtm.getExtensionFromMimeType(mimetype);
-		File tm = Environment.getExternalStorageDirectory();
-		File target = new File(tm.getAbsoluteFile() +  "/Download/");
-		if(!target.exists()){
-			target.mkdirs();
-		}
-		mTmpFile = File.createTempFile("/Download/", "." + extension, tm);
+        File tm = Environment.getExternalStorageDirectory();
+        File target = new File(tm.getAbsoluteFile() +  "/Download/");
+        if(!target.exists()){
+            target.mkdirs();
+        }
+        String extension=null;
+        if (mimetype!=null){
+            MimeTypeMap mtm = MimeTypeMap.getSingleton();
+            extension = mtm.getExtensionFromMimeType(mimetype);
+        }
+        if (extension==null){
+            if (!TextUtils.isEmpty(contentDisposition)){
+                String fileName=contentDisposition.replaceFirst("attachment; filename=","");
+                fileName.replaceAll("/","");
+                mTmpFile=new File(target,fileName);
+            }
+        }else{
+             mTmpFile = File.createTempFile("/Download/", "." + extension, tm);
+        }
+
 		OutputStream outStream = new FileOutputStream(mTmpFile);
 		byte buffer[] = new byte[1024 * 3];
 		while (true) {

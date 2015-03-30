@@ -32,7 +32,7 @@ import android.webkit.CookieSyncManager;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
 import android.widget.Toast;
-import org.zywx.wbpalmstar.engine.external.EXWebViewClient;
+import org.zywx.wbpalmstar.acedes.EXWebViewClient;
 import org.zywx.wbpalmstar.engine.universalex.EUExScript;
 
 import java.io.File;

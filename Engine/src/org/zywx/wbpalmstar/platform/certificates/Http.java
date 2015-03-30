@@ -148,7 +148,7 @@ public class Http {
 	        if(null == ksP12){
 		        String assertFile = "file:///android_asset/";
 		        String sdcardFile = "/sdcard/";
-		        String wgtFile = "/wgtRes/";
+		        String wgtFile = "widget/";
 		        String file = "file://";
 		        if(cPath.contains(assertFile)){
 		        	cPath = cPath.substring(assertFile.length());
@@ -159,10 +159,7 @@ public class Http {
 		        		cPath = cPath.substring("file://".length());
 		        	}
 		        	inStream = new FileInputStream(cPath);
-		        }else if(cPath.contains(wgtFile)){
-		        	if(cPath.contains(assertFile)){
-		        		cPath = cPath.substring(assertFile.length());
-		        	}
+		        }else if(cPath.startsWith(wgtFile)){
 		        	AssetManager asset = ctx.getAssets();
 		        	inStream = asset.open(cPath);
 		        }else{

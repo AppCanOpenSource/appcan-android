@@ -29,15 +29,13 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Xml;
 import org.xmlpull.v1.XmlPullParser;
+import org.zywx.wbpalmstar.acedes.ACEDes;
 import org.zywx.wbpalmstar.base.BDebug;
-import org.zywx.wbpalmstar.base.BHtmlDecrypt;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.ResoureFinder;
 import org.zywx.wbpalmstar.base.zip.CnZipInputStream;
 import org.zywx.wbpalmstar.base.zip.ZipEntry;
-import org.zywx.wbpalmstar.engine.EBrowserActivity;
 import org.zywx.wbpalmstar.engine.ESystemInfo;
-import org.zywx.wbpalmstar.engine.EUtil;
 import org.zywx.wbpalmstar.platform.encryption.PEncryption;
 import org.zywx.wbpalmstar.platform.myspace.CommonUtility;
 
@@ -385,6 +383,8 @@ public class WDataManager {
 				widgetData.m_author = cursor.getString(19);
 				widgetData.m_license = cursor.getString(20);
 				widgetData.m_orientation = cursor.getInt(21);
+                widgetData.m_opaque = cursor.getString(cursor.getColumnIndex(WDBAdapter.F_COLUMN_OPAQUE));
+                widgetData.m_bgColor = cursor.getString(cursor.getColumnIndex(WDBAdapter.F_COLUMN_BGCOLOR));
 				// widgetData.m_widgetAdStatus = cursor.getInt(22);
 			}
 			cursor.close();
@@ -427,6 +427,8 @@ public class WDataManager {
 				widgetData.m_author = cursor.getString(19);
 				widgetData.m_license = cursor.getString(20);
 				widgetData.m_orientation = cursor.getInt(21);
+                widgetData.m_opaque = cursor.getString(cursor.getColumnIndex(WDBAdapter.F_COLUMN_OPAQUE));
+                widgetData.m_bgColor = cursor.getString(cursor.getColumnIndex(WDBAdapter.F_COLUMN_BGCOLOR));
 				// widgetData.m_widgetAdStatus = cursor.getInt(22);
 			}
 			cursor.close();
@@ -606,6 +608,8 @@ public class WDataManager {
 		cv.put(WDBAdapter.F_COLUMN_AUTHOR, widgetData.m_author);
 		cv.put(WDBAdapter.F_COLUMN_LICENSE, widgetData.m_license);
 		cv.put(WDBAdapter.F_COLUMN_ORIENTATION, widgetData.m_orientation);
+        cv.put(WDBAdapter.F_COLUMN_OPAQUE, widgetData.m_opaque);
+        cv.put(WDBAdapter.F_COLUMN_BGCOLOR, widgetData.m_bgColor);
 		widgetDBId = db.insert(cv, tableName);
 		widgetData.m_id = Integer.parseInt(String.valueOf(widgetDBId));
 
@@ -626,7 +630,7 @@ public class WDataManager {
 
 		WWidgetData widgetData = null;
 		WWidgetData assetsData = getWidgetDataByXML(m_rootWidgetConfigPath, 0);
-		 isUpdateWidget = checkAppStatus(m_context, assetsData.m_appId);
+		isUpdateWidget = checkAppStatus(m_context, assetsData.m_appId);
 		try {
 			if (isUpdateWidget) {
 				PackageInfo pinfo = pm.getPackageInfo(
@@ -724,6 +728,30 @@ public class WDataManager {
 		widgetData.m_appdebug = assetsData.m_appdebug;
 		widgetData.m_logServerIp = assetsData.m_logServerIp;
 		widgetData.m_obfuscation = assetsData.m_obfuscation;
+		widgetData.m_opaque = assetsData.m_opaque;
+		
+		if (widgetData.m_obfuscation == 1) {
+
+
+
+			String preString = BUtility.F_ASSET_PATH;
+            String contentPrefix = "content://";
+            String packg = m_context.getPackageName();
+            String spPostFix = ".sp/";
+
+            BUtility.g_desPath = contentPrefix + packg + spPostFix;
+
+                    widgetData.m_indexUrl = contentPrefix + packg + spPostFix + widgetData.m_indexUrl.substring(preString.length());
+			
+			widgetData.m_obfuscation = 0;
+
+            BUtility.isDes = true;
+
+		}
+		
+
+			
+		
 
 		m_rootWgt = widgetData;
 		if (m_wgtsPath == null) {
@@ -1106,13 +1134,9 @@ public class WDataManager {
 			InputStream is1 = new ByteArrayInputStream(baos.toByteArray()); 
 			InputStream is2 = new ByteArrayInputStream(baos.toByteArray()); 
 			
-			boolean isV = BHtmlDecrypt.isEncrypted(is1);
+			boolean isV = ACEDes.isEncrypted(is1);
 			
 			if (isV) {
-				
-				EBrowserActivity activity = (EBrowserActivity)m_context;
-				
-				activity.isEncryptcj = isV;
 				
 	 	    	InputStream resStream = null;
 	 	    	byte[] data = null;
@@ -1120,7 +1144,7 @@ public class WDataManager {
 	 	    	String result = null;
 
  	    		data = BUtility.transStreamToBytes(is2, is2.available());
- 	    		result = EUtil.htmlDecode(data, fileName);
+ 	    		result = ACEDes.htmlDecode(data, fileName);
  	    		resStream = new ByteArrayInputStream(result.getBytes());
  	    		parser.setInput(resStream, "utf-8");
 			} else {
@@ -1154,7 +1178,12 @@ public class WDataManager {
 
 						widgetData.m_indexUrl = parser.getAttributeValue(null,
 								"src");
-					} else if ("icon".equals(localName)) {
+					} else if (WWidgetData.TAG_WIN_BG.equals(localName)){
+                        widgetData.m_opaque = parser.getAttributeValue(null,
+                                WWidgetData.TAG_WIN_BG_OPAQUE);
+                        widgetData.m_bgColor = parser.getAttributeValue(null,
+                                WWidgetData.TAG_WIN_BG_COLOR);
+                    } else if ("icon".equals(localName)) {
 						widgetData.m_iconPath = parser.getAttributeValue(null,
 								"src");
 					} else if ("name".equals(localName)) {
@@ -1165,6 +1194,7 @@ public class WDataManager {
 					} else if ("obfuscation".equals(localName)) {
 						if ("true".equals(parser.nextText())) {
 							widgetData.m_obfuscation = 1;
+							ACEDes.setEncryptcj(true);
 						}
 					} else if ("logserverip".equals(localName)) {
 						widgetData.m_logServerIp = parser.nextText();

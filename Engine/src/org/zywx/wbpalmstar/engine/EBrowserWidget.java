@@ -122,10 +122,12 @@ public class EBrowserWidget extends AbsoluteLayout {
 	}
 
 	public void onCloseWindow(EBrowserWindow window) {
-		Message msg = mWidgetLoop.obtainMessage();
-		msg.what = F_WIDGET_HANDLER_WINDOW_CLOSE;
-		msg.obj = window;
-		mWidgetLoop.sendMessage(msg);
+//		Message msg = mWidgetLoop.obtainMessage();
+//		msg.what = F_WIDGET_HANDLER_WINDOW_CLOSE;
+//		msg.obj = window;
+//		mWidgetLoop.sendMessage(msg);
+
+        closeWindow(window);
 	}
 
     public void createSlidingWindow(EBrwViewEntry entry) {
@@ -146,16 +148,100 @@ public class EBrowserWidget extends AbsoluteLayout {
 		if (!entry.checkFlag(EBrwViewEntry.F_FLAG_HIDDEN)) {
 			EBrowser.setFlag(EBrowser.F_BRW_FLAG_OPENING);
 		}
-		Message msg = mWidgetLoop.obtainMessage();
-		msg.obj = entry;
-		msg.what = F_WIDGET_HANDLER_WINDOW_CREATE;
-		mWidgetLoop.sendMessage(msg);
+//		Message msg = mWidgetLoop.obtainMessage();
+//		msg.obj = entry;
+//		msg.what = F_WIDGET_HANDLER_WINDOW_CREATE;
+//		mWidgetLoop.sendMessage(msg);
 
 		boolean isRootWidget = checkWidgetType(EBrowserWidget.F_WIDGET_POOL_TYPE_ROOT);
 		if (isRootWidget) {
 			mBrw.windowOpenAnalytics(preWindow, entry);
 		}
+
+        createWindowInner(preWindow, target, entry);
 	}
+
+    public void createWindowInner(EBrowserWindow preWindow, EBrowserView target,
+                             EBrwViewEntry entry) {
+
+        boolean hidden = entry.checkFlag(EBrwViewEntry.F_FLAG_HIDDEN);
+        if (!hidden) {
+            mEWindowStack.clearFractureLink();
+        }
+        if (checkWindow(entry)) {
+            return;
+        }
+        EBrowserWindow newWindow = getInvalid();
+        if (null != newWindow) {
+            newWindow.setEBrowserWidget(EBrowserWidget.this);
+        } else {
+            newWindow = new EBrowserWindow(mContext,
+                    EBrowserWidget.this);
+        }
+        boolean prevHidden = entry
+                .checkFlag(EBrwViewEntry.F_FLAG_NOT_HIDDEN);
+        newWindow.setPrevWindowWillHidden(prevHidden);
+        newWindow.setDateType(entry.mDataType);
+        newWindow.setWindPoType(F_WINDOW_POOL_TYPE_NEW);
+        newWindow.setAnimId(entry.mAnimId);
+        newWindow.setAnimDuration(entry.mAnimDuration);
+        newWindow.setHidden(hidden);
+        if (entry.checkFlag(EBrwViewEntry.F_FLAG_OAUTH)) {
+            newWindow.setOAuth(true);
+            newWindow.registUrlChangeNotify(entry.mPreWindName);
+        }
+
+        if (entry.checkFlag(EBrwViewEntry.F_FLAG_PREOP)) {
+            newWindow.setFlag(EBrowserWindow.F_WINDOW_FLAG_OPPOP);
+        }
+        if (entry.checkFlag(EBrwViewEntry.F_FLAG_OPAQUE)) {
+            newWindow.setBackgroundColor(0xFFFFFFFF);
+        }
+        AbsoluteLayout.LayoutParams parm = new AbsoluteLayout.LayoutParams(
+                Compat.FILL, Compat.FILL, 0, 0);
+        newWindow.setLayoutParams(parm);
+        newWindow.init(mBrw, entry);
+        if (entry.checkFlag(EBrwViewEntry.F_FLAG_GESTURE)) {
+            newWindow.setSupportZoom();
+        }
+        if (entry.checkFlag(EBrwViewEntry.F_FLAG_SHOULD_OP_SYS)) {
+            newWindow.setShouldOpenUrlInSystem(true);
+        }
+        newWindow.setVisibility(INVISIBLE);
+        newWindow.setQuery(EBrwViewEntry.VIEW_TYPE_MAIN, entry.mQuery);
+        ViewParent parent = newWindow.getParent();
+        if (null == parent) {
+            addView(newWindow);
+        }
+        addWindow(newWindow, hidden);
+//        Delay ent = new Delay(newWindow, entry);
+//        sendMessageDelayed(
+//                obtainMessage(F_WIDGET_HANDLER_LOAD_DELAY, ent), 90);
+
+
+//        //动画行为
+//        int animId = newWindow.getAnimId();
+//        long duration = newWindow.getAnimDuration();
+//        Animation[] animPair = EBrowserAnimation.getAnimPair(animId, duration);
+//
+//        newWindow.startAnimation(animPair[0]);
+//        newWindow.setVisibility(VISIBLE);
+//        mBroWindow.startAnimation(animPair[1]);
+
+        EBrwViewEntry enty = entry;
+        EBrowserWindow wind = newWindow;
+        if (EBrwViewEntry.isUrl(entry.mDataType)) {
+//					if (enty.checkFlag(EBrwViewEntry.F_FLAG_OBFUSCATION)) {
+            if (getWidget().m_obfuscation == 1) {
+                wind.needToEncrypt(enty.mData);
+            } else {
+                wind.start(enty.mData);
+            }
+        } else {
+            wind.newLoadData(enty.mData);
+        }
+
+    }
 
 	public void setWindowFrame(EBrowserWindow window, int x, int y, int duration) {
 		EViewEntry en = new EViewEntry();
@@ -464,6 +550,14 @@ public class EBrowserWidget extends AbsoluteLayout {
 			window.evaluatePopoverScript(inWhich, null, inPopName, inScript);
 		}
 	}
+	
+	public void evaluateMultiPopoverScript(WebView inWhich, String inWndName,
+			String inMultiPopName, String inPopName, String inScript) {
+		EBrowserWindow window = mEWindowStack.get(inWndName);
+		if (null != window) {
+			window.evaluateMultiPopoverScript(inWhich, null, inMultiPopName, inPopName, inScript);
+		}
+	}
 
 	public void setPushNotify(String windName, String function) {
 		mPushNotifyWindName = windName;
@@ -609,15 +703,13 @@ public class EBrowserWidget extends AbsoluteLayout {
 			addWindow(window, hidden);
 			boolean urlEmpty = inEntry.checkData();
 			boolean isReload = inEntry.checkFlag(EBrwViewEntry.F_FLAG_RElOAD);
-			boolean obfuscation = inEntry
-					.checkFlag(EBrwViewEntry.F_FLAG_OBFUSCATION);
 			if (!urlEmpty && !hidden && !isReload) {
 				showOnly(window, SHOW_TYPE_NEXT);
 				return true;
 			}
 			window.setFlag(EBrowserWindow.F_WINDOW_FLAG_SAME);
 			if (inEntry.checkDataType(EBrwViewEntry.WINDOW_DATA_TYPE_URL)) {
-				if (obfuscation) {
+				if (getWidget().m_obfuscation == 1) {
 					window.needToEncrypt(inEntry.mData);
 				} else {
 					String url = window.getAbsoluteUrl();
@@ -682,8 +774,8 @@ public class EBrowserWidget extends AbsoluteLayout {
 		EBrowser.clearFlag();
 	}
 
-	public static final int F_WIDGET_HANDLER_WINDOW_CREATE = 0;
-	public static final int F_WIDGET_HANDLER_WINDOW_CLOSE = 1;
+//	public static final int F_WIDGET_HANDLER_WINDOW_CREATE = 0;
+//	public static final int F_WIDGET_HANDLER_WINDOW_CLOSE = 1;
 	public static final int F_WIDGET_HANDLER_WINDOW_HISTROY = 2;
 	public static final int F_WIDGET_HANDLER_SHOW_DELAY = 3;
 	public static final int F_WIDGET_HANDLER_LOAD_DELAY = 4;
@@ -701,8 +793,8 @@ public class EBrowserWidget extends AbsoluteLayout {
 		}
 
 		public void clean() {
-			removeMessages(F_WIDGET_HANDLER_WINDOW_CREATE);
-			removeMessages(F_WIDGET_HANDLER_WINDOW_CLOSE);
+//			removeMessages(F_WIDGET_HANDLER_WINDOW_CREATE);
+//			removeMessages(F_WIDGET_HANDLER_WINDOW_CLOSE);
 			removeMessages(F_WIDGET_HANDLER_WINDOW_HISTROY);
 			removeMessages(F_WIDGET_HANDLER_SHOW_DELAY);
 			removeMessages(F_WIDGET_HANDLER_LOAD_DELAY);
@@ -714,68 +806,68 @@ public class EBrowserWidget extends AbsoluteLayout {
 
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
-			case F_WIDGET_HANDLER_WINDOW_CREATE:// create
-            {
-				EBrwViewEntry entry = (EBrwViewEntry) msg.obj;
-				boolean hidden = entry.checkFlag(EBrwViewEntry.F_FLAG_HIDDEN);
-				if (!hidden) {
-					mEWindowStack.clearFractureLink();
-				}
-				if (checkWindow(entry)) {
-					break;
-				}
-				EBrowserWindow newWindow = getInvalid();
-				if (null != newWindow) {
-					newWindow.setEBrowserWidget(EBrowserWidget.this);
-				} else {
-					newWindow = new EBrowserWindow(mContext,
-							EBrowserWidget.this);
-				}
-				boolean prevHidden = entry
-						.checkFlag(EBrwViewEntry.F_FLAG_NOT_HIDDEN);
-				newWindow.setPrevWindowWillHidden(prevHidden);
-				newWindow.setDateType(entry.mDataType);
-				newWindow.setWindPoType(F_WINDOW_POOL_TYPE_NEW);
-				newWindow.setAnimId(entry.mAnimId);
-				newWindow.setAnimDuration(entry.mAnimDuration);
-				newWindow.setHidden(hidden);
-				if (entry.checkFlag(EBrwViewEntry.F_FLAG_OAUTH)) {
-					newWindow.setOAuth(true);
-					newWindow.registUrlChangeNotify(entry.mPreWindName);
-				}
-
-				if (entry.checkFlag(EBrwViewEntry.F_FLAG_PREOP)) {
-					newWindow.setFlag(EBrowserWindow.F_WINDOW_FLAG_OPPOP);
-				}
-				if (entry.checkFlag(EBrwViewEntry.F_FLAG_OPAQUE)) {
-					newWindow.setBackgroundColor(0xFFFFFFFF);
-				} 
-				AbsoluteLayout.LayoutParams parm = new AbsoluteLayout.LayoutParams(
-						Compat.FILL, Compat.FILL, 0, 0);
-				newWindow.setLayoutParams(parm);
-				newWindow.init(mBrw, entry);
-				if (entry.checkFlag(EBrwViewEntry.F_FLAG_GESTURE)) {
-					newWindow.setSupportZoom();
-				}
-				if (entry.checkFlag(EBrwViewEntry.F_FLAG_SHOULD_OP_SYS)) {
-					newWindow.setShouldOpenUrlInSystem(true);
-				}
-				newWindow.setVisibility(INVISIBLE);
-				newWindow.setQuery(EBrwViewEntry.VIEW_TYPE_MAIN, entry.mQuery);
-				ViewParent parent = newWindow.getParent();
-				if (null == parent) {
-					addView(newWindow);
-				}
-				Bitmap map = mBrw.getImage(entry.mBgPath);
-				if (null != map) {
-					newWindow.setBackgroundDrawable(new BitmapDrawable(map));
-				}
-				addWindow(newWindow, hidden);
-				Delay ent = new Delay(newWindow, entry);
-				sendMessageDelayed(
-						obtainMessage(F_WIDGET_HANDLER_LOAD_DELAY, ent), 90);
-            }
-				break;
+//			case F_WIDGET_HANDLER_WINDOW_CREATE:// create
+//            {
+//				EBrwViewEntry entry = (EBrwViewEntry) msg.obj;
+//				boolean hidden = entry.checkFlag(EBrwViewEntry.F_FLAG_HIDDEN);
+//				if (!hidden) {
+//					mEWindowStack.clearFractureLink();
+//				}
+//				if (checkWindow(entry)) {
+//					break;
+//				}
+//				EBrowserWindow newWindow = getInvalid();
+//				if (null != newWindow) {
+//					newWindow.setEBrowserWidget(EBrowserWidget.this);
+//				} else {
+//					newWindow = new EBrowserWindow(mContext,
+//							EBrowserWidget.this);
+//				}
+//				boolean prevHidden = entry
+//						.checkFlag(EBrwViewEntry.F_FLAG_NOT_HIDDEN);
+//				newWindow.setPrevWindowWillHidden(prevHidden);
+//				newWindow.setDateType(entry.mDataType);
+//				newWindow.setWindPoType(F_WINDOW_POOL_TYPE_NEW);
+//				newWindow.setAnimId(entry.mAnimId);
+//				newWindow.setAnimDuration(entry.mAnimDuration);
+//				newWindow.setHidden(hidden);
+//				if (entry.checkFlag(EBrwViewEntry.F_FLAG_OAUTH)) {
+//					newWindow.setOAuth(true);
+//					newWindow.registUrlChangeNotify(entry.mPreWindName);
+//				}
+//
+//				if (entry.checkFlag(EBrwViewEntry.F_FLAG_PREOP)) {
+//					newWindow.setFlag(EBrowserWindow.F_WINDOW_FLAG_OPPOP);
+//				}
+//				if (entry.checkFlag(EBrwViewEntry.F_FLAG_OPAQUE)) {
+//					newWindow.setBackgroundColor(0xFFFFFFFF);
+//				}
+//				AbsoluteLayout.LayoutParams parm = new AbsoluteLayout.LayoutParams(
+//						Compat.FILL, Compat.FILL, 0, 0);
+//				newWindow.setLayoutParams(parm);
+//				newWindow.init(mBrw, entry);
+//				if (entry.checkFlag(EBrwViewEntry.F_FLAG_GESTURE)) {
+//					newWindow.setSupportZoom();
+//				}
+//				if (entry.checkFlag(EBrwViewEntry.F_FLAG_SHOULD_OP_SYS)) {
+//					newWindow.setShouldOpenUrlInSystem(true);
+//				}
+//				newWindow.setVisibility(INVISIBLE);
+//				newWindow.setQuery(EBrwViewEntry.VIEW_TYPE_MAIN, entry.mQuery);
+//				ViewParent parent = newWindow.getParent();
+//				if (null == parent) {
+//					addView(newWindow);
+//				}
+//				Bitmap map = mBrw.getImage(entry.mBgPath);
+//				if (null != map) {
+//					newWindow.setBackgroundDrawable(new BitmapDrawable(map));
+//				}
+//				addWindow(newWindow, hidden);
+//				Delay ent = new Delay(newWindow, entry);
+//				sendMessageDelayed(
+//						obtainMessage(F_WIDGET_HANDLER_LOAD_DELAY, ent), 90);
+//            }
+//				break;
 			case F_WIDGET_HANDLER_WINDOW_HISTROY:// window histroy
 				if (0 == msg.arg1) {// back
 					showOnly((EBrowserWindow) msg.obj, SHOW_TYPE_PRE);
@@ -839,9 +931,9 @@ public class EBrowserWidget extends AbsoluteLayout {
 				window.startAnimation(amin);
 				invalidate();
 				break;
-			case F_WIDGET_HANDLER_WINDOW_CLOSE:// close window
-				closeWindow((EBrowserWindow) msg.obj);
-				break;
+//			case F_WIDGET_HANDLER_WINDOW_CLOSE:// close window
+//				closeWindow((EBrowserWindow) msg.obj);
+//				break;
 			case F_WIDGET_HANDLER_INSERT_WINDOW_ABOVE_POPOVER:
 				EViewEntry c = (EViewEntry) msg.obj;
 				View bn1 = (View) c.obj;

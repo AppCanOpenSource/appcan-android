@@ -22,9 +22,10 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 import org.json.JSONObject;
-import org.zywx.wbpalmstar.base.BHtmlDecrypt;
+import org.zywx.wbpalmstar.acedes.ACEDes;
+import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.engine.EBrowserHistory.EHistoryEntry;
-import org.zywx.wbpalmstar.engine.external.EXWebViewClient;
+import org.zywx.wbpalmstar.acedes.EXWebViewClient;
 import org.zywx.wbpalmstar.engine.universalex.EUExCallback;
 import org.zywx.wbpalmstar.engine.universalex.EUExManager;
 import org.zywx.wbpalmstar.engine.universalex.EUExWindow;
@@ -32,13 +33,20 @@ import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.DownloadListener;
 import android.webkit.WebView;
@@ -85,6 +93,7 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 	private int mScrollDistance = 10;
 	private EUExWindow callback;
 	private boolean mIsNeedScroll = false;
+	private boolean isMultilPopoverFlippingEnbaled = false;
 
 	protected EBrowserView(Context context, int inType, EBrowserWindow inParent) {
 		super(context);
@@ -281,50 +290,50 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 		}
 	}
 
-	protected void setLayerTypeForHeighVersion() {
-		// if(Build.VERSION.SDK_INT < 11){
-		// return;
-		// }
-		// String MODEL = Build.MODEL;
-		// String MANUFACTURER = Build.MANUFACTURER;
-		// if(null != MODEL && null != MANUFACTURER){
-		// MODEL = MODEL.toLowerCase();
-		// MANUFACTURER = MANUFACTURER.toLowerCase();
-		// if((MODEL.contains("9508") || MODEL.contains("9500")) &&
-		// MANUFACTURER.contains("samsung")){
-		// return;
-		// }
-		// }
-		// Paint paint = new Paint();
-		// paint.setColor(0x00000000);
-		// if(isHardwareAccelerated()){
-		// setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-		// }
-	}
+//	protected void setLayerTypeForHeighVersion() {
+//		// if(Build.VERSION.SDK_INT < 11){
+//		// return;
+//		// }
+//		// String MODEL = Build.MODEL;
+//		// String MANUFACTURER = Build.MANUFACTURER;
+//		// if(null != MODEL && null != MANUFACTURER){
+//		// MODEL = MODEL.toLowerCase();
+//		// MANUFACTURER = MANUFACTURER.toLowerCase();
+//		// if((MODEL.contains("9508") || MODEL.contains("9500")) &&
+//		// MANUFACTURER.contains("samsung")){
+//		// return;
+//		// }
+//		// }
+//		// Paint paint = new Paint();
+//		// paint.setColor(0x00000000);
+//		// if(isHardwareAccelerated()){
+//		// setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+//		// }
+//	}
 
-	@SuppressLint("NewApi")
-	@Override
-	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		if (Build.VERSION.SDK_INT >= 11) {
-			String MODEL = Build.MODEL;
-			String MANUFACTURER = Build.MANUFACTURER;
-			if (null != MODEL && null != MANUFACTURER) {
-				MODEL = MODEL.toLowerCase();
-				MANUFACTURER = MANUFACTURER.toLowerCase();
-				if ((MODEL.contains("9508") || MODEL.contains("9500"))
-						&& MANUFACTURER.contains("samsung")) {
-					if (isHardwareAccelerated()) {
-						setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-					}
-					super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-					return;
-				}
-			}
-			setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-			invalidate();
-		}
-		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-	}
+//	@SuppressLint("NewApi")
+//	@Override
+//	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+//		if (Build.VERSION.SDK_INT >= 11) {
+//			String MODEL = Build.MODEL;
+//			String MANUFACTURER = Build.MANUFACTURER;
+//			if (null != MODEL && null != MANUFACTURER) {
+//				MODEL = MODEL.toLowerCase();
+//				MANUFACTURER = MANUFACTURER.toLowerCase();
+//				if ((MODEL.contains("9508") || MODEL.contains("9500"))
+//						&& MANUFACTURER.contains("samsung")) {
+//					if (isHardwareAccelerated()) {
+//						setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+//					}
+//					super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+//					return;
+//				}
+//			}
+//			setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+//			invalidate();
+//		}
+//		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+//	}
 
 	@SuppressLint("NewApi")
 	public void destroyControl() {
@@ -428,8 +437,10 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 	            this.scrollTo(this.getScrollX(), this.getScrollY() + 1);
 	            this.scrollTo(this.getScrollX(), temp_ScrollY);	    
 			}
+			setMultilPopoverFlippingEnbaled();
 			break;
 		case MotionEvent.ACTION_MOVE:
+			setMultilPopoverFlippingEnbaled();
 			break;
 		case MotionEvent.ACTION_UP:
 		case MotionEvent.ACTION_CANCEL:
@@ -438,6 +449,25 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 		}
 		return super.onTouchEvent(ev);
 
+	}
+
+    @Override
+    public boolean onGenericMotionEvent(MotionEvent event) {
+        return super.onGenericMotionEvent(event);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    public void setIsMultilPopoverFlippingEnbaled(boolean isEnabled) {
+		isMultilPopoverFlippingEnbaled = isEnabled;
+	}
+	
+	private void setMultilPopoverFlippingEnbaled() {
+		EBounceView parentBounceView = (EBounceView) this.getParent();
+		if (parentBounceView instanceof EBounceView) {
+			ViewParent parentViewPager = parentBounceView.getParent();
+			if (parentViewPager instanceof ViewPager) {
+				parentViewPager.requestDisallowInterceptTouchEvent(isMultilPopoverFlippingEnbaled);
+			}
+		}
 	}
 
 	private void strugglefoucs() {
@@ -769,7 +799,22 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 			setQuery(url.substring(index + 1));
 			turl = turl.substring(0, index);
 		}
-		String data = BHtmlDecrypt.decrypt(turl, mContext, false, null);
+		
+		String data = ACEDes.decrypt(turl, mContext, false, null);;
+		
+		if (ACEDes.isSpecifiedEncrypt()) {
+			
+//			data = SpecifiedEncrypt.parseSpecifiedEncryptHtml(data);
+			
+		}
+//		if (SpecifiedEncrypt.isSpecifiedEncrypt()) {
+//			
+//			data = SpecifiedEncrypt.parseSpecifiedEncrypt(turl);
+//			
+//		} else {
+//			data = BHtmlDecrypt.decrypt(turl, mContext, false, null);
+//		}
+		
 		view.loadDataWithBaseURL(url, data, CONTENT_MIMETYPE_HTML,
 				CONTENT_DEFAULT_CODE, url);
 		if (mType == EBrwViewEntry.VIEW_TYPE_MAIN) {
@@ -839,6 +884,25 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 		}
 	}
 
+    public String getCurrentUrl(String baseUrl) {
+        if (mDestroyed) {
+            return "";
+        }
+        if (!checkType(EBrwViewEntry.VIEW_TYPE_MAIN)) {
+            return mBroWind.location();
+        } else {
+            String url = getUrl();
+            if(TextUtils.isEmpty(url)){
+                url = baseUrl;
+            }
+            int index = url.indexOf("?");
+            if (-1 != index) {
+                url = url.substring(0, index);
+            }
+            return url;
+        }
+    }
+
 	public String getWidgetPath() {
 		if (mDestroyed) {
 			return "";
@@ -889,6 +953,33 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 			setBackgroundColor(Color.TRANSPARENT);
 		}
 	}
+
+    public void setBrwViewBackground(boolean flag, String bgColor, String baseUrl) {
+        if (flag) {
+            if(bgColor.startsWith("#") || bgColor.startsWith("rgb")){
+                int color = BUtility.parseColor(bgColor);
+                setBackgroundColor(color);
+            }else{
+                String path = BUtility.makeRealPath(BUtility.makeUrl(getCurrentUrl(baseUrl),bgColor),
+                        getCurrentWidget().m_widgetPath, getCurrentWidget().m_wgtType);
+                Bitmap bitmap = BUtility.getLocalImg(mContext, path);
+                Drawable d = null;
+                if(bitmap != null){
+                    d = new BitmapDrawable(mContext.getResources(), bitmap);
+                }
+                int version = Build.VERSION.SDK_INT;
+                if(version < 16){
+                    setBackgroundDrawable(d);
+                    setBackgroundColor(Color.argb(0, 0, 0, 0));
+                }else{
+                    setBackground(d);
+                    setBackgroundColor(Color.argb(0, 0, 0, 0));
+                }
+            }
+        } else {
+            setBackgroundColor(Color.TRANSPARENT);
+        }
+    }
 
 	public void setWebApp(boolean flag) {
 		mWebApp = flag;
@@ -1045,6 +1136,14 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 				}
 			}
 		});
+	}
+	
+	public boolean getBounce() {
+		EBounceView bounceView = (EBounceView) this.getParent();
+		if (bounceView instanceof EBounceView) {
+			return bounceView.getBounce();
+		}
+		return false;
 	}
 
 	public void setBounce(int flag) {

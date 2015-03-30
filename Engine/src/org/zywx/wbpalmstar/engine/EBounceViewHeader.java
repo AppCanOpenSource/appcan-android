@@ -40,7 +40,8 @@ public class EBounceViewHeader extends RelativeLayout {
 	static final int F_WAP_ID = 0x000111;
 	
 	private boolean mDonghang;
-	
+	private boolean mContentEmpty;
+	private RelativeLayout wap;
 	private TextView mContent;
 	private TextView mLevelContent;
 	private ProgressBar mProgress;
@@ -74,10 +75,11 @@ public class EBounceViewHeader extends RelativeLayout {
 		wapper.setLayoutParams(wParm);
 		addView(wapper);
 		
-		RelativeLayout wap = new RelativeLayout(context);
+		wap = new RelativeLayout(context);
 		wap.setId(F_WAP_ID);
 		RelativeLayout.LayoutParams wm = new LayoutParams(-2, height);
 		wm.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+		wm.leftMargin = 30;
 		wap.setLayoutParams(wm);
 		
 		mContent = new TextView(context);
@@ -108,8 +110,7 @@ public class EBounceViewHeader extends RelativeLayout {
 		int use = height - 12;
 		RelativeLayout.LayoutParams parmPro = new LayoutParams(use, use);
 		parmPro.addRule(RelativeLayout.LEFT_OF, F_WAP_ID);
-		parmPro.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
-		parmPro.rightMargin = 30;
+		parmPro.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
 		mProgress.setLayoutParams(parmPro);
 		mProgress.setVisibility(GONE);
 		wapper.addView(mProgress);
@@ -118,17 +119,16 @@ public class EBounceViewHeader extends RelativeLayout {
 		int useY = height - 12;
 		RelativeLayout.LayoutParams parmProY = new LayoutParams(useY, useY);
 		parmProY.addRule(RelativeLayout.LEFT_OF, F_WAP_ID);
-		parmProY.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
-		parmProY.rightMargin = 30;
+		parmProY.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
 		mYAxisProgress.setLayoutParams(parmProY);
 		mYAxisProgress.setVisibility(GONE);
 		wapper.addView(mYAxisProgress);
 		
 		mArrowImage = new ImageView(context);
-		RelativeLayout.LayoutParams parmImage = new LayoutParams(-2, height);
+		int useA = height - 12;
+		RelativeLayout.LayoutParams parmImage = new LayoutParams(useA, useA);
 		parmImage.addRule(RelativeLayout.LEFT_OF, F_WAP_ID);
-		parmImage.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
-		parmImage.rightMargin = 30;
+		parmImage.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
 		mArrowImage.setLayoutParams(parmImage);
 		Drawable icon = context.getResources().getDrawable(EResources.platform_myspace_pulltorefresh_arrow);
 		mArrowImage.setImageDrawable(icon);
@@ -152,6 +152,14 @@ public class EBounceViewHeader extends RelativeLayout {
 	
 	public void setDonghang(boolean flag){
 		mDonghang = flag;
+	}
+	
+	public void setContentEmpty(boolean empty){
+		mContentEmpty = empty;
+		if (mContentEmpty) {
+			wap.setVisibility(GONE);
+			mYAxisProgress.setRotationFlags(4);
+		}
 	}
 	
 	public void changeText(String text){
@@ -189,12 +197,20 @@ public class EBounceViewHeader extends RelativeLayout {
 	}
 	
 	public void setTextVisibility(int v){
-		mContent.setVisibility(v);
+		if (mContentEmpty) {
+			wap.setVisibility(GONE);
+		} else {
+			mContent.setVisibility(v);
+		}
 	}
 	
 	public void componentsEnable(){
 		mArrowImage.setVisibility(VISIBLE);
-		mContent.setVisibility(VISIBLE);
+		if (mContentEmpty) {
+			wap.setVisibility(GONE);
+		} else {
+			mContent.setVisibility(VISIBLE);
+		}
 	}
 	
 	public void componentsDisable(){
@@ -264,14 +280,26 @@ public class EBounceViewHeader extends RelativeLayout {
 	}
 	
 	public void showPullToReloadText(){
-		mContent.setText(pullToReloadText);
+		if (mContentEmpty) {
+			wap.setVisibility(GONE);
+		} else {
+			mContent.setText(pullToReloadText);
+		}
 	}
 	
 	public void showReleaseToReloadText(){
-		mContent.setText(releaseToReloadText);
+		if (mContentEmpty) {
+			wap.setVisibility(GONE);
+		} else {
+			mContent.setText(releaseToReloadText);
+		}
 	}
 	
 	public void showLoadingText(){
-		mContent.setText(loadingText);
+		if (mContentEmpty) {
+			wap.setVisibility(GONE);
+		} else {
+		    mContent.setText(loadingText);
+		}
 	}
 }

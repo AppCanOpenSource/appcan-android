@@ -245,10 +245,21 @@
     }
     
     
+    function winOpenPop2() {
+        uexWindow.evaluateScript("wintestNormal/uexWindow","0", "winPopOpen2()");
+    }
+    
+    function closeOpenPop2() {
+        uexWindow.evaluateScript("wintestNormal/uexWindow","0", "closeOpenPop2()");
+    }
+    
     function winOpenMultiPop() {
         uexWindow.evaluateScript("wintestNormal/uexWindow","0", "winOpenMultiPop()");
     }
     
+    function winCloseMultiPop() {
+        uexWindow.evaluateScript("wintestNormal/uexWindow","0", "winCloseMultiPop()");
+    }
     
 </script>
   </head>
@@ -262,13 +273,14 @@
             
             <span>2.窗口前进后退(windowForward, windowBack forward, back, pageForward, pageBack)</span>
             <input class="btn" type="button" value="窗口前进后退" onclick="testForwardWin()"><br>
-                
-                
-                
-                <span>6.打开多页面浮动窗口(openMultiPopover)</span>
-                <input class="btn" type="button" value="打开多页面浮动窗口" onclick="winOpenMultiPop()"><br>
-                
-                
+            
+            <span>5.打开浮动窗口2(测试closePopover)</span>
+            <input class="btn" type="button" value="打开浮动窗2" onclick="winOpenPop2()"><br>
+            <input class="btn" type="button" value="关闭浮动窗2" onclick="closeOpenPop2()"><br>
+            
+            <span>6.打开多页面浮动窗口(openMultiPopover)</span>
+            <input class="btn" type="button" value="打开多页面浮动窗口" onclick="winOpenMultiPop()"><br>
+            <input class="btn" type="button" value="关闭多页面浮动窗口" onclick="winCloseMultiPop()"><br>
                 
             <span>1.打开一个主窗口(open)，测试forward</span>
             <input class="btn" type="button" value="打开一个主窗口" onclick="openMainWin()"><br>

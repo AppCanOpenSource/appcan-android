@@ -53,6 +53,18 @@
             uexWindow.setSlidingWindowEnabled(1);
 			uexWindow.close(-1);
 		}
+	
+    function winPopOpen2() {
+        var x = 0;
+        var y = 0;
+        var w = 700;
+        var h = 800;
+        uexWindow.openPopover("pop2", "0", "window/pop.html", "", x, y, w, h, "5", "130");
+    }
+    
+    function closeOpenPop2() {
+        uexWindow.closePopover("pop2");
+    }
     
     function winOpenMultiPop() {
         
@@ -66,7 +78,7 @@
                       },
                       {
                       inPageName:"p2",
-                      inUrl:"window/pop.html",
+                      inUrl:"window/multipop.html",
                       inData:""
                       }
                       ]
@@ -74,7 +86,13 @@
         
         var paramStr = JSON.stringify(params);
         
-        uexWindow.openMultiPopover(paramStr,"multipop",0,0,0,200,240,'',0,0);
+        uexWindow.openMultiPopover(paramStr,"multipop",0,0,0,500,500,'',0,0);
+        uexWindow.setSelectedPopOverInMultiWindow("multipop", 1);
     }
+    
+    function winCloseMultiPop() {
+        uexWindow.closeMultiPopover("multipop");
+    }
+    
     </script>
 </html>
