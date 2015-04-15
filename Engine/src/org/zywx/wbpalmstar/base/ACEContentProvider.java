@@ -77,21 +77,7 @@ public class ACEContentProvider extends ContentProvider {
     			
     			String string = uri.getPath();
     			
-//    			string = "file://" + string;
-    			
-//    			File file = new File(string);
-//    			
-//    			if (file.isDirectory())
-//    				return null;
-//    				
-//    			parcel = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
-    			
-//    			AssetManager am = getContext().getAssets();  
-//    			String path = string.substring(1); 
-//    			InputStream localCopy = am.open(string);
-//    	    	   
-//    			parcel = ParcelFileDescriptorUtil.pipeFrom(localCopy);
-    			
+
     			
     			return parcel;
     		} catch (Exception e) {
