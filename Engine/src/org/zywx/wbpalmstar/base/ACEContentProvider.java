@@ -26,33 +26,24 @@ public class ACEContentProvider extends ContentProvider {
     	   
     	   if(path.startsWith("android_asset/")) {
 			   path = path.substring("android_asset/".length());
-			   if (WDataManager.isUpdateWidget) {
-	    		   File file = new File(path);
-	    		   is = new FileInputStream(file);
-	    	   } else {
-	    		   is = am.open(path);  
-	    	   }
-			   
-			   if (!path.endsWith(".html")
-					   && !path.endsWith(".css")
-					   && !path.endsWith(".js")
-					   && !path.endsWith(".htm")
-					   && !path.endsWith(".xml")) {
-				   ParcelFileDescriptor parcel = ACEParcelFileDescriptorUtil.pipeFrom(is);
-		    	   AssetFileDescriptor localAssetFileDescriptor = new AssetFileDescriptor(parcel, 0L, -1L);
-		           return localAssetFileDescriptor;
-			   }
-		   }  else {
-			   if (WDataManager.isUpdateWidget) {
-	    		   File file = new File(path);
-	    		   is = new FileInputStream(file);
-	    	   } else {
-	    		   is = am.open(path);  
-	    	   }
-			   ParcelFileDescriptor parcel = ACEParcelFileDescriptorUtil.pipeFrom(is);
-	    	   AssetFileDescriptor localAssetFileDescriptor = new AssetFileDescriptor(parcel, 0L, -1L);
-	           return localAssetFileDescriptor;
 		   }
+
+           if (WDataManager.isUpdateWidget) {
+               File file = new File(path);
+               is = new FileInputStream(file);
+           } else {
+               is = am.open(path);
+           }
+
+           if (!path.endsWith(".html")
+                   && !path.endsWith(".css")
+                   && !path.endsWith(".js")
+                   && !path.endsWith(".htm")
+                   && !path.endsWith(".xml")) {
+               ParcelFileDescriptor parcel = ACEParcelFileDescriptorUtil.pipeFrom(is);
+               AssetFileDescriptor localAssetFileDescriptor = new AssetFileDescriptor(parcel, 0L, -1L);
+               return localAssetFileDescriptor;
+           }
     			   
     	   InputStream localCopy;
     	   
@@ -65,9 +56,8 @@ public class ACEContentProvider extends ContentProvider {
 			}
 			baos.flush();
 
-			
-			InputStream is1 = new ByteArrayInputStream(baos.toByteArray()); 
-			InputStream is2 = new ByteArrayInputStream(baos.toByteArray()); 
+			InputStream is1 = new ByteArrayInputStream(baos.toByteArray());
+			InputStream is2 = new ByteArrayInputStream(baos.toByteArray());
 			
 			boolean isV = ACEDes.isEncrypted(is1);
 			
