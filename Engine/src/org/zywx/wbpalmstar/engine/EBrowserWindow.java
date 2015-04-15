@@ -2603,7 +2603,7 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
                 }
             }
         }else{
-            for (int i = 0; i < =index; i++) {
+            for (int i = 0; i <=index; i++) {
                 EBrowserWindow eBrwWin = eBrwWins.get(0);
                 if(eBrwWin != null){
                     mBroWidget.onCloseWindow(eBrwWin);
