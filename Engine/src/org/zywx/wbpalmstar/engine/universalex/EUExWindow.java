@@ -2205,8 +2205,7 @@ public class EUExWindow extends EUExBase {
     }
 
 	public void getBounce(String[] parm) {
-		int state = mBrwView.getBounce() ? 1 : 0;
-		jsCallback(function_cbBounceState, 0, EUExCallback.F_C_INT, state);
+		mBrwView.getBounce();
 	}
 	
 	public void setBounce(String[] parm) {

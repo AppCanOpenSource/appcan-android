@@ -1138,12 +1138,21 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 		});
 	}
 	
-	public boolean getBounce() {
-		EBounceView bounceView = (EBounceView) this.getParent();
-		if (bounceView instanceof EBounceView) {
-			return bounceView.getBounce();
+	public void cbBounceState(int inData) {
+		String js = "javascript:if(" + EUExWindow.function_cbBounceState + "){"
+				+ EUExWindow.function_cbBounceState + "(" + 0 + "," + 2 + ","
+				+ inData + ")}";
+		addUriTask(js);
+	}
+	
+	public void getBounce() {
+		if (mDestroyed) {
+			return;
 		}
-		return false;
+		EViewEntry bounceEntry = new EViewEntry();
+		bounceEntry.obj = getParent();
+		mBroWind.addBounceTask(bounceEntry,
+				EViewEntry.F_BOUNCE_TASK_GET_BOUNCE_VIEW);
 	}
 
 	public void setBounce(int flag) {
