@@ -35,6 +35,7 @@ public class EViewEntry {
 	public static final int F_BOUNCE_TASK_SET_BOUNCE_VIEW 			= 3;
 	public static final int F_BOUNCE_TASK_NOTIFY_BOUNCE_VIEW 		= 4;
 	public static final int F_BOUNCE_TASK_SET_BOUNCE_PARMS 			= 5;
+	public static final int F_BOUNCE_TASK_GET_BOUNCE_VIEW 			= 6;
 	
 	public long time;
 	public long interval;

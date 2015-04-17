@@ -1924,6 +1924,9 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 		case EViewEntry.F_BOUNCE_TASK_SET_BOUNCE_VIEW:
 			BView.setBounce(bunceEnty.flag != 0 ? true : false);
 			break;
+		case EViewEntry.F_BOUNCE_TASK_GET_BOUNCE_VIEW:
+			BView.getBounce();
+			break;
 		case EViewEntry.F_BOUNCE_TASK_NOTIFY_BOUNCE_VIEW:
 			BView.notifyBounceEvent(bunceEnty.type, bunceEnty.flag);
 			break;
