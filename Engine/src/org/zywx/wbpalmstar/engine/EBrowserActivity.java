@@ -99,6 +99,7 @@ public final class EBrowserActivity extends ActivityGroup {
 			loadResError();
 			return;
 		}
+		startActivity(new Intent(this, LoadingActivity.class));
 		mVisable = true;
 		Window activityWindow = getWindow();
 		ESystemInfo.getIntence().init(this);
@@ -106,7 +107,7 @@ public final class EBrowserActivity extends ActivityGroup {
 		mEHandler = new EHandler(Looper.getMainLooper());
 		View splash = initEngineUI();
 		mBrowserAround = new EBrowserAround(splash);
-		mScreen.setVisibility(View.INVISIBLE);
+//		mScreen.setVisibility(View.INVISIBLE);
 		setContentView(mScreen);
 		initInternalBranch();
 		
@@ -134,13 +135,13 @@ public final class EBrowserActivity extends ActivityGroup {
         globalSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
         
         
-        globalSlidingMenu.setShadowWidthRes(EUExUtil.getResDimenID("shadow_width"));
-        globalSlidingMenu.setShadowDrawable(EUExUtil.getResDrawableID("shadow"));
+//        globalSlidingMenu.setShadowWidthRes(EUExUtil.getResDimenID("shadow_width"));
+//        globalSlidingMenu.setShadowDrawable(EUExUtil.getResDrawableID("shadow"));
         
 //        globalSlidingMenu.setShadowWidthRes(R.dimen.shadow_width);
 //        globalSlidingMenu.setShadowDrawable(R.drawable.shadow);
 //        globalSlidingMenu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-        globalSlidingMenu.setFadeDegree(0.35f);
+//        globalSlidingMenu.setFadeDegree(0.35f);
 //        globalSlidingMenu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
 //        globalSlidingMenu.setMenu(R.layout.menu_frame);
 //        globalSlidingMenu.setMode(SlidingMenu.LEFT_RIGHT);
@@ -226,7 +227,7 @@ public final class EBrowserActivity extends ActivityGroup {
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						mScreen.setVisibility(View.VISIBLE);
+						startActivity(new Intent(EBrowserActivity.this,LoadingActivity.class));
 					}
 				});
 			}

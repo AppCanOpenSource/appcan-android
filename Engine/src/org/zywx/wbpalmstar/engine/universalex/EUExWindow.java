@@ -22,6 +22,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -114,7 +119,7 @@ public class EUExWindow extends EUExBase {
     private static final int MSG_FUNCTION_TOGGLE_SLIDINGWIN = 35;
     private static final int MSG_FUNCTION_REFRESH= 36;
     private static final int MSG_FUNCTION_SETMULTIPOPOVERFRAME = 37;
-    
+
 	private AlertDialog.Builder mAlert;
 	private AlertDialog.Builder mConfirm;
 	private PromptDialog mPrompt;
@@ -683,7 +688,7 @@ public class EUExWindow extends EUExBase {
         }
     }
 
-	
+
 	public void setSlidingWindow(String[] param) {
 		if (param.length <= 0) {
 			return;
@@ -717,6 +722,7 @@ public class EUExWindow extends EUExBase {
             	return;
             }
 
+            String animationId=jsonObject.optString("animationId");
 
             if (jsonObject.has("leftSliding"))  {
 
@@ -781,6 +787,34 @@ public class EUExWindow extends EUExBase {
 
             }
 
+            if ("1".equals(animationId)) {
+
+                String bg = jsonObject.optString("bg");
+
+                //仿QQ侧边栏动画
+                activity.globalSlidingMenu.setBehindCanvasTransformer(new SlidingMenu.CanvasTransformer() {
+                    @Override
+                    public void transformCanvas(Canvas canvas, float percentOpen) {
+                        float scale = (float) (percentOpen * 0.25 + 0.75);
+                        canvas.scale(scale, scale, 0, canvas.getHeight() / 2);
+                    }
+                });
+                activity.globalSlidingMenu.setAboveCanvasTransformer(new SlidingMenu.CanvasTransformer() {
+                    @Override
+                    public void transformCanvas(Canvas canvas, float percentOpen) {
+                        float scale = (float) (1 - percentOpen * 0.20);
+                        canvas.scale(scale, scale, canvas.getWidth() / 2, canvas.getHeight() / 2);
+                    }
+                });
+                if (!TextUtils.isEmpty(bg)) {
+                    setViewBackground(activity.globalSlidingMenu, bg, mBrwView.getCurrentWidget().m_indexUrl);
+                }
+                activity.globalSlidingMenu.setFadeEnabled(false);
+            }else{
+                activity.globalSlidingMenu.setShadowWidthRes(EUExUtil.getResDimenID("shadow_width"));
+                activity.globalSlidingMenu.setShadowDrawable(EUExUtil.getResDrawableID("shadow"));
+                activity.globalSlidingMenu.setFadeDegree(0.35f);
+            }
 
             if (leftJsonObj !=null && rightJsonObj != null) {
                 slidingMode = SlidingMenu.LEFT_RIGHT;
@@ -801,6 +835,29 @@ public class EUExWindow extends EUExBase {
 
     }
 
+
+    public void setViewBackground(View view, String bgColor, String baseUrl) {
+
+        if(bgColor.startsWith("#") || bgColor.startsWith("rgb")){
+            int color = BUtility.parseColor(bgColor);
+            view.setBackgroundColor(color);
+        }else{
+            String path = BUtility.makeRealPath(BUtility.makeUrl(mBrwView.getCurrentUrl(baseUrl),bgColor),
+                    mBrwView.getCurrentWidget().m_widgetPath, mBrwView.getCurrentWidget().m_wgtType);
+            Bitmap bitmap = BUtility.getLocalImg(mContext, path);
+            Drawable d = null;
+            if(bitmap != null){
+                d = new BitmapDrawable(mContext.getResources(), bitmap);
+            }
+            int version = Build.VERSION.SDK_INT;
+            if(version < 16){
+                view.setBackgroundDrawable(d);
+            }else{
+                view.setBackground(d);
+            }
+        }
+
+    }
 
     public void addBrowserWindowToSldingWin(String url, String winName) {
         EBrowserWindow curWind = mBrwView.getBrowserWindow();
