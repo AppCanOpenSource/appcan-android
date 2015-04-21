@@ -118,6 +118,9 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 		setAnimation(null);
 		setNetworkAvailable(true);
 		int version = Build.VERSION.SDK_INT;
+		if (!isHardwareAccelerated() && version >= Build.VERSION_CODES.HONEYCOMB) {
+			setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+		}
 		if (version <= 7) {
 			if (mBaSetting == null) {
 				mBaSetting = new EBrowserSetting(this);
