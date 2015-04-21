@@ -29,6 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.slidingmenu.lib.CustomViewAbove.OnPageChangeListener;
@@ -77,6 +78,8 @@ public class SlidingMenu extends RelativeLayout {
 	private OnOpenListener mSecondaryOpenListner;
 
 	private OnCloseListener mCloseListener;
+
+	private ImageView mViewBackground;
 
 	/**
 	 * The listener interface for receiving onOpen events.
@@ -205,7 +208,11 @@ public class SlidingMenu extends RelativeLayout {
 	 */
 	public SlidingMenu(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-		
+		LayoutParams backgroundParams = new LayoutParams(
+				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		mViewBackground = new ImageView(context);
+		mViewBackground.setScaleType(ImageView.ScaleType.CENTER_CROP);
+		addView(mViewBackground, backgroundParams);
 		LayoutParams behindParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		mViewBehind = new CustomViewBehind(context);
 		addView(mViewBehind, behindParams);
@@ -676,7 +683,7 @@ public class SlidingMenu extends RelativeLayout {
 		} catch (Exception e) {
 			width = display.getWidth();
 		}
-		setBehindOffset(width-i);
+		setBehindOffset(width - i);
 	}
 
 	/**
@@ -734,6 +741,15 @@ public class SlidingMenu extends RelativeLayout {
 	 */
 	public void setBehindCanvasTransformer(CanvasTransformer t) {
 		mViewBehind.setCanvasTransformer(t);
+	}
+
+	/**
+	 * Sets the above canvas transformer.
+	 *
+	 * @param t the new above canvas transformer
+	 */
+	public void setAboveCanvasTransformer(CanvasTransformer t) {
+		mViewAbove.setCanvasTransformer(t);
 	}
 
 	/**
@@ -866,6 +882,10 @@ public class SlidingMenu extends RelativeLayout {
 	 */
 	public void setSelectedView(View v) {
 		mViewBehind.setSelectedView(v);
+	}
+
+	public void setBackgroundImage(int resid) {
+		mViewBackground.setBackgroundResource(resid);
 	}
 
 	/**
