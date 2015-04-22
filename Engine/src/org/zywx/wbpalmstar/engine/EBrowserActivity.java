@@ -28,6 +28,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
 import android.os.*;
 import android.os.Process;
 import android.util.TypedValue;
@@ -227,7 +228,8 @@ public final class EBrowserActivity extends ActivityGroup {
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						startActivity(new Intent(EBrowserActivity.this,LoadingActivity.class));
+						getWindow().setBackgroundDrawable(new ColorDrawable(0xFFFFFFFF));
+						startActivity(new Intent(EBrowserActivity.this, LoadingActivity.class));
 					}
 				});
 			}
