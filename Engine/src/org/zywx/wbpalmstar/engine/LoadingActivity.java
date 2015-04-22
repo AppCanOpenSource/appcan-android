@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
-import org.zywx.wbpalmstar.widgetone.uex.R;
 
 /**
  * Created by yanlongtao on 2015/4/21 0021.
