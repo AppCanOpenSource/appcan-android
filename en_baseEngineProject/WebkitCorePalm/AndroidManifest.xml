@@ -38,7 +38,12 @@
          <activity
             android:name="org.zywx.wbpalmstar.platform.mam.PolicyInfoActivity"
             android:configChanges="orientation|keyboardHidden|navigation" android:windowSoftInputMode="adjustPan"/>
-
+        <activity android:name="org.zywx.wbpalmstar.engine.LoadingActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:theme="@style/browser_loading_theme"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            />
         <receiver
             android:name="org.zywx.wbpalmstar.platform.push.PushRecieveMsgReceiver">
             <intent-filter>
