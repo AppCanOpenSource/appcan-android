@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,7 +19,7 @@ import java.io.InputStream;
  * Created by yanlongtao on 2015/4/21 0021.
  */
 
-public class LoadingActivity extends Activity {
+public class TempActivity extends Activity {
 
     public static final String BROADCAST_ACTION = "com.appcan.close";
     private BroadcastReceiver mBroadcastReceiver;
@@ -32,26 +31,25 @@ public class LoadingActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent intent=getIntent();
-        if (intent!=null) {
-            isTemp = intent.getBooleanExtra("isTemp", false);
-        }
         InputStream inputStream=getResources().openRawResource(EUExUtil.getResDrawableID("startup_bg_16_9"));
         ImageView imageView=new ImageView(this);
         imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         imageView.setImageBitmap(BitmapFactory.decodeStream(inputStream));
         setContentView(imageView);
-
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (!isTemp) {
-                    startActivity(new Intent(LoadingActivity.this, EBrowserActivity.class));
-                    overridePendingTransition(EUExUtil.getResAnimID("platform_myspace_no_anim")
-                            , EUExUtil.getResAnimID("platform_myspace_no_anim"));
-                }
-            }
-        },200);
+        Intent intent=getIntent();
+        if (intent!=null){
+            isTemp=intent.getBooleanExtra("isTemp",false);
+        }
+//        mHandler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (!isTemp) {
+//                    startActivity(new Intent(TempActivity.this, EBrowserActivity.class));
+//                    overridePendingTransition(EUExUtil.getResAnimID("platform_myspace_no_anim")
+//                            , EUExUtil.getResAnimID("platform_myspace_no_anim"));
+//                }
+//            }
+//        },800);
 
         mBroadcastReceiver = new MyBroadcastReceiver();
               IntentFilter intentFilter = new IntentFilter();
@@ -59,12 +57,7 @@ public class LoadingActivity extends Activity {
         registerReceiver(mBroadcastReceiver, intentFilter);
     }
 
-    @Override
-    public Resources.Theme getTheme() {
-        return super.getTheme();
-    }
-
-    //    @Override
+//    @Override
 //    protected void onNewIntent(Intent intent) {
 //        super.onNewIntent(intent);
 //        finish();

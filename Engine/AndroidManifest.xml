@@ -22,18 +22,23 @@
             android:screenOrientation="portrait"
             android:theme="@style/browser_main_theme"
             android:windowSoftInputMode="stateHidden|adjustResize" >
+        </activity>
+        <activity android:name="org.zywx.wbpalmstar.engine.TempActivity"
+            android:launchMode="standard"
+            android:screenOrientation="portrait"
+            android:theme="@style/browser_loading_theme"/>
+        <activity android:name="org.zywx.wbpalmstar.engine.LoadingActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:theme="@style/browser_main_theme"
+            android:screenOrientation="portrait"
+            android:launchMode="standard"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="org.zywx.wbpalmstar.engine.LoadingActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:theme="@style/browser_loading_theme"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTop"
-            />
         <activity
             android:name="org.zywx.wbpalmstar.wbpalm.V8PalmActivity"
             android:configChanges="orientation"
