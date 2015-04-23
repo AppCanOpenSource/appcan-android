@@ -55,7 +55,6 @@ import org.zywx.wbpalmstar.engine.universalex.ThirdPluginObject;
 import org.zywx.wbpalmstar.platform.push.PushRecieveMsgReceiver;
 import org.zywx.wbpalmstar.widgetone.WidgetOneApplication;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
-//import org.zywx.wbpalmstar.widgetone.uex.R;
 
 
 import java.io.BufferedReader;
@@ -100,7 +99,12 @@ public final class EBrowserActivity extends ActivityGroup {
 			loadResError();
 			return;
 		}
-		startActivity(new Intent(this, LoadingActivity.class));
+		Intent intent=new Intent(EBrowserActivity.this, TempActivity.class);
+		intent.putExtra("isTemp",true);
+		startActivity(intent);
+		overridePendingTransition(EUExUtil.getResAnimID("platform_myspace_no_anim")
+				, EUExUtil.getResAnimID("platform_myspace_no_anim"));
+
 		mVisable = true;
 		Window activityWindow = getWindow();
 		ESystemInfo.getIntence().init(this);
@@ -229,11 +233,12 @@ public final class EBrowserActivity extends ActivityGroup {
 					@Override
 					public void run() {
 						getWindow().setBackgroundDrawable(new ColorDrawable(0xFFFFFFFF));
-						startActivity(new Intent(EBrowserActivity.this, LoadingActivity.class));
+						Intent intent=new Intent(LoadingActivity.BROADCAST_ACTION);
+						sendBroadcast(intent);
 					}
 				});
 			}
-		}, 1000);
+		}, 200);
 	}
 
 	public final void showCustomView(View view, CustomViewCallback callback) {
