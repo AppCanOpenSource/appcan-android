@@ -20,7 +20,7 @@
         <item name="android:windowIsFloating">false</item>
         <item name="android:windowIsTranslucent">false</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="android:windowShowWallpaper">true</item>
+        <item name="android:windowShowWallpaper">false</item>
         <item name="android:windowActionBar">false</item>
     </style>
 
@@ -32,7 +32,7 @@
         <item name="android:windowIsFloating">false</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="android:windowShowWallpaper">true</item>
+        <item name="android:windowShowWallpaper">false</item>
         <item name="android:windowActionBar">false</item>
     </style>
     <!-- WidgetOne use -->
