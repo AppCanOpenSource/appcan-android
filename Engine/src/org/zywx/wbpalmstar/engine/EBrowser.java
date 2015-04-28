@@ -90,6 +90,10 @@ public class EBrowser {
 
 		return mBrwWindPol.getRootWidget();
 	}
+	
+	public EWidgetStack getWidgetStack() {
+		return mBrwWindPol.getWidgetStack();
+	}
 
 	public boolean isFromPush() {
 		return mfromPush;

@@ -2512,35 +2512,38 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 	}
 
 	public void publishChannelNotification(String channelId, String des) {
-        //normal window
-		ELinkedList<EBrowserWindow> eBrwWins = mBroWidget.getWindowStack()
-				.getAll();
-		for (int i = 0; i < eBrwWins.size(); i++) {
-			EBrowserWindow eBrwWin = eBrwWins.get(i);
-			List<HashMap<String, String>> list = eBrwWin.mChannelList;
-			if(list == null || list.size() == 0){
-			    continue;
+		EWidgetStack eWidgetStack = mBroWidget.getWidgetStack();
+		for (int w = 0; w < eWidgetStack.length(); w++) {
+			//normal window
+			ELinkedList<EBrowserWindow> eBrwWins = eWidgetStack.get(w).getWindowStack()
+					.getAll();
+			for (int i = 0; i < eBrwWins.size(); i++) {
+				EBrowserWindow eBrwWin = eBrwWins.get(i);
+				List<HashMap<String, String>> list = eBrwWin.mChannelList;
+				if(list == null || list.size() == 0){
+					continue;
+				}
+				setCallback(eBrwWin.mMainView, list, channelId, des, WIN_TYPE_MAIN);
+				
+				//popover window
+				Collection<EBrowserView> eBrwViews = eBrwWin.mPopTable.values();
+				for (EBrowserView entry : eBrwViews) {
+					setCallback(entry, list, channelId, des, WIN_TYPE_POP);
+				}
+				
+				//multiPopover window
+				if(eBrwWin.mMultiPopTable != null && eBrwWin.mMultiPopTable.size() > 0){
+					for (Map.Entry<String, ArrayList<EBrowserView>> entry : eBrwWin.mMultiPopTable
+							.entrySet()) {
+						ArrayList<EBrowserView> temp = entry.getValue();
+						if (null != temp && temp.size() > 0) {
+							for (int j = 0; j < temp.size(); j++) {
+								setCallback(temp.get(j), list, channelId, des, WIN_TYPE_POP);
+							}
+						}
+					}
+				}
 			}
-			setCallback(eBrwWin.mMainView, list, channelId, des, WIN_TYPE_MAIN);
-			
-			//popover window
-	        Collection<EBrowserView> eBrwViews = eBrwWin.mPopTable.values();
-	        for (EBrowserView entry : eBrwViews) {
-	            setCallback(entry, list, channelId, des, WIN_TYPE_POP);
-	        }
-
-	        //multiPopover window
-	        if(eBrwWin.mMultiPopTable != null && eBrwWin.mMultiPopTable.size() > 0){
-	            for (Map.Entry<String, ArrayList<EBrowserView>> entry : eBrwWin.mMultiPopTable
-	                    .entrySet()) {
-	                ArrayList<EBrowserView> temp = entry.getValue();
-	                if (null != temp && temp.size() > 0) {
-	                    for (int j = 0; j < temp.size(); j++) {
-	                        setCallback(temp.get(j), list, channelId, des, WIN_TYPE_POP);
-	                    }
-	                }
-	            }
-	        }
 		}
 	}
 
