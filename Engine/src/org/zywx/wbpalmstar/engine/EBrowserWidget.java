@@ -532,6 +532,10 @@ public class EBrowserWidget extends AbsoluteLayout {
 
 		return mBrw.getRootWidget();
 	}
+	
+	public EWidgetStack getWidgetStack() {
+		return mBrw.getWidgetStack();
+	}
 
 	public EWgtResultInfo getResult() {
 

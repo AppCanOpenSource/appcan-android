@@ -98,7 +98,6 @@ public class WidgetOneApplication extends Application {
 					m.invoke(c, new Object[] {this});
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
 			}
 		}
 	}

@@ -123,6 +123,10 @@ public class EBrowserWidgetPool {
 
 		return mRootWidget;
 	}
+	
+	public EWidgetStack getWidgetStack() {
+		return mWgtStack;
+	}
 
 	public EBrowserWidget getWidget(String inWidgetNmae) {
 

@@ -173,7 +173,6 @@ public final class EBrowserActivity extends ActivityGroup {
 					m.invoke(c, new Object[] {this});
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
 			}
 		}
 	}
