@@ -29,7 +29,7 @@
             android:theme="@style/browser_loading_theme"/>
         <activity android:name="org.zywx.wbpalmstar.engine.LoadingActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:theme="@style/browser_main_theme"
+            android:theme="@style/browser_loading_theme"
             android:screenOrientation="portrait"
             android:launchMode="standard"
             >
