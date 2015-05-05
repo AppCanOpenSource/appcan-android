@@ -51,7 +51,7 @@ public class LoadingActivity extends Activity {
                             , EUExUtil.getResAnimID("platform_myspace_no_anim"));
                 }
             }
-        },200);
+        },700);
 
         mBroadcastReceiver = new MyBroadcastReceiver();
               IntentFilter intentFilter = new IntentFilter();
