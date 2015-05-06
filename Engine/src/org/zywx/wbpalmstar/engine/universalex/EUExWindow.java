@@ -24,7 +24,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -38,13 +37,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
+
 import com.slidingmenu.lib.SlidingMenu;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.ResoureFinder;
-import org.zywx.wbpalmstar.engine.*;
+import org.zywx.wbpalmstar.engine.EBrowser;
+import org.zywx.wbpalmstar.engine.EBrowserActivity;
+import org.zywx.wbpalmstar.engine.EBrowserAnimation;
+import org.zywx.wbpalmstar.engine.EBrowserView;
+import org.zywx.wbpalmstar.engine.EBrowserWidget;
+import org.zywx.wbpalmstar.engine.EBrowserWindow;
+import org.zywx.wbpalmstar.engine.EBrwViewEntry;
+import org.zywx.wbpalmstar.engine.EDialogTask;
+import org.zywx.wbpalmstar.engine.ESystemInfo;
+import org.zywx.wbpalmstar.engine.EViewEntry;
 import org.zywx.wbpalmstar.platform.window.ActionSheetDialog;
 import org.zywx.wbpalmstar.platform.window.ActionSheetDialog.ActionSheetDialogItemClickListener;
 import org.zywx.wbpalmstar.platform.window.PromptDialog;
@@ -119,7 +129,16 @@ public class EUExWindow extends EUExBase {
     private static final int MSG_FUNCTION_TOGGLE_SLIDINGWIN = 35;
     private static final int MSG_FUNCTION_REFRESH= 36;
     private static final int MSG_FUNCTION_SETMULTIPOPOVERFRAME = 37;
-
+    private static final int MSG_PUBLISH_CHANNEL_NOTIFICATION = 38;
+    private static final int MSG_SET_WINDOW_HIDDEN = 39;
+    private static final int MSG_OPEN_AD = 40;
+    private static final int MSG_SHOW_SOFT_KEYBOARD = 41;
+    private static final int MSG_ACTION_SHEET = 42;
+    private static final int MSG_STATUS_BAR_NOTIFICATION = 43;
+    private static final int MSG_CREATE_PROGRESS_DIALOG = 44;
+    private static final int MSG_DESTROY_PROGRESS_DIALOG = 45;
+    private static final int MSG_POST_GLOBAL_NOTIFICATION = 46;
+    private static final int MSG_SUBSCRIBE_CHANNEL_NOTIFICATION = 47;
 	private AlertDialog.Builder mAlert;
 	private AlertDialog.Builder mConfirm;
 	private PromptDialog mPrompt;
@@ -1732,11 +1751,22 @@ public class EUExWindow extends EUExBase {
         String wName2 = parm[1];
         curWgt.insertWindowBelowWindow(wName1, wName2);
     }
-	
-	public void setWindowHidden(String[] parm) {
-		if (parm.length < 1) {
-			return;
-		}
+
+    public void setWindowHidden(String[] params) {
+        if (params == null || params.length < 1) {
+            errorCallback(0, 0, "error params!");
+            return;
+        }
+        Message msg = new Message();
+        msg.obj = this;
+        msg.what = MSG_SET_WINDOW_HIDDEN;
+        Bundle bd = new Bundle();
+        bd.putStringArray(TAG_BUNDLE_PARAM, params);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
+    }
+    
+	public void setWindowHiddenMsg(String[] parm) {
 		EBrowserWindow curWind = mBrwView.getBrowserWindow();
 		if (null == curWind) {
 			return;
@@ -1951,7 +1981,21 @@ public class EUExWindow extends EUExBase {
 		mBrwView.commitAnimition();
 	}
 
-	public void openAd(String[] parm) {
+    public void openAd(String[] params) {
+        if (params == null || params.length < 4) {
+            errorCallback(0, 0, "error params!");
+            return;
+        }
+        Message msg = new Message();
+        msg.obj = this;
+        msg.what = MSG_OPEN_AD;
+        Bundle bd = new Bundle();
+        bd.putStringArray(TAG_BUNDLE_PARAM, params);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
+    }
+    
+	public void openAdMsg(String[] parm) {
 		EBrowserWindow curWind = mBrwView.getBrowserWindow();
 		if (null == curWind) {
 			return;
@@ -2645,7 +2689,17 @@ public class EUExWindow extends EUExBase {
 		}
 	}
 
-	public void showSoftKeyboard(String[] parm) {
+    public void showSoftKeyboard(String[] params) {
+        Message msg = new Message();
+        msg.obj = this;
+        msg.what = MSG_SHOW_SOFT_KEYBOARD;
+        Bundle bd = new Bundle();
+        bd.putStringArray(TAG_BUNDLE_PARAM, params);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
+    }
+    
+	public void showSoftKeyboardMsg() {
       //boolean flag = mBrwView.hasFocus();
       //if(flag){
       mBrwView.getBrowserWindow().showSoftKeyboard();
@@ -2660,7 +2714,21 @@ public class EUExWindow extends EUExBase {
 		mBrwView.setVerticalScrollBarEnabled(visible);
 	}
 
-	public void actionSheet(String[] params) {
+    public void actionSheet(String[] params) {
+        if (params == null || params.length < 3) {
+            errorCallback(0, 0, "error params!");
+            return;
+        }
+        Message msg = new Message();
+        msg.obj = this;
+        msg.what = MSG_ACTION_SHEET;
+        Bundle bd = new Bundle();
+        bd.putStringArray(TAG_BUNDLE_PARAM, params);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
+    }
+    
+	public void actionSheetMsg(String[] params) {
 		final int length = params.length;
 		boolean op = EBrowser.checkFlag(EBrowser.F_BRW_FLAG_OPENING);
 		if (length < 3 || op) {
@@ -2672,21 +2740,35 @@ public class EUExWindow extends EUExBase {
 		final String[] btnLabels = params[2].split(",");
 		ActionSheetDialog.show(mContext, btnLabels, inTitle, inCancel, new ActionSheetDialogItemClickListener() {
 
-					@Override
-					public void onItemClicked(ActionSheetDialog dialog, int postion) {
-						jsCallback(function_actionSheet, 0, EUExCallback.F_C_INT, postion);
-						EBrowser.clearFlag();
-					}
+            @Override
+            public void onItemClicked(ActionSheetDialog dialog, int postion) {
+                jsCallback(function_actionSheet, 0, EUExCallback.F_C_INT, postion);
+                EBrowser.clearFlag();
+            }
 
-					@Override
-					public void onCanceled(ActionSheetDialog dialog) {
-						jsCallback(function_actionSheet, 0, EUExCallback.F_C_INT, btnLabels.length);
-						EBrowser.clearFlag();
-					}
-				});
+            @Override
+            public void onCanceled(ActionSheetDialog dialog) {
+                jsCallback(function_actionSheet, 0, EUExCallback.F_C_INT, btnLabels.length);
+                EBrowser.clearFlag();
+            }
+        });
 	}
 
-	public void statusBarNotification(String[] parm) {
+    public void statusBarNotification(String[] params) {
+        if (params == null || params.length < 2) {
+            errorCallback(0, 0, "error params!");
+            return;
+        }
+        Message msg = new Message();
+        msg.obj = this;
+        msg.what = MSG_STATUS_BAR_NOTIFICATION;
+        Bundle bd = new Bundle();
+        bd.putStringArray(TAG_BUNDLE_PARAM, params);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
+    }
+    
+	public void statusBarNotificationMsg(String[] parm) {
 		if (parm.length < 2) {
 			return;
 		}
@@ -2726,7 +2808,21 @@ public class EUExWindow extends EUExBase {
 		return true;
 	}
 
-	public void createProgressDialog(String[] params) {
+    public void createProgressDialog(String[] params) {
+        if (params == null || params.length < 2) {
+            errorCallback(0, 0, "error params!");
+            return;
+        }
+        Message msg = new Message();
+        msg.obj = this;
+        msg.what = MSG_CREATE_PROGRESS_DIALOG;
+        Bundle bd = new Bundle();
+        bd.putStringArray(TAG_BUNDLE_PARAM, params);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
+    }
+    
+	public void createProgressDialogMsg(String[] params) {
 		if (params.length < 2) {
 			return;
 		}
@@ -2742,7 +2838,17 @@ public class EUExWindow extends EUExBase {
 		mBrwView.getBrowserWindow().createProgressDialog(title, message, isCancel);
 	}
 
-	public void destroyProgressDialog(String[] params) {
+    public void destroyProgressDialog(String[] params) {
+        Message msg = new Message();
+        msg.obj = this;
+        msg.what = MSG_DESTROY_PROGRESS_DIALOG;
+        Bundle bd = new Bundle();
+        bd.putStringArray(TAG_BUNDLE_PARAM, params);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
+    }
+    
+	public void destroyProgressDialogMsg() {
 		EBrowserWindow curWind = mBrwView.getBrowserWindow();
 		if (null == curWind) {
 			return;
@@ -2750,7 +2856,21 @@ public class EUExWindow extends EUExBase {
 		curWind.destroyProgressDialog();
 	}
 
-	public void postGlobalNotification(String[] params) {
+    public void postGlobalNotification(String[] params) {
+        if (params == null || params.length < 1) {
+            errorCallback(0, 0, "error params!");
+            return;
+        }
+        Message msg = new Message();
+        msg.obj = this;
+        msg.what = MSG_POST_GLOBAL_NOTIFICATION;
+        Bundle bd = new Bundle();
+        bd.putStringArray(TAG_BUNDLE_PARAM, params);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
+    }
+
+	public void postGlobalNotificationMsg(String[] params) {
 		if (params.length == 0) {
 			return;
 		}
@@ -2762,7 +2882,21 @@ public class EUExWindow extends EUExBase {
 		curWind.postGlobalNotification(des);
 	}
 
-	public void subscribeChannelNotification(String[] params) {
+    public void subscribeChannelNotification(String[] params) {
+        if (params == null || params.length < 2) {
+            errorCallback(0, 0, "error params!");
+            return;
+        }
+        Message msg = new Message();
+        msg.obj = this;
+        msg.what = MSG_SUBSCRIBE_CHANNEL_NOTIFICATION;
+        Bundle bd = new Bundle();
+        bd.putStringArray(TAG_BUNDLE_PARAM, params);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
+    }
+    
+	public void subscribeChannelNotificationMsg(String[] params) {
 		if (params.length < 2) {
 			return;
 		}
@@ -2792,7 +2926,21 @@ public class EUExWindow extends EUExBase {
         curWind.subscribeChannelNotification(channelId, callbackFunction, type, name);
 	}
 
-	public void publishChannelNotification(String[] params) {
+    public void publishChannelNotification(String[] params) {
+        if (params == null || params.length < 2) {
+            errorCallback(0, 0, "error params!");
+            return;
+        }
+        Message msg = new Message();
+        msg.obj = this;
+        msg.what = MSG_PUBLISH_CHANNEL_NOTIFICATION;
+        Bundle bd = new Bundle();
+        bd.putStringArray(TAG_BUNDLE_PARAM, params);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
+    }
+
+	public void publishChannelNotificationMsg(String[] params) {
 		if (params.length < 2) {
 			return;
 		}
@@ -2830,128 +2978,158 @@ public class EUExWindow extends EUExBase {
         EBrowserWindow eBrwWin = mBrwView.getBrowserWindow();
         String[] param = msg.getData().getStringArray(TAG_BUNDLE_PARAM);
         switch (msg.what) {
-        case MSG_FUNCTION_CLOSE:
-            if(param != null) closeMsg(param);
-            break;
-        case MSG_FUNCTION_CLOSE_ABOVE_WND_BY_NAME:
-            String windowName = msg.getData().getString(TAG_BUNDLE_PARAM_NAME);
-            eBrwWin.closeAboveWndByName(windowName);
-            break;
-        case MSG_FUNCTION_OPEN:
-            if(param != null) openMsg(param);
-            break;
-        case MSG_FUNCTION_OPEN_POP:
-            if(param != null) openPopoverMsg(param);
-            break;
-        case MSG_FUNCTION_FORWARD:
-            eBrwWin.goForward();
-            break;
-        case MSG_FUNCTION_BACK:
-            eBrwWin.goBack();
-            break;
-        case MSG_FUNCTION_PAGEFORWARD:
-            mBrwView.goForward();
-            break;
-        case MSG_FUNCTION_PAGEBACK:
-            mBrwView.goBack();
-            break;
-        case MSG_FUNCTION_WINDOWFORWARD:
-            if(param != null) windowForwardMsg(param);
-            break;
-        case MSG_FUNCTION_WINDOWBACK:
-            if(param != null) windowBackMsg(param);
-            break;
-        case MSG_FUNCTION_SETWINDOWFRAME:
-            if(param != null) setWindowFrameMsg(param);
-            break;
-        case MSG_FUNCTION_OPENSLIBING:
-            if(param != null) openSlibingMsg(param);
-            break;
-        case MSG_FUNCTION_CLOSESLIBING:
-            if(param != null) closeSlibingMsg(param);
-            break;
-        case MSG_FUNCTION_SHOWSLIBING:
-            if(param != null) showSlibingMsg(param);
-            break;
-        case MSG_FUNCTION_LOADOBFUSCATIONDATA:
-            if(param != null) loadObfuscationDataMsg(param);
-            break;
-        case MSG_FUNCTION_TOAST:
-            if(param != null) toastMsg(param);
-            break;
-        case MSG_FUNCTION_CLOSETOAST:
-            eBrwWin.closeToast();
-            break;
-        case MSG_FUNCTION_CLOSEPOPOVER:
-            if(param != null) closePopoverMsg(param);
-            break;
-        case MSG_FUNCTION_SETPOPOVERFRAME:
-            if(param != null) setPopoverFrameMsg(param);
-            break;
-        case MSG_FUNCTION_OPENMULTIPOPOVER:
-            if(param != null) openMultiPopoverMsg(param);
-            break;
-        case MSG_FUNCTION_CLOSEMULTIPOPOVER:
-            if(param != null) closeMultiPopoverMsg(param);
-            break;
-        case MSG_FUNCTION_SETMULTIPOPOVERFRAME:
-        	if(param != null) setMultiPopoverFrameMsg(param);
-        	break;
-        case MSG_FUNCTION_SETSELECTEDPOPOVERINMULTIWINDOW:
-            if(param != null) setSelectedPopOverInMultiWindowMsg(param);
-            break;
-        case MSG_FUNCTION_BRINGTOFRONT:
-            eBrwWin.bringToFront(mBrwView);
-            break;
-        case MSG_FUNCTION_SENDTOBACK:
-            eBrwWin.sendToBack(mBrwView);
-            break;
-        case MSG_FUNCTION_INSERTABOVE:
-            if(param != null) insertAboveMsg(param);
-            break;
-        case MSG_FUNCTION_INSERTBELOW:
-            if(param != null) insertBelowMsg(param);
-            break;
-        case MSG_FUNCTION_BRINGPOPOVERTOFRONT:
-            if(param != null) bringPopoverToFrontMsg(param);
-            break;
-        case MSG_FUNCTION_SENDPOPOVERTOBACK:
-            if(param != null) sendPopoverToBackMsg(param);
-            break;
-        case MSG_FUNCTION_INSERTPOPOVERABOVEPOPOVER:
-            if(param != null) insertPopoverAbovePopoverMsg(param);
-            break;
-        case MSG_FUNCTION_INSERTPOPOVERBELOWPOPOVER:
-            if(param != null) insertPopoverBelowPopoverMsg(param);
-            break;
-        case MSG_FUNCTION_INSERTWINDOWABOVEWINDOW:
-            if(param != null) insertWindowAboveWindowMsg(param);
-            break;
-        case MSG_FUNCTION_INSERTWINDOWBELOWWINDOW:
-            if(param != null) insertWindowBelowWindowMsg(param);
-            break;
-        case MSG_FUNCTION_SETORIENTATION:
-            if(param != null) setOrientationMsg(param);
-            break;
-        case MSG_FUNCTION_SETSLIDINGWIN:
-        	handleSetSlidingWin(param);
-        	break;
-        case MSG_FUNCTION_SETSLIDINGWIN_ENABLE:
-            hanldeSetSlidingWindowEnabled(param);
-            break;
-        case MSG_FUNCTION_TOGGLE_SLIDINGWIN:
-            hanldeToggleSlidingWindow(param);
-            break;
-        case MSG_FUNCTION_REFRESH:
-            String url = mBrwView.getRelativeUrl();
-            mBrwView.loadUrl(url);
-			mBrwView.postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					mBrwView.clearHistory();
-				}
-			}, 1000);
-            break;
+            case MSG_FUNCTION_CLOSE:
+                if(param != null) closeMsg(param);
+                break;
+            case MSG_FUNCTION_CLOSE_ABOVE_WND_BY_NAME:
+                String windowName = msg.getData().getString(TAG_BUNDLE_PARAM_NAME);
+                eBrwWin.closeAboveWndByName(windowName);
+                break;
+            case MSG_FUNCTION_OPEN:
+                if(param != null) openMsg(param);
+                break;
+            case MSG_FUNCTION_OPEN_POP:
+                if(param != null) openPopoverMsg(param);
+                break;
+            case MSG_FUNCTION_FORWARD:
+                eBrwWin.goForward();
+                break;
+            case MSG_FUNCTION_BACK:
+                eBrwWin.goBack();
+                break;
+            case MSG_FUNCTION_PAGEFORWARD:
+                mBrwView.goForward();
+                break;
+            case MSG_FUNCTION_PAGEBACK:
+                mBrwView.goBack();
+                break;
+            case MSG_FUNCTION_WINDOWFORWARD:
+                if(param != null) windowForwardMsg(param);
+                break;
+            case MSG_FUNCTION_WINDOWBACK:
+                if(param != null) windowBackMsg(param);
+                break;
+            case MSG_FUNCTION_SETWINDOWFRAME:
+                if(param != null) setWindowFrameMsg(param);
+                break;
+            case MSG_FUNCTION_OPENSLIBING:
+                if(param != null) openSlibingMsg(param);
+                break;
+            case MSG_FUNCTION_CLOSESLIBING:
+                if(param != null) closeSlibingMsg(param);
+                break;
+            case MSG_FUNCTION_SHOWSLIBING:
+                if(param != null) showSlibingMsg(param);
+                break;
+            case MSG_FUNCTION_LOADOBFUSCATIONDATA:
+                if(param != null) loadObfuscationDataMsg(param);
+                break;
+            case MSG_FUNCTION_TOAST:
+                if(param != null) toastMsg(param);
+                break;
+            case MSG_FUNCTION_CLOSETOAST:
+                eBrwWin.closeToast();
+                break;
+            case MSG_FUNCTION_CLOSEPOPOVER:
+                if(param != null) closePopoverMsg(param);
+                break;
+            case MSG_FUNCTION_SETPOPOVERFRAME:
+                if(param != null) setPopoverFrameMsg(param);
+                break;
+            case MSG_FUNCTION_OPENMULTIPOPOVER:
+                if(param != null) openMultiPopoverMsg(param);
+                break;
+            case MSG_FUNCTION_CLOSEMULTIPOPOVER:
+                if(param != null) closeMultiPopoverMsg(param);
+                break;
+            case MSG_FUNCTION_SETMULTIPOPOVERFRAME:
+                if(param != null) setMultiPopoverFrameMsg(param);
+                break;
+            case MSG_FUNCTION_SETSELECTEDPOPOVERINMULTIWINDOW:
+                if(param != null) setSelectedPopOverInMultiWindowMsg(param);
+                break;
+            case MSG_FUNCTION_BRINGTOFRONT:
+                eBrwWin.bringToFront(mBrwView);
+                break;
+            case MSG_FUNCTION_SENDTOBACK:
+                eBrwWin.sendToBack(mBrwView);
+                break;
+            case MSG_FUNCTION_INSERTABOVE:
+                if(param != null) insertAboveMsg(param);
+                break;
+            case MSG_FUNCTION_INSERTBELOW:
+                if(param != null) insertBelowMsg(param);
+                break;
+            case MSG_FUNCTION_BRINGPOPOVERTOFRONT:
+                if(param != null) bringPopoverToFrontMsg(param);
+                break;
+            case MSG_FUNCTION_SENDPOPOVERTOBACK:
+                if(param != null) sendPopoverToBackMsg(param);
+                break;
+            case MSG_FUNCTION_INSERTPOPOVERABOVEPOPOVER:
+                if(param != null) insertPopoverAbovePopoverMsg(param);
+                break;
+            case MSG_FUNCTION_INSERTPOPOVERBELOWPOPOVER:
+                if(param != null) insertPopoverBelowPopoverMsg(param);
+                break;
+            case MSG_FUNCTION_INSERTWINDOWABOVEWINDOW:
+                if(param != null) insertWindowAboveWindowMsg(param);
+                break;
+            case MSG_FUNCTION_INSERTWINDOWBELOWWINDOW:
+                if(param != null) insertWindowBelowWindowMsg(param);
+                break;
+            case MSG_FUNCTION_SETORIENTATION:
+                if(param != null) setOrientationMsg(param);
+                break;
+            case MSG_FUNCTION_SETSLIDINGWIN:
+                handleSetSlidingWin(param);
+                break;
+            case MSG_FUNCTION_SETSLIDINGWIN_ENABLE:
+                hanldeSetSlidingWindowEnabled(param);
+                break;
+            case MSG_FUNCTION_TOGGLE_SLIDINGWIN:
+                hanldeToggleSlidingWindow(param);
+                break;
+            case MSG_FUNCTION_REFRESH:
+                String url = mBrwView.getRelativeUrl();
+                mBrwView.loadUrl(url);
+                mBrwView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mBrwView.clearHistory();
+                    }
+                }, 1000);
+                break;
+            case MSG_SET_WINDOW_HIDDEN:
+                setWindowHiddenMsg(param);
+                break;
+            case MSG_OPEN_AD:
+                openAdMsg(param);
+                break;
+            case MSG_SHOW_SOFT_KEYBOARD:
+                showSoftKeyboardMsg();
+                break;
+            case MSG_ACTION_SHEET:
+                actionSheetMsg(param);
+                break;
+            case MSG_STATUS_BAR_NOTIFICATION:
+                statusBarNotificationMsg(param);
+                break;
+            case MSG_CREATE_PROGRESS_DIALOG:
+                createProgressDialogMsg(param);
+                break;
+            case MSG_DESTROY_PROGRESS_DIALOG:
+                destroyProgressDialogMsg();
+                break;
+            case MSG_POST_GLOBAL_NOTIFICATION:
+                postGlobalNotificationMsg(param);
+                break;
+            case MSG_SUBSCRIBE_CHANNEL_NOTIFICATION:
+                subscribeChannelNotificationMsg(param);
+                break;
+            case MSG_PUBLISH_CHANNEL_NOTIFICATION:
+                publishChannelNotificationMsg(param);
+                break;
         default:
             break;
         }
