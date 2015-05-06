@@ -33,7 +33,7 @@ import java.io.IOException;
 public class DiskCache {
 
 	public static final String TAG = "DiskCache";
-	private static File cacheFolder;
+	public static File cacheFolder;
 
 	public static void initDiskCache(Context context) {
 
