@@ -29,18 +29,18 @@ public class ACEImageLoader {
         DiskCache.initDiskCache(application);
         ImageLoaderConfiguration  config=new ImageLoaderConfiguration
                 .Builder(application)
-                .memoryCacheExtraOptions(480, 800) // max width, max height£¬¼´±£´æµÄÃ¿¸ö»º´æÎÄ¼şµÄ×î´ó³¤¿í
-                .threadPoolSize(3)//Ïß³Ì³ØÄÚ¼ÓÔØµÄÊıÁ¿
+                .memoryCacheExtraOptions(480, 800) // max width, max heightï¼Œå³ä¿å­˜çš„æ¯ä¸ªç¼“å­˜æ–‡ä»¶çš„æœ€å¤§é•¿å®½
+                .threadPoolSize(3)//çº¿ç¨‹æ± å†…åŠ è½½çš„æ•°é‡
                 .threadPriority(Thread.NORM_PRIORITY - 2)
                 .denyCacheImageMultipleSizesInMemory()
-                .memoryCache(new UsingFreqLimitedMemoryCache(2 * 1024 * 1024)) // You can pass your own memory cache implementation/Äã¿ÉÒÔÍ¨¹ı×Ô¼ºµÄÄÚ´æ»º´æÊµÏÖ
+                .memoryCache(new UsingFreqLimitedMemoryCache(2 * 1024 * 1024)) // You can pass your own memory cache implementation/ä½ å¯ä»¥é€šè¿‡è‡ªå·±çš„å†…å­˜ç¼“å­˜å®ç°
                 .memoryCacheSize(2 * 1024 * 1024)
                 .tasksProcessingOrder(QueueProcessingType.LIFO)
-                .diskCache(new UnlimitedDiscCache(DiskCache.cacheFolder))//×Ô¶¨Òå»º´æÂ·¾¶
+                .diskCache(new UnlimitedDiscCache(DiskCache.cacheFolder))//è‡ªå®šä¹‰ç¼“å­˜è·¯å¾„
                 .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
-                .imageDownloader(new BaseImageDownloader(application, 5 * 1000, 30 * 1000)) // connectTimeout (5 s), readTimeout (30 s)³¬Ê±Ê±¼ä
+                .imageDownloader(new BaseImageDownloader(application, 5 * 1000, 30 * 1000)) // connectTimeout (5 s), readTimeout (30 s)è¶…æ—¶æ—¶é—´
                 .writeDebugLogs() // Remove for release app
-                .build();//¿ªÊ¼¹¹½¨
+                .build();//å¼€å§‹æ„å»º
         ImageLoader.getInstance().init(config);
     }
 
