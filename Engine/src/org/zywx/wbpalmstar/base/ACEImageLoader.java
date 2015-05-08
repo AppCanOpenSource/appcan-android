@@ -1,16 +1,17 @@
 package org.zywx.wbpalmstar.base;
 
+import org.zywx.wbpalmstar.base.cache.DiskCache;
+
 import android.app.Application;
 import android.widget.ImageView;
 
-import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
-import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
-import org.zywx.wbpalmstar.base.cache.DiskCache;
+import com.ace.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
+import com.ace.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
+import com.ace.universalimageloader.core.DisplayImageOptions;
+import com.ace.universalimageloader.core.ImageLoader;
+import com.ace.universalimageloader.core.ImageLoaderConfiguration;
+import com.ace.universalimageloader.core.assist.QueueProcessingType;
+import com.ace.universalimageloader.core.download.BaseImageDownloader;
 
 /**
  * Created by ylt on 2015/4/28.
@@ -36,7 +37,7 @@ public class ACEImageLoader {
                 .memoryCache(new UsingFreqLimitedMemoryCache(2 * 1024 * 1024)) // You can pass your own memory cache implementation/你可以通过自己的内存缓存实现
                 .memoryCacheSize(2 * 1024 * 1024)
                 .tasksProcessingOrder(QueueProcessingType.LIFO)
-                .diskCache(new UnlimitedDiscCache(DiskCache.cacheFolder))//自定义缓存路径
+                .diskCache(new UnlimitedDiskCache(DiskCache.cacheFolder))//自定义缓存路径
                 .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
                 .imageDownloader(new BaseImageDownloader(application, 5 * 1000, 30 * 1000)) // connectTimeout (5 s), readTimeout (30 s)超时时间
                 .writeDebugLogs() // Remove for release app
