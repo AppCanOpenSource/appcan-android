@@ -610,19 +610,7 @@ public final class EBrowserActivity extends ActivityGroup {
 				Compat.FILL, Compat.FILL);
 		splash.setLayoutParams(shelterPa);
 		mScreen.addView(splash);
-		if (develop) {
-			TextView worn = new TextView(this);
-			worn.setText("测试版本仅用于开发测试");
-			worn.setTextColor(0xffff0000);
-			worn.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-			FrameLayout.LayoutParams wornPa = new FrameLayout.LayoutParams(
-					Compat.FILL, Compat.WRAP);
-			wornPa.gravity = Gravity.TOP;
-			wornPa.leftMargin = 10;
-			wornPa.topMargin = 10;
-			worn.setLayoutParams(wornPa);
-			splash.addView(worn);
-		}
+
 
 		/*
 		 * ImageView background = new ImageView(this);
