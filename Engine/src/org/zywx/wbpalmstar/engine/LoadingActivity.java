@@ -9,8 +9,13 @@ import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import org.zywx.wbpalmstar.engine.external.Compat;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 
 import java.io.InputStream;
@@ -36,11 +41,15 @@ public class LoadingActivity extends Activity {
         if (intent!=null) {
             isTemp = intent.getBooleanExtra("isTemp", false);
         }
+        FrameLayout rootLayout=new FrameLayout(this);
+        FrameLayout.LayoutParams layoutParams=new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
+        rootLayout.setLayoutParams(layoutParams);
         InputStream inputStream=getResources().openRawResource(EUExUtil.getResDrawableID("startup_bg_16_9"));
         ImageView imageView=new ImageView(this);
         imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         imageView.setImageBitmap(BitmapFactory.decodeStream(inputStream));
-        setContentView(imageView);
+        rootLayout.addView(imageView);
+        setContentView(rootLayout);
 
         mHandler.postDelayed(new Runnable() {
             @Override
@@ -57,6 +66,19 @@ public class LoadingActivity extends Activity {
               IntentFilter intentFilter = new IntentFilter();
                intentFilter.addAction(BROADCAST_ACTION);
         registerReceiver(mBroadcastReceiver, intentFilter);
+        if (EBrowserActivity.develop) {
+            TextView worn = new TextView(this);
+            worn.setText("测试版本仅用于开发测试");
+            worn.setTextColor(0xffff0000);
+            worn.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+            FrameLayout.LayoutParams wornPa = new FrameLayout.LayoutParams(
+                    Compat.FILL, Compat.WRAP);
+            wornPa.gravity = Gravity.TOP;
+            wornPa.leftMargin = 10;
+            wornPa.topMargin = 10;
+            worn.setLayoutParams(wornPa);
+            rootLayout.addView(worn);
+        }
     }
 
     @Override

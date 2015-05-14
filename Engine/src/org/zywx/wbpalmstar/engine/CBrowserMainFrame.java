@@ -48,8 +48,7 @@ public class CBrowserMainFrame extends WebChromeClient {
 	@Override
 	public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
 		if (!((EBrowserActivity)view.getContext()).isVisable()){
-			result.cancel();
-			return true;
+			result.confirm();
 		}
 		AlertDialog.Builder dia = new AlertDialog.Builder(view.getContext());
 		dia.setTitle("提示消息");
