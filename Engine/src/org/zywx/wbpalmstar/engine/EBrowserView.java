@@ -102,7 +102,7 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 		mContext = context;
 		mType = inType;
 		initPrivateVoid();
-		setOnLongClickListener(this);
+//		setOnLongClickListener(this);
 		setDownloadListener(this);
 	}
 
