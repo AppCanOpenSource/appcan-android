@@ -6,7 +6,9 @@ import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.ParcelFileDescriptor;
+import android.text.TextUtils;
 
 import org.zywx.wbpalmstar.acedes.ACEDes;
 import org.zywx.wbpalmstar.widgetone.dataservice.WDataManager;
@@ -22,13 +24,15 @@ public class ACEContentProvider extends ContentProvider {
        AssetManager am = getContext().getAssets();  
        String path = uri.getPath().substring(1);  
        try {  
-    	   InputStream is = null;
-    	   
-    	   if(path.startsWith("android_asset/")) {
-			   path = path.substring("android_asset/".length());
-		   }
+           InputStream is = null;
+           
+           if(path.startsWith("android_asset/")) {
+               path = path.substring("android_asset/".length());
+           }
 
-           if (WDataManager.isUpdateWidget) {
+           String sdCardPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+           if (WDataManager.isUpdateWidget || 
+                   (!TextUtils.isEmpty(sdCardPath) && path.startsWith(sdCardPath.substring(1)))) {
                File file = new File(path);
                is = new FileInputStream(file);
            } else {
