@@ -1252,6 +1252,9 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 		boolean isHasPop = false;
 		if (null != popView) {
 			popView.loadUrl(EUExScript.F_UEX_SCRIPT_SELF_FINISH);
+            String popName=name;
+            String popUrl=popView.getUrl();
+            evaluateScript(mMainView,"root",0, "javascript:if(window.onPopoverLoadFinishInRootWnd){window.onPopoverLoadFinishInRootWnd('"+popName+"','"+popUrl+"');}");
 			isHasPop = true;
 		}
 		if(mMultiPopTable != null && mMultiPopTable.size() > 0){
@@ -1263,7 +1266,10 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 	                    if((temp.get(i).getName()).equals(name)){
 	                        temp.get(i).loadUrl(EUExScript.F_UEX_SCRIPT_SELF_FINISH);
 	                        isHasPop = true;
-	                    }
+                            String popName=name;
+                            String popUrl=temp.get(i).getUrl();
+                            evaluateScript(mMainView,"root",0, "javascript:if(window.onPopoverLoadFinishInRootWnd){window.onPopoverLoadFinishInRootWnd('"+popName+"','"+popUrl+"');}");
+                        }
 	                }
 	            }
 	        }
