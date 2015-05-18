@@ -27,13 +27,16 @@ import org.zywx.wbpalmstar.widgetone.WidgetOneApplication;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 
 public class EBrowserWidgetPool {
@@ -375,6 +378,15 @@ public class EBrowserWidgetPool {
 		inWidget.setVisibility(View.VISIBLE);
 		outWidget.startAnimation(outAnim);
 		inWidget.startAnimation(inAnim);
+		
+        InputMethodManager imm = (InputMethodManager) mContext
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        int versionA = Build.VERSION.SDK_INT;
+        if (versionA == 19) {
+			imm.hideSoftInputFromWindow(((EBrowserActivity) mContext)
+					.getCurrentFocus().getWindowToken(),
+					InputMethodManager.HIDE_NOT_ALWAYS);
+        }
 	}
 
 	public void goForward() {
