@@ -33,6 +33,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.webkit.CookieManager;
@@ -222,6 +223,39 @@ public abstract class EUExBase {
 		adptLayoutParams(parms, lp);
 		mBrwView.addViewToCurrentWindow(child, lp);
 	}
+
+
+    /**
+     * 将View嵌入到webview随view一起滚动
+     * @param child
+     * @param params
+     * @param id 标识要添加的view，删除时会用到
+     */
+    public final void addViewToWebView(View child, android.widget.AbsoluteLayout.LayoutParams params,String id){
+        if (mBrwView==null){
+            return;
+        }
+        if (id!=null) {
+            child.setTag(id);
+        }
+        mBrwView.addView(child,params);
+    }
+
+    /**
+     * 将制定id的view从webview中删除
+     * @param id
+     */
+    public final void removeViewFromWebView(String id){
+        if (!TextUtils.isEmpty(id)){
+            int viewCount=mBrwView.getChildCount();
+            for (int i=viewCount-1;i>=0;i--){
+                if (id.equals(mBrwView.getChildAt(i).getTag())){
+                    mBrwView.removeView(mBrwView.getChildAt(i));
+                    break;
+                }
+            }
+        }
+    }
 
 	/**
 	 * 加载一个widget
