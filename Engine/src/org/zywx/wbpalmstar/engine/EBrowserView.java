@@ -1360,39 +1360,28 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 			}
 
 			if ((int) (getContentHeight() * nowScale) == (getHeight() + getScrollY())) {
-				// �������ײ�����Ҫ�����¡���������
 				callback.jsCallback(EUExWindow.function_cbslipedDownEdge, 0,
 						EUExCallback.F_C_INT, 0);
 				
 				callback.jsCallback(EUExWindow.function_onSlipedDownEdge, 0,
 						EUExCallback.F_C_INT, 0);
-				Log.d("scroll", "�������ײ�");
 
 			} else if (getScrollY() == 0) {
-				// ��������������Ҫ�����¡�������
 				callback.jsCallback(EUExWindow.function_cbslipedUpEdge, 0,
 						EUExCallback.F_C_INT, 0);
 				callback.jsCallback(EUExWindow.function_onSlipedUpEdge, 0,
 						EUExCallback.F_C_INT, 0);
-				Log.d("scroll", "����������");
 
 			} else if (oldt - t > mScrollDistance) {
-				// ���»���
 				callback.jsCallback(EUExWindow.function_cbslipedDownward, 0,
 						EUExCallback.F_C_INT, 0);
 				callback.jsCallback(EUExWindow.function_onSlipedDownward, 0,
 						EUExCallback.F_C_INT, 0);
-				Log.d("scroll", "���»���" + "y1:" + oldt + " y2:" + t
-						+ " scale" + getScale());
-
 			} else if (oldt - t < -mScrollDistance) {
-				// ���ϻ���
 				callback.jsCallback(EUExWindow.function_cbslipedUpward, 0,
 						EUExCallback.F_C_INT, 0);
 				callback.jsCallback(EUExWindow.function_onSlipedUpward, 0,
 						EUExCallback.F_C_INT, 0);
-				Log.d("scroll", "���ϻ���" + "y1:" + oldt + " y2:" + t
-						+ " scale" + getScale());
 			}
 		}
 
