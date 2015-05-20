@@ -25,6 +25,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Xml;
@@ -75,6 +76,8 @@ public class WDataManager {
 	// public static Map<String, WWidgetData> widgetMap = null;
 	public static List<String> appIDList = null;
 	public static boolean isUpdateWidget = false;
+	public static boolean isCopyAssetsFinish = false;
+	public static String m_copyAssetsFinish = "copyAssetsFinish";
 	// private int m_count = 0;
 
 	public WDataManager(Context context) {
@@ -631,6 +634,7 @@ public class WDataManager {
 		WWidgetData widgetData = null;
 		WWidgetData assetsData = getWidgetDataByXML(m_rootWidgetConfigPath, 0);
 		isUpdateWidget = checkAppStatus(m_context, assetsData.m_appId);
+		isCopyAssetsFinish = m_preferences.getBoolean(m_copyAssetsFinish, false);
 		try {
 			if (isUpdateWidget) {
 				PackageInfo pinfo = pm.getPackageInfo(
@@ -638,7 +642,7 @@ public class WDataManager {
 						PackageManager.GET_CONFIGURATIONS);
 				ver = pinfo.versionName;
 				dbVer = m_preferences.getString("dbVer", null);
-				if (dbVer == null || !ver.equals(dbVer)) {
+				if (dbVer == null || !ver.equals(dbVer) || !isCopyAssetsFinish) {
 					Editor editor = m_preferences.edit();
 					editor.putString("dbVer", ver);
 					editor.commit();
@@ -646,7 +650,7 @@ public class WDataManager {
 					if (flie.exists()) {
 //						deleteFile(flie);
 					}
-					CopyAssets("widget", m_sboxPath + "widget/");
+					new CopyAssetsTask().execute("widget", m_sboxPath + "widget/");
 				}
 			}
 		} catch (Exception e) {
@@ -654,7 +658,7 @@ public class WDataManager {
 		}
 		long widgetDBId = m_preferences.getLong(m_rootWidgetDBId, -1);
 		if (widgetDBId != -1) {
-			if (!unZIP(m_sboxPath + "widget/")) {
+			if (!unZIP(m_sboxPath + "widget/") || !isCopyAssetsFinish) {
 				int webapp = 0;
 				if(null != assetsData){
 					webapp = assetsData.m_webapp;
@@ -671,10 +675,10 @@ public class WDataManager {
 
 		}
 //		File flie = new File(m_sboxPath + "widget/");
-		if (isUpdateWidget) {
-			if (widgetData == null) {
-				CopyAssets("widget", m_sboxPath + "widget/");
-			} 
+		if (isUpdateWidget && isCopyAssetsFinish) {
+//			if (widgetData == null) {
+//				CopyAssets("widget", m_sboxPath + "widget/");
+//			} 
 //			else {
 //
 //				if (assetsData != null
@@ -730,7 +734,7 @@ public class WDataManager {
 		widgetData.m_obfuscation = assetsData.m_obfuscation;
 		widgetData.m_opaque = assetsData.m_opaque;
 		
-		if (isUpdateWidget) {
+		if (isUpdateWidget && isCopyAssetsFinish) {
 			String matchAssetPath = BUtility.F_ASSET_PATH + "widget/";
 			if (widgetData.m_indexUrl.startsWith(matchAssetPath)) {
 				String indexPath = widgetData.m_indexUrl.substring(matchAssetPath.length());
@@ -747,7 +751,7 @@ public class WDataManager {
             String packg = m_context.getPackageName();
             String spPostFix = ".sp/";
             
-            if (isUpdateWidget) {
+            if (isUpdateWidget && isCopyAssetsFinish) {
             	BUtility.g_desPath = contentPrefix + packg + spPostFix + "android_asset" + m_sboxPath;
             	widgetData.m_indexUrl = contentPrefix + packg + spPostFix + "android_asset/" + widgetData.m_indexUrl.substring("file:///".length());
             } else {
@@ -844,58 +848,64 @@ public class WDataManager {
 		return false;
 	}
 
-	private void CopyAssets(String assetDir, String dir) {
-		String[] files;
-		try {
-			files = m_context.getResources().getAssets().list(assetDir);
-		} catch (IOException e1) {
-			return;
-		}
-		File mWorkingPath = new File(dir);
-		// if this directory does not exists, make one.
-		if (!mWorkingPath.exists()) {
-			if (!mWorkingPath.mkdirs()) {
-				BDebug.e("--CopyAssets--", "cannot create directory.");
-			}
-		}
-
-		for (int i = 0; i < files.length; i++) {
+	private class CopyAssetsTask extends AsyncTask<String, String, String> {
+		@Override
+		protected String doInBackground(String... params) {
+			String[] files;
 			try {
-				String fileName = files[i];
-				// we make sure file name not contains '.' to be a folder.
-				if (!fileName.contains(".")) {
-					if (0 == assetDir.length()) {
-						CopyAssets(fileName, dir + fileName + "/");
-					} else {
-						CopyAssets(assetDir + "/" + fileName, dir + fileName
-								+ "/");
-					}
-					continue;
-				}
-				File outFile = new File(mWorkingPath, fileName);
-				if (outFile.exists())
-					outFile.delete();
-				InputStream in = null;
-				if (0 != assetDir.length())
-					in = m_context.getAssets().open(assetDir + "/" + fileName);
-				else
-					in = m_context.getAssets().open(fileName);
-				OutputStream out = new FileOutputStream(outFile);
-
-				// Transfer bytes from in to out
-				byte[] buf = new byte[1024];
-				int len;
-				while ((len = in.read(buf)) > 0) {
-					out.write(buf, 0, len);
-				}
-
-				in.close();
-				out.close();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+				files = m_context.getResources().getAssets().list(params[0]);
+			} catch (IOException e1) {
+				return null;
 			}
+			File mWorkingPath = new File(params[1]);
+			// if this directory does not exists, make one.
+			if (!mWorkingPath.exists()) {
+				if (!mWorkingPath.mkdirs()) {
+					BDebug.e("--CopyAssets--", "cannot create directory.");
+				}
+			}
+
+			for (int i = 0; i < files.length; i++) {
+				try {
+					String fileName = files[i];
+					// we make sure file name not contains '.' to be a folder.
+					if (!fileName.contains(".")) {
+						if (0 == params[0].length()) {
+							CopyAssets(fileName, params[1] + fileName + "/");
+						} else {
+							CopyAssets(params[0] + "/" + fileName, params[1] + fileName
+									+ "/");
+						}
+						continue;
+					}
+					File outFile = new File(mWorkingPath, fileName);
+					if (outFile.exists())
+						outFile.delete();
+					InputStream in = null;
+					if (0 != params[0].length())
+						in = m_context.getAssets().open(params[0] + "/" + fileName);
+					else
+						in = m_context.getAssets().open(fileName);
+					OutputStream out = new FileOutputStream(outFile);
+
+					// Transfer bytes from in to out
+					byte[] buf = new byte[1024];
+					int len;
+					while ((len = in.read(buf)) > 0) {
+						out.write(buf, 0, len);
+					}
+					in.close();
+					out.close();
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			Editor editor = m_preferences.edit();
+			editor.putBoolean(m_copyAssetsFinish, true);
+			editor.commit();
+			return null;
 		}
 	}
 
