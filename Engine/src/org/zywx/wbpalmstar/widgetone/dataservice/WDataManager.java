@@ -851,61 +851,66 @@ public class WDataManager {
 	private class CopyAssetsTask extends AsyncTask<String, String, String> {
 		@Override
 		protected String doInBackground(String... params) {
-			String[] files;
-			try {
-				files = m_context.getResources().getAssets().list(params[0]);
-			} catch (IOException e1) {
-				return null;
-			}
-			File mWorkingPath = new File(params[1]);
-			// if this directory does not exists, make one.
-			if (!mWorkingPath.exists()) {
-				if (!mWorkingPath.mkdirs()) {
-					BDebug.e("--CopyAssets--", "cannot create directory.");
-				}
-			}
-
-			for (int i = 0; i < files.length; i++) {
-				try {
-					String fileName = files[i];
-					// we make sure file name not contains '.' to be a folder.
-					if (!fileName.contains(".")) {
-						if (0 == params[0].length()) {
-							CopyAssets(fileName, params[1] + fileName + "/");
-						} else {
-							CopyAssets(params[0] + "/" + fileName, params[1] + fileName
-									+ "/");
-						}
-						continue;
-					}
-					File outFile = new File(mWorkingPath, fileName);
-					if (outFile.exists())
-						outFile.delete();
-					InputStream in = null;
-					if (0 != params[0].length())
-						in = m_context.getAssets().open(params[0] + "/" + fileName);
-					else
-						in = m_context.getAssets().open(fileName);
-					OutputStream out = new FileOutputStream(outFile);
-
-					// Transfer bytes from in to out
-					byte[] buf = new byte[1024];
-					int len;
-					while ((len = in.read(buf)) > 0) {
-						out.write(buf, 0, len);
-					}
-					in.close();
-					out.close();
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+			CopyAssets(params[0], params[1]);
 			Editor editor = m_preferences.edit();
 			editor.putBoolean(m_copyAssetsFinish, true);
 			editor.commit();
 			return null;
+		}
+	}
+	
+	private void CopyAssets(String assetDir, String dir) {
+		String[] files;
+		try {
+			files = m_context.getResources().getAssets().list(assetDir);
+		} catch (IOException e1) {
+			return;
+		}
+		File mWorkingPath = new File(dir);
+		// if this directory does not exists, make one.
+		if (!mWorkingPath.exists()) {
+			if (!mWorkingPath.mkdirs()) {
+				BDebug.e("--CopyAssets--", "cannot create directory.");
+			}
+		}
+
+		for (int i = 0; i < files.length; i++) {
+			try {
+				String fileName = files[i];
+				// we make sure file name not contains '.' to be a folder.
+				if (!fileName.contains(".")) {
+					if (0 == assetDir.length()) {
+						CopyAssets(fileName, dir + fileName + "/");
+					} else {
+						CopyAssets(assetDir + "/" + fileName, dir + fileName
+								+ "/");
+					}
+					continue;
+				}
+				File outFile = new File(mWorkingPath, fileName);
+				if (outFile.exists())
+					outFile.delete();
+				InputStream in = null;
+				if (0 != assetDir.length())
+					in = m_context.getAssets().open(assetDir + "/" + fileName);
+				else
+					in = m_context.getAssets().open(fileName);
+				OutputStream out = new FileOutputStream(outFile);
+
+				// Transfer bytes from in to out
+				byte[] buf = new byte[1024];
+				int len;
+				while ((len = in.read(buf)) > 0) {
+					out.write(buf, 0, len);
+				}
+
+				in.close();
+				out.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
