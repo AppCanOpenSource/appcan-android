@@ -31,7 +31,7 @@ public class ACEContentProvider extends ContentProvider {
            }
 
            String sdCardPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-           if (WDataManager.isUpdateWidget || 
+           if ((WDataManager.isUpdateWidget && WDataManager.isCopyAssetsFinish) || 
                    (!TextUtils.isEmpty(sdCardPath) && path.startsWith(sdCardPath.substring(1)))) {
                File file = new File(path);
                is = new FileInputStream(file);
