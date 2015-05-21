@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.text.TextUtils;
 
+import org.apache.commons.io.input.BOMInputStream;
 import org.zywx.wbpalmstar.acedes.ACEDes;
 import org.zywx.wbpalmstar.widgetone.dataservice.WDataManager;
 
@@ -39,6 +40,11 @@ public class ACEContentProvider extends ContentProvider {
                is = am.open(path);
            }
 
+           BOMInputStream bomInputStream=new BOMInputStream(is);
+           if (bomInputStream.hasBOM()){
+               is=bomInputStream;
+           }
+
            if (!path.endsWith(".html")
                    && !path.endsWith(".css")
                    && !path.endsWith(".js")
@@ -62,7 +68,7 @@ public class ACEContentProvider extends ContentProvider {
 
 			InputStream is1 = new ByteArrayInputStream(baos.toByteArray());
 			InputStream is2 = new ByteArrayInputStream(baos.toByteArray());
-			
+
 			boolean isV = ACEDes.isEncrypted(is1);
 			
 			if (isV) {
