@@ -26,7 +26,7 @@ public class ACEContentProvider extends ContentProvider {
        String path = uri.getPath().substring(1);  
        try {  
            InputStream is = null;
-           
+           InputStream tempInputStream=null;
            if(path.startsWith("android_asset/")) {
                path = path.substring("android_asset/".length());
            }
@@ -36,13 +36,18 @@ public class ACEContentProvider extends ContentProvider {
                    (!TextUtils.isEmpty(sdCardPath) && path.startsWith(sdCardPath.substring(1)))) {
                File file = new File(path);
                is = new FileInputStream(file);
+               tempInputStream=new FileInputStream(file);
            } else {
                is = am.open(path);
+               tempInputStream=am.open(path);
            }
 
-           BOMInputStream bomInputStream=new BOMInputStream(is);
+           BOMInputStream bomInputStream=new BOMInputStream(tempInputStream);
            if (bomInputStream.hasBOM()){
                is=bomInputStream;
+           }else{
+               bomInputStream.close();
+               tempInputStream.close();
            }
 
            if (!path.endsWith(".html")
