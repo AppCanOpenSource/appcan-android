@@ -24,6 +24,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -849,13 +850,10 @@ public class EUExWindow extends EUExBase {
             if (isAttach == true) {
                 activity.globalSlidingMenu.setMode(slidingMode);
                 activity.globalSlidingMenu.attachToActivity(activity, SlidingMenu.SLIDING_CONTENT);
-
+                mBrwView.setBackgroundColor(Color.TRANSPARENT);
             }
+         } catch (JSONException e) {
 
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
 
 
