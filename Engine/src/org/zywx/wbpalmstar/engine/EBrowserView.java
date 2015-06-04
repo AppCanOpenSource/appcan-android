@@ -126,7 +126,7 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 				mBaSetting = new EBrowserSetting(this);
 				mBaSetting.initBaseSetting(mWebApp);
 				setWebViewClient(mEXWebViewClient = new CBrowserWindow());
-				setWebChromeClient(new CBrowserMainFrame());
+				setWebChromeClient(new CBrowserMainFrame(mContext));
 			}
 			
 		} else {

@@ -29,6 +29,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.*;
 import android.os.Process;
 import android.util.TypedValue;
@@ -36,6 +37,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient.CustomViewCallback;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -69,6 +71,7 @@ import java.util.Set;
 public final class EBrowserActivity extends ActivityGroup {
 
 	public static final int F_OAUTH_CODE = 100001;
+	public final static int FILECHOOSER_RESULTCODE = 233;
 
 	private EBrowser mBrowser;
 	private boolean mKeyDown;
@@ -90,7 +93,7 @@ public final class EBrowserActivity extends ActivityGroup {
 	public static boolean isForground = false;
 	
 	public SlidingMenu globalSlidingMenu;
-
+	private ValueCallback<Uri> mUploadMessage;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -551,6 +554,12 @@ public final class EBrowserActivity extends ActivityGroup {
 				uexOnAuthorize(authorizeID);
 			}
 			return;
+		}else if (requestCode==FILECHOOSER_RESULTCODE){
+			if (null == mUploadMessage)
+				return;
+			Uri result = data == null || resultCode != RESULT_OK ? null : data.getData();
+			mUploadMessage.onReceiveValue(result);
+			mUploadMessage = null;
 		}
 		if (mCallbackRuning && null != mActivityCallback) {
 			mActivityCallback.onActivityResult(requestCode, resultCode, data);
@@ -732,6 +741,14 @@ public final class EBrowserActivity extends ActivityGroup {
 			    loadByOtherApp();
 			}
 		}
+	}
+
+	public ValueCallback<Uri> getmUploadMessage() {
+		return mUploadMessage;
+	}
+
+	public void setmUploadMessage(ValueCallback<Uri> mUploadMessage) {
+		this.mUploadMessage = mUploadMessage;
 	}
 
 	public class EHandler extends Handler {

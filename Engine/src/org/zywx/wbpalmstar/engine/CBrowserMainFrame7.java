@@ -31,18 +31,18 @@ import android.widget.FrameLayout;
 
 public class CBrowserMainFrame7  extends CBrowserMainFrame {
 
-	private Context mContext;
 	final long MAX_QUOTA = 104857600L;
-	
-//	private ValueCallback<Uri> mFile;
-	
-	
+
 	/**
-	 *android version >= 2.1 use 
+	 * android version < 2.1 use
+	 *
+	 * @param context
 	 */
-	public CBrowserMainFrame7(Context context){
-		mContext = context;
+	public CBrowserMainFrame7(Context context) {
+		super(context);
 	}
+
+//	private ValueCallback<Uri> mFile;
 
 	public void onHideCustomView() {
 		((EBrowserActivity)mContext).hideCustomView();
