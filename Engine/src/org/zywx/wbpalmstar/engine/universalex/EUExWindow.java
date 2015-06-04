@@ -653,8 +653,9 @@ public class EUExWindow extends EUExBase {
 
     public void hanldeToggleSlidingWindow(String[] param) {
         try {
-            int value = Integer.parseInt(param[0]);
-
+            JSONObject jsonObject=new JSONObject(param[0]);
+            int isLeft=jsonObject.optInt("mark",0);
+            int isReload=jsonObject.optInt("reload",0);
             EBrowserActivity activity = (EBrowserActivity) mContext;
 
             SlidingMenu slidingMenu = activity.globalSlidingMenu;
@@ -663,20 +664,26 @@ public class EUExWindow extends EUExBase {
 
                 slidingMenu.toggle();
             }  else {
-                if (value == 0) { //left
+                if (isLeft == 0) { //left
 
                     slidingMenu.showMenu();
-
-                } else if (value == 1) { // right
+                    if (isReload==1){
+                        EBrowserWindow leftWindow= (EBrowserWindow) slidingMenu.getMenu();
+                        if (leftWindow!=null) {
+                            leftWindow.refresh();
+                        }
+                    }
+                } else if (isLeft == 1) { // right
                     slidingMenu.showSecondaryMenu();
+                    if (isReload==1){
+                        EBrowserWindow rightWindow= (EBrowserWindow) slidingMenu.getSecondaryMenu();
+                        if (rightWindow!=null) {
+                            rightWindow.refresh();
+                        }
+                    }
                 }
 
             }
-
-
-
-
-
         } catch (Exception e) {
         }
     }
