@@ -42,7 +42,7 @@ body,p,div,ul,ol,li,dl,dt,dd,span,var,em,a,img,strong,table,td,tr,h2,h3,h4,h5,in
 .tcxx{ font-size:1.3em;}
 }
 
-body{ background:#077CE3; width:100%; height:100%;}
+body{ background:#00000000; width:100%; height:100%;}
 
 .con{ padding:5px;}
 .tit{ background:#27A73F; width:100%; text-align:center;}
