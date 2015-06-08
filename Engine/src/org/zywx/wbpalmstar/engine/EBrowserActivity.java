@@ -412,7 +412,12 @@ public final class EBrowserActivity extends ActivityGroup {
 	        return;
 	    }
         Intent firstIntent = getIntent();
-        int type = intent.getIntExtra("ntype", 0);
+        int type = 0;
+        try {
+            type = intent.getIntExtra("ntype", 0);
+        }catch (Exception e){
+
+        }
         switch (type) {
         case ENotification.F_TYPE_PUSH:
             if (null != mBrowser) {
