@@ -794,6 +794,7 @@ public final class EBrowserActivity extends ActivityGroup {
 				break;
 			case F_MSG_LOAD_HIDE_SH:
 				mScreen.setVisibility(View.VISIBLE);
+				setContentViewVisible();
 				if (mBrowserAround.checkTimeFlag()) {
 					mBrowser.hiddenShelter();
 				} else {
