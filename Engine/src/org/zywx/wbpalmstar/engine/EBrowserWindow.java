@@ -117,7 +117,7 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 
     public static String rootLeftSlidingWinName = "rootLeftSlidingWinName";
     public static String rootRightSlidingWinName = "rootRightSlidingWinName";
-	
+
 	public EBrowserWindow(Context context, EBrowserWidget inParent) {
 		super(context);
 		mContext = context;
@@ -153,12 +153,12 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 		if (null == inEntry) {
 			setName("root");
 			mMainView.setRelativeUrl("index.html");
-			
+
 			if(!TextUtils.isEmpty(mBroWidget.getWidget().m_opaque)) {
 				mMainView.setBrwViewBackground(mBroWidget.getWidget().getOpaque(),
 	                    mBroWidget.getWidget().m_bgColor, mBroWidget.getWidget().m_indexUrl);
 			}
-            
+
 		} else {
 			setName(inEntry.mWindName);
 			setAnimId(inEntry.mAnimId);
@@ -237,7 +237,7 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 		mBroWidget.onCloseWindow(this);
 		if(mChannelList != null){
 		    mChannelList.clear();
-		    mChannelList = null; 
+		    mChannelList = null;
 		}
 
 	}
@@ -325,13 +325,13 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 		popEntry.mY = inY;
 		popEntry.mWidth = inWidth;
 		popEntry.mHeight = inHeight;
-		
+
 		Message msg = mWindLoop.obtainMessage();
 		msg.what = F_WHANDLER_MULTIPOP_SET;
 		msg.obj = popEntry;
 		mWindLoop.sendMessage(msg);
 	}
-	
+
 	private void hSetMultiPopOverFrame(EBrwViewEntry entity) {
 		ArrayList<EBrowserView> list = mMultiPopTable.get(entity.mViewName);
 		if (null == list || list.size() == 0) {
@@ -344,7 +344,7 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 		lParam.topMargin = entity.mY;
 		vParent.setLayoutParams(lParam);
 	}
-	
+
 	public void evaluateMultiPopoverScript(WebView inWhich, String inWndName,
 			String inMultiPopName, String inPopName, String inScript) {
 		if (null == inWndName || 0 == inWndName.length()) {
@@ -364,7 +364,7 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 					inMultiPopName, inPopName, inScript);
 		}
 	}
-	
+
 	public void bringToFront(EBrowserView child) {
 		View v = (View) child.getParent();
 		Message msg = mWindLoop.obtainMessage();
@@ -870,7 +870,7 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
             mResumeJs.clear();
             mResumeJs = null;
         }
-    }	
+    }
 
 	protected void onWidgetResult(String callBack, String inResultInfo) {
 		if (null != callBack) {
@@ -1254,7 +1254,7 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 			popView.loadUrl(EUExScript.F_UEX_SCRIPT_SELF_FINISH);
             String popName=name;
             String popUrl=popView.getUrl();
-            evaluateScript(mMainView,"root",0, "javascript:if(window.onPopoverLoadFinishInRootWnd){window.onPopoverLoadFinishInRootWnd('"+popName+"','"+popUrl+"');}");
+            evaluateScript(mMainView,"root",0, "javascript:if(uexWindow.onPopoverLoadFinishInRootWnd){uexWindow.onPopoverLoadFinishInRootWnd('"+popName+"','"+popUrl+"');}");
 			isHasPop = true;
 		}
 		if(mMultiPopTable != null && mMultiPopTable.size() > 0){
@@ -1268,7 +1268,7 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 	                        isHasPop = true;
                             String popName=name;
                             String popUrl=temp.get(i).getUrl();
-                            evaluateScript(mMainView,"root",0, "javascript:if(window.onPopoverLoadFinishInRootWnd){window.onPopoverLoadFinishInRootWnd('"+popName+"','"+popUrl+"');}");
+                            evaluateScript(mMainView,"root",0, "javascript:if(uexWindow.onPopoverLoadFinishInRootWnd){uexWindow.onPopoverLoadFinishInRootWnd('"+popName+"','"+popUrl+"');}");
                         }
 	                }
 	            }
@@ -1559,7 +1559,7 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 
     public void addUriTaskAsyn(EBrowserView target, String uri) {
         if(mResumeJs == null){
-            mResumeJs = new ArrayList<HashMap<String,Object>>(); 
+            mResumeJs = new ArrayList<HashMap<String,Object>>();
         }
         HashMap<String, Object> item = new HashMap<String, Object>();
         item.put("js", uri);
@@ -2530,13 +2530,13 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 					continue;
 				}
 				setCallback(eBrwWin.mMainView, list, channelId, des, WIN_TYPE_MAIN);
-				
+
 				//popover window
 				Collection<EBrowserView> eBrwViews = eBrwWin.mPopTable.values();
 				for (EBrowserView entry : eBrwViews) {
 					setCallback(entry, list, channelId, des, WIN_TYPE_POP);
 				}
-				
+
 				//multiPopover window
 				if(eBrwWin.mMultiPopTable != null && eBrwWin.mMultiPopTable.size() > 0){
 					for (Map.Entry<String, ArrayList<EBrowserView>> entry : eBrwWin.mMultiPopTable
@@ -2637,9 +2637,9 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
         }
         return -1;
     }
-    
+
     public void closeWindowByAnimation(Animation anim) {
-    	
+
     	if (anim != null) {
     		startAnimation(anim);
         	anim.setAnimationListener(this);
@@ -2647,13 +2647,13 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 			setVisibility(GONE);
 			mBroWidget.putInvalid(this);
 		}
-    	
+
     }
 
 	@Override
 	public void onAnimationStart(Animation animation) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -2670,8 +2670,8 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 	@Override
 	public void onAnimationRepeat(Animation animation) {
 		// TODO Auto-generated method stub
-		
-		
+
+
 	}
 
 	public void addUriTaskSpeci(String winName, String js) {
