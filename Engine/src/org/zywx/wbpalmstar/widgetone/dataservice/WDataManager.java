@@ -25,7 +25,6 @@ import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Xml;
@@ -621,6 +620,124 @@ public class WDataManager {
 	}
 
 	/**
+	 * 判断是否有增量更新包，如果有，继续判断版本号是否大于当前APK的版本号
+	 */
+	private boolean isHasUpdateZip(String zipPath) {
+		SharedPreferences preferences = m_context.getSharedPreferences(
+				"updateInfo", Context.MODE_WORLD_READABLE);
+		int totalSize = preferences.getInt("totalSize", 0);
+		int downloaded = preferences.getInt("downloaded", 0);
+		if (totalSize == 0 || downloaded == 0 || totalSize != downloaded) {
+			return false;
+		}
+		String filePath = preferences.getString("filePath", null);
+		if (TextUtils.isEmpty(filePath)) {
+			return false;
+		}
+
+		try {
+			File dir = new File(zipPath);
+			// 建立与目标文件的输入连接
+			FileInputStream inputStream = new FileInputStream(filePath);
+			CnZipInputStream in = new CnZipInputStream(inputStream, "UTF-8");
+			ZipEntry entry = in.getNextEntry();
+			byte[] c = new byte[1024];
+			int slen;
+			while (entry != null) {
+				String zename = entry.getName();
+				if (zename.toLowerCase().equals("config.xml")) {
+					File files = new File(dir.getAbsolutePath() + "/" + zename)
+							.getParentFile();// 当前文件所在目录
+					if (!files.exists()) {// 如果目录文件夹不存在，则创建
+						files.mkdirs();
+					}
+					//得到config.xml文件的内容
+					FileOutputStream out = new FileOutputStream(
+							dir.getAbsolutePath() + "/" + zename);
+					while ((slen = in.read(c, 0, c.length)) != -1)
+						out.write(c, 0, slen);
+					
+					//对config.xml文件进行XML解析
+					File file = new File(dir.getAbsolutePath() + "/" + zename);
+					if (!file.exists()) {
+						return false;
+					}
+					FileInputStream input = new FileInputStream(file);
+					XmlPullParser parser = Xml.newPullParser();
+					parser.setInput(input, "utf-8");
+					int tokenType = 0;
+					boolean needContinue = true;
+					String m_verString = null;
+					do {
+						tokenType = parser.next();
+						switch (tokenType) {
+						case XmlPullParser.START_TAG:
+							String localName = (parser.getName()).toLowerCase();
+							if ("widget".equals(localName)) {
+								//得到增量更新包的版本号
+								m_verString = parser.getAttributeValue(null, "version");
+								needContinue = false;
+							}
+							break;
+						case XmlPullParser.END_DOCUMENT:
+							needContinue = false;
+							break;
+						}
+					} while (needContinue);
+					
+					//比较增量更新包和当前APK的版本号大小
+					String dbVerString = m_preferences.getString("dbVer", null);
+					if (m_verString != null && dbVerString != null) {
+						//格式化版本号内容，去掉"."
+						m_verString = formatVerString(m_verString.split("\\."));
+						dbVerString = formatVerString(dbVerString.split("\\."));
+						//转换成long型
+						long m_verLong = Long.parseLong(m_verString);
+						long dbVerLong = Long.parseLong(dbVerString);
+						if (m_verLong > dbVerLong) {
+							return true;
+						}
+					}
+					out.close();
+					input.close();
+				}
+				entry = in.getNextEntry();
+			}
+			in.close();
+		} catch (Exception i) {
+			return false;
+		}
+		return false;
+	}
+	
+	private String formatVerString(String[] s) {
+		if (s.length == 1 && s[0].length() == 1) {
+			s[0] = 0 + s[0];
+		}
+		if (s.length == 2 && s[1].length() == 1) {
+			s[1] = "0" + s[1];
+		}
+		if (s.length == 3 && s[2].length() == 1) {
+			s[2] = "000" + s[2];
+		}
+		if (s.length == 3 && s[2].length() == 2) {
+			s[2] = "00" + s[2];
+		}
+		if (s.length == 3 && s[2].length() == 3) {
+			s[2] = "0" + s[2];
+		}
+		StringBuffer sbf = new StringBuffer("");
+		if (s.length == 1) {
+			sbf.append(s[0]).append("000000");
+		} else if (s.length == 2) {
+			sbf.append(s[0]).append(s[1]).append("0000");
+		} else if (s.length == 3) {
+			sbf.append(s[0]).append(s[1]).append(s[2]);
+		}
+		return sbf.toString();
+	}
+	
+	/**
 	 * 得到当前应用
 	 * 
 	 * @return
@@ -645,12 +762,22 @@ public class WDataManager {
 				if (dbVer == null || !ver.equals(dbVer) || !isCopyAssetsFinish) {
 					Editor editor = m_preferences.edit();
 					editor.putString("dbVer", ver);
+					editor.putBoolean(m_copyAssetsFinish, false);
+					isCopyAssetsFinish = false;
 					editor.commit();
 					File flie = new File(m_sboxPath + "widget/");
 					if (flie.exists()) {
 //						deleteFile(flie);
 					}
-					new CopyAssetsTask().execute("widget", m_sboxPath + "widget/");
+					//如果有增量更新包，且其版本号大于当前APK的版本号，则进行同步拷贝操作，防止再次弹出增量更新提示框，否则，才进行异步拷贝操作
+					if (isHasUpdateZip(m_sboxPath + "widget/")) {
+						CopyAssets("widget", m_sboxPath + "widget/");
+						isCopyAssetsFinish = true;
+						editor.putBoolean(m_copyAssetsFinish, true);
+						editor.commit();
+					} else {
+						copyAssetsThread("widget", m_sboxPath + "widget/");
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -658,7 +785,7 @@ public class WDataManager {
 		}
 		long widgetDBId = m_preferences.getLong(m_rootWidgetDBId, -1);
 		if (widgetDBId != -1) {
-			if (!unZIP(m_sboxPath + "widget/") || !isCopyAssetsFinish) {
+			if (!isCopyAssetsFinish || !unZIP(m_sboxPath + "widget/")) {
 				int webapp = 0;
 				if(null != assetsData){
 					webapp = assetsData.m_webapp;
@@ -848,15 +975,20 @@ public class WDataManager {
 		return false;
 	}
 
-	private class CopyAssetsTask extends AsyncTask<String, String, String> {
-		@Override
-		protected String doInBackground(String... params) {
-			CopyAssets(params[0], params[1]);
-			Editor editor = m_preferences.edit();
-			editor.putBoolean(m_copyAssetsFinish, true);
-			editor.commit();
-			return null;
-		}
+	private void copyAssetsThread(final String assetDir, final String dir) {
+		Thread thread = new Thread("copyAssetsThread") {
+			@Override
+			public void run() {
+				try {
+					CopyAssets(assetDir, dir);
+					Editor editor = m_preferences.edit();
+					editor.putBoolean(m_copyAssetsFinish, true);
+					editor.commit();
+				} catch (Exception e) {
+				}
+			}
+		};
+		thread.start();
 	}
 	
 	private void CopyAssets(String assetDir, String dir) {
