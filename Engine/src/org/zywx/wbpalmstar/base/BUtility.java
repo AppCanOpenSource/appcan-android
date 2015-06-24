@@ -729,7 +729,7 @@ public class BUtility {
             while ((line = br.readLine()) != null) {
                 // 将常见的linux分区过滤掉
                 if (line.contains("secure") || line.contains("asec")
-                        || line.contains("media") || line.contains("system")
+                        || line.contains("system")
                         || line.contains("cache") || line.contains("sys")
                         || line.contains("data") || line.contains("tmpfs")
                         || line.contains("shell") || line.contains("root")
@@ -738,12 +738,12 @@ public class BUtility {
                     continue;
                 }
                 if (line.contains("fat") || line.contains("fuse")
-                        || line.contains("ntfs")) {
+                        || line.contains("ntfs") || line.contains("extSdCard")) {
                     String columns[] = line.split(" ");
                     if (columns != null && columns.length > 1) {
                         String path = columns[1];
                         if (path != null && !sdList.contains(path)
-                                && path.contains("sd"))
+                                && path.toLowerCase().contains("sd"))
                             sdList.add(columns[1]);
                     }
                 }

@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.text.TextUtils;
+import android.util.Log;
 
 import org.apache.commons.io.input.BOMInputStream;
 import org.zywx.wbpalmstar.acedes.ACEDes;
@@ -48,8 +49,10 @@ public class ACEContentProvider extends ContentProvider {
            }else{
                //外置sd卡路径
                List<String> sdCardList = BUtility.getAllExtraSdcardPath();
+               Log.i(TAG, "size = " + sdCardList.size());
                for (int i = 0; i < sdCardList.size(); i ++){
                    String sdExtraPath = sdCardList.get(i);
+                   Log.i(TAG, "sdExtraPath = " + sdExtraPath);
                    if (!TextUtils.isEmpty(sdExtraPath)
                            && path.startsWith(sdExtraPath.substring(1))){
                        isLocalPath = true;
