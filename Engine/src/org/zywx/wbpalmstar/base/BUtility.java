@@ -715,7 +715,7 @@ public class BUtility {
 
     /**
      * 获取外置SD卡路径
-     * @return  应该就一条记录或空
+     * @return  路径列表
      */
     public static List<String> getAllExtraSdcardPath() {
         List<String> sdList = new ArrayList<String>();
@@ -743,8 +743,12 @@ public class BUtility {
                     if (columns != null && columns.length > 1) {
                         String path = columns[1];
                         if (path != null && !sdList.contains(path)
-                                && path.toLowerCase().contains("sd"))
-                            sdList.add(columns[1]);
+                                && path.toLowerCase().contains("sd")){
+                            File file = new File(path);
+                            if (file.isDirectory()){
+                                sdList.add(columns[1]);
+                            }
+                        }
                     }
                 }
             }
