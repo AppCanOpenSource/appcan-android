@@ -32,9 +32,21 @@ import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.DisplayMetrics;
+import android.util.Log;
+
 import org.zywx.wbpalmstar.widgetone.dataservice.WDataManager;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -321,7 +333,7 @@ public class BUtility {
 	 */
 	public static boolean sdCardIsWork() {
 		if (Environment.getExternalStorageState().equals(
-				Environment.MEDIA_MOUNTED)) {
+                Environment.MEDIA_MOUNTED)) {
 			return true;
 		}
 		return false;
@@ -700,4 +712,45 @@ public class BUtility {
 		}
 		return name;
 	}
+
+    /**
+     * 获取外置SD卡路径
+     * @return  应该就一条记录或空
+     */
+    public static List<String> getAllExtraSdcardPath() {
+        List<String> sdList = new ArrayList<String>();
+        try {
+            Runtime runtime = Runtime.getRuntime();
+            Process process = runtime.exec("mount");
+            InputStream is = process.getInputStream();
+            InputStreamReader isr = new InputStreamReader(is);
+            String line;
+            BufferedReader br = new BufferedReader(isr);
+            while ((line = br.readLine()) != null) {
+                // 将常见的linux分区过滤掉
+                if (line.contains("secure") || line.contains("asec")
+                        || line.contains("media") || line.contains("system")
+                        || line.contains("cache") || line.contains("sys")
+                        || line.contains("data") || line.contains("tmpfs")
+                        || line.contains("shell") || line.contains("root")
+                        || line.contains("acct") || line.contains("proc")
+                        || line.contains("misc") || line.contains("obb")) {
+                    continue;
+                }
+                if (line.contains("fat") || line.contains("fuse")
+                        || line.contains("ntfs")) {
+                    String columns[] = line.split(" ");
+                    if (columns != null && columns.length > 1) {
+                        String path = columns[1];
+                        if (path != null && !sdList.contains(path)
+                                && path.contains("sd"))
+                            sdList.add(columns[1]);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return sdList;
+    }
 }
