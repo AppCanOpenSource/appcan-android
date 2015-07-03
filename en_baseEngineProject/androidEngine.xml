@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <info>
-    <version>sdksuit_3.1_150624_01</version>
-	<package>android_Engine_3.1_150624_01</package>
-	<description>1.修复弹出两次增量更新提示问题;2.修复低版本手机开启增量更新开关崩溃问题;3.修复外置sd卡路径图片无法显示的问题</description>
+    <version>sdksuit_3.1_150703_01</version>
+	<package>android_Engine_3.1_150703_01</package>
+	<description>1.新增isAppInstalled，cbIsAppInstalled判断是否安装某第三方应用方法及其回调方法;2.新增cbStartApp启动第三方应用的回调方法。</description>
 </info>
