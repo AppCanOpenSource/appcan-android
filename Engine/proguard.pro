@@ -274,6 +274,7 @@
     public void removeWidget(java.lang.String[]);
     public void loadApp(java.lang.String[]);
     public void startApp(java.lang.String[]);
+    public void isAppInstalled(java.lang.String[]);
     public void installApp(java.lang.String[]);
     public void setMySpaceInfo(java.lang.String[]);
     public void getOpenerInfo(java.lang.String[]);

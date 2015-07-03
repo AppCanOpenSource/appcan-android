@@ -91,6 +91,7 @@ public class EUExScript {
                 + "setSpaceEnable:function(){uexWidget_.setSpaceEnable(jo(arguments));},"
                 + "setLogServerIp:function(){uexWidget_.setLogServerIp(jo(arguments));},"
                 + "delPushInfo:function(){uexWidget_.delPushInfo(jo(arguments));},"
+                + "isAppInstalled:function(){uexWidget_.isAppInstalled(jo(arguments));},"
 				+ "getPushInfo:function(){uexWidget_.getPushInfo(jo(arguments));}};"
 				+
 				// Window
