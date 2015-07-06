@@ -2552,6 +2552,41 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 			}
 		}
 	}
+	
+	public void reloadWidgetByAppId(String appId) {
+		EBrowserWidget eBrwWidget = mBroWidget.getWidgetStack().get(appId);
+		// normal window
+		ELinkedList<EBrowserWindow> eBrwWins = eBrwWidget.getWindowStack()
+				.getAll();
+		for (int i = 0; i < eBrwWins.size(); i++) {
+			EBrowserWindow eBrwWin = eBrwWins.get(i);
+			List<HashMap<String, String>> list = eBrwWin.mChannelList;
+			if (list == null || list.size() == 0) {
+				continue;
+			}
+			eBrwWin.mMainView.reload();
+
+			// popover window
+			Collection<EBrowserView> eBrwViews = eBrwWin.mPopTable.values();
+			for (EBrowserView entry : eBrwViews) {
+				entry.reload();
+			}
+
+			// multiPopover window
+			if (eBrwWin.mMultiPopTable != null
+					&& eBrwWin.mMultiPopTable.size() > 0) {
+				for (Map.Entry<String, ArrayList<EBrowserView>> entry : eBrwWin.mMultiPopTable
+						.entrySet()) {
+					ArrayList<EBrowserView> temp = entry.getValue();
+					if (null != temp && temp.size() > 0) {
+						for (int j = 0; j < temp.size(); j++) {
+							temp.get(j).reload();
+						}
+					}
+				}
+			}
+		}
+	}
 
 	private void setCallback(final EBrowserView brwView, List<HashMap<String, String>> list, String channelId, String data, String type) {
 		String js;
