@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <info>
-    <version>sdksuit_3.1_150703_01</version>
-	<package>android_Engine_3.1_150703_01</package>
-	<description>1.新增isAppInstalled，cbIsAppInstalled判断是否安装某第三方应用方法及其回调方法;2.新增cbStartApp启动第三方应用的回调方法。</description>
+    <version>sdksuit_3.1_150706_01</version>
+	<package>android_Engine_3.1_150706_01</package>
+	<description>uexWindow新增加reload、reloadWidgetByAppId接口。</description>
 </info>

@@ -140,6 +140,8 @@ public class EUExWindow extends EUExBase {
     private static final int MSG_DESTROY_PROGRESS_DIALOG = 45;
     private static final int MSG_POST_GLOBAL_NOTIFICATION = 46;
     private static final int MSG_SUBSCRIBE_CHANNEL_NOTIFICATION = 47;
+    private static final int MSG_FUNCTION_RELOAD= 48;
+    private static final int MSG_FUNCTION_RELOAD_WIDGET_BY_APPID= 49;
 	private AlertDialog.Builder mAlert;
 	private AlertDialog.Builder mConfirm;
 	private PromptDialog mPrompt;
@@ -474,6 +476,39 @@ public class EUExWindow extends EUExBase {
         msg.what = MSG_FUNCTION_REFRESH;
         msg.obj = this;
         mHandler.sendMessage(msg);
+    }
+    
+    public void reload(String[] params){
+    	Message msg = mHandler.obtainMessage();
+    	msg.what = MSG_FUNCTION_RELOAD;
+    	msg.obj = this;
+    	mHandler.sendMessage(msg);
+    }
+    
+    public void reloadWidgetByAppId(String[] params){
+		if (params.length < 1) {
+			return;
+		}
+    	Message msg = mHandler.obtainMessage();
+    	msg.what = MSG_FUNCTION_RELOAD_WIDGET_BY_APPID;
+    	msg.obj = this;
+        Bundle bd = new Bundle();
+        bd.putStringArray(TAG_BUNDLE_PARAM, params);
+        msg.setData(bd);
+    	mHandler.sendMessage(msg);
+    }
+    
+    private void reloadWidgetByAppIdMsg(String[] params) {
+		String appId = params[0];
+		if (TextUtils.isEmpty(appId)) {
+			Log.e("reloadWidgetByAppId", "appId is empty!!!");
+			return;
+		}
+		EBrowserWindow curWind = mBrwView.getBrowserWindow();
+		if (null == curWind) {
+			return;
+		}
+		curWind.reloadWidgetByAppId(appId);
     }
 
 	public void openSlibing(String[] parm) {
@@ -3104,6 +3139,12 @@ public class EUExWindow extends EUExBase {
                         mBrwView.clearHistory();
                     }
                 }, 1000);
+                break;
+            case MSG_FUNCTION_RELOAD:
+            	mBrwView.reload();
+            	break;
+            case MSG_FUNCTION_RELOAD_WIDGET_BY_APPID:
+            	if(param != null) reloadWidgetByAppIdMsg(param);
                 break;
             case MSG_SET_WINDOW_HIDDEN:
                 setWindowHiddenMsg(param);

@@ -183,6 +183,8 @@ public class EUExScript {
 				+ "setBounceParams:function(){uexWindow_.setBounceParams(jo(arguments));},"
 				+ "hiddenBounceView:function(){uexWindow_.hiddenBounceView(jo(arguments));},"
                 + "refresh:function(){if(uexWindow_.termination()){return;}uexWindow_.refresh(jo(arguments));},"
+                + "reload:function(){if(uexWindow_.termination()){return;}uexWindow_.reload(jo(arguments));},"
+                + "reloadWidgetByAppId:function(){if(uexWindow_.termination()){return;}uexWindow_.reloadWidgetByAppId(jo(arguments));},"
 				+ "getUrlQuery:function(){return uexWindow_.getUrlQuery(jo(arguments))}};"
 
 				+
