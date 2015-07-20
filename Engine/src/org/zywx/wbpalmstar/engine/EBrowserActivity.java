@@ -422,7 +422,9 @@ public final class EBrowserActivity extends ActivityGroup {
         case ENotification.F_TYPE_PUSH:
             if (null != mBrowser) {
                 String data = intent.getStringExtra("data");
+				String pushMessage = intent.getStringExtra("message");
                 firstIntent.putExtra("data", data);
+				firstIntent.putExtra("message", pushMessage);
                 mBrowser.pushNotify();
             }
             break;

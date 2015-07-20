@@ -9,7 +9,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.zywx.wbpalmstar.platform.push.report.PushReportUtility;
 
@@ -582,7 +581,8 @@ public class MQTTService implements MqttSimpleCallback {
 
 			JSONObject json;
 			try {
-				json = new JSONObject(Rc4Encrypt.decry_RC4(reData, mAppId));
+				String decryptedData = Rc4Encrypt.decry_RC4(reData, mAppId);
+				json = new JSONObject(decryptedData);
 
 				if (json.has("mdm") && json.getString("mdm") != null) {
 					Intent intent = new Intent();
@@ -608,8 +608,8 @@ public class MQTTService implements MqttSimpleCallback {
 					}
 				}
 
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
+			} catch (Exception e) {
+				PushReportUtility.oe("publishArrived", e);
 				e.printStackTrace();
 			}
 

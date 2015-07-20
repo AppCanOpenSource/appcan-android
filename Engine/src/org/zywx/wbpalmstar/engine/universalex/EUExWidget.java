@@ -77,6 +77,9 @@ public class EUExWidget extends EUExBase {
     public static final String function_onSpaceClick = "uexWidget.onSpaceClick";
 	public static final String function_loadApp = "uexWidget.cbLoadApp";
     private static final String BUNDLE_DATA = "data";
+	private static final String BUNDLE_MESSAGE = "message";
+	private static final String PUSH_MSG_BODY = "0";
+	private static final String PUSH_MSG_ALL = "1";
     private static final int MSG_IS_APP_INSTALLED = 0;
 
 	public EUExWidget(Context context, EBrowserView inParent) {
@@ -725,8 +728,19 @@ public class EUExWidget extends EUExBase {
 	}
 
 	public void getPushInfo(String[] parm) {
-		String userInfo = ((EBrowserActivity) mContext).getIntent()
-				.getStringExtra("data");
+		String type = PUSH_MSG_BODY;
+		if (parm.length >= 1) {
+			type = parm[0];
+		}
+		String userInfo = null;
+		if (PUSH_MSG_ALL.equals(type)) {
+			// 获取推送消息所有内容
+			userInfo = ((EBrowserActivity) mContext).getIntent()
+					.getStringExtra(BUNDLE_MESSAGE);
+		} else {
+			userInfo = ((EBrowserActivity) mContext).getIntent()
+					.getStringExtra(BUNDLE_DATA);
+		}
 		((WidgetOneApplication) mContext.getApplicationContext()).getPushInfo(
 				userInfo, System.currentTimeMillis() + "");
 		jsCallback(function_getPushInfo, 0, EUExCallback.F_C_TEXT, userInfo);
