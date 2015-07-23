@@ -164,14 +164,14 @@ public class PushReportThread extends Thread implements PushReportConstants {
 		String result = PushReportHttpClient.sendPostDataByNameValuePair(
 				(host_pushReport + url_push_report), mNameValuePairs,
 				m_activity);
-		Log.i("PushReportThread", "result======" + result);
+		Log.i("PushReportThread", "pushReportOpen result======" + result);
 	}
 
 	private void pushReportArrive() {
 		String result = PushReportHttpClient.sendPostDataByNameValuePair(
 				(host_pushReport + url_push_report), mNameValuePairs,
 				m_activity);
-		Log.i("PushReportThread", "result======" + result);
+		Log.i("PushReportThread", "pushReportArrive result======" + result);
 	}
 
 }
