@@ -292,6 +292,7 @@ public class PushService extends Service implements PushDataCallback {
 	// }
 
 	private void runningNotification(JSONObject text) throws JSONException {	    
+		String pushMessage = text.toString();// 推送消息全部内容
         // 设置通知的事件消息
 	    String tickerText = text.getString("title");
 	    String value = text.getString("body");
@@ -319,6 +320,8 @@ public class PushService extends Service implements PushDataCallback {
 		intent.putExtra("title", tickerText);
 		intent.putExtra("packg", packg);
 		intent.putExtra("widgetName", widgetName);
+		intent.setPackage(packg);
+		intent.putExtra("message", pushMessage);
 		sendBroadcast(intent);//传递过去
 
         try {

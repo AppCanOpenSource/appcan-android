@@ -158,22 +158,18 @@ public class PushReportAgent implements PushReportConstants {
 	 */
 	public static void reportPush(String pushInfo, String occuredAt,
 			String eventType, String softToken, Context context) {
-		Log.i("push", "reportPush===" + pushInfo);
+		PushReportUtility.log("reportPush===" + pushInfo + " eventType==="
+				+ eventType);
 		String msgId = parsePushInfo2MsgId(pushInfo);
-		Log.i("push", "parsePushInfo2MsgId===" + msgId);
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 		nameValuePairs
 				.add(new BasicNameValuePair(KEY_PUSH_REPORT_MSGID, msgId));
-		Log.i("push", "KEY_PUSH_REPORT_MSGID===" + msgId);
 		nameValuePairs.add(new BasicNameValuePair(KEY_PUSH_REPORT_SOFTTOKEN,
 				softToken));
-		Log.i("push", "KEY_PUSH_REPORT_SOFTTOKEN");
 		nameValuePairs.add(new BasicNameValuePair(KEY_PUSH_REPORT_EVENTTYPE,
 				eventType));
-		Log.i("push", "KEY_PUSH_REPORT_EVENTTYPE===" + eventType);
 		nameValuePairs.add(new BasicNameValuePair(KEY_PUSH_REPORT_OCCUREDAT,
 				occuredAt));
-		Log.i("push", "KEY_PUSH_REPORT_OCCUREDAT===" + occuredAt);
 		if (eventType.equals(PushReportConstants.EVENT_TYPE_OPEN)) {
 			PushReportThread.getPushReportThread(context, sAgent,
 					TYPE_PUSH_REPORT_OPEN, nameValuePairs).start();
@@ -196,10 +192,8 @@ public class PushReportAgent implements PushReportConstants {
 		try {
 			JSONObject json = new JSONObject(pushInfo);
 			msgId = json.getString(KEY_PUSH_REPORT_MSGID);
-		} catch (JSONException e) {
-			e.printStackTrace();
 		} catch (Exception e) {
-			e.printStackTrace();
+			PushReportUtility.oe("parsePushInfo2MsgId", e);
 		}
 		return msgId;
 	}
@@ -211,7 +205,7 @@ public class PushReportAgent implements PushReportConstants {
 	 *            1 开 0 关
 	 */
 	public static void setPushState(Context context, int type) {
-		Log.i("push", "setPushState--" + type);
+		PushReportUtility.log("setPushState--" + type);
 		SharedPreferences sp = context.getSharedPreferences("saveData",
 				Context.MODE_PRIVATE);
 		Editor editor = sp.edit();

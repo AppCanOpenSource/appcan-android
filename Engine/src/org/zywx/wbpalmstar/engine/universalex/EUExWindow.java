@@ -2588,10 +2588,11 @@ public class EUExWindow extends EUExBase {
 		if (inButtonLable == null) {
 			return;
 		}
-		if (null != mConfirm) {
-			return;
-		}
-		int length = inButtonLable.length;
+        //修复：多个appcan.window.alert()同时执行时，只会弹出一次的问题
+//		if (null != mConfirm) {
+//			return;
+//		}
+        int length = inButtonLable.length;
 		if (length > 0 && length <= 3) {
 			mConfirm = new AlertDialog.Builder(mContext);
 			mConfirm.setTitle(inTitle);
