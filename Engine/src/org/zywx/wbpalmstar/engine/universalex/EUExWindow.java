@@ -2567,18 +2567,22 @@ public class EUExWindow extends EUExBase {
 		if (null != mAlert) {
 			return;
 		}
-		mAlert = new AlertDialog.Builder(mContext);
-		mAlert.setTitle(inTitle);
-		mAlert.setMessage(inMessage);
-		mAlert.setCancelable(false);
-		mAlert.setPositiveButton(inButtonLable, new OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.dismiss();
-				mAlert = null;
-			}
-		});
-		mAlert.show();
+		try {
+			mAlert = new AlertDialog.Builder(mContext);
+			mAlert.setTitle(inTitle);
+			mAlert.setMessage(inMessage);
+			mAlert.setCancelable(false);
+			mAlert.setPositiveButton(inButtonLable, new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+					mAlert = null;
+				}
+			});
+			mAlert.show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void private_confirm(String inTitle, String inMessage, String[] inButtonLable) {
@@ -2592,85 +2596,89 @@ public class EUExWindow extends EUExBase {
 //		if (null != mConfirm) {
 //			return;
 //		}
-        int length = inButtonLable.length;
-		if (length > 0 && length <= 3) {
-			mConfirm = new AlertDialog.Builder(mContext);
-			mConfirm.setTitle(inTitle);
-			mConfirm.setMessage(inMessage);
-			mConfirm.setCancelable(false);
-			switch (length) {
-			case 1:
-				mConfirm.setPositiveButton(inButtonLable[0], new OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								jsCallback(function_confirm, 0,
-										EUExCallback.F_C_INT, 0);
-								dialog.dismiss();
-								mConfirm = null;
-							}
-						}).show();
-				break;
-			case 2:
-				mConfirm.setPositiveButton(inButtonLable[0],
-						new OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								jsCallback(function_confirm, 0,
-										EUExCallback.F_C_INT, 0);
-								dialog.dismiss();
-								mConfirm = null;
-							}
-						})
-						.setNegativeButton(inButtonLable[1],
-								new OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-										jsCallback(function_confirm, 0,
-												EUExCallback.F_C_INT, 1);
-										dialog.dismiss();
-										mConfirm = null;
-									}
-								}).show();
-				break;
-			case 3:
-				mConfirm.setPositiveButton(inButtonLable[0],
-						new OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								jsCallback(function_confirm, 0,
-										EUExCallback.F_C_INT, 0);
-								dialog.dismiss();
-								mConfirm = null;
-							}
-						});
-				mConfirm.setNeutralButton(inButtonLable[1],
-						new OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								jsCallback(function_confirm, 0,
-										EUExCallback.F_C_INT, 1);
-								dialog.dismiss();
-								mConfirm = null;
-							}
-						});
-				mConfirm.setNegativeButton(inButtonLable[2],
-						new OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								jsCallback(function_confirm, 0,
-										EUExCallback.F_C_INT, 2);
-								dialog.dismiss();
-								mConfirm = null;
-							}
-						}).show();
-				break;
+		try {
+			int length = inButtonLable.length;
+			if (length > 0 && length <= 3) {
+				mConfirm = new AlertDialog.Builder(mContext);
+				mConfirm.setTitle(inTitle);
+				mConfirm.setMessage(inMessage);
+				mConfirm.setCancelable(false);
+				switch (length) {
+				case 1:
+					mConfirm.setPositiveButton(inButtonLable[0], new OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									jsCallback(function_confirm, 0,
+											EUExCallback.F_C_INT, 0);
+									dialog.dismiss();
+									mConfirm = null;
+								}
+							}).show();
+					break;
+				case 2:
+					mConfirm.setPositiveButton(inButtonLable[0],
+							new OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									jsCallback(function_confirm, 0,
+											EUExCallback.F_C_INT, 0);
+									dialog.dismiss();
+									mConfirm = null;
+								}
+							})
+							.setNegativeButton(inButtonLable[1],
+									new OnClickListener() {
+										@Override
+										public void onClick(DialogInterface dialog,
+												int which) {
+											jsCallback(function_confirm, 0,
+													EUExCallback.F_C_INT, 1);
+											dialog.dismiss();
+											mConfirm = null;
+										}
+									}).show();
+					break;
+				case 3:
+					mConfirm.setPositiveButton(inButtonLable[0],
+							new OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									jsCallback(function_confirm, 0,
+											EUExCallback.F_C_INT, 0);
+									dialog.dismiss();
+									mConfirm = null;
+								}
+							});
+					mConfirm.setNeutralButton(inButtonLable[1],
+							new OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									jsCallback(function_confirm, 0,
+											EUExCallback.F_C_INT, 1);
+									dialog.dismiss();
+									mConfirm = null;
+								}
+							});
+					mConfirm.setNegativeButton(inButtonLable[2],
+							new OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									jsCallback(function_confirm, 0,
+											EUExCallback.F_C_INT, 2);
+									dialog.dismiss();
+									mConfirm = null;
+								}
+							}).show();
+					break;
+				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

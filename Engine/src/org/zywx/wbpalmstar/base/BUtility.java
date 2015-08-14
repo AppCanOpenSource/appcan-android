@@ -32,7 +32,6 @@ import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.DisplayMetrics;
-import android.util.Log;
 
 import org.zywx.wbpalmstar.widgetone.dataservice.WDataManager;
 
@@ -757,4 +756,43 @@ public class BUtility {
         }
         return sdList;
     }
+
+	public static Bitmap createBitmapWithStream(InputStream inputStream,
+			int reqWidth, int reqHeight) {
+		Bitmap bm = null;
+		if (inputStream != null) {
+			BitmapFactory.Options opts = new BitmapFactory.Options();
+			opts.inJustDecodeBounds = true;
+			BitmapFactory.decodeStream(inputStream, null, opts);
+			opts.inSampleSize = calculateInSampleSize(opts, reqWidth, reqHeight);
+			opts.inPurgeable = true;
+			opts.inInputShareable = true;
+			opts.inTempStorage = new byte[64 * 1024];
+			opts.inJustDecodeBounds = false;
+			bm = BitmapFactory.decodeStream(inputStream, null, opts);
+		}
+		return bm;
+	}
+
+	public static int calculateInSampleSize(BitmapFactory.Options options,
+			int reqWidth, int reqHeight) {
+		// Raw height and width of image
+		final int height = options.outHeight;
+		final int width = options.outWidth;
+		int inSampleSize = 1;
+
+		if (height > reqHeight || width > reqWidth) {
+			final int halfHeight = height / 2;
+			final int halfWidth = width / 2;
+
+			// Calculate the largest inSampleSize value that is a power of 2 and
+			// keeps both
+			// height and width larger than the requested height and width.
+			while ((halfHeight / inSampleSize) > reqHeight
+					&& (halfWidth / inSampleSize) > reqWidth) {
+				inSampleSize *= 2;
+			}
+		}
+		return inSampleSize;
+	}
 }

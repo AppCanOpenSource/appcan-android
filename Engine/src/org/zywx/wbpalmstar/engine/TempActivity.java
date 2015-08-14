@@ -5,15 +5,17 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.BitmapFactory;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.engine.external.Compat;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 
@@ -40,10 +42,16 @@ public class TempActivity extends Activity {
         FrameLayout.LayoutParams layoutParams=new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
         rootLayout.setLayoutParams(layoutParams);
         InputStream inputStream = getResources().openRawResource(EUExUtil.getResDrawableID("startup_bg_16_9"));
-        ImageView imageView=new ImageView(this);
-        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-        imageView.setImageBitmap(BitmapFactory.decodeStream(inputStream));
-        rootLayout.addView(imageView);
+		DisplayMetrics dm = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(dm);
+		Bitmap bm = BUtility.createBitmapWithStream(inputStream,
+				dm.widthPixels, dm.heightPixels);
+		if (bm != null) {
+			ImageView imageView = new ImageView(this);
+			imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+			imageView.setImageBitmap(bm);
+			rootLayout.addView(imageView);
+		}
         if (EBrowserActivity.develop) {
             TextView worn = new TextView(this);
             worn.setText("测试版本仅用于开发测试");
