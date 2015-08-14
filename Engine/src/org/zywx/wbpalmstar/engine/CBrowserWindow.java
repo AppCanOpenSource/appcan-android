@@ -123,8 +123,13 @@ public class CBrowserWindow extends EXWebViewClient {
 
 	@Override
 	public void onPageStarted(WebView view, String url, Bitmap favicon) {
+		if (view == null) {
+			return;
+		}
 		EBrowserView target = (EBrowserView) view;
-		mReferenceUrl = url;
+		if (url != null) {
+			mReferenceUrl = url;
+		}
 		target.onPageStarted(target, url);
 		ESystemInfo info = ESystemInfo.getIntence();
 		if (info.mFinished) {
@@ -134,13 +139,18 @@ public class CBrowserWindow extends EXWebViewClient {
 
 	@Override
 	public void onPageFinished(WebView view, String url) {
-		EBrowserView target = (EBrowserView) view;
-		String oUrl = view.getOriginalUrl();
-		if (!mReferenceUrl.equals(url) || target.beDestroy() || !url.equals(oUrl)) {
+		if (view == null) {
 			return;
 		}
-		if (!mReferenceUrl.equals(url) || target.beDestroy()) {
-			return;
+		EBrowserView target = (EBrowserView) view;
+		if (url != null) {
+			String oUrl = view.getOriginalUrl();
+			if (!mReferenceUrl.equals(url) || target.beDestroy() || !url.equals(oUrl)) {
+				return;
+			}
+			if (!mReferenceUrl.equals(url) || target.beDestroy()) {
+				return;
+			}
 		}
 		ESystemInfo info = ESystemInfo.getIntence();
 
@@ -172,22 +182,25 @@ public class CBrowserWindow extends EXWebViewClient {
 
 	public void onDownloadStart(Context context, String url, String userAgent,
 			String contentDisposition, String mimetype, long contentLength) {
-		Intent installIntent = new Intent(Intent.ACTION_VIEW);
-		String filename = url;
-		Uri path = Uri.parse(filename);
-		if (path.getScheme() == null) {
-			path = Uri.fromFile(new File(filename));
-		}
-		installIntent.setDataAndType(path, mimetype);
-		installIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		if (checkInstallApp(context, installIntent)) {
-			try {
-				context.startActivity(installIntent);
-			} catch (Exception e) {
-				e.printStackTrace();
-				Toast.makeText(context, "未找到可执行的应用", Toast.LENGTH_SHORT).show();
+		if (contentDisposition == null
+				|| !contentDisposition.regionMatches(true, 0, "attachment", 0, 10)) {
+			Intent installIntent = new Intent(Intent.ACTION_VIEW);
+			String filename = url;
+			Uri path = Uri.parse(filename);
+			if (path.getScheme() == null) {
+				path = Uri.fromFile(new File(filename));
 			}
-			return;
+			installIntent.setDataAndType(path, mimetype);
+			installIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			if (checkInstallApp(context, installIntent)) {
+				try {
+					context.startActivity(installIntent);
+				} catch (Exception e) {
+					e.printStackTrace();
+					Toast.makeText(context, "未找到可执行的应用", Toast.LENGTH_SHORT).show();
+				}
+				return;
+			}
 		}
 		if (null != mDialog) {
 			return;

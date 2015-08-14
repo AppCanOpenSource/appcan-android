@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <info>
-    <version>sdksuit_3.1_150706_01</version>
-	<package>android_Engine_3.1_150706_01</package>
-	<description>uexWindow新增加reload、reloadWidgetByAppId接口。</description>
+    <version>sdksuit_3.1_150814_01</version>
+	<package>android_Engine_3.1_150814_01</package>
+	<description>修复：1、某些情况下出现的崩溃异常；2、下载附件失败问题。</description>
 </info>

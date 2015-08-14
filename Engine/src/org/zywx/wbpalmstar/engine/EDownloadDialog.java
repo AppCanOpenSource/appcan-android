@@ -37,6 +37,7 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.webkit.CookieManager;
 import android.webkit.MimeTypeMap;
+import android.webkit.URLUtil;
 import android.widget.Toast;
 
 public class EDownloadDialog extends ProgressDialog implements Runnable{
@@ -194,11 +195,18 @@ public class EDownloadDialog extends ProgressDialog implements Runnable{
             extension = mtm.getExtensionFromMimeType(mimetype);
         }
         if (extension==null){
-            if (!TextUtils.isEmpty(contentDisposition)){
-                String fileName=contentDisposition.replaceFirst("attachment; filename=","");
-                fileName.replaceAll("/","");
-                mTmpFile=new File(target,fileName);
-            }
+			String fileName = "";
+			if (!TextUtils.isEmpty(contentDisposition)) {
+				fileName = contentDisposition.replaceFirst(
+						"attachment; filename=", "");
+			} else {
+				fileName = URLUtil.guessFileName(url, contentDisposition,
+						mimetype);
+			}
+			if (!TextUtils.isEmpty(fileName)) {
+				fileName.replaceAll("/", "");
+				mTmpFile = new File(target, fileName);
+			}
         }else{
              mTmpFile = File.createTempFile("/Download/", "." + extension, tm);
         }

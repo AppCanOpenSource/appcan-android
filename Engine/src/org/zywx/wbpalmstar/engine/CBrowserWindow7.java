@@ -161,8 +161,10 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
 
 	@Override
 	public void onPageStarted(WebView view, String url, Bitmap favicon) {
+		if (view == null) {
+			return;
+		}
 		EBrowserView target = (EBrowserView) view;
-		mReferenceUrl = url;
 		target.onPageStarted(target, url);
 		if (null != mParms) {
 			target.setQuery(mParms);
@@ -172,28 +174,34 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
 		if (info.mFinished) {
 			info.mScaled = true;
 		}
-		if (url.startsWith("http")) {
-			EBrowserWindow bWindow = target.getBrowserWindow();
-			WWidgetData wgt = bWindow.getWidget();
-			if (1 == wgt.m_webapp) {
-				bWindow.showProgress();
+		if (url != null) {
+			mReferenceUrl = url;
+			if (url.startsWith("http")) {
+				EBrowserWindow bWindow = target.getBrowserWindow();
+				if (bWindow != null && 1 == bWindow.getWidget().m_webapp) {
+					bWindow.showProgress();
+				}
 			}
 		}
 	}
 
 	@Override
 	public void onPageFinished(WebView view, String url) {
-		EBrowserView target = (EBrowserView) view;
-		if (url.startsWith("http")) {
-			EBrowserWindow bWindow = target.getBrowserWindow();
-			WWidgetData wgt = bWindow.getWidget();
-			if (1 == wgt.m_webapp) {
-				bWindow.hiddenProgress();
-			}
-		}
-		String oUrl = view.getOriginalUrl();
-		if (!mReferenceUrl.equals(url) || target.beDestroy() || !url.equals(oUrl)) {
+		if (view == null) {
 			return;
+		}
+		EBrowserView target = (EBrowserView) view;
+		EBrowserWindow bWindow = target.getBrowserWindow();
+		if (url != null) {
+			if (url.startsWith("http")) {
+				if (bWindow != null && 1 == bWindow.getWidget().m_webapp) {
+					bWindow.hiddenProgress();
+				}
+			}
+			String oUrl = view.getOriginalUrl();
+			if (!mReferenceUrl.equals(url) || target.beDestroy() || !url.equals(oUrl)) {
+				return;
+			}
 		}
 		ESystemInfo info = ESystemInfo.getIntence();
 
@@ -224,12 +232,9 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
 		target.loadUrl(EUExScript.F_UEX_SCRIPT);
 		target.onPageFinished(target, url);
 		
-		EBrowserWindow win = target.getBrowserWindow();
-		WWidgetData wgt = win.getWidget();
-		
-        if (wgt.m_appdebug == 1) {
+        if (bWindow != null && bWindow.getWidget().m_appdebug == 1) {
             String debugUrlString = "http://" 
-                                           + wgt.m_logServerIp 
+                                           + bWindow.getWidget().m_logServerIp 
                                            + ":30060/target/target-script-min.js#anonymous";
             String weinreString = "javascript:var x = document.createElement(\"SCRIPT\");x.setAttribute('src',\"" 
                                              +  debugUrlString + "\"" + ");document.body.appendChild(x);";
@@ -259,22 +264,25 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
 
 	public void onDownloadStart(Context context, String url, String userAgent,
 			String contentDisposition, String mimetype, long contentLength) {
-		Intent installIntent = new Intent(Intent.ACTION_VIEW);
-		String filename = url;
-		Uri path = Uri.parse(filename);
-		if (path.getScheme() == null) {
-			path = Uri.fromFile(new File(filename));
-		}
-		installIntent.setDataAndType(path, mimetype);
-		installIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		if (checkInstallApp(context, installIntent)) {
-			try {
-				context.startActivity(installIntent);
-			} catch (Exception e) {
-				e.printStackTrace();
-				Toast.makeText(context, "未找到可执行的应用", Toast.LENGTH_SHORT).show();
+		if (contentDisposition == null
+				|| !contentDisposition.regionMatches(true, 0, "attachment", 0, 10)) {
+			Intent installIntent = new Intent(Intent.ACTION_VIEW);
+			String filename = url;
+			Uri path = Uri.parse(filename);
+			if (path.getScheme() == null) {
+				path = Uri.fromFile(new File(filename));
 			}
-			return;
+			installIntent.setDataAndType(path, mimetype);
+			installIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			if (checkInstallApp(context, installIntent)) {
+				try {
+					context.startActivity(installIntent);
+				} catch (Exception e) {
+					e.printStackTrace();
+					Toast.makeText(context, "未找到可执行的应用", Toast.LENGTH_SHORT).show();
+				}
+				return;
+			}
 		}
 		if (null != mDialog) {
 			return;
