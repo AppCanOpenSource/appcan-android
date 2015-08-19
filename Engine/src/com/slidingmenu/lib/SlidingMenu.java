@@ -1060,7 +1060,7 @@ public class SlidingMenu extends RelativeLayout {
 	public void manageLayers(float percentOpen) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && !isHardwareAccelerated()) {
 			boolean layer = percentOpen > 0.0f && percentOpen < 1.0f;
-			final int layerType = layer ? View.LAYER_TYPE_HARDWARE : View.LAYER_TYPE_NONE;
+			final int layerType = layer ? View.LAYER_TYPE_HARDWARE : View.LAYER_TYPE_SOFTWARE;
 			
 			if (layerType != getContent().getLayerType()) {
 				getHandler().post(new Runnable() {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <info>
-    <version>sdksuit_3.1_150814_01</version>
-	<package>android_Engine_3.1_150814_01</package>
-	<description>修复：1、某些情况下出现的崩溃异常；2、下载附件失败问题。</description>
+    <version>sdksuit_3.1_150819_01</version>
+	<package>android_Engine_3.1_150819_01</package>
+	<description>修复：1、高版本手机侧滑到主界面后无响应问题；2、宽屏手机下拉刷新双行提示语显示不完全问题。</description>
 </info>
