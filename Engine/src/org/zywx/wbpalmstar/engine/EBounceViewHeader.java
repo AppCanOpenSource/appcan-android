@@ -89,7 +89,7 @@ public class EBounceViewHeader extends RelativeLayout {
 		mContent.setLayoutParams(parmMsg);
 		mContent.setTextColor(textColor);
 		mContent.setText(pullToReloadText);
-		mContent.setTextSize(TypedValue.COMPLEX_UNIT_SP, (float)(intence.mDefaultNatvieFontSize));
+		mContent.setTextSize(TypedValue.COMPLEX_UNIT_DIP, (float)(intence.mDefaultNatvieFontSize));
 		mContent.setVisibility(GONE);
 		wap.addView(mContent);
 		
@@ -99,7 +99,7 @@ public class EBounceViewHeader extends RelativeLayout {
 		parml.addRule(RelativeLayout.BELOW, F_CONTENT_ID);
 		mLevelContent.setLayoutParams(parml);
 		mLevelContent.setTextColor(textColor);
-		mLevelContent.setTextSize(TypedValue.COMPLEX_UNIT_SP, (float)(intence.mDefaultNatvieFontSize * 0.6));
+		mLevelContent.setTextSize(TypedValue.COMPLEX_UNIT_DIP, (float)(intence.mDefaultNatvieFontSize * 0.6));
 		mLevelContent.setVisibility(GONE);
 		wap.addView(mLevelContent);
 		
@@ -234,8 +234,8 @@ public class EBounceViewHeader extends RelativeLayout {
 		RelativeLayout.LayoutParams parmMsg = new LayoutParams(-2, -2);
 		parmMsg.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
 		mContent.setLayoutParams(parmMsg);
-		mContent.setTextSize(TypedValue.COMPLEX_UNIT_SP, (float)(ESystemInfo.getIntence().mDefaultNatvieFontSize));
-		mLevelContent.setTextSize(TypedValue.COMPLEX_UNIT_SP, (float)(ESystemInfo.getIntence().mDefaultNatvieFontSize * 0.6));
+		mContent.setTextSize(TypedValue.COMPLEX_UNIT_DIP, (float)(ESystemInfo.getIntence().mDefaultNatvieFontSize));
+		mLevelContent.setTextSize(TypedValue.COMPLEX_UNIT_DIP, (float)(ESystemInfo.getIntence().mDefaultNatvieFontSize * 0.6));
 		mLevelContent.setText(levelText);
 		mLevelContent.setVisibility(VISIBLE);
 	}
