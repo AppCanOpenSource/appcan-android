@@ -18,11 +18,35 @@
 
 package org.zywx.wbpalmstar.base;
 
+import android.os.Environment;
 import android.util.Log;
 
+
+import java.io.File;
+
+/**
+ * SD卡根目录新建文件“appcandebug.txt”，即打开debug开关，删除文件即关闭
+ *
+ * Log输出用逗号隔开
+ * 如Log.i("key","value","end");
+ *
+ */
 public class BDebug {
 
-	public static final boolean DEBUG = false;
+    public static final String FILE_NAME="appcandebug.txt";
+	public static boolean DEBUG = false;
+
+    public static final String TAG="appcan";
+
+    public static void init(){
+        if (Environment.MEDIA_MOUNTED.equals(Environment
+                .getExternalStorageState())) {
+            File file = new File(Environment.getExternalStorageDirectory(), FILE_NAME);
+            if (file.exists()) {
+                DEBUG = true;
+            }
+        }
+    }
 
 	public static void log(String msg) {
 		if (DEBUG) {
@@ -30,33 +54,49 @@ public class BDebug {
 		}
 	}
 
-	public static void e(String tag, String msg) {
+	public static void e(Object... msg) {
 		if (DEBUG) {
-			Log.e(tag, msg);
+			Log.e(TAG, getMsg(msg));
 		}
 	}
 
-	public static void d(String tag, String msg) {
+	public static void d(Object... msg) {
 		if (DEBUG) {
-			Log.d(tag, msg);
+			Log.d(TAG, getMsg(msg));
 		}
 	}
 
-	public static void v(String tag, String msg) {
+	public static void v(Object... msg) {
 		if (DEBUG) {
-			Log.v(tag, msg);
+			Log.v(TAG, getMsg(msg));
 		}
 	}
 
-	public static void w(String tag, String msg) {
+	public static void w(Object... msg) {
 		if (DEBUG) {
-			Log.w(tag, msg);
+			Log.w(TAG, getMsg(msg));
 		}
 	}
 
-	public static void i(String tag, String msg) {
+	public static void i(Object... msg) {
 		if (DEBUG) {
-			Log.i(tag, msg);
+			Log.i(TAG, getMsg(msg));
 		}
 	}
+
+    public static String getMsg(Object... msg){
+        StringBuilder str=new StringBuilder();
+        if (msg!=null){
+            for (Object obj:msg){
+                if (obj==null){
+                    continue;
+                }
+                str.append(obj).append(" ");
+            }
+        }else {
+            str.append("null");
+        }
+        return str.toString();
+    }
+
 }

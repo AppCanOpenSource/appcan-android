@@ -28,7 +28,7 @@ import android.webkit.CookieSyncManager;
 import dalvik.system.DexClassLoader;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.zywx.wbpalmstar.base.ACEImageLoader;
+import org.zywx.wbpalmstar.base.BConstant;
 import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.engine.EBrowserView;
@@ -64,7 +64,7 @@ public class WidgetOneApplication extends Application {
 		mListenerQueue = new ELinkedList<EngineEventListener>();
 		PushEngineEventListener pushlistener = new PushEngineEventListener();
 		mListenerQueue.add(pushlistener);
-	}
+ 	}
 
 	@Override
 	public void onCreate() {
@@ -82,9 +82,10 @@ public class WidgetOneApplication extends Application {
 			initClassLoader();
 		}
 		initPlugin();
-		ACEImageLoader.setApplication(this);
 		reflectionPluginMethod("onApplicationCreate");
-	}
+        BConstant.app=this;
+        BDebug.init();
+    }
 
 	private void reflectionPluginMethod(String method) {
 		ThirdPluginMgr tpm = getThirdPlugins();

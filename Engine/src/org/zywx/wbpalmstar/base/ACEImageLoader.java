@@ -18,18 +18,15 @@ import com.ace.universalimageloader.core.download.BaseImageDownloader;
  */
 public class ACEImageLoader {
 
-    private static Application application=null;
-
-
     private static ACEImageLoader aceImageLoader;
 
     private ACEImageLoader(){
-        if (application==null){
+        if (BConstant.app==null){
             return;
         }
-        DiskCache.initDiskCache(application);
+        DiskCache.initDiskCache(BConstant.app);
         ImageLoaderConfiguration  config=new ImageLoaderConfiguration
-                .Builder(application)
+                .Builder(BConstant.app)
                 .memoryCacheExtraOptions(480, 800) // max width, max height，即保存的每个缓存文件的最大长宽
                 .threadPoolSize(3)//线程池内加载的数量
                 .threadPriority(Thread.NORM_PRIORITY - 2)
@@ -39,7 +36,8 @@ public class ACEImageLoader {
                 .tasksProcessingOrder(QueueProcessingType.LIFO)
                 .diskCache(new UnlimitedDiskCache(DiskCache.cacheFolder))//自定义缓存路径
                 .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
-                .imageDownloader(new BaseImageDownloader(application, 5 * 1000, 30 * 1000)) // connectTimeout (5 s), readTimeout (30 s)超时时间
+                .imageDownloader(new BaseImageDownloader(BConstant.app, 5 * 1000, 30 * 1000)) // connectTimeout (5 s),
+                // readTimeout (30 s)超时时间
                 .writeDebugLogs() // Remove for release app
                 .build();//开始构建
         ImageLoader.getInstance().init(config);
@@ -70,8 +68,4 @@ public class ACEImageLoader {
         ImageLoader.getInstance().displayImage(realImgUrl,imageView);
     }
 
-
-    public static void setApplication(Application app) {
-        application = app;
-    }
 }
