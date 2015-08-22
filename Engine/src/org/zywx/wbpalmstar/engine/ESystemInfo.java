@@ -121,7 +121,7 @@ public class ESystemInfo {
                 mDefaultFontSize = 32;
                 mDefaultNatvieFontSize = 16;
                 mDefaultzoom = ZoomDensity.FAR;
-                mDefaultBounceHeight = 70;
+                mDefaultBounceHeight = 76;
             }
 				break;
 			case 480: //DisplayMetrics.DENSITY_XXHIGH from 16
@@ -129,7 +129,15 @@ public class ESystemInfo {
                 mDefaultFontSize = 48;
                 mDefaultNatvieFontSize = 17;
                 mDefaultzoom = ZoomDensity.FAR;
-                mDefaultBounceHeight = 105;
+                mDefaultBounceHeight = 112;
+            }
+                break;
+			case 640:
+			{
+				mDefaultFontSize = 64;
+				mDefaultNatvieFontSize = 17;
+				mDefaultzoom = ZoomDensity.FAR;
+				mDefaultBounceHeight = 150;
             }
 				break;
 			default:
