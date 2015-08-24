@@ -65,7 +65,7 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 
 public class EUExWindow extends EUExBase {
-	public static final String tag = "uexWindow_";
+	public static final String tag = "uexWindow";
 
 	public static final String function_confirm = "uexWindow.cbConfirm";
 	public static final String function_prompt = "uexWindow.cbPrompt";

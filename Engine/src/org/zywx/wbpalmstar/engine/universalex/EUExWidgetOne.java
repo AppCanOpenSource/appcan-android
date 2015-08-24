@@ -32,7 +32,7 @@ import android.content.Context;
 import android.content.Intent;
 
 public class EUExWidgetOne extends EUExBase {
-	public static final String tag = "uexWidgetOne_";
+	public static final String tag = "uexWidgetOne";
 	public static final String function_getId = "uexWidgetOne.cbGetId";
 	public static final String function_getPlatForm = "uexWidgetOne.cbGetPlatform";
 	public static final String function_getVersion = "uexWidgetOne.cbGetVersion";
