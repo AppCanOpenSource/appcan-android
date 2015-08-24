@@ -27,7 +27,7 @@ import android.content.Context;
 
 public class EUExAppCenter extends EUExBase {
 
-	public static final String tag = "uexAppCenter_";
+	public static final String tag = "uexAppCenter";
 	public static final String F_CALLBACK_LOGIN_OUT = "uexAppCenter.cbLoginOut";
 	public static final String F_CALLBACK_GET_SESSION_KEY = "uexAppCenter.cbGetSessionKey";
 

@@ -20,7 +20,10 @@ package org.zywx.wbpalmstar.engine.universalex;
 
 import android.content.Context;
 import android.os.Build;
+import android.util.Log;
 import android.webkit.WebView;
+
+import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.ELinkedList;
 import org.zywx.wbpalmstar.widgetone.WidgetOneApplication;
@@ -50,10 +53,11 @@ public class EUExManager {
 		appCenter.setUexName(EUExAppCenter.tag);
 //		EUExDataAnalysis dataAnalysis = new EUExDataAnalysis(mContext, brwView);
 //		dataAnalysis.setUexName(EUExDataAnalysis.tag);
-		brwView.addJavascriptInterface(widgetOne, EUExWidgetOne.tag);
-		brwView.addJavascriptInterface(window, EUExWindow.tag);
-		brwView.addJavascriptInterface(widget, EUExWidget.tag);
-		brwView.addJavascriptInterface(appCenter, EUExAppCenter.tag);
+//		brwView.addJavascriptInterface(widgetOne, EUExWidgetOne.tag);
+//		brwView.addJavascriptInterface(window, EUExWindow.tag);
+//		brwView.addJavascriptInterface(widget, EUExWidget.tag);
+//		brwView.addJavascriptInterface(appCenter, EUExAppCenter.tag);
+        brwView.addJavascriptInterface(new EUExDispatcher(this),EUExDispatcher.JS_OBJECT_NAME);
 //		brwView.addJavascriptInterface(dataAnalysis, EUExDataAnalysis.tag);
 		mThirdPlugins.add(widgetOne);
 		mThirdPlugins.add(window);
@@ -64,7 +68,7 @@ public class EUExManager {
 		WidgetOneApplication app = (WidgetOneApplication)mContext.getApplicationContext();
 		ThirdPluginMgr tpm = app.getThirdPlugins();
 		Map<String, ThirdPluginObject> thirdPlugins = tpm.getPlugins();
-		String symbol = "_";
+//		String symbol = "_";
 		Set<Map.Entry<String, ThirdPluginObject>> pluginSet = thirdPlugins.entrySet();
 		for (Map.Entry<String, ThirdPluginObject> entry : pluginSet) {
 			String uName = entry.getKey();
@@ -83,12 +87,12 @@ public class EUExManager {
 				}
 				
 			} catch (Exception e) {
-				e.printStackTrace();
+                BDebug.e(e.toString());
 			}
 			if (null != objectIntance) {
-				String uexName = uName + symbol;
-				objectIntance.setUexName(uexName);
-				brwView.addJavascriptInterface(objectIntance, uexName);
+//				String uexName = uName + symbol;
+				objectIntance.setUexName(uName);
+//				brwView.addJavascriptInterface(objectIntance, uexName);
 				
 				if (scriptObj.isGlobal == true) {
 					scriptObj.pluginObj = objectIntance;
@@ -132,4 +136,8 @@ public class EUExManager {
 		mThirdPlugins = null;
 		mContext = null;
 	}
+
+    public ELinkedList<EUExBase> getThirdPlugins() {
+        return mThirdPlugins;
+    }
 }

@@ -18,6 +18,7 @@
 
 package org.zywx.wbpalmstar.base;
 
+import android.app.Application;
 import android.os.AsyncTask;
 
 import java.text.DecimalFormat;
@@ -37,6 +38,8 @@ public class BConstant {
 	public static final String F_SDCARD_ROOT 			= "file:///sdcard/";
 	public static final String F_PUSH_WIN_NAME          = "winName";
 	public static final String F_PUSH_NOTI_FUN_NAME     = "funName";
+
+    public static Application app=null;
 
 	public static String byteChange(int size) {
 		DecimalFormat df = new DecimalFormat("0.00");
@@ -70,4 +73,6 @@ public class BConstant {
 		 */
 		FINISHED,
 	}
+
+
 }

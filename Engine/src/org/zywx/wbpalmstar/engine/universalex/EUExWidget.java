@@ -64,7 +64,7 @@ import java.util.List;
 import java.util.Set;
 
 public class EUExWidget extends EUExBase {
-	public static final String tag = "uexWidget_";
+	public static final String tag = "uexWidget";
 
 	public static final int LOADAPP_RQ_CODE = 1000001;
 
