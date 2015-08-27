@@ -609,6 +609,10 @@ public class SlidingMenu extends RelativeLayout {
 	public boolean isSecondaryMenuShowing() {
 		return mViewAbove.getCurrentItem() == 2;
 	}
+	
+	public int getCurrentItem() {
+		return mViewAbove.getCurrentItem();
+	}
 
 	/**
 	 * Gets the behind offset.
