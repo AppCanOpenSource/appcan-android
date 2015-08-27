@@ -142,6 +142,7 @@ public class EUExWindow extends EUExBase {
     private static final int MSG_SUBSCRIBE_CHANNEL_NOTIFICATION = 47;
     private static final int MSG_FUNCTION_RELOAD= 48;
     private static final int MSG_FUNCTION_RELOAD_WIDGET_BY_APPID= 49;
+    private static final int MSG_FUNCTION_GET_SLIDING_WINDOW_STATE = 50;
 	private AlertDialog.Builder mAlert;
 	private AlertDialog.Builder mConfirm;
 	private PromptDialog mPrompt;
@@ -724,7 +725,24 @@ public class EUExWindow extends EUExBase {
         }
     }
 
+	public void getSlidingWindowState(String[] param) {
+		Message msg = new Message();
+		msg.obj = this;
+		msg.what = MSG_FUNCTION_GET_SLIDING_WINDOW_STATE;
+		mHandler.sendMessage(msg);
+	}
 
+	private void hanldeGetSlidingWindowState() {
+		EBrowserActivity activity = (EBrowserActivity) mContext;
+		SlidingMenu slidingMenu = activity.globalSlidingMenu;
+		if (slidingMenu != null) {
+			int state = slidingMenu.getCurrentItem();
+			String js = "javascript:if(uexWindow.cbSlidingWindowState){uexWindow.cbSlidingWindowState("
+					+ state + ");}";
+			mBrwView.addUriTask(js);
+		}
+	}
+    
     public void setSlidingWindowEnabled(String[] param) {
         if (param.length <= 0) {
             return;
@@ -2995,7 +3013,7 @@ public class EUExWindow extends EUExBase {
 		}
 		String channelId = params[0];
 		if (TextUtils.isEmpty(channelId)) {
-			Log.e("subscribeChannelNotification", "channelId is empty!!!");
+			Log.e("publishChannelNotificationMsg", "channelId is empty!!!");
 			return;
 		}
 		String des = params[1];
@@ -3139,6 +3157,9 @@ public class EUExWindow extends EUExBase {
             case MSG_FUNCTION_TOGGLE_SLIDINGWIN:
                 hanldeToggleSlidingWindow(param);
                 break;
+            case MSG_FUNCTION_GET_SLIDING_WINDOW_STATE:
+            	hanldeGetSlidingWindowState();
+            	break;
             case MSG_FUNCTION_REFRESH:
                 String url = mBrwView.getRelativeUrl();
                 mBrwView.loadUrl(url);
