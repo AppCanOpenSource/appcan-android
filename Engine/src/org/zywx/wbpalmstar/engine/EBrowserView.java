@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.json.JSONObject;
 import org.zywx.wbpalmstar.acedes.ACEDes;
+import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.engine.EBrowserHistory.EHistoryEntry;
 import org.zywx.wbpalmstar.acedes.EXWebViewClient;
@@ -117,11 +118,7 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 		setLayoutAnimation(null);
 		setAnimation(null);
 		setNetworkAvailable(true);
-		int version = Build.VERSION.SDK_INT;
-		if (version >= Build.VERSION_CODES.HONEYCOMB && !isHardwareAccelerated()) {
-			setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-		}
-		if (version <= 7) {
+		if (Build.VERSION.SDK_INT <= 7) {
 			if (mBaSetting == null) {
 				mBaSetting = new EBrowserSetting(this);
 				mBaSetting.initBaseSetting(mWebApp);
@@ -143,7 +140,24 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 		mUExMgr.addJavascriptInterface(this);
 	}
 
-	@Override
+    @Override
+    protected void onAttachedToWindow() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && !isHardwareAccelerated()) {
+            setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            BDebug.i("setLayerType","LAYER_TYPE_SOFTWARE");
+        }
+        super.onAttachedToWindow();
+    }
+
+    @Override
+    public boolean isHardwareAccelerated() {
+        //confirm view is attached to a window
+        boolean isHardwareAccelerated=super.isHardwareAccelerated();
+        BDebug.i("isHardwareAccelerated",isHardwareAccelerated);
+        return isHardwareAccelerated;
+    }
+
+    @Override
 	public void loadUrl(String url) {
 		if (mDestroyed) {
 			return;
