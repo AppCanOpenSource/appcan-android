@@ -241,7 +241,7 @@ public class EBrowserWidget extends AbsoluteLayout {
                 wind.start(enty.mData);
             }
         } else {
-            wind.newLoadData(enty.mData);
+            wind.loadDataWithBaseURL(null,enty.mData,"text/html","utf-8",null);
         }
 
     }
