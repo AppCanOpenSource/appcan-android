@@ -915,7 +915,7 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 			return;
 		}
 		mMainView.needToEncrypt(mMainView, BUtility.makeUrl(location(), inUrl),
-				EBrowserHistory.UPDATE_STEP_ADD);
+                EBrowserHistory.UPDATE_STEP_ADD);
 	}
 
 	public void start(String url) {
@@ -938,13 +938,18 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 	public void needToEncrypt(String url) {
 
 		mMainView.needToEncrypt(mMainView, url,
-				EBrowserHistory.UPDATE_STEP_INIT);
+                EBrowserHistory.UPDATE_STEP_INIT);
 	}
 
 	public void newLoadData(String inDta) {
 
 		mMainView.newLoadData(inDta);
 	}
+
+    public void loadDataWithBaseURL(String baseUrl, String data,
+                                    String mimeType, String encoding, String historyUrl){
+        mMainView.loadDataWithBaseURL(baseUrl,data,mimeType,encoding,historyUrl);
+    }
 
 	public void onSetWindowFrameFinish() {
 
