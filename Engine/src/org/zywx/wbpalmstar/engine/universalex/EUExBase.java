@@ -167,6 +167,13 @@ public abstract class EUExBase {
 				requestCode);
 	}
 
+    /**
+     * 修复startActivityForResult是通过三方应用调起时，收不到回调的问题
+     */
+    public final void registerActivityResult(){
+        ((EBrowserActivity)mContext).registerActivityForResult(this);
+    }
+
 	/**
 	 * 运行一个Activity
 	 * 
@@ -414,6 +421,8 @@ public abstract class EUExBase {
 	/**
 	 * 通过startActivityForResult函数运行一个Activity,当此Activity finish后回调的数据将通过此接口返回.<br>
 	 * 需要Activity返回值的操作,请重写此接口,并进行相关操作.
+     *
+     * 如果是第三方应用去startActivityForResult，需要先调registerActivityResult才能收到回调
 	 * 
 	 * @param requestCode
 	 *            startActivityForResult时为目标Activity分配的请求码.用于判断是哪个Activity的返回.
