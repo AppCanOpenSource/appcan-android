@@ -590,6 +590,16 @@ public final class EBrowserActivity extends ActivityGroup {
 		}
 	}
 
+    public final void registerActivityForResult(EUExBase callback){
+        if (mCallbackRuning) {
+            return;
+        }
+        if (null != callback) {
+            mActivityCallback = callback;
+            mCallbackRuning = true;
+        }
+    }
+
 	public final void registerAppEventListener(EUExEventListener listener) {
 		if (null != mBrowserAround) {
 			mBrowserAround.registerAppEventListener(listener);

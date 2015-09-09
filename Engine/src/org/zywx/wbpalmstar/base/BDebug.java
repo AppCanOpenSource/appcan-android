@@ -115,18 +115,33 @@ public class BDebug {
 	}
 
     public static String getMsg(Object... msg){
-        StringBuilder str=new StringBuilder();
-        if (msg!=null){
-            for (Object obj:msg){
-                if (obj==null){
-                    continue;
-                }
-                str.append(obj).append(" ");
-            }
-        }else {
-            str.append("null");
-        }
-        return str.toString();
+		StringBuilder str=new StringBuilder();
+		if (msg!=null){
+			for (Object obj:msg){
+				if (obj==null){
+					continue;
+				}
+				str.append(obj).append(" ");
+			}
+		}else {
+			str.append("null");
+		}
+		try{
+			StackTraceElement[] sts = Thread.currentThread().getStackTrace();
+			StackTraceElement st = null;
+			String tag = null;
+			if (sts != null && sts.length > 4) {
+				st = sts[4];
+				if (st != null) {
+					String fileName = st.getFileName();
+					tag = (fileName == null) ? "Unkown" : fileName.replace(".java", "");
+					str.insert(0, "[ "+tag + "." + st.getMethodName() + "()" + " ] \n");
+				}
+			}
+		}catch(Exception e){
+
+		}
+		return str.toString();
     }
 
 }
