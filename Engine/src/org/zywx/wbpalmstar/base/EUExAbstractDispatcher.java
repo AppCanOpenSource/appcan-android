@@ -17,7 +17,7 @@
  *
  */
 
-package org.zywx.wbpalmstar.engine.universalex;
+package org.zywx.wbpalmstar.base;
 
 /**
  * Created by ylt on 15/9/15.

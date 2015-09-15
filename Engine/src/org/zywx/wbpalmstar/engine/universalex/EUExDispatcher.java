@@ -20,12 +20,14 @@
 package org.zywx.wbpalmstar.engine.universalex;
 
 import android.webkit.JavascriptInterface;
+
+import org.zywx.wbpalmstar.base.EUExAbstractDispatcher;
 import org.zywx.wbpalmstar.engine.callback.EUExDispatcherCallback;
 
 /**
  * Created by ylt on 15/8/21.
  */
-public class EUExDispatcher extends EUExAbstractDispatcher{
+public class EUExDispatcher extends EUExAbstractDispatcher {
 
     public EUExDispatcherCallback mDispatcherCallback;
 
