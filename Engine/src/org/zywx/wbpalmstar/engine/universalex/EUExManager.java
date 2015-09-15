@@ -145,9 +145,11 @@ public class EUExManager {
         } catch (NoSuchMethodException e) {
             BDebug.e(methodName, " NoSuchMethodException");
         } catch (IllegalAccessException e) {
-            BDebug.e(e.toString());
+            BDebug.e(plugin.getUexName(),methodName,e.toString());
         } catch (InvocationTargetException e) {
-            BDebug.e(e.toString());
+            if (BDebug.DEBUG){
+                e.printStackTrace();
+            }
         }
     }
 
