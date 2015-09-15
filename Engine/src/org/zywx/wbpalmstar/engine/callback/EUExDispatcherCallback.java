@@ -17,25 +17,13 @@
  *
  */
 
-package org.zywx.wbpalmstar.engine.universalex;
-
-import android.webkit.JavascriptInterface;
-import org.zywx.wbpalmstar.engine.callback.EUExDispatcherCallback;
+package org.zywx.wbpalmstar.engine.callback;
 
 /**
- * Created by ylt on 15/8/21.
+ * Created by ylt on 15/9/15.
  */
-public class EUExDispatcher extends EUExAbstractDispatcher{
+public interface EUExDispatcherCallback {
 
-    public EUExDispatcherCallback mDispatcherCallback;
-
-    public EUExDispatcher(EUExDispatcherCallback callback){
-        this.mDispatcherCallback=callback;
-    }
-
-    @JavascriptInterface
-    public void dispatch(String pluginName,String methodName,String[] params){
-        mDispatcherCallback.onDispatch(pluginName, methodName, params);
-    }
+    void onDispatch(String pluginName,String methodName,String[] params);
 
 }
