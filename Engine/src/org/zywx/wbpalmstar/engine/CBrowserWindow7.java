@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.zywx.wbpalmstar.acedes.ACEDESBrowserWindow7;
+import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.acedes.EXWebViewClient;
 import org.zywx.wbpalmstar.engine.universalex.EUExScript;
@@ -363,6 +364,9 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
 				sb.append("\n");
 				if (null != errorWgt) {
 					sb.append(errorWgt.toString());
+				}
+				if (BDebug.DEBUG){
+					BDebug.e(sb.toString());
 				}
 				FileOutputStream fos = new FileOutputStream(path + fileName);
 				fos.write(sb.toString().getBytes());
