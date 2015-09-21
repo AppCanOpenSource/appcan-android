@@ -19,11 +19,12 @@
 
 package org.zywx.wbpalmstar.engine.callback;
 
+
 /**
  * Created by ylt on 15/9/15.
  */
 public interface EUExDispatcherCallback {
 
-    void onDispatch(String pluginName,String methodName,String[] params);
+    Object onDispatch(String pluginName,String methodName,String[] params);
 
 }
