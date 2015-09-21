@@ -33,6 +33,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.util.DisplayMetrics;
 
+import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.widgetone.dataservice.WDataManager;
 
 import java.io.BufferedReader;
@@ -44,6 +45,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -435,7 +437,6 @@ public class BUtility {
 	 * 根据file://res/协议的路径获得AssetFileDescriptor对象用于设置DataSource
 	 * 
 	 * @param context
-	 * @param totalPath
 	 * @return
 	 */
 	public static AssetFileDescriptor getFileDescriptorByResPath(
@@ -506,11 +507,10 @@ public class BUtility {
 	/**
 	 * 制造一个真实的路径
 	 * 
-	 * @param context
 	 * @param path
-	 * @param appID
 	 * @return
 	 */
+    @Deprecated
 	public static String makeRealPath(String path, String widgetPath,
 			int wgtType) {
 		// path = makeUrl(currentUrl, path);
@@ -548,6 +548,18 @@ public class BUtility {
 			return path;
 		}
 	}
+
+    /**
+     * 制造一个真实的路径
+     *
+     * @return
+     */
+    public static String makeRealPath(String path, EBrowserView browserView) {
+        path=makeUrl(browserView.getCurrentUrl(),path);
+        int wgtType=browserView.getCurrentWidget().m_wgtType;
+        String widgetPath=browserView.getCurrentWidget().getWidgetPath();
+        return makeRealPath(path,widgetPath,wgtType);
+    }
 
 	/**
 	 * 获得带协议的全路径

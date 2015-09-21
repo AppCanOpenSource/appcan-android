@@ -2714,12 +2714,12 @@ public class EUExWindow extends EUExBase {
 						public void onClick(DialogInterface dialog, int which) {
 							try {
 								final PromptDialog wPromptDialog = (PromptDialog) dialog;
-								dialog.dismiss();
+                                hideSoftKeyboard(wPromptDialog.getWindowToken());
+                                dialog.dismiss();
 								mPrompt = null;
 								jsonObject.put(EUExCallback.F_JK_NUM, 0);
-								jsonObject.put(EUExCallback.F_JK_VALUE, wPromptDialog.getInput());
-								jsCallback(function_prompt, 0, EUExCallback.F_C_JSON, jsonObject.toString());
-								hideSoftKeyboard(wPromptDialog.getWindowToken());
+                                jsonObject.put(EUExCallback.F_JK_VALUE, wPromptDialog.getInput());
+                                jsCallback(function_prompt, 0, EUExCallback.F_C_JSON, jsonObject.toString());
 							} catch (Exception e) {
 								errorCallback(0, 0, e.toString());
 								e.printStackTrace();
@@ -2729,13 +2729,13 @@ public class EUExWindow extends EUExBase {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							final PromptDialog wPromptDialog = (PromptDialog) dialog;
-							dialog.dismiss();
+                            hideSoftKeyboard(wPromptDialog.getWindowToken());
+                            dialog.dismiss();
 							mPrompt = null;
 							try {
 								jsonObject.put(EUExCallback.F_JK_NUM, 1);
-								jsonObject.put(EUExCallback.F_JK_VALUE, wPromptDialog.getInput());
-								jsCallback(function_prompt, 0, EUExCallback.F_C_JSON, jsonObject.toString());
-								hideSoftKeyboard(wPromptDialog.getWindowToken());
+                                jsonObject.put(EUExCallback.F_JK_VALUE, wPromptDialog.getInput());
+                                jsCallback(function_prompt, 0, EUExCallback.F_C_JSON, jsonObject.toString());
 							} catch (Exception e) {
 								errorCallback(0, 0, e.toString());
 								e.printStackTrace();
