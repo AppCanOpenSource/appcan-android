@@ -1361,10 +1361,7 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 	@Override
 	protected void onScrollChanged(int l, int t, int oldl, int oldt) {
 		super.onScrollChanged(l, t, oldl, oldt);
-		// Log.d("scroll", "onScrollChanged"+"y1:"+oldt+" y2:"+t);
-
-		if (!EBrowserWindow.isShowDialog) {
-
+		//if (!EBrowserWindow.isShowDialog) {
 			float nowScale = 1.0f;
 
 			int versionA = Build.VERSION.SDK_INT;
@@ -1372,7 +1369,6 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 			if (versionA <= 18) {
 				nowScale = getScale();
 			}
-
 			if ((int) (getContentHeight() * nowScale) == (getHeight() + getScrollY())) {
 				callback.jsCallback(EUExWindow.function_cbslipedDownEdge, 0,
 						EUExCallback.F_C_INT, 0);
@@ -1397,7 +1393,7 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 				callback.jsCallback(EUExWindow.function_onSlipedUpward, 0,
 						EUExCallback.F_C_INT, 0);
 			}
-		}
+		//}
 
 		super.onScrollChanged(l, t, oldl, oldt);
 	}
