@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <info>
-    <version>sdksuit_3.1_150827_01</version>
-	<package>android_Engine_3.1_150827_01</package>
-	<description>修复：1、增加uexWindow.getSlidingWindowState()接口。</description>
+    <version>sdksuit_3.1_150928_01</version>
+	<package>android_Engine_3.1_150928_01</package>
+	<description>修复横屏情况下网页上滑下滑监听不生效的问题</description>
 </info>
