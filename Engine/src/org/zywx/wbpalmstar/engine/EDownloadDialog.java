@@ -26,6 +26,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import org.apache.http.cookie.SM;
 import org.apache.http.protocol.HTTP;
+import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -81,10 +83,10 @@ public class EDownloadDialog extends ProgressDialog implements Runnable{
 		setProgress(0);
 		setIcon(EResources.icon);
 		setCancelable(false);
-		setTitle("正在下载文件");
+		setTitle(EUExUtil.getString("platform_downloading_file"));
 		setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		setMax(100);
-		setButton("取消", new DialogInterface.OnClickListener() {
+		setButton(EUExUtil.getString("cancel"), new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				mFromStop = true;
 				stopDownload();
@@ -136,7 +138,8 @@ public class EDownloadDialog extends ProgressDialog implements Runnable{
 		try {
 			if (!Environment.getExternalStorageState().equals(
 					Environment.MEDIA_MOUNTED)) {
-				mProgressHandler.sendMessage(mProgressHandler.obtainMessage(-2, "您的手机未安装SD卡!"));
+				mProgressHandler.sendMessage(mProgressHandler.obtainMessage(-2, EUExUtil.getString
+						("error_sdcard_is_not_available")));
 				mProgressHandler.sendEmptyMessage(-3);
 				return ;
 			}
@@ -160,13 +163,13 @@ public class EDownloadDialog extends ProgressDialog implements Runnable{
 			if(200 == responseCode){
 				saveToFile();
 			}else{
-				mProgressHandler.sendMessage(mProgressHandler.obtainMessage(-2, "连接失败,请重试!"));
+				mProgressHandler.sendMessage(mProgressHandler.obtainMessage(-2, EUExUtil.getString("platform_connect_failed")));
 				mProgressHandler.sendEmptyMessage(-3);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			if(!mFromStop){
-				mProgressHandler.sendMessage(mProgressHandler.obtainMessage(-2, "下载出错,请重试!"));
+				mProgressHandler.sendMessage(mProgressHandler.obtainMessage(-2, EUExUtil.getString("platform_download_failed")));
 			}
 			mProgressHandler.sendEmptyMessage(-3);
 		}
@@ -243,7 +246,7 @@ public class EDownloadDialog extends ProgressDialog implements Runnable{
 	    	getContext().startActivity(installIntent);
 	    }catch (Exception e) {
 	    	e.printStackTrace();
-	    	mProgressHandler.sendMessage(mProgressHandler.obtainMessage(-2, "未找到可执行的应用"));
+	    	mProgressHandler.sendMessage(mProgressHandler.obtainMessage(-2, EUExUtil.getString("can_not_find_suitable_app_perform_this_operation")));
 	    }
 	}
 	

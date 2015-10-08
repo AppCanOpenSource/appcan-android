@@ -143,7 +143,7 @@ public class ThirdPluginMgr {
 			EUExScript.F_UEX_SCRIPT += script.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RuntimeException("uex对象加载发生异常,请检查XML文件!");
+			throw new RuntimeException(EUExUtil.getString("load_uex_object_error"));
 		}
 	}
 

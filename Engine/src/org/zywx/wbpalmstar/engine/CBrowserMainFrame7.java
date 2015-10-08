@@ -29,6 +29,8 @@ import android.view.ViewGroup.LayoutParams;
 import android.webkit.WebStorage.QuotaUpdater;
 import android.widget.FrameLayout;
 
+import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
+
 public class CBrowserMainFrame7  extends CBrowserMainFrame {
 
 	final long MAX_QUOTA = 104857600L;
@@ -60,7 +62,7 @@ public class CBrowserMainFrame7  extends CBrowserMainFrame {
 	@Override
 	public View getVideoLoadingProgressView() {
 		EBrowserToast progress = new EBrowserToast(mContext);
-		progress.setMsg("加载中...");
+		progress.setMsg(mContext.getString(EUExUtil.getResStringID("platform_myspace_loading")));
 		progress.setInLargeModul();
 		progress.showProgress();
 		return progress;

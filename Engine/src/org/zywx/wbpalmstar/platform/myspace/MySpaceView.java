@@ -28,6 +28,7 @@ import org.zywx.wbpalmstar.base.cache.MyAsyncTask;
 import org.zywx.wbpalmstar.engine.EBrowser;
 import org.zywx.wbpalmstar.engine.EBrowserAnimation;
 import org.zywx.wbpalmstar.engine.EWgtResultInfo;
+import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.platform.myspace.AppInfo.DelayInstallInfo;
 import org.zywx.wbpalmstar.platform.myspace.AppInfo.DelayStartInfo;
 import org.zywx.wbpalmstar.platform.myspace.AppInfo.DelayUninstallInfo;
@@ -166,7 +167,7 @@ public class MySpaceView extends RelativeLayout implements OnClickListener, OnIt
 			}
 		});
 		actionSheetDialog = new ActionSheetDialog(getContext());
-		actionSheetDialog.setTitle("请选择操作");
+		actionSheetDialog.setTitle(EUExUtil.getString("select_operation"));
 	}
 
 	private int lastOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
@@ -200,9 +201,9 @@ public class MySpaceView extends RelativeLayout implements OnClickListener, OnIt
 				public void handleOnPreLoad(final MyAsyncTask task) {
 					String message = "";
 					if (currentLoginInfo.isInfoCompleted()) {
-						message = "正在获取用户登录信息...";
+						message =EUExUtil.getString("get_user_info");
 					} else {
-						message = "尚未登录,获取登录列表...";
+						message =EUExUtil.getString("get_login_list");
 					}
 					showProgressDialog(message, true, new OnCancelListener() {
 						@Override
@@ -214,7 +215,7 @@ public class MySpaceView extends RelativeLayout implements OnClickListener, OnIt
 
 				public void handleOnCanceled(MyAsyncTask task) {
 					closeProgressDialog();
-					Toast.makeText(getContext(), "操作已取消!", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getContext(), EUExUtil.getString("operation_cancel"), Toast.LENGTH_SHORT).show();
 				};
 
 				protected Object doInBackground(Object... params) {
@@ -230,7 +231,7 @@ public class MySpaceView extends RelativeLayout implements OnClickListener, OnIt
 					closeProgressDialog();
 					String sk = (String) result;
 					if (sk == null) {
-						Toast.makeText(getContext(), "获取登录信息失败!", Toast.LENGTH_SHORT).show();
+						Toast.makeText(getContext(), EUExUtil.getString("get_user_info_failed"), Toast.LENGTH_SHORT).show();
 						return;
 					}
 					if (currentLoginInfo.isInfoCompleted()) {// 已经有登录信息
@@ -267,12 +268,13 @@ public class MySpaceView extends RelativeLayout implements OnClickListener, OnIt
 					try {
 						((Activity) getContext()).startActivity(intent);
 					} catch (ActivityNotFoundException e) {
-						Toast.makeText(getContext(), "无法执行此操作", Toast.LENGTH_SHORT).show();
+						Toast.makeText(getContext(), EUExUtil.getString("can_not_find_suitable_app_perform_this_operation"),
+                                Toast.LENGTH_SHORT).show();
 					}
 					break;
 				case AppInfo.APP_MODE_WIDGET:
 					if (appsTaskList.isExistTask(downloadInfo.appId)) {// 存在下载列表中
-						Toast.makeText(getContext(), "应用正在下载请稍后...", Toast.LENGTH_SHORT).show();
+						Toast.makeText(getContext(), EUExUtil.getString("app_is_download_please_wait"), Toast.LENGTH_SHORT).show();
 						return;
 					}
 					if (myAppsAdapter.checkDownloaded(downloadInfo.appId)) {// 已经下载，直接启动
@@ -300,7 +302,7 @@ public class MySpaceView extends RelativeLayout implements OnClickListener, OnIt
 				startWidgetByAppId(installInfo.getAppId());
 			} else {// 尚未下载，开始下载
 				if (appsTaskList.isExistTask(installInfo.getAppId())) {// 正在下载，存在下载队列中
-					Toast.makeText(getContext(), "应用正在下载请稍后...", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getContext(), EUExUtil.getString("app_is_download_please_wait"), Toast.LENGTH_SHORT).show();
 				} else {// 尚未加入下载队列，开始下载
 					createAppDownloadTask(installInfo).execute(new Object[] {});
 				}
@@ -312,9 +314,9 @@ public class MySpaceView extends RelativeLayout implements OnClickListener, OnIt
 	public boolean onItemLongClick(AdapterView<?> parent, final View item, final int position, long id) {
 		final InstallInfo installInfo = myAppsAdapter.getItem(position);
 		if (installInfo.isDownload) {
-			String[] labels = {"删除"};
+			String[] labels = {EUExUtil.getString("delete")};
 			actionSheetDialog.setupData(labels);
-			actionSheetDialog.setTitle("确定删除" + installInfo.getDownloadInfo().appName + "吗？");
+			actionSheetDialog.setTitle(EUExUtil.getString("confirm_delete") + installInfo.getDownloadInfo().appName + "？");
 			actionSheetDialog.setOnDialogItemClickedListener(new ActionSheetDialogItemClickListener() {
 
 				@Override
@@ -323,7 +325,7 @@ public class MySpaceView extends RelativeLayout implements OnClickListener, OnIt
 						new MyAsyncTask() {
 
 							public void handleOnPreLoad(MyAsyncTask task) {
-								showProgressDialog("正在卸载...", false, null);
+								showProgressDialog(EUExUtil.getString("is_uninstalling"), false, null);
 							};
 
 							protected Object doInBackground(Object... params) {
@@ -438,9 +440,9 @@ public class MySpaceView extends RelativeLayout implements OnClickListener, OnIt
 					@SuppressWarnings("unchecked")
 					ArrayList<DownloadData> recommendList = (ArrayList<DownloadData>) result;
 					recommendAppsAdapter.reload(recommendList);
-					Toast.makeText(getContext(), "更新成功!", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getContext(), EUExUtil.getString("refresh_success"), Toast.LENGTH_SHORT).show();
 				} else {
-					Toast.makeText(getContext(), "刷新失败", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getContext(), EUExUtil.getString("refresh_failed"), Toast.LENGTH_SHORT).show();
 				}
 				if (runnable != null) {
 					runnable.run();
@@ -457,7 +459,7 @@ public class MySpaceView extends RelativeLayout implements OnClickListener, OnIt
 		new MyAsyncTask() {
 
 			public void handleOnPreLoad(MyAsyncTask task) {
-				showProgressDialog("获取用户信息...", true, null);
+				showProgressDialog(EUExUtil.getString("get_user_info"), true, null);
 			};
 
 			protected Object doInBackground(Object... params) {
@@ -564,7 +566,7 @@ public class MySpaceView extends RelativeLayout implements OnClickListener, OnIt
 		} else {
 			currentLoginInfo.sessionKey = null;
 			newLoginInfo.sessionKey = null;
-			Toast.makeText(getContext(), "登录失败...", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getContext(), EUExUtil.getString("login_failed"), Toast.LENGTH_SHORT).show();
 		}
 	};
 
@@ -580,17 +582,17 @@ public class MySpaceView extends RelativeLayout implements OnClickListener, OnIt
 	public void notifyDownloadApp(String json) {
 		final DownloadData downloadInfo = appDao.getWebAppDownloadInfo(json);
 		if (downloadInfo == null) {
-			Toast.makeText(getContext(), "下载信息错误!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getContext(), EUExUtil.getString("download_info_error"), Toast.LENGTH_SHORT).show();
 			return;
 		}
 
 		if (currentLoginInfo != null && currentLoginInfo.isInfoCompleted()) {
 			if (myAppsAdapter.checkDownloaded(downloadInfo.appId)) {// 已经存在
-				Toast.makeText(getContext(), "应用已下载，请直接运行", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getContext(), EUExUtil.getString("app_has_download_please_run"), Toast.LENGTH_SHORT).show();
 				return;
 			}
 			if (appsTaskList.isExistTask(downloadInfo.appId)) {// 存在下载列表中
-				Toast.makeText(getContext(), "应用正在下载请稍候...", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getContext(), EUExUtil.getString("app_downloading"), Toast.LENGTH_SHORT).show();
 				return;
 			}
 			new MyAsyncTask() {
@@ -619,7 +621,7 @@ public class MySpaceView extends RelativeLayout implements OnClickListener, OnIt
 		if (info != null && info.isDownload) {
 			WWidgetData widgetData = appDao.getWidgetDataByInstallPath(info.installPath);
 			if (widgetData == null) {
-				Toast.makeText(getContext(), "未找到此widget，无法启动!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getContext(), EUExUtil.getString("cannot_find_this_widget"), Toast.LENGTH_SHORT).show();
 			} else {
 				BDebug.d(TAG, "startWidget:" + widgetData.m_indexUrl);
 				EWgtResultInfo inResult = new EWgtResultInfo(null, null);
@@ -712,7 +714,8 @@ public class MySpaceView extends RelativeLayout implements OnClickListener, OnIt
 				if (result == null) {
 					myAppsAdapter.removeItemByAppId(info.getAppId());
 					myAppsGridView.requestLayout();
-					Toast.makeText(getContext(), "安装失败", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getContext(), EUExUtil.getString("install_failed"),
+							Toast.LENGTH_SHORT).show();
 				}
 			};
 		};
@@ -721,7 +724,7 @@ public class MySpaceView extends RelativeLayout implements OnClickListener, OnIt
 	private void startLoginTask() {
 		new MyAsyncTask() {
 			public void handleOnPreLoad(final MyAsyncTask task) {
-				showProgressDialog("尚未登录,正在获取开放平台登录列表", true, new OnCancelListener() {
+				showProgressDialog(EUExUtil.getString("get_open_login_list"), true, new OnCancelListener() {
 					@Override
 					public void onCancel(DialogInterface dialog) {
 						task.cancel(true);
@@ -731,7 +734,7 @@ public class MySpaceView extends RelativeLayout implements OnClickListener, OnIt
 
 			public void handleOnCanceled(MyAsyncTask task) {
 				closeProgressDialog();
-				Toast.makeText(getContext(), "操作已取消!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getContext(), EUExUtil.getString("operation_cancel"), Toast.LENGTH_SHORT).show();
 			};
 
 			protected Object doInBackground(Object... params) {
@@ -741,7 +744,7 @@ public class MySpaceView extends RelativeLayout implements OnClickListener, OnIt
 			public void handleOnCompleted(MyAsyncTask task, Object result) {
 				closeProgressDialog();
 				if (result == null) {
-					Toast.makeText(getContext(), "获取信息失败!", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getContext(), EUExUtil.getString("get_info_failed"), Toast.LENGTH_SHORT).show();
 					return;
 				}
 				currentLoginInfo.sessionKey = (String) result;

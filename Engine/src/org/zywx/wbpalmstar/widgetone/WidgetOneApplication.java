@@ -233,7 +233,7 @@ public class WidgetOneApplication extends Application {
 	private final void initPlugin() {
 		int id = EUExUtil.getResXmlID("plugin");
 		if (id == 0) {
-			throw new RuntimeException("插件配置文件不存在!");
+			throw new RuntimeException(EUExUtil.getString("plugin_config_no_exist"));
 		}
 		XmlResourceParser plugins = getResources().getXml(id);
 		if (null == mThirdPluginMgr) {

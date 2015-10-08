@@ -34,6 +34,7 @@ import android.webkit.WebView;
 import android.widget.Toast;
 import org.zywx.wbpalmstar.acedes.EXWebViewClient;
 import org.zywx.wbpalmstar.engine.universalex.EUExScript;
+import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 
 import java.io.File;
 import java.util.List;
@@ -197,7 +198,7 @@ public class CBrowserWindow extends EXWebViewClient {
 					context.startActivity(installIntent);
 				} catch (Exception e) {
 					e.printStackTrace();
-					Toast.makeText(context, "未找到可执行的应用", Toast.LENGTH_SHORT).show();
+					Toast.makeText(context, EUExUtil.getString("can_not_find_suitable_app_perform_this_operation"), Toast.LENGTH_SHORT).show();
 				}
 				return;
 			}

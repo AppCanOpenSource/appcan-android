@@ -126,7 +126,8 @@ public class EUExWidget extends EUExBase {
 			WWidgetData data = widgetData.getWidgetDataByAppId(inAppId,
 					mBrwView.getRootWidget());
 			if (data == null) {
-				showErrorAlert("AppId为 " + inAppId + " 的Widget不存在");
+				showErrorAlert(String.format(EUExUtil.getString("platform_widget_not_exist")
+				,inAppId+""));
 				jsCallback(function_startWidget, 0, EUExCallback.F_C_INT,
 						EUExCallback.F_C_FAILED);
 				return;
@@ -144,7 +145,7 @@ public class EUExWidget extends EUExBase {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			showErrorAlert("搜索Widget发生异常!请确认Widget是否损坏!");
+			showErrorAlert(EUExUtil.getString("platform_widget_search_failed"));
 			jsCallback(function_startWidget, 0, EUExCallback.F_C_INT,
 					EUExCallback.F_C_FAILED);
 		}
@@ -400,7 +401,7 @@ public class EUExWidget extends EUExBase {
 			WDataManager widgetData = new WDataManager(mContext);
 			WWidgetData data = widgetData.getWidgetDataByAppPath(path);
 			if (data == null) {
-				showErrorAlert("路径为 " + path + " 的Widget不存在");
+				showErrorAlert(String.format(EUExUtil.getString("platform_widget_path_not_exist"),path));
 				jsCallback(function_startWidget, 0, EUExCallback.F_C_INT,
 						EUExCallback.F_C_FAILED);
 				return;
@@ -418,7 +419,7 @@ public class EUExWidget extends EUExBase {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			showErrorAlert("搜索Widget发生异常!请确认Widget是否损坏!");
+			showErrorAlert(EUExUtil.getString("platform_widget_search_failed"));
 			jsCallback(function_startWidget, 0, EUExCallback.F_C_INT,
 					EUExCallback.F_C_FAILED);
 		}
@@ -509,7 +510,7 @@ public class EUExWidget extends EUExBase {
 			}
 		}
 		try {
-			startActivityForResult(Intent.createChooser(intent, "请选择:"),
+			startActivityForResult(Intent.createChooser(intent, EUExUtil.getString("platform_choose_app")),
 					LOADAPP_RQ_CODE);
 		} catch (Exception e) {
 			Toast.makeText(mContext, "not find any app", Toast.LENGTH_SHORT)
