@@ -34,6 +34,7 @@ import android.os.Environment;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
@@ -718,6 +719,30 @@ public class EUExWidget extends EUExBase {
 		app.setPushState(Integer.parseInt(parm[0]));
 
 	}
+
+    public void setKeyboardMode(final String[] param) {
+        if (param.length <= 0) {
+            return;
+        }
+        ((Activity)mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    JSONObject jsonObject=new JSONObject(param[0]);
+                    int mode=jsonObject.optInt("mode",0);
+                    if (mode==0){
+                        ((Activity)mContext).getWindow().setSoftInputMode(WindowManager.LayoutParams
+                                .SOFT_INPUT_ADJUST_RESIZE |
+                                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+                    }else{
+                        ((Activity)mContext).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+                    }
+                } catch (JSONException e) {
+
+                }
+            }
+        });
+    }
 
 	public void getPushState(String[] parm) {
 		SharedPreferences sp = mContext.getSharedPreferences("saveData",
