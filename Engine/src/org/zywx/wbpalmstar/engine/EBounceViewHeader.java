@@ -20,6 +20,8 @@ package org.zywx.wbpalmstar.engine;
 
 
 import org.zywx.wbpalmstar.engine.external.YAxisImageView;
+import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -51,9 +53,9 @@ public class EBounceViewHeader extends RelativeLayout {
     private RotateAnimation mAnimationUp;
     private int textColor = 0xFF717171;
     private String levelText;
-    private String pullToReloadText = "拖动刷新";
-    private String releaseToReloadText = "释放刷新";
-    private String loadingText = "刷新中";
+    private String pullToReloadText = EUExUtil.getString("platform_myspace_pull_to_refresh");
+    private String releaseToReloadText = EUExUtil.getString("platform_myspace_release_to_refresh");
+    private String loadingText = EUExUtil.getString("platform_myspace_loading");
 	
 	public EBounceViewHeader(Context context, int type) {
 		super(context);

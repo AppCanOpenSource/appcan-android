@@ -35,6 +35,7 @@ import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.acedes.EXWebViewClient;
 import org.zywx.wbpalmstar.engine.universalex.EUExScript;
+import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
 import android.annotation.SuppressLint;
@@ -280,7 +281,7 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
 					context.startActivity(installIntent);
 				} catch (Exception e) {
 					e.printStackTrace();
-					Toast.makeText(context, "未找到可执行的应用", Toast.LENGTH_SHORT).show();
+					Toast.makeText(context, EUExUtil.getString("can_not_find_suitable_app_perform_this_operation"), Toast.LENGTH_SHORT).show();
 				}
 				return;
 			}

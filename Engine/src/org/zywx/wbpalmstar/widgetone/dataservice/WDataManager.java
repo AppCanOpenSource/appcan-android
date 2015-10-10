@@ -36,6 +36,7 @@ import org.zywx.wbpalmstar.base.ResoureFinder;
 import org.zywx.wbpalmstar.base.zip.CnZipInputStream;
 import org.zywx.wbpalmstar.base.zip.ZipEntry;
 import org.zywx.wbpalmstar.engine.ESystemInfo;
+import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.platform.encryption.PEncryption;
 import org.zywx.wbpalmstar.platform.myspace.CommonUtility;
 
@@ -110,7 +111,7 @@ public class WDataManager {
 		WWidgetData wgt = new WWidgetData();
 		wgt.m_appId = "9999997";
 		wgt.m_ver = "00.00.0000";
-		wgt.m_widgetName = "更多";
+		wgt.m_widgetName = EUExUtil.getString("more");
 		wgt.m_updateurl = "http://discuz.3g2win.com/source/plugin/zywx/rpc/widget_upgrade.php";
 		wgt.m_indexUrl = CommonUtility.URL_MORE_WIDGET_URL
 				+ "platFormId=1&pageindex=1";
@@ -1121,10 +1122,10 @@ public class WDataManager {
 				deleteFile(wgtFile);
 				// wgtFile.delete();
 			} else {
-				return "在" + wgtPath + "目录下的 appId 是" + appId + "的widget不存在";
+				return String.format(EUExUtil.getString("widget_not_exist_id_path"),wgtPath,appId);
 			}
 		} else {
-			return "该应用下没有任何widget";
+			return EUExUtil.getString("not_any_widget");
 		}
 
 		return "0";

@@ -54,7 +54,7 @@ public class TempActivity extends Activity {
 		}
         if (EBrowserActivity.develop) {
             TextView worn = new TextView(this);
-            worn.setText("测试版本仅用于开发测试");
+            worn.setText(EUExUtil.getString("platform_only_test"));
             worn.setTextColor(0xffff0000);
             worn.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
             FrameLayout.LayoutParams wornPa = new FrameLayout.LayoutParams(

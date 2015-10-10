@@ -33,6 +33,8 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.EditText;
 
+import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
+
 public class CBrowserMainFrame extends WebChromeClient {
 
     public Context mContext;
@@ -64,10 +66,10 @@ public class CBrowserMainFrame extends WebChromeClient {
 			result.confirm();
 		}
 		AlertDialog.Builder dia = new AlertDialog.Builder(view.getContext());
-		dia.setTitle("提示消息");
+		dia.setTitle(EUExUtil.getResStringID("prompt"));
 		dia.setMessage(message);
 		dia.setCancelable(false);
-		dia.setPositiveButton("确定", new OnClickListener() {
+		dia.setPositiveButton(EUExUtil.getResStringID("confirm"), new OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				result.confirm();
 			}
@@ -85,15 +87,15 @@ public class CBrowserMainFrame extends WebChromeClient {
 		} 
 		AlertDialog.Builder dia = new AlertDialog.Builder(view.getContext());
 		 dia.setMessage(message);
-		 dia.setTitle("确认消息");
+		 dia.setTitle(EUExUtil.getResStringID("prompt"));
 		 dia.setCancelable(false);
-		 dia.setPositiveButton("确定", 
+		 dia.setPositiveButton(EUExUtil.getResStringID("confirm"),
          	new DialogInterface.OnClickListener() {
              	public void onClick(DialogInterface dialog, int which) {
              		result.confirm();
                  }
              });
-		 dia.setNegativeButton("取消", 
+		 dia.setNegativeButton(EUExUtil.getResStringID("cancel"),
                  	new DialogInterface.OnClickListener() {
              	public void onClick(DialogInterface dialog, int which) {
              		result.cancel();
@@ -120,13 +122,13 @@ public class CBrowserMainFrame extends WebChromeClient {
 		input.setSelectAllOnFocus(true);
 		dia.setView(input);
 		dia.setCancelable(false);
-		dia.setPositiveButton("确定", 
+		dia.setPositiveButton(EUExUtil.getResStringID("confirm"),
 			new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
 					result.confirm(input.getText().toString());
 			}
 		});
-		dia.setNegativeButton("取消", 
+		dia.setNegativeButton(EUExUtil.getResStringID("cancel"),
 			new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
 					result.cancel();

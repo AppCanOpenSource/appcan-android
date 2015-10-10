@@ -46,6 +46,7 @@ import org.zywx.wbpalmstar.engine.EBrowserHistory.EHistoryEntry;
 import org.zywx.wbpalmstar.engine.external.Compat;
 import org.zywx.wbpalmstar.engine.universalex.EUExCallback;
 import org.zywx.wbpalmstar.engine.universalex.EUExScript;
+import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.engine.universalex.EUExWidget.SpaceClickListener;
 import org.zywx.wbpalmstar.engine.universalex.EUExWindow;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
@@ -911,7 +912,8 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 
 	public void onLoadObfuscationData(String inUrl) {
 		if (!isObfuscation()) {
-			Toast.makeText(mContext, "没有配置解密权限！", Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, EUExUtil.getString("platform_no_configuration_decryption_permissions"), Toast.LENGTH_SHORT)
+					.show();
 			return;
 		}
 		mMainView.needToEncrypt(mMainView, BUtility.makeUrl(location(), inUrl),

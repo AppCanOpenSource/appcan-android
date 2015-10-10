@@ -319,10 +319,10 @@ public class EUExWindow extends EUExBase {
 			@Override
 			public void run() {
 				AlertDialog.Builder dia = new AlertDialog.Builder(mContext);
-				dia.setTitle("警告");
-				dia.setMessage("没有打开" + windName + "窗口的权限");
+				dia.setTitle(EUExUtil.getString("warning"));
+				dia.setMessage(String.format(EUExUtil.getString("no_permission_to_open_window"),windName));
 				dia.setCancelable(false);
-				dia.setPositiveButton("确定", null);
+				dia.setPositiveButton(EUExUtil.getString("confirm"), null);
 				dia.show();
 			}
 		};

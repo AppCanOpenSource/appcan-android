@@ -34,6 +34,7 @@ import android.os.Environment;
 import android.util.DisplayMetrics;
 
 import org.zywx.wbpalmstar.engine.EBrowserView;
+import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.widgetone.dataservice.WDataManager;
 
 import java.io.BufferedReader;
@@ -659,7 +660,7 @@ public class BUtility {
 			String message, final boolean exitOnClicked) {
 		new AlertDialog.Builder(activity).setTitle(title).setMessage(message)
 				.setCancelable(false)
-				.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+				.setPositiveButton(EUExUtil.getString("confirm"), new DialogInterface.OnClickListener() {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
