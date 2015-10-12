@@ -18,6 +18,7 @@
 
 package org.zywx.wbpalmstar.engine.universalex;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -2772,6 +2773,15 @@ public class EUExWindow extends EUExBase {
       mBrwView.getBrowserWindow().showSoftKeyboard();
       //}
 	}
+
+    public void hideSoftKeyboard(String[] params){
+        ((Activity)mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                hideSoftKeyboard(mBrwView.getWindowToken());
+            }
+        });
+    }
 
 	public void setWindowScrollbarVisible(String[] params) {
 		if (null == params || params.length < 1)
