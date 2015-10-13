@@ -102,6 +102,7 @@ public class EUExScript {
                 + "pageBack:function(){uexDispatcher.dispatch('uexWindow','pageBack',jo(arguments));},"
                 + "pageForward:function(){uexDispatcher.dispatch('uexWindow','pageForward',jo(arguments));},"
                 + "showSoftKeyboard:function(){uexDispatcher.dispatch('uexWindow','showSoftKeyboard',jo(arguments));},"
+                + "hideSoftKeyboard:function(){uexDispatcher.dispatch('uexWindow','hideSoftKeyboard',jo(arguments));},"
                 + "alert:function(){uexDispatcher.dispatch('uexWindow','alert',jo(arguments));},"
                 + "confirm:function(){uexDispatcher.dispatch('uexWindow','confirm',jo(arguments));},"
                 + "prompt:function(){uexDispatcher.dispatch('uexWindow','prompt',jo(arguments));},"
