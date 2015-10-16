@@ -774,18 +774,19 @@ public class BUtility {
 			int reqWidth, int reqHeight) {
 		Bitmap bm = null;
 		if (inputStream != null) {
-			BitmapFactory.Options opts = new BitmapFactory.Options();
-			opts.inJustDecodeBounds = true;
-			BitmapFactory.decodeStream(inputStream, null, opts);
-			opts.inSampleSize = calculateInSampleSize(opts, reqWidth, reqHeight);
-			opts.inPurgeable = true;
-			opts.inInputShareable = true;
-			opts.inTempStorage = new byte[64 * 1024];
-			opts.inJustDecodeBounds = false;
-			bm = BitmapFactory.decodeStream(inputStream, null, opts);
+			bm =decodeSamplerBitmap(transStreamToBytes(inputStream,64*1024),reqWidth,reqHeight);
 		}
 		return bm;
 	}
+
+    public static Bitmap decodeSamplerBitmap(byte[] data, int reqWidth, int reqHeight) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeByteArray(data, 0, data.length, options);
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeByteArray(data, 0, data.length, options);
+    }
 
 	public static int calculateInSampleSize(BitmapFactory.Options options,
 			int reqWidth, int reqHeight) {
