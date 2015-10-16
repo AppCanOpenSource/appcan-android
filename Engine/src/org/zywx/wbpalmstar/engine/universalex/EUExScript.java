@@ -188,8 +188,8 @@ public class EUExScript {
                 + "refresh:function(){uexDispatcher.dispatch('uexWindow','refresh',jo(arguments));},"
                 + "reload:function(){uexDispatcher.dispatch('uexWindow','reload',jo(arguments));},"
                 + "reloadWidgetByAppId:function(){uexDispatcher.dispatch('uexWindow','reloadWidgetByAppId',jo(arguments));},"
+                + "setIsSupportSlideCallback:function(){uexDispatcher.dispatch('uexWindow','setIsSupportSlideCallback',jo(arguments));},"
                 + "getUrlQuery:function(){return uexDispatcher.dispatch('uexWindow','getUrlQuery',jo(arguments))}};"
-
                 +
 //				// DataAnalysis 
 //				"window.uexDataAnalysis={"
