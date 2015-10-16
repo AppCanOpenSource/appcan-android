@@ -144,6 +144,7 @@ public class EUExWindow extends EUExBase {
     private static final int MSG_FUNCTION_RELOAD= 48;
     private static final int MSG_FUNCTION_RELOAD_WIDGET_BY_APPID= 49;
     private static final int MSG_FUNCTION_GET_SLIDING_WINDOW_STATE = 50;
+    private static final int MSG_SET_IS_SUPPORT_SLIDE_CALLBACK = 51;
 	private AlertDialog.Builder mAlert;
 	private AlertDialog.Builder mConfirm;
 	private PromptDialog mPrompt;
@@ -3046,7 +3047,32 @@ public class EUExWindow extends EUExBase {
 		}
 		mBrwView.setIsMultilPopoverFlippingEnbaled(enabled == 1 ? true : false);
 	}
-	
+
+    public void setIsSupportSlideCallback(String[] params) {
+        if (params == null || params.length < 1) {
+            errorCallback(0, 0, "error params!");
+            return;
+        }
+        Message msg = new Message();
+        msg.obj = this;
+        msg.what = MSG_SET_IS_SUPPORT_SLIDE_CALLBACK;
+        Bundle bd = new Bundle();
+        bd.putStringArray(TAG_BUNDLE_PARAM, params);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
+    }
+
+    private void setIsSupportSlideCallbackMsg(String[] params) {
+        String json = params[0];
+        try {
+            JSONObject jsonObject = new JSONObject(json);
+            boolean isSupport = Boolean.valueOf(jsonObject.getString("isSupport"));
+            mBrwView.setIsSupportSlideCallback(isSupport);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onHandleMessage(Message msg) {
         if(mBrwView == null || mBrwView.getBrowserWindow() == null || msg == null){
@@ -3216,7 +3242,10 @@ public class EUExWindow extends EUExBase {
             case MSG_PUBLISH_CHANNEL_NOTIFICATION:
                 publishChannelNotificationMsg(param);
                 break;
-        default:
+            case MSG_SET_IS_SUPPORT_SLIDE_CALLBACK:
+                setIsSupportSlideCallbackMsg(param);
+                break;
+            default:
             break;
         }
     }

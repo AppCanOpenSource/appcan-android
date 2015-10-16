@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <info>
-    <version>sdksuit_3.1_150928_01</version>
-	<package>android_Engine_3.1_150928_01</package>
-	<description>修复横屏情况下网页上滑下滑监听不生效的问题</description>
+    <version>sdksuit_3.1_151016_01</version>
+	<package>android_Engine_3.1_151016_01</package>
+	<description>1、修复部分机型出现弹出键盘又立刻消失的问题；2、新增setIsSupportSlideCallback接口，设置网页是否支持滑动的相关监听方法</description>
 </info>
