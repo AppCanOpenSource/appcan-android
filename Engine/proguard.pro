@@ -22,6 +22,16 @@
 -keep public class * extends android.support.v4.**  
 -keep public class * extends android.app.Fragment  
 
+-dontwarn org.chromium.**
+-dontwarn javax.annotation.**
+
+-keep class org.xwalk.core.** {
+    *;
+}
+-keep class org.chromium.** {
+    *;
+}
+
 -keepclasseswithmembernames class * {
     native <methods>;
 }
@@ -68,6 +78,10 @@
 }
 
 -keep class org.zywx.wbpalmstar.widgetone.WidgetOneApplication {
+    <fields>;
+    <methods>;
+}
+-keep class org.zywx.wbpalmstar.engine.universalex.EUExDispatcher {
     <fields>;
     <methods>;
 }
@@ -154,6 +168,7 @@
 -keep class com.baidu.location.** {*;} 
 -keep class org.zywx.wbpalmstar.acedes.** {*;}
 
+#-libraryjars libs/BaiduLBS_Android.jar
 -keep class com.baidu.** { *; }
 -keep class vi.com.gdi.bgl.android.**{*;}
 -keep class pvi.com.gdi.bgl.android.**{*;}
@@ -245,6 +260,7 @@
     public void subscribeChannelNotification(java.lang.String[]);
     public void publishChannelNotification(java.lang.String[]);
     public void showSoftKeyboard(java.lang.String[]);
+    public void hideSoftKeyboard(java.lang.String[]);
     public void closeAboveWndByName(java.lang.String[]);
     public void setSlidingWindow(java.lang.String[]);
     public void toggleSlidingWindow(java.lang.String[]);
@@ -287,9 +303,10 @@
     public void setPushState(java.lang.String[]);
     public void getPushState(java.lang.String[]);
     public void getPushInfo(java.lang.String[]);
-    public void setLogServerIp(java.lang.String[]);    
+    public void setLogServerIp(java.lang.String[]);
     public void setSpaceEnable(java.lang.String[]);
-    public void delPushInfo(java.lang.String[]);    
+    public void delPushInfo(java.lang.String[]);
+    public void setKeyboardMode(java.lang.String[]);
     public void reload(java.lang.String[]);
     public void reloadWidgetByAppId(java.lang.String[]);
     
