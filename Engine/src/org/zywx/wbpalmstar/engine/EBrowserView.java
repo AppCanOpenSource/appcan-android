@@ -95,6 +95,7 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 	private EUExWindow callback;
 	private boolean mIsNeedScroll = false;
 	private boolean isMultilPopoverFlippingEnbaled = false;
+    private boolean isSupportSlideCallback = false;//is need callback,set by API interface.
 
 	protected EBrowserView(Context context, int inType, EBrowserWindow inParent) {
 		super(context);
@@ -1169,7 +1170,7 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 		EViewEntry bounceEntry = new EViewEntry();
 		bounceEntry.obj = getParent();
 		mBroWind.addBounceTask(bounceEntry,
-				EViewEntry.F_BOUNCE_TASK_GET_BOUNCE_VIEW);
+                EViewEntry.F_BOUNCE_TASK_GET_BOUNCE_VIEW);
 	}
 
 	public void setBounce(int flag) {
@@ -1309,6 +1310,7 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 		mOAuth = false;
 		mWebApp = false;
 		mSupportZoom = false;
+        isSupportSlideCallback = false;
 		eClearHistory();
 		resumeCore();
 		mUExMgr.notifyReset();
@@ -1362,37 +1364,53 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 	protected void onScrollChanged(int l, int t, int oldl, int oldt) {
 		super.onScrollChanged(l, t, oldl, oldt);
 		//if (!EBrowserWindow.isShowDialog) {
-			float nowScale = 1.0f;
+        int versionA = Build.VERSION.SDK_INT;
+        boolean isSlideCallback = false;
 
-			int versionA = Build.VERSION.SDK_INT;
+        if (versionA >= 19){
+            //system above 4.4, is support callback depend on isSupportSlideCallback which
+            // set by developer.
+            // 4.4以上手机系统，是否回调取决于前端接口设置。
+            isSlideCallback = isSupportSlideCallback;
+        }else{
+            //system below 4.4, is support callback depend on isSupportSlideCallback and
+            //isShowDialog, isShowDialog indicate is pop-up keyboard or whether to switch
+            // the screen.
+            // 4.4以下手机系统，是否回调即取决于前端接口设置，也取决于当前键盘是否弹出或者是否变换屏幕。因此在该
+            // 条件下屏幕旋转之后，上滑下滑的监听不生效。
+            isSlideCallback = isSupportSlideCallback && !EBrowserWindow.isShowDialog;
+        }
+        if(isSlideCallback) {
+            float nowScale = 1.0f;
 
-			if (versionA <= 18) {
-				nowScale = getScale();
-			}
-			if ((int) (getContentHeight() * nowScale) == (getHeight() + getScrollY())) {
-				callback.jsCallback(EUExWindow.function_cbslipedDownEdge, 0,
-						EUExCallback.F_C_INT, 0);
-				
-				callback.jsCallback(EUExWindow.function_onSlipedDownEdge, 0,
-						EUExCallback.F_C_INT, 0);
+            if (versionA <= 18) {
+                nowScale = getScale();
+            }
+            if ((int) (getContentHeight() * nowScale) == (getHeight() + getScrollY())) {
+                callback.jsCallback(EUExWindow.function_cbslipedDownEdge, 0,
+                        EUExCallback.F_C_INT, 0);
 
-			} else if (getScrollY() == 0) {
-				callback.jsCallback(EUExWindow.function_cbslipedUpEdge, 0,
-						EUExCallback.F_C_INT, 0);
-				callback.jsCallback(EUExWindow.function_onSlipedUpEdge, 0,
-						EUExCallback.F_C_INT, 0);
+                callback.jsCallback(EUExWindow.function_onSlipedDownEdge, 0,
+                        EUExCallback.F_C_INT, 0);
 
-			} else if (oldt - t > mScrollDistance) {
-				callback.jsCallback(EUExWindow.function_cbslipedDownward, 0,
-						EUExCallback.F_C_INT, 0);
-				callback.jsCallback(EUExWindow.function_onSlipedDownward, 0,
-						EUExCallback.F_C_INT, 0);
-			} else if (oldt - t < -mScrollDistance) {
-				callback.jsCallback(EUExWindow.function_cbslipedUpward, 0,
-						EUExCallback.F_C_INT, 0);
-				callback.jsCallback(EUExWindow.function_onSlipedUpward, 0,
-						EUExCallback.F_C_INT, 0);
-			}
+            } else if (getScrollY() == 0) {
+                callback.jsCallback(EUExWindow.function_cbslipedUpEdge, 0,
+                        EUExCallback.F_C_INT, 0);
+                callback.jsCallback(EUExWindow.function_onSlipedUpEdge, 0,
+                        EUExCallback.F_C_INT, 0);
+
+            } else if (oldt - t > mScrollDistance) {
+                callback.jsCallback(EUExWindow.function_cbslipedDownward, 0,
+                        EUExCallback.F_C_INT, 0);
+                callback.jsCallback(EUExWindow.function_onSlipedDownward, 0,
+                        EUExCallback.F_C_INT, 0);
+            } else if (oldt - t < -mScrollDistance) {
+                callback.jsCallback(EUExWindow.function_cbslipedUpward, 0,
+                        EUExCallback.F_C_INT, 0);
+                callback.jsCallback(EUExWindow.function_onSlipedUpward, 0,
+                        EUExCallback.F_C_INT, 0);
+            }
+        }
 		//}
 
 		super.onScrollChanged(l, t, oldl, oldt);
@@ -1403,10 +1421,14 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 			String contentDisposition, String mimetype, long contentLength) {
 
 		mEXWebViewClient.onDownloadStart(mContext, url, userAgent,
-				contentDisposition, mimetype, contentLength);
+                contentDisposition, mimetype, contentLength);
 	}
 
     public void setNeedScroll(boolean b) {
         this.mIsNeedScroll = b;
+    }
+
+    public void setIsSupportSlideCallback(boolean isSupport) {
+        isSupportSlideCallback = isSupport;
     }
 }

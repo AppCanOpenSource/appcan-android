@@ -259,6 +259,7 @@
     public void setSlidingWindowEnabled(java.lang.String[]);
     public void getSlidingWindowState(java.lang.String[]);
     public void dispatch(java.lang.String,java.lang.String,java.lang.String[]);
+    public void setIsSupportSlideCallback(java.lang.String[]);
 
     public void getId(java.lang.String[]);
     public void getWidgetNumber(java.lang.String[]);
