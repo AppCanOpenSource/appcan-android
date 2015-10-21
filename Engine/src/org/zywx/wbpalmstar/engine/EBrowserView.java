@@ -890,35 +890,37 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 		if (mDestroyed) {
 			return "";
 		}
-		if (!checkType(EBrwViewEntry.VIEW_TYPE_MAIN)) {
-			return mBroWind.location();
-		} else {
-			String url = getUrl();
-			int index = url.indexOf("?");
-			if (-1 != index) {
-				url = url.substring(0, index);
-			}
-			return url;
+		//修改浮动窗口中不能打开窗口问题
+		//if (!checkType(EBrwViewEntry.VIEW_TYPE_MAIN)) {
+		//	return mBroWind.location();
+		//} else {
+		String url = getUrl();
+		int index = url.indexOf("?");
+		if (-1 != index) {
+			url = url.substring(0, index);
 		}
+		return url;
+		//}
 	}
 
     public String getCurrentUrl(String baseUrl) {
         if (mDestroyed) {
             return "";
         }
-        if (!checkType(EBrwViewEntry.VIEW_TYPE_MAIN)) {
-            return mBroWind.location();
-        } else {
-            String url = getUrl();
-            if(TextUtils.isEmpty(url)){
-                url = baseUrl;
-            }
-            int index = url.indexOf("?");
-            if (-1 != index) {
-                url = url.substring(0, index);
-            }
-            return url;
+		//修改浮动窗口中不能打开窗口问题
+        //if (!checkType(EBrwViewEntry.VIEW_TYPE_MAIN)) {
+        //    return mBroWind.location();
+        //} else {
+        String url = getUrl();
+        if(TextUtils.isEmpty(url)){
+            url = baseUrl;
         }
+        int index = url.indexOf("?");
+        if (-1 != index) {
+            url = url.substring(0, index);
+        }
+        return url;
+        //}
     }
 
 	public String getWidgetPath() {
