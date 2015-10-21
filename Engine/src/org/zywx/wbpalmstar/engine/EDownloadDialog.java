@@ -24,6 +24,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Locale;
+import java.util.zip.DeflaterInputStream;
+import java.util.zip.GZIPInputStream;
+
 import org.apache.http.cookie.SM;
 import org.apache.http.protocol.HTTP;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
@@ -154,7 +158,7 @@ public class EDownloadDialog extends ProgressDialog implements Runnable{
 			mConnection.setUseCaches(false);
 			mConnection.setRequestProperty("Connection", "Keep-Alive");
 			mConnection.setRequestProperty("Charset", HTTP.UTF_8);
-			mConnection.setRequestProperty("User-Agent", EBrowserSetting.USERAGENT);
+			mConnection.setRequestProperty("User-Agent", EBrowserSetting.USERAGENT_NEW);
 			mConnection.setReadTimeout(1000 * 30);
 			mConnection.setConnectTimeout(1000 * 30);
 			mConnection.setInstanceFollowRedirects(false);
@@ -181,6 +185,12 @@ public class EDownloadDialog extends ProgressDialog implements Runnable{
 		if (mInStream == null) {
 			return;
 		}
+		String encoding = mConnection.getContentEncoding();
+		if ("gzip".equalsIgnoreCase(encoding)) {
+			mInStream = new GZIPInputStream(mInStream);
+		} else if ("deflate".equalsIgnoreCase(encoding)) {
+			mInStream = new DeflaterInputStream(mInStream);
+		}
 		if(contentLength <= 0){
 			String cLength = mConnection.getHeaderField("Content-Length");
             if (cLength != null) {
@@ -198,14 +208,8 @@ public class EDownloadDialog extends ProgressDialog implements Runnable{
             extension = mtm.getExtensionFromMimeType(mimetype);
         }
         if (extension==null){
-			String fileName = "";
-			if (!TextUtils.isEmpty(contentDisposition)) {
-				fileName = contentDisposition.replaceFirst(
-						"attachment; filename=", "");
-			} else {
-				fileName = URLUtil.guessFileName(url, contentDisposition,
-						mimetype);
-			}
+			String fileName = URLUtil.guessFileName(url, contentDisposition,
+					mimetype);
 			if (!TextUtils.isEmpty(fileName)) {
 				fileName.replaceAll("/", "");
 				mTmpFile = new File(target, fileName);
@@ -240,6 +244,8 @@ public class EDownloadDialog extends ProgressDialog implements Runnable{
         if (path.getScheme() == null) {
             path = Uri.fromFile(new File(filename));
         }
+		String suffix = makeFileSuffix(filename).toLowerCase(Locale.US);
+		mimetype = MimeTypeMap.getSingleton().getMimeTypeFromExtension(suffix);
 	    installIntent.setDataAndType(path, mimetype); 
 	    installIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 	    try {

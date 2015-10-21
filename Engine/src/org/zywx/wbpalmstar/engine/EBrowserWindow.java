@@ -2496,8 +2496,20 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 
 	public void postGlobalNotification(String des) {
 		String js = CALLBACK_POST_GLOBAL_NOTI + des + "');}";
-		ELinkedList<EBrowserWindow> eBrwWins = mBroWidget.getWindowStack()
-				.getAll();
+		EWindowStack windowStack = mBroWidget.getWindowStack();
+		ELinkedList<EBrowserWindow> eBrwWins = windowStack.getAll();
+		
+		EBrowserWindow leftSlidingWin = windowStack
+				.getSlidingWind(EBrowserWindow.rootLeftSlidingWinName);
+		if (leftSlidingWin != null) {
+			leftSlidingWin.addUriTask(leftSlidingWin.mMainView, js);
+		}
+		EBrowserWindow rightSlidingWin = windowStack
+				.getSlidingWind(EBrowserWindow.rootRightSlidingWinName);
+		if (rightSlidingWin != null) {
+			rightSlidingWin.addUriTask(rightSlidingWin.mMainView, js);
+		}
+		
 		for (int i = 0; i < eBrwWins.size(); i++) {
 			EBrowserWindow eBrwWin = eBrwWins.get(i);
 			eBrwWin.addUriTask(eBrwWin.mMainView, js);
@@ -2527,9 +2539,30 @@ public class EBrowserWindow extends FrameLayout implements AnimationListener {
 	public void publishChannelNotification(String channelId, String des) {
 		EWidgetStack eWidgetStack = mBroWidget.getWidgetStack();
 		for (int w = 0; w < eWidgetStack.length(); w++) {
+			EWindowStack windowStack = eWidgetStack.get(w).getWindowStack();
+
+			//Sliding window
+			EBrowserWindow leftSlidingWin = windowStack
+					.getSlidingWind(EBrowserWindow.rootLeftSlidingWinName);
+			if (leftSlidingWin != null) {
+				List<HashMap<String, String>> list = leftSlidingWin.mChannelList;
+				if (list != null && list.size() != 0) {
+					setCallback(leftSlidingWin.mMainView, list, channelId, des,
+							WIN_TYPE_MAIN);
+				}
+			}
+			EBrowserWindow rightSlidingWin = windowStack
+					.getSlidingWind(EBrowserWindow.rootRightSlidingWinName);
+			if (rightSlidingWin != null) {
+				List<HashMap<String, String>> list = rightSlidingWin.mChannelList;
+				if (list != null && list.size() != 0) {
+					setCallback(rightSlidingWin.mMainView, list, channelId, des,
+							WIN_TYPE_MAIN);
+				}
+			}
+			
 			//normal window
-			ELinkedList<EBrowserWindow> eBrwWins = eWidgetStack.get(w).getWindowStack()
-					.getAll();
+			ELinkedList<EBrowserWindow> eBrwWins = windowStack.getAll();
 			for (int i = 0; i < eBrwWins.size(); i++) {
 				EBrowserWindow eBrwWin = eBrwWins.get(i);
 				List<HashMap<String, String>> list = eBrwWin.mChannelList;

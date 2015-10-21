@@ -37,6 +37,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient.CustomViewCallback;
 import android.widget.FrameLayout;
@@ -159,6 +160,13 @@ public final class EBrowserActivity extends ActivityGroup {
 //        globalSlidingMenu.setBehindWidthRes(R.dimen.slidingmenu_width);
 //        globalSlidingMenu.setBehindWidthRes(0);
         reflectionPluginMethod("onActivityCreate");
+        try {
+			activityWindow.clearFlags(
+					WindowManager.LayoutParams.class.getField(
+							"FLAG_NEEDS_MENU_KEY").getInt(null));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void reflectionPluginMethod(String method) {
@@ -752,8 +760,11 @@ public final class EBrowserActivity extends ActivityGroup {
 			    while (it.hasNext()) {
                     try {
                         String key = it.next();
-                        String data = bundle.get(key).toString();
-                        OtherAppData.put(key, data);
+                        Object object = bundle.get(key);
+                        if (object != null) {
+                        	String data = object.toString();
+                        	OtherAppData.put(key, data);
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

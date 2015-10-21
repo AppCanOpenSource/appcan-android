@@ -1034,6 +1034,7 @@ public class EBrowserWidget extends AbsoluteLayout {
 
 
 //                windowStorage(newWindow);
+                mEWindowStack.addSlidingWindMap(newWindow);
                 newWindow.setFlag(EBrowserWindow.F_WINDOW_FLAG_SLIDING_WIN);
 
 //                Delay ent = new Delay(newWindow, entry);

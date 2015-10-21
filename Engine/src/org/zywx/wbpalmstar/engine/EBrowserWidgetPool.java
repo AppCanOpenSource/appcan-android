@@ -379,14 +379,18 @@ public class EBrowserWidgetPool {
 		outWidget.startAnimation(outAnim);
 		inWidget.startAnimation(inAnim);
 		
-        InputMethodManager imm = (InputMethodManager) mContext
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
-        int versionA = Build.VERSION.SDK_INT;
-        if (versionA == 19) {
-			imm.hideSoftInputFromWindow(((EBrowserActivity) mContext)
-					.getCurrentFocus().getWindowToken(),
-					InputMethodManager.HIDE_NOT_ALWAYS);
-        }
+		try {
+			int versionA = Build.VERSION.SDK_INT;
+			if (versionA == 19) {
+				InputMethodManager imm = (InputMethodManager) mContext
+						.getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(((EBrowserActivity) mContext)
+						.getCurrentFocus().getWindowToken(),
+						InputMethodManager.HIDE_NOT_ALWAYS);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void goForward() {

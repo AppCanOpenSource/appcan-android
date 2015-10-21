@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -84,6 +85,13 @@ public class TempActivity extends Activity {
               IntentFilter intentFilter = new IntentFilter();
                intentFilter.addAction(BROADCAST_ACTION);
         registerReceiver(mBroadcastReceiver, intentFilter);
+		try {
+			getWindow().clearFlags(
+					WindowManager.LayoutParams.class.getField(
+							"FLAG_NEEDS_MENU_KEY").getInt(null));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     }
 
 //    @Override
