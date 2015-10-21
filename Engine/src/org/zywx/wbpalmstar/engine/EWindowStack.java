@@ -27,10 +27,26 @@ public class EWindowStack {
 
 	private ELinkedList<EBrowserWindow> mWindList;
 	private Map<String, EBrowserWindow> mWindMap;
+	private Map<String, EBrowserWindow> mSlidingWindMap;
 	
 	public EWindowStack(){
 		mWindList = new ELinkedList<EBrowserWindow>();
 		mWindMap = new Hashtable<String, EBrowserWindow>();
+		mSlidingWindMap = new Hashtable<String, EBrowserWindow>();
+	}
+	
+	public void addSlidingWindMap(EBrowserWindow window){
+		String name = window.getName();
+		if(name != null && name.trim().length() > 0){
+			mSlidingWindMap.put(name, window);
+		}
+	}
+	
+	public EBrowserWindow getSlidingWind(String name){
+		if(null != name && name.trim().length() != 0){
+			return mSlidingWindMap.get(name);
+		}
+		return null;
 	}
 	
 	public void add(EBrowserWindow view){
