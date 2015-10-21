@@ -41,6 +41,8 @@ public class EBrowserSetting implements EBrowserBaseSetting {
 			+ "(KHTML, like Gecko) Version/4.0 Mobile Safari/533.1";
 
 	public static final String USERAGENT = FROYO_USERAGENT;
+	public static final String USERAGENT_APPCAN = " Appcan/3.1";
+	public static String USERAGENT_NEW;
 
 	protected WebSettings mWebSetting;
 	protected EBrowserView mBrwView;
@@ -49,6 +51,7 @@ public class EBrowserSetting implements EBrowserBaseSetting {
 	public EBrowserSetting(EBrowserView inView) {
 		mWebSetting = inView.getSettings();
 		mBrwView = inView;
+		USERAGENT_NEW = mWebSetting.getUserAgentString() + USERAGENT_APPCAN;
 	}
 
 	public void initBaseSetting(boolean webApp) {
@@ -66,7 +69,7 @@ public class EBrowserSetting implements EBrowserBaseSetting {
 		mWebSetting.setUseWideViewPort(false);
 		mWebSetting.setLoadsImagesAutomatically(true);
 		mWebSetting.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
-		mWebSetting.setUserAgentString(USERAGENT);
+		mWebSetting.setUserAgentString(USERAGENT_NEW);
 		mWebSetting.setRenderPriority(RenderPriority.HIGH);
 		mWebSetting.setDefaultTextEncodingName("UTF-8");
 		if (Build.VERSION.SDK_INT <= 7) {

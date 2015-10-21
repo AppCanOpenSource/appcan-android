@@ -154,7 +154,7 @@ public class EDownloadDialog extends ProgressDialog implements Runnable{
 			mConnection.setUseCaches(false);
 			mConnection.setRequestProperty("Connection", "Keep-Alive");
 			mConnection.setRequestProperty("Charset", HTTP.UTF_8);
-			mConnection.setRequestProperty("User-Agent", EBrowserSetting.USERAGENT);
+			mConnection.setRequestProperty("User-Agent", EBrowserSetting.USERAGENT_NEW);
 			mConnection.setReadTimeout(1000 * 30);
 			mConnection.setConnectTimeout(1000 * 30);
 			mConnection.setInstanceFollowRedirects(false);
