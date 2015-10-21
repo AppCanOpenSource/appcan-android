@@ -1387,6 +1387,8 @@ public class EUExWindow extends EUExBase {
                 childUrl[i] = jsonContent.getJSONObject(i).getString("inUrl");
                 popEntry.mData = jsonContent.getJSONObject(i).getString(
                         "inData");
+                popEntry.mFlag = jsonContent.getJSONObject(i).optInt(
+                		"flag");
 
                 if (null == popEntry.mViewName
                         || popEntry.mViewName.length() == 0) {
