@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -87,6 +88,13 @@ public class LoadingActivity extends Activity {
             worn.setLayoutParams(wornPa);
             rootLayout.addView(worn);
         }
+		try {
+			getWindow().clearFlags(
+					WindowManager.LayoutParams.class.getField(
+							"FLAG_NEEDS_MENU_KEY").getInt(null));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     }
 
     @Override
