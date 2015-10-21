@@ -314,9 +314,9 @@ public class EUExWindow extends EUExBase {
 
 	private void showPermissionDialog(final String windName) {
 		EBrowserActivity activity = (EBrowserActivity) mContext;
-		if (!activity.isVisable()) {
+		/*if (!activity.isVisable()) {
 			return;
-		}
+		}*/
 		Runnable ui = new Runnable() {
 			@Override
 			public void run() {
@@ -2581,9 +2581,9 @@ public class EUExWindow extends EUExBase {
 	}
 
 	public void private_alert(String inTitle, String inMessage, String inButtonLable) {
-		if (!((EBrowserActivity) mContext).isVisable()) {
+		/*if (!((EBrowserActivity) mContext).isVisable()) {
 			return;
-		}
+		}*/
 		if (null != mAlert) {
 			return;
 		}
@@ -2606,9 +2606,9 @@ public class EUExWindow extends EUExBase {
 	}
 
 	public void private_confirm(String inTitle, String inMessage, String[] inButtonLable) {
-		if (!((EBrowserActivity) mContext).isVisable()) {
+		/*if (!((EBrowserActivity) mContext).isVisable()) {
 			return;
-		}
+		}*/
 		if (inButtonLable == null) {
 			return;
 		}
@@ -2703,9 +2703,9 @@ public class EUExWindow extends EUExBase {
 	}
 
 	public void private_prompt(String inTitle, String inMessage, String inDefaultValue, String[] inButtonLables) {
-		if (!((EBrowserActivity) mContext).isVisable()) {
+		/*if (!((EBrowserActivity) mContext).isVisable()) {
 			return;
-		}
+		}*/
 		if (null != mPrompt) {
 			return;
 		}
