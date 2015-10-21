@@ -752,8 +752,11 @@ public final class EBrowserActivity extends ActivityGroup {
 			    while (it.hasNext()) {
                     try {
                         String key = it.next();
-                        String data = bundle.get(key).toString();
-                        OtherAppData.put(key, data);
+                        Object object = bundle.get(key);
+                        if (object != null) {
+                        	String data = object.toString();
+                        	OtherAppData.put(key, data);
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

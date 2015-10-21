@@ -846,37 +846,40 @@ public class MQTTService implements MqttSimpleCallback {
 	private class BackgroundDataChangeIntentReceiver extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context ctx, Intent intent) {
-			// we protect against the phone switching off while we're doing this
-			// by requesting a wake lock - we request the minimum possible wake
-			// lock - just enough to keep the CPU running until we've finished
-			PowerManager pm = (PowerManager) _context
-					.getSystemService(Service.POWER_SERVICE);
-			WakeLock wl = pm
-					.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MQTT");
-			wl.acquire();
-
-			ConnectivityManager cm = (ConnectivityManager) _context
-					.getSystemService(Service.CONNECTIVITY_SERVICE);
-			if (cm.getBackgroundDataSetting()) {
-				// user has allowed background data - we start again - picking
-				// up where we left off in handleStart before
-				defineConnectionToBroker(brokerHostName);
-				// handleStart(intent, 0);
-			} else {
-				// user has disabled background data
-				connectionStatus = MQTTConnectionStatus.NOTCONNECTED_DATADISABLED;
-
-				// update the app to show that the connection has been disabled
-				broadcastServiceStatus("Not connected - background data disabled");
-
-				// disconnect from the broker
-				disconnectFromBroker();
+			String action = intent.getAction();
+			if (ConnectivityManager.ACTION_BACKGROUND_DATA_SETTING_CHANGED.equals(action)) {
+				// we protect against the phone switching off while we're doing this
+				// by requesting a wake lock - we request the minimum possible wake
+				// lock - just enough to keep the CPU running until we've finished
+				PowerManager pm = (PowerManager) _context
+						.getSystemService(Service.POWER_SERVICE);
+				WakeLock wl = pm
+						.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MQTT");
+				wl.acquire();
+				
+				ConnectivityManager cm = (ConnectivityManager) _context
+						.getSystemService(Service.CONNECTIVITY_SERVICE);
+				if (cm.getBackgroundDataSetting()) {
+					// user has allowed background data - we start again - picking
+					// up where we left off in handleStart before
+					defineConnectionToBroker(brokerHostName);
+					// handleStart(intent, 0);
+				} else {
+					// user has disabled background data
+					connectionStatus = MQTTConnectionStatus.NOTCONNECTED_DATADISABLED;
+					
+					// update the app to show that the connection has been disabled
+					broadcastServiceStatus("Not connected - background data disabled");
+					
+					// disconnect from the broker
+					disconnectFromBroker();
+				}
+				
+				// we're finished - if the phone is switched off, it's okay for the
+				// CPU
+				// to sleep now
+				wl.release();
 			}
-
-			// we're finished - if the phone is switched off, it's okay for the
-			// CPU
-			// to sleep now
-			wl.release();
 		}
 	}
 
@@ -888,29 +891,32 @@ public class MQTTService implements MqttSimpleCallback {
 	private class NetworkConnectionIntentReceiver extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context ctx, Intent intent) {
-			// we protect against the phone switching off while we're doing this
-			// by requesting a wake lock - we request the minimum possible wake
-			// lock - just enough to keep the CPU running until we've finished
-			PowerManager pm = (PowerManager) _context
-					.getSystemService(Service.POWER_SERVICE);
-			WakeLock wl = pm
-					.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MQTT");
-			wl.acquire();
-
-			if (isOnline()) {
-				// we have an internet connection - have another try at
-				// connecting
-				if (connectToBroker()) {
-					// we subscribe to a topic - registering to receive push
-					// notifications with a particular key
-					subscribeToTopic(topicName);
+			String action = intent.getAction();
+			if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
+				// we protect against the phone switching off while we're doing this
+				// by requesting a wake lock - we request the minimum possible wake
+				// lock - just enough to keep the CPU running until we've finished
+				PowerManager pm = (PowerManager) _context
+						.getSystemService(Service.POWER_SERVICE);
+				WakeLock wl = pm
+						.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MQTT");
+				wl.acquire();
+				
+				if (isOnline()) {
+					// we have an internet connection - have another try at
+					// connecting
+					if (connectToBroker()) {
+						// we subscribe to a topic - registering to receive push
+						// notifications with a particular key
+						subscribeToTopic(topicName);
+					}
 				}
+				
+				// we're finished - if the phone is switched off, it's okay for the
+				// CPU
+				// to sleep now
+				wl.release();
 			}
-
-			// we're finished - if the phone is switched off, it's okay for the
-			// CPU
-			// to sleep now
-			wl.release();
 		}
 	}
 
@@ -961,37 +967,40 @@ public class MQTTService implements MqttSimpleCallback {
 	public class PingSender extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			// Note that we don't need a wake lock for this method (even though
-			// it's important that the phone doesn't switch off while we're
-			// doing this).
-			// According to the docs, "Alarm Manager holds a CPU wake lock as
-			// long as the alarm receiver's onReceive() method is executing.
-			// This guarantees that the phone will not sleep until you have
-			// finished handling the broadcast."
-			// This is good enough for our needs.
-
-			try {
-				mqttClient.ping();
-			} catch (MqttException e) {
-				// if something goes wrong, it should result in connectionLost
-				// being called, so we will handle it there
-				PushReportUtility.oe("PingSender ping failed", e);
-
-				// assume the client connection is broken - trash it
+			String action = intent.getAction();
+			if (MQTT_PING_ACTION.equals(action)) {
+				// Note that we don't need a wake lock for this method (even though
+				// it's important that the phone doesn't switch off while we're
+				// doing this).
+				// According to the docs, "Alarm Manager holds a CPU wake lock as
+				// long as the alarm receiver's onReceive() method is executing.
+				// This guarantees that the phone will not sleep until you have
+				// finished handling the broadcast."
+				// This is good enough for our needs.
+				
 				try {
-					mqttClient.disconnect();
-				} catch (MqttPersistenceException e1) {
-					PushReportUtility.oe("PingSender disconnect failed", e);
+					mqttClient.ping();
+				} catch (MqttException e) {
+					// if something goes wrong, it should result in connectionLost
+					// being called, so we will handle it there
+					PushReportUtility.oe("PingSender ping failed", e);
+					
+					// assume the client connection is broken - trash it
+					try {
+						mqttClient.disconnect();
+					} catch (MqttPersistenceException e1) {
+						PushReportUtility.oe("PingSender disconnect failed", e);
+					}
+					
+					// reconnect
+					if (connectToBroker()) {
+						subscribeToTopic(topicName);
+					}
 				}
-
-				// reconnect
-				if (connectToBroker()) {
-					subscribeToTopic(topicName);
-				}
+				
+				// start the next keep alive period
+				scheduleNextPing();
 			}
-
-			// start the next keep alive period
-			scheduleNextPing();
 		}
 	}
 
