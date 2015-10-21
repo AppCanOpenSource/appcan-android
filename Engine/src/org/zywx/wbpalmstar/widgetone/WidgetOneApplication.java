@@ -76,11 +76,9 @@ public class WidgetOneApplication extends Application {
 		CookieManager.getInstance().removeExpiredCookie();
 		mCrashReport = new ECrashHandler();
 		cachePath = getCacheDir().getAbsolutePath();
-		if (BDebug.DEBUG) {
-			copyLib();
-			copyJar();
-			initClassLoader();
-		}
+		copyLib();
+		copyJar();
+		initClassLoader();
 		initPlugin();
 		reflectionPluginMethod("onApplicationCreate");
         BConstant.app=this;
