@@ -154,7 +154,7 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
     public boolean isHardwareAccelerated() {
         //confirm view is attached to a window
         boolean isHardwareAccelerated=super.isHardwareAccelerated();
-        BDebug.i("isHardwareAccelerated",isHardwareAccelerated);
+        BDebug.v("isHardwareAccelerated",isHardwareAccelerated);
         return isHardwareAccelerated;
     }
 

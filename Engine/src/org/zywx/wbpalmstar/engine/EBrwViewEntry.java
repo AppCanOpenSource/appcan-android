@@ -41,6 +41,7 @@ public class EBrwViewEntry {
 	public static final int F_FLAG_GESTURE			= 0x80;
 	public static final int F_FLAG_NOT_HIDDEN		= 0x100;
 	public static final int F_FLAG_WEBAPP			= 0x200;
+    public static final int F_FLAG_NAV_TYPE         = 0x400;
     public static final String TAG_EXTRAINFO = "extraInfo";
     public static final String TAG_DELAYTIME = "delayTime";
 	

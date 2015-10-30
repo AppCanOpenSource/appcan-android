@@ -42,6 +42,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.zywx.wbpalmstar.acedes.ACEDes;
 import org.zywx.wbpalmstar.base.BUtility;
+import org.zywx.wbpalmstar.base.view.SwipeView;
 import org.zywx.wbpalmstar.engine.EBrowserHistory.EHistoryEntry;
 import org.zywx.wbpalmstar.engine.external.Compat;
 import org.zywx.wbpalmstar.engine.universalex.EUExCallback;
@@ -53,7 +54,7 @@ import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
 import java.util.*;
 
-public class EBrowserWindow extends FrameLayout implements AnimationListener {
+public class EBrowserWindow extends SwipeView implements AnimationListener {
 
 	private static final String TAG = "EBrowserWindow";
 	public static final int F_WINDOW_FLAG_NONE = 0x0;
