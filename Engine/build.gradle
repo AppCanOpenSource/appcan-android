@@ -21,7 +21,7 @@ android {
             renderscript.srcDirs = ['src']
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
-            jniLibs.srcDirs = ['libs']
+            jniLibs.srcDirs=['libs']
         }
 
         // Move the tests to tests/java, tests/res, etc...
@@ -41,6 +41,7 @@ android {
     }
     defaultConfig {
         applicationId 'org.zywx.wbpalmstar.widgetone.uex'
+        minSdkVersion 8
     }
     productFlavors {
     }
@@ -50,7 +51,7 @@ task clearJar(type: Delete) {
     delete 'libs/AppCanEngine.jar'
 }
 
-task makeJar(type:org.gradle.api.tasks.bundling.Jar) {
+task makeJar(type:Jar) {
     //指定生成的jar名
     baseName 'AppCanEngine'
     //从哪里打包class文件
