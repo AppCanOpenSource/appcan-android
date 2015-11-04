@@ -21,7 +21,6 @@ package org.zywx.wbpalmstar.engine.universalex;
 
 import android.webkit.JavascriptInterface;
 
-import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.EUExAbstractDispatcher;
 import org.zywx.wbpalmstar.engine.callback.EUExDispatcherCallback;
 
@@ -39,7 +38,6 @@ public class EUExDispatcher extends EUExAbstractDispatcher {
     @JavascriptInterface
     public Object dispatch(String pluginName,String methodName,String[] params){
         Object result=mDispatcherCallback.onDispatch(pluginName, methodName, params);
-        BDebug.i(result);
         return result;
     }
 

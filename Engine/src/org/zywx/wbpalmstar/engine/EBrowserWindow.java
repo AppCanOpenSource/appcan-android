@@ -41,6 +41,7 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.zywx.wbpalmstar.acedes.ACEDes;
+import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.view.SwipeView;
 import org.zywx.wbpalmstar.engine.EBrowserHistory.EHistoryEntry;
@@ -2161,8 +2162,8 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
 		}
 	}
 
-	private void hMultiPopOverOpen(ArrayList<EBrwViewEntry> entitys, int index) {
-		ArrayList<EBounceView> viewList = new ArrayList<EBounceView>();
+	private void hMultiPopOverOpen(final ArrayList<EBrwViewEntry> entitys, final int index) {
+		final ArrayList<EBounceView> viewList = new ArrayList<EBounceView>();
 		EBrwViewEntry mainEntry = entitys.get(0);
 		Log.d("multi", "entitys num:" + entitys.size());
 		if (checkMultiPop(entitys)) {
@@ -2232,8 +2233,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
 			viewList.add(bounceViewChild);
 
 		}
-		Log.d("multi", "viewlist num:" + viewList.size());
-
+        BDebug.i("multi", "viewlist num:", viewList.size());
 		LayoutParams pagerParm = new LayoutParams(
 				ViewGroup.LayoutParams.MATCH_PARENT,
 				ViewGroup.LayoutParams.MATCH_PARENT);
@@ -2241,72 +2241,90 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
 		mPager.setAdapter(new MultiPopAdapter(viewList));
 		mPager.setCurrentItem(index);
 		mPager.setOnPageChangeListener(new MyPageChangedListener(
-				parentBrowerview.getName()));
+                parentBrowerview.getName()));
 		mPager.setLayoutParams(pagerParm);
 		parentBrowerview.addView(mPager);
 		mMultiPopPager.put(parentBrowerview.getName(), mPager);
-		ArrayList<EBrowserView> list = new ArrayList<EBrowserView>();
+		final ArrayList<EBrowserView> list = new ArrayList<EBrowserView>();
 		list.add(parentBrowerview);
 
-		for (int i = 0; i < viewList.size(); i++) {
-			EBounceView eBounceView = viewList.get(i);
-			EBrowserView eView = eBounceView.mBrwView;
-
-			EBrwViewEntry entity = entitys.get(i + 1);
-			if (entity.checkFlag(EBrwViewEntry.F_FLAG_SHOULD_OP_SYS)) {
-				eView.setShouldOpenInSystem(true);
-			}
-            if(!entity.hasExtraInfo) {
-                if (entity.checkFlag(EBrwViewEntry.F_FLAG_OPAQUE)) {
-                    eView.setOpaque(true);
-                } else {
-                    eView.setOpaque(false);
-                }
+        EBrowserView eBrowserView = loadOneOfMultiPop(viewList.get(index), entitys.get(index+1), list);
+        eBrowserView.setEBrowserViewChangeListener(new EBrowserView.OnEBrowserViewChangeListener() {
+            @Override
+            public void onPageFinish() {
+                loadTheRestOfMultiPop(index,viewList, entitys, list);
             }
-			if (entity.checkFlag(EBrwViewEntry.F_FLAG_OAUTH)) {
-				eView.setOAuth(true);
-			}
-			if (entity.checkFlag(EBrwViewEntry.F_FLAG_WEBAPP)) {
-				eView.setWebApp(true);
-			}
-			eView.setQuery(entity.mQuery);
-			eView.init();
-			if (entity.checkFlag(EBrwViewEntry.F_FLAG_GESTURE)) {
-				eView.setSupportZoom();
-			}
-			if (entity.mFontSize > 0) {
-				eView.setDefaultFontSize(entity.mFontSize);
-			}
-			switch (entity.mDataType) {
-			case EBrwViewEntry.WINDOW_DATA_TYPE_URL:
-//				if (entity.checkFlag(EBrwViewEntry.F_FLAG_OBFUSCATION)) {
-				if ((getWidget().m_obfuscation == 1) && !entity.checkFlag(EBrwViewEntry.F_FLAG_WEBAPP)) {
-					eView.needToEncrypt(eView, entity.mUrl, 0);
-				} else {
-					eView.newLoadUrl(entity.mUrl);
-				}
-				break;
-			case EBrwViewEntry.WINDOW_DATA_TYPE_DATA:
-				eView.newLoadData(entity.mData);
-				break;
-			case EBrwViewEntry.WINDOW_DATA_TYPE_DATA_URL:
-				String date1 = ACEDes.decrypt(entity.mUrl, mContext,
-						false, entity.mData);
-				eView.loadDataWithBaseURL(entity.mUrl, date1,
-						EBrowserView.CONTENT_MIMETYPE_HTML,
-						EBrowserView.CONTENT_DEFAULT_CODE, entity.mUrl);
-				break;
-			}
-
-			if (checkFlag(EBrowserWindow.F_WINDOW_FLAG_OPPOP)) {
-				mPreQueue.add(entity.mViewName);
-			}
-
-			list.add(eView);
-		}
-
-		mMultiPopTable.put(parentBrowerview.getName(), list);
+        });
+        BDebug.i("multipop", index, "load...");
+        mMultiPopTable.put(parentBrowerview.getName(), list);
 	}
+
+    private void loadTheRestOfMultiPop(int index,List<EBounceView> viewList,List<EBrwViewEntry> entries,
+                                       ArrayList<EBrowserView> eBrowserViews){
+        for (int i=0;i<viewList.size();i++){
+            if (i==index){
+                continue;
+            }
+            loadOneOfMultiPop(viewList.get(i),entries.get(i+1),eBrowserViews);
+            BDebug.i("multipop", i, "load...");
+        }
+    }
+
+    private EBrowserView loadOneOfMultiPop(EBounceView eBounceView,EBrwViewEntry entity,ArrayList<EBrowserView>
+            eBrowserViews){
+        EBrowserView eView = eBounceView.mBrwView;
+        if (entity.checkFlag(EBrwViewEntry.F_FLAG_SHOULD_OP_SYS)) {
+            eView.setShouldOpenInSystem(true);
+        }
+        if(!entity.hasExtraInfo) {
+            if (entity.checkFlag(EBrwViewEntry.F_FLAG_OPAQUE)) {
+                eView.setOpaque(true);
+            } else {
+                eView.setOpaque(false);
+            }
+        }
+        if (entity.checkFlag(EBrwViewEntry.F_FLAG_OAUTH)) {
+            eView.setOAuth(true);
+        }
+        if (entity.checkFlag(EBrwViewEntry.F_FLAG_WEBAPP)) {
+            eView.setWebApp(true);
+        }
+        eView.setQuery(entity.mQuery);
+        eView.init();
+        if (entity.checkFlag(EBrwViewEntry.F_FLAG_GESTURE)) {
+            eView.setSupportZoom();
+        }
+        if (entity.mFontSize > 0) {
+            eView.setDefaultFontSize(entity.mFontSize);
+        }
+        switch (entity.mDataType) {
+            case EBrwViewEntry.WINDOW_DATA_TYPE_URL:
+//				if (entity.checkFlag(EBrwViewEntry.F_FLAG_OBFUSCATION)) {
+                if ((getWidget().m_obfuscation == 1) && !entity.checkFlag(EBrwViewEntry.F_FLAG_WEBAPP)) {
+                    eView.needToEncrypt(eView, entity.mUrl, 0);
+                } else {
+                    eView.newLoadUrl(entity.mUrl);
+                }
+                break;
+            case EBrwViewEntry.WINDOW_DATA_TYPE_DATA:
+                eView.newLoadData(entity.mData);
+                break;
+            case EBrwViewEntry.WINDOW_DATA_TYPE_DATA_URL:
+                String date1 = ACEDes.decrypt(entity.mUrl, mContext,
+                        false, entity.mData);
+                eView.loadDataWithBaseURL(entity.mUrl, date1,
+                        EBrowserView.CONTENT_MIMETYPE_HTML,
+                        EBrowserView.CONTENT_DEFAULT_CODE, entity.mUrl);
+                break;
+        }
+
+        if (checkFlag(EBrowserWindow.F_WINDOW_FLAG_OPPOP)) {
+            mPreQueue.add(entity.mViewName);
+        }
+        eBrowserViews.add(eView);
+        return eView;
+    }
+
 
 	public void hSetMuliPopOverSelected(String obj, int arg1) {
 		// TODO Auto-generated method stub

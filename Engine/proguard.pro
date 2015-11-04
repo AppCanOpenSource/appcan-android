@@ -6,6 +6,14 @@
 -ignorewarnings
 -optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
 
+-libraryjars libs/wmqtt.jar
+-libraryjars libs/httpmime-4.1.3.jar
+-libraryjars libs/android-support-v4.jar
+-libraryjars libs/libacedes-v1.jar
+-libraryjars libs/commons-io-2.4.jar
+-libraryjars libs/aceimageloader.jar
+-libraryjars libs/gson-2.2.4.jar
+
 -keep public class * extends android.app.Activity
 -keep public class * extends android.app.Application
 -keep public class * extends android.app.Service
@@ -20,7 +28,8 @@
 -dontwarn android.support.v4.**  
 -keep class android.support.v4.** { *; }  
 -keep public class * extends android.support.v4.**  
--keep public class * extends android.app.Fragment  
+-keep public class * extends android.app.Fragment
+-keep public class * extends android.support.v4.app.FragmentActivity
 
 -dontwarn org.chromium.**
 -dontwarn javax.annotation.**
@@ -286,7 +295,6 @@
     public void cleanCache(java.lang.String[]);
     public void exit(java.lang.String[]);
     public void getMainWidgetId(java.lang.String[]);
-    
     public void startWidget(java.lang.String[]);
     public void startWidgetWithPath(java.lang.String[]);
     public void finishWidget(java.lang.String[]);
@@ -309,7 +317,6 @@
     public void setKeyboardMode(java.lang.String[]);
     public void reload(java.lang.String[]);
     public void reloadWidgetByAppId(java.lang.String[]);
-    
     public void setEvent(java.lang.String[]);
     public void beginEvent(java.lang.String[]);
     public void endEvent(java.lang.String[]);
