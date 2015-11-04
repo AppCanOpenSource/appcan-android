@@ -240,7 +240,9 @@ public abstract class EUExBase {
      * @param params
      * @param id 标识要添加的view，删除时会用到
      */
-    public final void addViewToWebView(View child, android.widget.AbsoluteLayout.LayoutParams params,String id){
+    public final void addViewToWebView(View child,
+                                       android.widget.AbsoluteLayout.LayoutParams params,
+                                       String id){
         if (mBrwView==null){
             return;
         }
@@ -266,7 +268,9 @@ public abstract class EUExBase {
         }
     }
 
-    public void addFragmentToCurrentWindow(BaseFragment fragment, final RelativeLayout.LayoutParams params,String tag){
+    public void addFragmentToCurrentWindow(BaseFragment fragment,
+                                           final RelativeLayout.LayoutParams params,
+                                           String tag){
         addFragment(fragment,tag);
         fragment.setOnViewCreatedListener(new BaseFragment.OnViewCreatedListener() {
 			@Override
@@ -290,7 +294,8 @@ public abstract class EUExBase {
      * @param tag 作为Fragment的Tag，和添加到WebView的tag,必须保证唯一性
      */
     public void addFragmentToWebView(BaseFragment fragment,
-                                     final android.widget.AbsoluteLayout.LayoutParams params, final String tag){
+                                     final android.widget.AbsoluteLayout.LayoutParams params,
+                                     final String tag){
         if (TextUtils.isEmpty(tag)){
             return;
         }
@@ -318,11 +323,12 @@ public abstract class EUExBase {
                 .remove(fragment).commit();
     }
 
-    public void removeFragment(String tag){
+    private void removeFragment(String tag){
         if (TextUtils.isEmpty(tag)){
             return;
         }
-        Fragment fragment=((FragmentActivity) mContext).getSupportFragmentManager().findFragmentByTag(tag);
+        Fragment fragment=((FragmentActivity) mContext).
+                getSupportFragmentManager().findFragmentByTag(tag);
         if (fragment!=null) {
             removeFragment(fragment);
         }
