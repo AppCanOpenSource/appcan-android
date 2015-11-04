@@ -22,7 +22,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
-import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.Fragment;
@@ -65,7 +64,7 @@ public abstract class EUExBase {
 
 	protected boolean mDestroyed;
 	protected boolean mStopped;
-	protected BaseHandler mHandler;
+	protected c mHandler;
 
 	public static final String SCRIPT_TAIL = ")}";
 	public static final String SCRIPT_HEADER = "javascript:";
@@ -74,7 +73,7 @@ public abstract class EUExBase {
 	public EUExBase(Context context, EBrowserView inParent) {
 		mContext = context;
 		mBrwView = inParent;
-		mHandler = new BaseHandler(Looper.getMainLooper());
+		mHandler = new c(Looper.getMainLooper());
 	}
 
 	/**
@@ -167,7 +166,7 @@ public abstract class EUExBase {
 			return;
 		}
 		((EBrowserActivity) mContext).startActivityForResult(this, intent,
-                requestCode);
+				requestCode);
 	}
 
     /**
@@ -248,7 +247,7 @@ public abstract class EUExBase {
         if (id!=null) {
             child.setTag(id);
         }
-        mBrwView.addView(child,params);
+        mBrwView.addView(child, params);
     }
 
     /**
@@ -270,11 +269,11 @@ public abstract class EUExBase {
     public void addFragmentToCurrentWindow(BaseFragment fragment, final RelativeLayout.LayoutParams params,String tag){
         addFragment(fragment,tag);
         fragment.setOnViewCreatedListener(new BaseFragment.OnViewCreatedListener() {
-            @Override
-            public void onViewCreated(View view) {
-                addViewToCurrentWindow(view,params);
-            }
-        });
+			@Override
+			public void onViewCreated(View view) {
+				addViewToCurrentWindow(view, params);
+			}
+		});
     }
 
     public void removeFragmentFromWindow(BaseFragment fragment,String tag){
@@ -297,11 +296,11 @@ public abstract class EUExBase {
         }
         addFragment(fragment,tag);
         fragment.setOnViewCreatedListener(new BaseFragment.OnViewCreatedListener() {
-            @Override
-            public void onViewCreated(View view) {
-                addViewToWebView(view, params, tag);
-            }
-        });
+			@Override
+			public void onViewCreated(View view) {
+				addViewToWebView(view, params, tag);
+			}
+		});
     }
 
     public void removeFragmentFromWebView(String tag){
@@ -623,17 +622,6 @@ public abstract class EUExBase {
 		}
 	}
 
-    public class BaseHandler extends Handler {
-
-        public BaseHandler(Looper loop) {
-            super(loop);
-        }
-
-        public void handleMessage(Message msg) {
-            EUExBase base = (EUExBase) msg.obj;
-            base.onHandleMessage(msg);
-        }
-    }
     
     public void onHandleMessage(Message msg) {}
 }
