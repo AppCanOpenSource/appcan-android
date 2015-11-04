@@ -104,6 +104,11 @@
     <methods>;
 }
 
+-keep class org.zywx.wbpalmstar.engine.universalex.c{
+    <fields>;
+    <methods>;
+}
+
 -keep class org.zywx.wbpalmstar.engine.universalex.EUExCallback {
     <fields>;
     <methods>;
