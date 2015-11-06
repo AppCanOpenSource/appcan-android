@@ -67,6 +67,7 @@ public class EUExManager {
                 for (EUExBase plugin:plugins) {
                     if (plugin.getUexName().equals(pluginName)){
                         callMethod(plugin,methodName,params);
+                        return;
                     }
                 }
                 //调用单实例插件
