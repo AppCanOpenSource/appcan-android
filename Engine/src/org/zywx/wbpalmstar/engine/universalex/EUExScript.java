@@ -88,6 +88,7 @@ public class EUExScript {
                 + "setPushState:function(){uexDispatcher.dispatch('uexWidget','setPushState',jo(arguments));},"
                 + "getPushState:function(){uexDispatcher.dispatch('uexWidget','getPushState',jo(arguments));},"
                 + "startApp:function(){uexDispatcher.dispatch('uexWidget','startApp',jo(arguments));},"
+                + "removeWidget:function(){uexDispatcher.dispatch('uexWidget','removeWidget',jo(arguments));},"
                 + "setSpaceEnable:function(){uexDispatcher.dispatch('uexWidget','setSpaceEnable',jo(arguments));},"
                 + "setLogServerIp:function(){uexDispatcher.dispatch('uexWidget','setLogServerIp',jo(arguments));},"
                 + "delPushInfo:function(){uexDispatcher.dispatch('uexWidget','delPushInfo',jo(arguments));},"

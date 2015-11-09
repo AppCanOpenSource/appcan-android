@@ -96,6 +96,8 @@ public final class EBrowserActivity extends ActivityGroup {
 	public SlidingMenu globalSlidingMenu;
 	private ValueCallback<Uri> mUploadMessage;
 
+    private boolean mLoadingRemoved=false;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(null);
@@ -235,20 +237,24 @@ public final class EBrowserActivity extends ActivityGroup {
 		return mEBrwMainFrame.customViewShown();
 	}
 
-	public void setContentViewVisible(){
+	public void setContentViewVisible(int delayTime){
+        if (mLoadingRemoved){
+            return;
+        }
 		mEHandler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
+                        mLoadingRemoved=true;
 						getWindow().setBackgroundDrawable(new ColorDrawable(0xFFFFFFFF));
 						Intent intent=new Intent(LoadingActivity.BROADCAST_ACTION);
 						sendBroadcast(intent);
 					}
 				});
 			}
-		}, 200);
+		}, delayTime);
 	}
 
 	public final void showCustomView(View view, CustomViewCallback callback) {
@@ -820,7 +826,7 @@ public final class EBrowserActivity extends ActivityGroup {
 				break;
 			case F_MSG_LOAD_HIDE_SH:
 				mScreen.setVisibility(View.VISIBLE);
-				setContentViewVisible();
+				setContentViewVisible(0);
 				if (mBrowserAround.checkTimeFlag()) {
 					mBrowser.hiddenShelter();
 				} else {

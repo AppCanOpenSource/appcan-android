@@ -1389,6 +1389,11 @@ public class WDataManager {
 						if ("true".equals(text)) {
 							widgetData.m_appdebug = 1;
 						}
+					}else if ("removeloading".equals(localName)) {
+						String text = parser.nextText();
+						if ("true".equals(text)) {
+							widgetData.m_remove_loading = 0;
+						}
 					}
 					break;
 				case XmlPullParser.END_DOCUMENT:

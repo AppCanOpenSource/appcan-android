@@ -466,6 +466,15 @@ public class EUExWidget extends EUExBase {
 		}
 	}
 
+    public void closeLoading(String[] parm) {
+        ((EBrowserActivity) mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ((EBrowserActivity) mContext).setContentViewVisible(0);
+            }
+        });
+    }
+
 	public void loadApp(String[] parm) {
 		if (parm.length < 3) {
 			return;

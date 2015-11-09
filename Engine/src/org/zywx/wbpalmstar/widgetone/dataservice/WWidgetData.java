@@ -106,6 +106,8 @@ public class WWidgetData implements Parcelable {
 
     public String m_bgColor = "#00000000";
 
+    public static int m_remove_loading=1;//1,引擎关闭loading页；0，web调接口关闭loading页
+
 	public static final Parcelable.Creator<WWidgetData> CREATOR = new Creator<WWidgetData>() {
 		public WWidgetData createFromParcel(Parcel source) {
 			WWidgetData widget = new WWidgetData();
@@ -275,6 +277,8 @@ public class WWidgetData implements Parcelable {
 		sb.append("\n");
 		sb.append("m_id: " + m_id);
 		sb.append("\n");
+        sb.append("m_remove_loading:"+m_remove_loading);
+        sb.append("\n");
 		return sb.toString();
 	}
 	
