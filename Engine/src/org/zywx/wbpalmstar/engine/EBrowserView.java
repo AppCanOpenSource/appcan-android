@@ -142,10 +142,13 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 	}
 
     private void disableHW(){
-        if (Build.MODEL.equals("HUAWEI GRA-UL00")||
-                Build.MODEL.equals("GEM-703L")){
-            setLayerType(View.LAYER_TYPE_SOFTWARE,null);
-        }
+		if (Build.MODEL.equals("HUAWEI GRA-UL00")||
+				Build.MODEL.equals("GEM-703L")||
+				Build.BRAND.equals("Xiaomi")){
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				setLayerType(View.LAYER_TYPE_SOFTWARE,null);
+			}
+		}
     }
 
     @Override
