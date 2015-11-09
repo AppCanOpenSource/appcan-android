@@ -64,7 +64,8 @@ public class EUExScript {
                 + "platformVersion:'" + Build.VERSION.RELEASE + "',"
                 + "getId:function(){uexDispatcher.dispatch('uexWidgetOne','getId',jo(arguments));},"
                 + "getVersion:function(){uexDispatcher.dispatch('uexWidgetOne','getVersion',jo(arguments));},"
-                + "getPlatform:function(){return uexDispatcher.dispatch('uexWidgetOne','getPlatform',jo(arguments));},"
+                + "getPlatform:function(){uexDispatcher.dispatch('uexWidgetOne','getPlatform',jo(arguments)); return " +
+                "0},"
                 + "exit:function(){uexDispatcher.dispatch('uexWidgetOne','exit',jo(arguments));},"
                 + "getWidgetNumber:function(){uexDispatcher.dispatch('uexWidgetOne','getWidgetNumber',jo(arguments));},"
                 + "getWidgetInfo:function(){uexDispatcher.dispatch('uexWidgetOne','getWidgetInfo',jo(arguments));},"

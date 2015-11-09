@@ -36,9 +36,8 @@ public class EUExDispatcher extends EUExAbstractDispatcher {
     }
 
     @JavascriptInterface
-    public Object dispatch(String pluginName,String methodName,String[] params){
-        Object result=mDispatcherCallback.onDispatch(pluginName, methodName, params);
-        return result;
+    public void dispatch(String pluginName,String methodName,String[] params){
+         mDispatcherCallback.onDispatch(pluginName, methodName, params);
     }
 
 }
