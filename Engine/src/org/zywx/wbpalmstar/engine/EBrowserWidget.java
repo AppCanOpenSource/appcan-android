@@ -1019,6 +1019,7 @@ public class EBrowserWidget extends AbsoluteLayout {
                     newWindow = new EBrowserWindow(mContext,
                             EBrowserWidget.this);
                 }
+                newWindow.setSwipeEnabled(false);
                 boolean prevHidden = entry
                         .checkFlag(EBrwViewEntry.F_FLAG_NOT_HIDDEN);
                 newWindow.setPrevWindowWillHidden(prevHidden);

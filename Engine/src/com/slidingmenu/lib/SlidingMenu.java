@@ -2,6 +2,7 @@ package com.slidingmenu.lib;
 
 import java.lang.reflect.Method;
 
+import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 
 //import org.zywx.wbpalmstar.widgetone.uex.R;
@@ -41,6 +42,8 @@ public class SlidingMenu extends RelativeLayout {
 	public static final int SLIDING_WINDOW = 0;
 	public static final int SLIDING_CONTENT = 1;
 	private boolean mActionbarOverlay = false;
+
+    private int mCurrentLayerType=View.LAYER_TYPE_HARDWARE;
 
 	/** Constant value for use with setTouchModeAbove(). Allows the SlidingMenu to be opened with a swipe
 	 * gesture on the screen's margin
@@ -1062,22 +1065,34 @@ public class SlidingMenu extends RelativeLayout {
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void manageLayers(float percentOpen) {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && !isHardwareAccelerated()) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && isHardwareAccelerated()) {
 			boolean layer = percentOpen > 0.0f && percentOpen < 1.0f;
-			final int layerType = layer ? View.LAYER_TYPE_HARDWARE : View.LAYER_TYPE_SOFTWARE;
-			
-			if (layerType != getContent().getLayerType()) {
-				getHandler().post(new Runnable() {
-					public void run() {
-						Log.v(TAG, "changing layerType. hardware? " + (layerType == View.LAYER_TYPE_HARDWARE));
-						getContent().setLayerType(layerType, null);
-						getMenu().setLayerType(layerType, null);
-						if (getSecondaryMenu() != null) {
-							getSecondaryMenu().setLayerType(layerType, null);
-						}
-					}
-				});
-			}
+            BDebug.i("software:",layer);
+            if (layer){
+                if (mCurrentLayerType!=View.LAYER_TYPE_SOFTWARE) {
+                    mCurrentLayerType=View.LAYER_TYPE_SOFTWARE;
+                    getHandler().post(new Runnable() {
+                        public void run() {
+                            getContent().setLayerType(mCurrentLayerType, null);
+                            if (getSecondaryMenu() != null) {
+                                getSecondaryMenu().setLayerType(mCurrentLayerType, null);
+                            }
+                        }
+                    });
+                }
+            }else{
+                if (mCurrentLayerType!=View.LAYER_TYPE_HARDWARE) {
+                    mCurrentLayerType=View.LAYER_TYPE_HARDWARE;
+                    getHandler().post(new Runnable() {
+                        public void run() {
+                            getContent().setLayerType(mCurrentLayerType, null);
+                            if (getSecondaryMenu() != null) {
+                                getSecondaryMenu().setLayerType(mCurrentLayerType, null);
+                            }
+                        }
+                    });
+                }
+            }
 		}
 	}
 }

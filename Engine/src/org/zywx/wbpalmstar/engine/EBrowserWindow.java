@@ -22,6 +22,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -131,8 +132,8 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
 		mMultiPopTable = new Hashtable<String, ArrayList<EBrowserView>>();
 		mMultiPopPager = new HashMap<String, ViewPager>();
 
-		setAnimationCacheEnabled(false);
-		setAlwaysDrawnWithCacheEnabled(false);
+//		setAnimationCacheEnabled(false);
+//		setAlwaysDrawnWithCacheEnabled(false);
 	}
 
 	public void init(EBrowser inBrw, EBrwViewEntry inEntry) {
@@ -143,6 +144,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
 					EBrwViewEntry.VIEW_TYPE_MAIN, this);
 			mMainView.setVisibility(VISIBLE);
 			mMainView.setName("main");
+            mMainView.setBackgroundColor(Color.TRANSPARENT);
 			EBounceView bounceView = new EBounceView(mContext);
 			EUtil.viewBaseSetting(bounceView);
 			bounceView.setId(VIEW_MID);
