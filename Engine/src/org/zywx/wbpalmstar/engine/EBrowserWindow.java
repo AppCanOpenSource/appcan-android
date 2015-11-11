@@ -18,6 +18,7 @@
 
 package org.zywx.wbpalmstar.engine;
 
+import android.animation.Animator;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -132,8 +133,8 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
 		mMultiPopTable = new Hashtable<String, ArrayList<EBrowserView>>();
 		mMultiPopPager = new HashMap<String, ViewPager>();
 
-//		setAnimationCacheEnabled(false);
-//		setAlwaysDrawnWithCacheEnabled(false);
+		setAnimationCacheEnabled(false);
+		setAlwaysDrawnWithCacheEnabled(false);
 	}
 
 	public void init(EBrowser inBrw, EBrwViewEntry inEntry) {
@@ -2723,7 +2724,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         	anim.setAnimationListener(this);
 		} else {
 			setVisibility(GONE);
-			mBroWidget.putInvalid(this);
+           	mBroWidget.putInvalid(this);
 		}
 
     }
@@ -2739,6 +2740,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
 		// TODO Auto-generated method stub
 		new Handler().post(new Runnable() {
 			public void run() {
+//				setX(getWidth());
 				setVisibility(GONE);
 				mBroWidget.putInvalid(EBrowserWindow.this);
 			}

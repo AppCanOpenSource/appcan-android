@@ -698,12 +698,20 @@ public class EBrowserWidget extends AbsoluteLayout {
 				if (null == preWind)
 					break;
 			}
+            preWind.getMainView().setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 			preWind.startAnimation(animPair[0]);
 			preWind.setVisibility(VISIBLE);
 			preWind.notifyVisibilityChanged(0);
 //			mBroWindow.startAnimation(animPair[1]);
+            mBroWindow.getMainView().setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 			mBroWindow.closeWindowByAnimation(animPair[1]);
-
+            final EBrowserWindow temp=preWind;
+            postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    temp.setLayerType(View.LAYER_TYPE_HARDWARE,null);
+                }
+            },260);
             if (EBrowserWindow.sNavFlag) {
                 setPreWindVisible(preWind, VISIBLE);
             }
