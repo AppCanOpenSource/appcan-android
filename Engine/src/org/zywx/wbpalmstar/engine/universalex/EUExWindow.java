@@ -45,6 +45,7 @@ import com.slidingmenu.lib.SlidingMenu;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.ResoureFinder;
 import org.zywx.wbpalmstar.engine.EBrowser;
@@ -150,6 +151,8 @@ public class EUExWindow extends EUExBase {
 	private PromptDialog mPrompt;
 	private ResoureFinder finder;
 
+    public static final String KEY_HARDWARE="hardware";//硬件加速
+
 	public EUExWindow(Context context, EBrowserView inParent) {
 		super(context, inParent);
 		inParent.setScrollCallBackContex(this);
@@ -190,6 +193,7 @@ public class EUExWindow extends EUExBase {
         boolean opaque = false;
         String bgColor = null;
         boolean hasExtraInfo = false;
+        int hardware=-1;
         if (parm.length > 7) {
             animDuration = parm[7];
         }
@@ -206,6 +210,10 @@ public class EUExWindow extends EUExBase {
                 if(data.has(WWidgetData.TAG_WIN_BG_COLOR)){
                     bgColor = data.getString(WWidgetData.TAG_WIN_BG_COLOR);
                     hasExtraInfo = true;
+                }
+                hardware=data.optInt(KEY_HARDWARE,-1);
+                if (hardware!=-1){
+                    hasExtraInfo=true;
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -279,6 +287,7 @@ public class EUExWindow extends EUExBase {
         windEntry.mAnimDuration = duration;
         windEntry.mOpaque = opaque;
         windEntry.mBgColor = bgColor;
+        windEntry.mHardware =hardware;
         windEntry.hasExtraInfo = hasExtraInfo;
         curWind.createWindow(mBrwView, windEntry);
     }
@@ -1016,6 +1025,7 @@ public class EUExWindow extends EUExBase {
         boolean opaque = false;
         String bgColor = null;
         boolean hasExtraInfo = false;
+        int hardware=-1;
         if (parm.length > 11) {
             String jsonData = parm[11];
             try {
@@ -1029,6 +1039,10 @@ public class EUExWindow extends EUExBase {
                 if(data.has(WWidgetData.TAG_WIN_BG_COLOR)){
                     bgColor = data.getString(WWidgetData.TAG_WIN_BG_COLOR);
                     hasExtraInfo = true;
+                }
+                hardware=data.optInt(KEY_HARDWARE,-1);
+                if (hardware!=-1){
+                    hasExtraInfo=true;
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -1109,6 +1123,7 @@ public class EUExWindow extends EUExBase {
         popEntry.mBottom = bottom;
         popEntry.mOpaque = opaque;
         popEntry.mBgColor = bgColor;
+        popEntry.mHardware=hardware;
         popEntry.hasExtraInfo = hasExtraInfo;
         String query = null;
         if (Build.VERSION.SDK_INT >= 11) {
@@ -1165,6 +1180,39 @@ public class EUExWindow extends EUExBase {
         msg.setData(bd);
         mHandler.sendMessage(msg);
 	}
+
+    public void setHardwareEnable(final String[] params){
+        ((Activity)mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (params != null && params.length > 0) {
+                    EBrowserWindow curWindow=mBrwView.getBrowserWindow();
+                    int flag = Integer.parseInt(params[0]);
+                    curWindow.setWindowHWEnable(flag);
+                }
+            }
+        });
+    }
+
+
+    public void setPopHardwareEnable(final String[] params){
+        BDebug.i(params.toString());
+        ((Activity) mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (params != null && params.length > 1) {
+                    String popoverName = params[0];
+                    int flag = Integer.parseInt(params[1]);
+                    EBrowserWindow curWindow = mBrwView.getBrowserWindow();
+                    if (curWindow == null) {
+                        return;
+                    }
+                    curWindow.setPopoverHardwareEnable(popoverName, flag);
+                }
+            }
+        });
+    }
+
 
     public void setPopoverFrameMsg(String[] parm) {
         EBrowserWindow curWind = mBrwView.getBrowserWindow();

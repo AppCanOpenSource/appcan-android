@@ -70,7 +70,7 @@ public class EBrwViewEntry {
     public String mBgColor = "#00000000";
 	public long mAnimDuration;
 	public Object mObj;
-	
+	public int mHardware =-1;//硬件加速，-1不处理，0关闭，1开启
 	
 	public EBrwViewEntry(int inType){
 		mType = inType;

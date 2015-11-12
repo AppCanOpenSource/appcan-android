@@ -806,6 +806,21 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
         }
     }
 
+    /**
+     * 设置是否开启硬件加速
+     * @param flag -1不处理，0关闭，1开启
+     */
+    public void setHWEnable(int flag){
+        if (flag==-1){
+            return;
+        }
+        if (flag==1){
+            setLayerType(View.LAYER_TYPE_HARDWARE,null);
+        }else{
+            setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
+    }
+
 	protected void needToEncrypt(WebView view, String url, int inFlag) {
 		if (mDestroyed) {
 			return;

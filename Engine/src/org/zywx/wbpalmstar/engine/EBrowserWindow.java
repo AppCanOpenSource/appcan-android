@@ -954,7 +954,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
 
     public void loadDataWithBaseURL(String baseUrl, String data,
                                     String mimeType, String encoding, String historyUrl){
-        mMainView.loadDataWithBaseURL(baseUrl,data,mimeType,encoding,historyUrl);
+        mMainView.loadDataWithBaseURL(baseUrl, data, mimeType, encoding, historyUrl);
     }
 
 	public void onSetWindowFrameFinish() {
@@ -1744,6 +1744,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
 		EUtil.viewBaseSetting(bounceView);
 		bounceView.setLayoutParams(newParm);
 		bounceView.addView(eView);
+        eView.setHWEnable(entity.mHardware);
 		addView(bounceView);
 		if (entity.checkFlag(EBrwViewEntry.F_FLAG_SHOULD_OP_SYS)) {
 			eView.setShouldOpenInSystem(true);
@@ -2375,6 +2376,26 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
 		mWindLoop.sendMessage(msg);
 
 	}
+
+    /**
+     * 设置window是否开启硬件加速
+     * @param flag
+     */
+    public void setWindowHWEnable(int flag){
+        getMainView().setHWEnable(flag);
+    }
+
+    /**
+     * 设置popover是否开启硬件加速
+     * @param popName
+     * @param flag
+     */
+    public void setPopoverHardwareEnable(String popName,int flag){
+        EBrowserView pop = mPopTable.get(popName);
+        if (pop!=null){
+            pop.setHWEnable(flag);
+        }
+    }
 
 	public class MyPageChangedListener implements
 			ViewPager.OnPageChangeListener {

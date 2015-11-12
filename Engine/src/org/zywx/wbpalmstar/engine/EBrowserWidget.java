@@ -218,6 +218,7 @@ public class EBrowserWidget extends AbsoluteLayout {
                 Compat.FILL, Compat.FILL, 0, 0);
         newWindow.setLayoutParams(parm);
         newWindow.init(mBrw, entry);
+        newWindow.setWindowHWEnable(entry.mHardware);
         if (entry.checkFlag(EBrwViewEntry.F_FLAG_GESTURE)) {
             newWindow.setSupportZoom();
         }
