@@ -1063,36 +1063,21 @@ public class SlidingMenu extends RelativeLayout {
 		return true;
 	}
 
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	public void manageLayers(float percentOpen) {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && isHardwareAccelerated()) {
-			boolean layer = percentOpen > 0.0f && percentOpen < 1.0f;
-            BDebug.i("software:",layer);
-            if (layer){
-                if (mCurrentLayerType!=View.LAYER_TYPE_SOFTWARE) {
-                    mCurrentLayerType=View.LAYER_TYPE_SOFTWARE;
-                    getHandler().post(new Runnable() {
-                        public void run() {
-                            getContent().setLayerType(mCurrentLayerType, null);
-                            if (getSecondaryMenu() != null) {
-                                getSecondaryMenu().setLayerType(mCurrentLayerType, null);
-                            }
-                        }
-                    });
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public void manageLayers(float percentOpen) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && isHardwareAccelerated()) {
+            boolean layer = percentOpen > 0.0f && percentOpen < 1.0f;
+            if (layer) {
+                if (mCurrentLayerType != View.LAYER_TYPE_SOFTWARE) {
+                    mCurrentLayerType = View.LAYER_TYPE_SOFTWARE;
+                    getContent().setLayerType(mCurrentLayerType, null);
                 }
-            }else{
-                if (mCurrentLayerType!=View.LAYER_TYPE_HARDWARE) {
-                    mCurrentLayerType=View.LAYER_TYPE_HARDWARE;
-                    getHandler().post(new Runnable() {
-                        public void run() {
-                            getContent().setLayerType(mCurrentLayerType, null);
-                            if (getSecondaryMenu() != null) {
-                                getSecondaryMenu().setLayerType(mCurrentLayerType, null);
-                            }
-                        }
-                    });
+            } else {
+                if (mCurrentLayerType != View.LAYER_TYPE_HARDWARE) {
+                    mCurrentLayerType = View.LAYER_TYPE_HARDWARE;
+                    getContent().setLayerType(mCurrentLayerType, null);
                 }
             }
-		}
-	}
+        }
+    }
 }
