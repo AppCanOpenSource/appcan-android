@@ -118,6 +118,7 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 		setLayoutAnimation(null);
 		setAnimation(null);
 		setNetworkAvailable(true);
+        disableHW();
 		if (Build.VERSION.SDK_INT <= 7) {
 			if (mBaSetting == null) {
 				mBaSetting = new EBrowserSetting(this);
@@ -139,6 +140,26 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 		mUExMgr = new EUExManager(mContext);
 		mUExMgr.addJavascriptInterface(this);
 	}
+
+    private void disableHW(){
+        if (isDisableHWDevice()){
+            setLayerType(LAYER_TYPE_SOFTWARE,null);
+        }
+    }
+
+    public boolean isDisableHWDevice(){
+        String device=Build.BRAND+" "+Build.MODEL;
+        return  device.equalsIgnoreCase("Letv X600")||
+                device.equalsIgnoreCase("Xiaomi 2013023");
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        if (getLayerType()==LAYER_TYPE_SOFTWARE){
+            invalidate();
+        }
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
 
     @Override
     protected void onAttachedToWindow() {
