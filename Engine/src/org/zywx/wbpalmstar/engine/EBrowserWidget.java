@@ -82,7 +82,7 @@ public class EBrowserWidget extends AbsoluteLayout {
 		setAlwaysDrawnWithCacheEnabled(false);
 		EUtil.viewBaseSetting(this);
 		mPres = mContext.getSharedPreferences("saveData",
-                Context.MODE_WORLD_READABLE);
+                Context.MODE_PRIVATE);
 		mPushNotifyWindName = mPres.getString(BConstant.F_PUSH_WIN_NAME, "");
 		mPushNotifyFunctionName = mPres.getString(BConstant.F_PUSH_NOTI_FUN_NAME, "");
 	}

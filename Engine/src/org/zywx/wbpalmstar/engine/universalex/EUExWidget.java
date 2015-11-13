@@ -746,7 +746,7 @@ public class EUExWidget extends EUExBase {
 
 	public void getPushState(String[] parm) {
 		SharedPreferences sp = mContext.getSharedPreferences("saveData",
-				Context.MODE_WORLD_READABLE);
+				Context.MODE_PRIVATE);
 		String pushMes = sp.getString("pushMes", "0");
 		String localPushMes = sp.getString("localPushMes", pushMes);
 		jsCallback(function_getPushState, 0, EUExCallback.F_C_INT,
@@ -759,13 +759,16 @@ public class EUExWidget extends EUExBase {
 			type = parm[0];
 		}
 		String userInfo = null;
-		if (PUSH_MSG_ALL.equals(type)) {
-			// 获取推送消息所有内容
-			userInfo = ((EBrowserActivity) mContext).getIntent()
-					.getStringExtra(BUNDLE_MESSAGE);
-		} else {
-			userInfo = ((EBrowserActivity) mContext).getIntent()
-					.getStringExtra(BUNDLE_DATA);
+		try {
+			if (PUSH_MSG_ALL.equals(type)) {
+				// 获取推送消息所有内容
+				userInfo = ((EBrowserActivity) mContext).getIntent()
+						.getStringExtra(BUNDLE_MESSAGE);
+			} else {
+				userInfo = ((EBrowserActivity) mContext).getIntent()
+						.getStringExtra(BUNDLE_DATA);
+			}
+		} catch (Exception e) {
 		}
 		((WidgetOneApplication) mContext.getApplicationContext()).getPushInfo(
 				userInfo, System.currentTimeMillis() + "");

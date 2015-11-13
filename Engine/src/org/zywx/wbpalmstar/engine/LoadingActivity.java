@@ -9,6 +9,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -40,10 +41,13 @@ public class LoadingActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent intent=getIntent();
-        if (intent!=null) {
-            isTemp = intent.getBooleanExtra("isTemp", false);
-        }
+        try {
+			Intent intent=getIntent();
+			if (intent!=null) {
+			    isTemp = intent.getBooleanExtra("isTemp", false);
+			}
+		} catch (Exception exception) {
+		}
         FrameLayout rootLayout=new FrameLayout(this);
         FrameLayout.LayoutParams layoutParams=new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
         rootLayout.setLayoutParams(layoutParams);
@@ -74,7 +78,8 @@ public class LoadingActivity extends Activity {
         mBroadcastReceiver = new MyBroadcastReceiver();
               IntentFilter intentFilter = new IntentFilter();
                intentFilter.addAction(BROADCAST_ACTION);
-        registerReceiver(mBroadcastReceiver, intentFilter);
+		LocalBroadcastManager.getInstance(this).registerReceiver(
+				mBroadcastReceiver, intentFilter);
         if (EBrowserActivity.develop) {
             TextView worn = new TextView(this);
             worn.setText(EUExUtil.getString("platform_only_test"));
@@ -118,7 +123,8 @@ public class LoadingActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(mBroadcastReceiver);
+		LocalBroadcastManager.getInstance(this).unregisterReceiver(
+				mBroadcastReceiver);
     }
 
     private class MyBroadcastReceiver extends BroadcastReceiver {

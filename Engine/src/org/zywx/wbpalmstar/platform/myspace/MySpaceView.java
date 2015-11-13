@@ -125,7 +125,7 @@ public class MySpaceView extends RelativeLayout implements OnClickListener, OnIt
 	}
 
 	private void initParams() {
-		sp = getContext().getSharedPreferences(USER_SP_NAME, Context.MODE_WORLD_READABLE);
+		sp = getContext().getSharedPreferences(USER_SP_NAME, Context.MODE_PRIVATE);
 		lastUpdateRecmdDay = sp.getInt(USER_SP_LAST_UPDATE_RECMD_APPS_TIME, 0);
 		currentLoginInfo = getLoginInfo();
 		newLoginInfo = new LoginInfo();

@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -67,10 +68,13 @@ public class TempActivity extends Activity {
             rootLayout.addView(worn);
         }
         setContentView(rootLayout);
-        Intent intent=getIntent();
-        if (intent!=null){
-            isTemp=intent.getBooleanExtra("isTemp",false);
-        }
+        try {
+			Intent intent=getIntent();
+			if (intent!=null){
+			    isTemp=intent.getBooleanExtra("isTemp",false);
+			}
+		} catch (Exception exception) {
+		}
 //        mHandler.postDelayed(new Runnable() {
 //            @Override
 //            public void run() {
@@ -84,7 +88,8 @@ public class TempActivity extends Activity {
           mBroadcastReceiver = new MyBroadcastReceiver();
               IntentFilter intentFilter = new IntentFilter();
                intentFilter.addAction(BROADCAST_ACTION);
-        registerReceiver(mBroadcastReceiver, intentFilter);
+		LocalBroadcastManager.getInstance(this).registerReceiver(
+				mBroadcastReceiver, intentFilter);
 		try {
 			getWindow().clearFlags(
 					WindowManager.LayoutParams.class.getField(
@@ -110,7 +115,8 @@ public class TempActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(mBroadcastReceiver);
+		LocalBroadcastManager.getInstance(this).unregisterReceiver(
+				mBroadcastReceiver);
     }
 
     private class MyBroadcastReceiver extends BroadcastReceiver {
