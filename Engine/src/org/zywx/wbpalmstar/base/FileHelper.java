@@ -24,10 +24,12 @@ import android.os.StatFs;
 import java.io.*;
 
 public class FileHelper {
+	public static final String SDCARD = Environment
+			.getExternalStorageDirectory().getPath();
 
 	public static String getSDcardPath() {
 		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-			return "/sdcard/";
+			return SDCARD + "/";
 		}
 		return null;
 	}

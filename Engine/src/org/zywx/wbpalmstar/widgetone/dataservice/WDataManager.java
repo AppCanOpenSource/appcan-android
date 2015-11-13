@@ -87,7 +87,7 @@ public class WDataManager {
 		// db.open();
 		// db.close();
 		m_preferences = m_context.getSharedPreferences(m_widgetOneConfig,
-				Context.MODE_WORLD_READABLE);
+				Context.MODE_PRIVATE);
 
 		m_sboxPath = context.getFilesDir().getPath() + "/";
 	}
@@ -625,7 +625,7 @@ public class WDataManager {
 	 */
 	private boolean isHasUpdateZip(String zipPath) {
 		SharedPreferences preferences = m_context.getSharedPreferences(
-				"updateInfo", Context.MODE_WORLD_READABLE);
+				"updateInfo", Context.MODE_PRIVATE);
 		int totalSize = preferences.getInt("totalSize", 0);
 		int downloaded = preferences.getInt("downloaded", 0);
 		if (totalSize == 0 || downloaded == 0 || totalSize != downloaded) {
@@ -943,7 +943,7 @@ public class WDataManager {
 	}
 	private boolean unZIP(String targetFile) {
 		SharedPreferences preferences = m_context.getSharedPreferences(
-				"updateInfo", Context.MODE_WORLD_READABLE);
+				"updateInfo", Context.MODE_PRIVATE);
 		int totalSize = preferences.getInt("totalSize", 0);
 		int downloaded = preferences.getInt("downloaded", 0);
 

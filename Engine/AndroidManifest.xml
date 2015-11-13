@@ -60,7 +60,8 @@
         <!-- push -->
         <service
             android:name="org.zywx.wbpalmstar.platform.push.PushService"
-           android:process=":push"
+            android:process=":push"
+            android:exported="false"
             android:enabled="true" />
 
         <receiver
@@ -71,7 +72,7 @@
         </receiver>
 
         <receiver
-            android:name="org.zywx.wbpalmstar.platform.push.PushRecieveMsgReceiver">
+            android:name="org.zywx.wbpalmstar.platform.push.PushRecieveMsgReceiver" android:exported="false">
             <intent-filter>
                 <action android:name="org.zywx.push.receive" />
             </intent-filter>

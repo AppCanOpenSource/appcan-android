@@ -161,23 +161,25 @@ public class PushReportAgent implements PushReportConstants {
 		PushReportUtility.log("reportPush===" + pushInfo + " eventType==="
 				+ eventType);
 		String msgId = parsePushInfo2MsgId(pushInfo);
-		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-		nameValuePairs
-				.add(new BasicNameValuePair(KEY_PUSH_REPORT_MSGID, msgId));
-		nameValuePairs.add(new BasicNameValuePair(KEY_PUSH_REPORT_SOFTTOKEN,
-				softToken));
-		nameValuePairs.add(new BasicNameValuePair(KEY_PUSH_REPORT_EVENTTYPE,
-				eventType));
-		nameValuePairs.add(new BasicNameValuePair(KEY_PUSH_REPORT_OCCUREDAT,
-				occuredAt));
-		if (eventType.equals(PushReportConstants.EVENT_TYPE_OPEN)) {
-			PushReportThread.getPushReportThread(context, sAgent,
-					TYPE_PUSH_REPORT_OPEN, nameValuePairs).start();
-			Log.i("push", "EVENT_TYPE_OPEN");
-		} else if (eventType.equals(PushReportConstants.EVENT_TYPE_ARRIVED)) {
-			PushReportThread.getPushReportThread(context, sAgent,
-					TYPE_PUSH_REPORT_ARRIVED, nameValuePairs).start();
-			Log.i("push", "EVENT_TYPE_ARRIVED");
+		if (msgId != null) {
+			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+			nameValuePairs
+			.add(new BasicNameValuePair(KEY_PUSH_REPORT_MSGID, msgId));
+			nameValuePairs.add(new BasicNameValuePair(KEY_PUSH_REPORT_SOFTTOKEN,
+					softToken));
+			nameValuePairs.add(new BasicNameValuePair(KEY_PUSH_REPORT_EVENTTYPE,
+					eventType));
+			nameValuePairs.add(new BasicNameValuePair(KEY_PUSH_REPORT_OCCUREDAT,
+					occuredAt));
+			if (eventType.equals(PushReportConstants.EVENT_TYPE_OPEN)) {
+				PushReportThread.getPushReportThread(context, sAgent,
+						TYPE_PUSH_REPORT_OPEN, nameValuePairs).start();
+				Log.i("push", "EVENT_TYPE_OPEN");
+			} else if (eventType.equals(PushReportConstants.EVENT_TYPE_ARRIVED)) {
+				PushReportThread.getPushReportThread(context, sAgent,
+						TYPE_PUSH_REPORT_ARRIVED, nameValuePairs).start();
+				Log.i("push", "EVENT_TYPE_ARRIVED");
+			}
 		}
 	}
 

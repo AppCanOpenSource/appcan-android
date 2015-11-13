@@ -587,6 +587,7 @@ public class MQTTService implements MqttSimpleCallback {
 				if (json.has("mdm") && json.getString("mdm") != null) {
 					Intent intent = new Intent();
 					intent.setAction(ACTION_MDM);
+					intent.setPackage(_context.getPackageName());
 					intent.putExtra("mdmtoken", json.getString("mdm"));
 					_context.sendBroadcast(intent);
 

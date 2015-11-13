@@ -31,6 +31,7 @@ import android.net.Uri;
 import android.os.*;
 import android.os.Process;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -232,6 +233,8 @@ public final class EBrowserActivity extends FragmentActivity {
 	}
 
 	public void setContentViewVisible(){
+		final LocalBroadcastManager broadcastManager = LocalBroadcastManager
+				.getInstance(this);
 		mEHandler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -240,7 +243,7 @@ public final class EBrowserActivity extends FragmentActivity {
 					public void run() {
 						getWindow().setBackgroundDrawable(new ColorDrawable(0xFFFFFFFF));
 						Intent intent=new Intent(LoadingActivity.BROADCAST_ACTION);
-						sendBroadcast(intent);
+						broadcastManager.sendBroadcast(intent);
 					}
 				});
 			}
@@ -415,34 +418,33 @@ public final class EBrowserActivity extends FragmentActivity {
 	    if(intent == null){
 	        return;
 	    }
-        Intent firstIntent = getIntent();
-        int type = 0;
         try {
-            type = intent.getIntExtra("ntype", 0);
-        }catch (Exception e){
+			Intent firstIntent = getIntent();
+			int type = intent.getIntExtra("ntype", 0);;
+			switch (type) {
+			case ENotification.F_TYPE_PUSH:
+			    if (null != mBrowser) {
+			        String data = intent.getStringExtra("data");
+					String pushMessage = intent.getStringExtra("message");
+			        firstIntent.putExtra("data", data);
+					firstIntent.putExtra("message", pushMessage);
+			        mBrowser.pushNotify();
+			    }
+			    break;
+			case ENotification.F_TYPE_USER:
 
-        }
-        switch (type) {
-        case ENotification.F_TYPE_PUSH:
-            if (null != mBrowser) {
-                String data = intent.getStringExtra("data");
-				String pushMessage = intent.getStringExtra("message");
-                firstIntent.putExtra("data", data);
-				firstIntent.putExtra("message", pushMessage);
-                mBrowser.pushNotify();
-            }
-            break;
-        case ENotification.F_TYPE_USER:
+			    break;
+			case ENotification.F_TYPE_SYS:
 
-            break;
-        case ENotification.F_TYPE_SYS:
-
-            break;
-        default:
-            getIntentData(intent);
-            firstIntent.putExtras(intent);
-            break;
-        }
+			    break;
+			default:
+			    getIntentData(intent);
+			    firstIntent.putExtras(intent);
+			    break;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public final void exitApp(boolean showDilog) {
@@ -800,18 +802,22 @@ public final class EBrowserActivity extends FragmentActivity {
 				initEngine(msg);
 				break;
 			case F_MSG_LOAD_DELAY:
-				Intent intent = getIntent();
-				int type = intent.getIntExtra("ntype", 0);
-				switch (type) {
-				case ENotification.F_TYPE_PUSH:
-					mBrowser.setFromPush(true);
+				try {
+					Intent intent = getIntent();
+					int type = intent.getIntExtra("ntype", 0);
+					switch (type) {
+					case ENotification.F_TYPE_PUSH:
+						mBrowser.setFromPush(true);
+						break;
+					case ENotification.F_TYPE_USER:
+						// onNewIntent(intent);
+						break;
+					}
+					mBrowser.start();
 					break;
-				case ENotification.F_TYPE_USER:
-					// onNewIntent(intent);
-					break;
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-				mBrowser.start();
-				break;
 			case F_MSG_LOAD_HIDE_SH:
 				mScreen.setVisibility(View.VISIBLE);
 				setContentViewVisible();
