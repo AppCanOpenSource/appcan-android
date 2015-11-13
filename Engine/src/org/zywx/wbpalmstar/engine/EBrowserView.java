@@ -97,6 +97,8 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 	private boolean isMultilPopoverFlippingEnbaled = false;
     private boolean isSupportSlideCallback = false;//is need callback,set by API interface.
 
+    private OnEBrowserViewChangeListener mBrowserViewChangeListener;
+
 	protected EBrowserView(Context context, int inType, EBrowserWindow inParent) {
 		super(context);
 		mMyCountId = EBrowser.assignCountID();
@@ -154,7 +156,7 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
     public boolean isHardwareAccelerated() {
         //confirm view is attached to a window
         boolean isHardwareAccelerated=super.isHardwareAccelerated();
-        BDebug.i("isHardwareAccelerated",isHardwareAccelerated);
+        BDebug.v("isHardwareAccelerated",isHardwareAccelerated);
         return isHardwareAccelerated;
     }
 
@@ -575,6 +577,9 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 			return;
 		}
 		mBroWind.onPageFinished(view, url);
+        if (mBrowserViewChangeListener!=null){
+            mBrowserViewChangeListener.onPageFinish();
+        }
 	}
 
 	public boolean isObfuscation() {
@@ -1432,5 +1437,13 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 
     public void setIsSupportSlideCallback(boolean isSupport) {
         isSupportSlideCallback = isSupport;
+    }
+
+    public void setEBrowserViewChangeListener(OnEBrowserViewChangeListener browserViewChangeListener) {
+        mBrowserViewChangeListener = browserViewChangeListener;
+    }
+
+    public interface OnEBrowserViewChangeListener{
+        void onPageFinish();
     }
 }
