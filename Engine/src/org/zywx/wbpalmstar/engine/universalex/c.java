@@ -17,15 +17,23 @@
  *
  */
 
-package org.zywx.wbpalmstar.base;
+package org.zywx.wbpalmstar.engine.universalex;
+
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 
 /**
- * Created by ylt on 15/9/15.
+ *历史遗留问题，需要保证混淆后的类名是c，此类名不能更改
  */
-public abstract class EUExAbstractDispatcher {
+public class c extends Handler {
 
-    public static final String JS_OBJECT_NAME="uexDispatcher";
+    public c(Looper loop) {
+        super(loop);
+    }
 
-    public abstract void dispatch(String pluginName,String methodName,String[] params);
-
+    public void handleMessage(Message msg) {
+        EUExBase base = (EUExBase) msg.obj;
+        base.onHandleMessage(msg);
+    }
 }

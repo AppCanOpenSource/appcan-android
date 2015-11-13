@@ -18,26 +18,6 @@
 
 package org.zywx.wbpalmstar.engine;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.zywx.wbpalmstar.acedes.ACEDESBrowserWindow7;
-import org.zywx.wbpalmstar.base.BDebug;
-import org.zywx.wbpalmstar.base.BUtility;
-import org.zywx.wbpalmstar.acedes.EXWebViewClient;
-import org.zywx.wbpalmstar.engine.universalex.EUExScript;
-import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
-import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -50,18 +30,33 @@ import android.net.http.SslError;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Message;
-import android.util.Log;
 import android.webkit.CookieSyncManager;
 import android.webkit.HttpAuthHandler;
 import android.webkit.SslErrorHandler;
-import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.widget.Toast;
+
+import org.zywx.wbpalmstar.acedes.ACEDESBrowserWindow7;
+import org.zywx.wbpalmstar.base.BDebug;
+import org.zywx.wbpalmstar.engine.universalex.EUExScript;
+import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
+import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
 
 	protected String mReferenceUrl;
 	protected String mParms;
+
+	private boolean mIsPageOnload;
 	
 	/**
 	 * android version >= 2.1 use
@@ -163,6 +158,7 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
 
 	@Override
 	public void onPageStarted(WebView view, String url, Bitmap favicon) {
+		mIsPageOnload = false;
 		if (view == null) {
 			return;
 		}
@@ -201,10 +197,11 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
 				}
 			}
 			String oUrl = view.getOriginalUrl();
-			if (!mReferenceUrl.equals(url) || target.beDestroy() || !url.equals(oUrl)) {
+			if ((!mReferenceUrl.equals(url) || target.beDestroy() || !url.equals(oUrl)) && mIsPageOnload) {
 				return;
 			}
 		}
+		mIsPageOnload = true;
 		ESystemInfo info = ESystemInfo.getIntence();
 
 		int versionA = Build.VERSION.SDK_INT;
