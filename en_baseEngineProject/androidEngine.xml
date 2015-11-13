@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <info>
-    <version>sdksuit_3.1_151021_01</version>
-	<package>android_Engine_3.1_151021_01</package>
-	<description>1、UserAgent增加Appcan字段；2、代码漏洞修复；3、Root窗口中的浮动窗口调用引擎的alert接口，无法弹出对话框；4、浮动窗口中不能打开窗口；5、下载附件名显示有误、下载附件乱码、图片下载后无法用图库打开查看；6、只有右侧滑菜单时阴影显示不正确；7、关闭子应用时应用崩溃；8、修改多浮动窗口打开外网界面混乱问题；9、修改无法通知侧滑页面事件问题；10、三星S6显示空菜单键问题；11、去掉判断Debug的逻辑(不去掉PDF插件无法使用)。</description>
+    <version>sdksuit_3.2_151102_01</version>
+	<package>android_Engine_3.2_151102_01</package>
+	<description>1、去掉ActivityGroup，需要配套使用最新插件</description>
 </info>

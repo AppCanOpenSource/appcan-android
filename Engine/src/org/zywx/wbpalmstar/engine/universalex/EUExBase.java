@@ -18,21 +18,14 @@
 
 package org.zywx.wbpalmstar.engine.universalex;
 
-import java.io.File;
-
-import org.zywx.wbpalmstar.engine.EBrowserActivity;
-import org.zywx.wbpalmstar.engine.EBrowserView;
-import org.zywx.wbpalmstar.engine.EBrowserWindow;
-import org.zywx.wbpalmstar.engine.EWgtResultInfo;
-import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
-import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
@@ -40,6 +33,15 @@ import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+
+import org.zywx.wbpalmstar.base.view.BaseFragment;
+import org.zywx.wbpalmstar.engine.EBrowserActivity;
+import org.zywx.wbpalmstar.engine.EBrowserView;
+import org.zywx.wbpalmstar.engine.EBrowserWindow;
+import org.zywx.wbpalmstar.engine.EWgtResultInfo;
+import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
+
+import java.io.File;
 
 public abstract class EUExBase {
 
@@ -62,7 +64,7 @@ public abstract class EUExBase {
 
 	protected boolean mDestroyed;
 	protected boolean mStopped;
-	protected BaseHandler mHandler;
+	protected c mHandler;
 
 	public static final String SCRIPT_TAIL = ")}";
 	public static final String SCRIPT_HEADER = "javascript:";
@@ -71,7 +73,7 @@ public abstract class EUExBase {
 	public EUExBase(Context context, EBrowserView inParent) {
 		mContext = context;
 		mBrwView = inParent;
-		mHandler = new BaseHandler(Looper.getMainLooper());
+		mHandler = new c(Looper.getMainLooper());
 	}
 
 	/**
@@ -238,14 +240,16 @@ public abstract class EUExBase {
      * @param params
      * @param id 标识要添加的view，删除时会用到
      */
-    public final void addViewToWebView(View child, android.widget.AbsoluteLayout.LayoutParams params,String id){
+    public final void addViewToWebView(View child,
+                                       android.widget.AbsoluteLayout.LayoutParams params,
+                                       String id){
         if (mBrwView==null){
             return;
         }
         if (id!=null) {
             child.setTag(id);
         }
-        mBrwView.addView(child,params);
+        mBrwView.addView(child, params);
     }
 
     /**
@@ -263,6 +267,73 @@ public abstract class EUExBase {
             }
         }
     }
+
+    public void addFragmentToCurrentWindow(BaseFragment fragment,
+                                           final RelativeLayout.LayoutParams params,
+                                           String tag){
+        addFragment(fragment,tag);
+        fragment.setOnViewCreatedListener(new BaseFragment.OnViewCreatedListener() {
+			@Override
+			public void onViewCreated(View view) {
+				addViewToCurrentWindow(view, params);
+			}
+		});
+    }
+
+    public void removeFragmentFromWindow(BaseFragment fragment){
+        if (fragment.getView()!=null) {
+            removeViewFromCurrentWindow(fragment.getView());
+        }
+        removeFragment(fragment);
+    }
+
+    /**
+     *
+     * @param fragment
+     * @param params
+     * @param tag 作为Fragment的Tag，和添加到WebView的tag,必须保证唯一性
+     */
+    public void addFragmentToWebView(BaseFragment fragment,
+                                     final android.widget.AbsoluteLayout.LayoutParams params,
+                                     final String tag){
+        if (TextUtils.isEmpty(tag)){
+            return;
+        }
+        addFragment(fragment,tag);
+        fragment.setOnViewCreatedListener(new BaseFragment.OnViewCreatedListener() {
+			@Override
+			public void onViewCreated(View view) {
+				addViewToWebView(view, params, tag);
+			}
+		});
+    }
+
+    public void removeFragmentFromWebView(String tag){
+        removeViewFromWebView(tag);
+        removeFragment(tag);
+    }
+
+    private void addFragment(Fragment fragment,String tag){
+        ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction()
+                .add(fragment,tag).commit();
+    }
+
+    private void removeFragment(Fragment fragment){
+        ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction()
+                .remove(fragment).commit();
+    }
+
+    private void removeFragment(String tag){
+        if (TextUtils.isEmpty(tag)){
+            return;
+        }
+        Fragment fragment=((FragmentActivity) mContext).
+                getSupportFragmentManager().findFragmentByTag(tag);
+        if (fragment!=null) {
+            removeFragment(fragment);
+        }
+    }
+
 
 	/**
 	 * 加载一个widget
@@ -557,17 +628,6 @@ public abstract class EUExBase {
 		}
 	}
 
-    public class BaseHandler extends Handler {
-
-        public BaseHandler(Looper loop) {
-            super(loop);
-        }
-
-        public void handleMessage(Message msg) {
-            EUExBase base = (EUExBase) msg.obj;
-            base.onHandleMessage(msg);
-        }
-    }
     
     public void onHandleMessage(Message msg) {}
 }

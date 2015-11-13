@@ -1,14 +1,17 @@
+import proguard.gradle.ProGuardTask
+
 apply plugin: 'com.android.application'
 
 dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
-    compile files('libs/commons-io-2.4.jar')
+    compile fileTree(dir: 'libs', include: '*.jar',exclude:'android-support-v4.jar')
+    compile 'com.android.support:support-v4:23.1.0'
 }
 
 android {
     compileSdkVersion 22
-    buildToolsVersion "23.0.0"
+    buildToolsVersion '23.0.0'
     packagingOptions {
+        exclude 'META-INF/MANIFEST.MF'
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
     }
@@ -41,26 +44,57 @@ android {
     }
     defaultConfig {
         applicationId 'org.zywx.wbpalmstar.widgetone.uex'
+        minSdkVersion 14
+        targetSdkVersion 14 //
     }
     productFlavors {
+    }
+    buildTypes {
+        debug {
+            minifyEnabled false
+        }
+        release {
+            minifyEnabled false
+            proguardFile 'proguard.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
 }
 
 task clearJar(type: Delete) {
-    delete 'libs/AppCanEngine.jar'
+    delete 'build/libs/AppCanEngine.jar'
+    delete 'build/libs/AppCanEngine_un_pro.jar'
 }
 
-task makeJar(type:org.gradle.api.tasks.bundling.Jar) {
+task makeJar(type:Jar,dependsOn:['compileReleaseJavaWithJavac']) {
     //指定生成的jar名
-    baseName 'AppCanEngine'
+    archiveName 'AppCanEngine_un_pro.jar'
     //从哪里打包class文件
-    from('build/intermediates/classes/debug/')
+    from('build/intermediates/classes/release/')
+    destinationDir=file('build/libs')
     //打包到jar后的目录结构
-    into('')
+//    into('')
     //去掉不需要打包的目录和文件
-    exclude('test/', 'BuildConfig.class', 'R.class')
+//    exclude('test/', 'BuildConfig.class', 'R.class')
     //去掉R$开头的文件
-    exclude{ it.name.startsWith('R$');}
+//    exclude{ it.name.startsWith('R$');}
+    exclude('**/R.class')
+    exclude('**/R\$*.class')
+//    include('com/slidingmenu/lib/*')
+//    include('org/zywx/wbpalmstar/*')
 }
 
-makeJar.dependsOn(clearJar, build)
+makeJar.dependsOn(clearJar)
+
+def androidSDKDir = plugins.getPlugin('com.android.application').sdkHandler.getSdkFolder()
+def androidJarDir = androidSDKDir.toString() + '/platforms/' + "${android.compileSdkVersion}" + '/android.jar'
+
+task proguardMyLib(type: ProGuardTask, dependsOn: ['makeJar']) {
+    injars('build/libs/AppCanEngine_un_pro.jar')
+    outjars('build/libs/AppCanEngine.jar')
+    libraryjars(androidJarDir)
+    configuration 'proguard.pro'
+}

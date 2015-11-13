@@ -18,9 +18,7 @@
 
 package org.zywx.wbpalmstar.engine;
 
-import android.app.ActivityGroup;
 import android.app.AlertDialog;
-import android.app.LocalActivityManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -32,8 +30,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.*;
 import android.os.Process;
-import android.util.TypedValue;
-import android.view.Gravity;
+import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -68,8 +65,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-@SuppressWarnings("deprecation")
-public final class EBrowserActivity extends ActivityGroup {
+public final class EBrowserActivity extends FragmentActivity {
 
 	public static final int F_OAUTH_CODE = 100001;
 	public final static int FILECHOOSER_RESULTCODE = 233;
@@ -510,8 +506,6 @@ public final class EBrowserActivity extends ActivityGroup {
 			mBrowser.onAppStop();
 		}
 		mBrowserAround.removeViewImmediate();
-		LocalActivityManager lm = getLocalActivityManager();
-		lm.removeAllActivities();
 		clean();
 		finish();
 		Process.killProcess(Process.myPid());
