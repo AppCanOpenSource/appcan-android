@@ -146,8 +146,8 @@ public class EUExWindow extends EUExBase {
     private static final int MSG_FUNCTION_RELOAD_WIDGET_BY_APPID= 49;
     private static final int MSG_FUNCTION_GET_SLIDING_WINDOW_STATE = 50;
     private static final int MSG_SET_IS_SUPPORT_SLIDE_CALLBACK = 51;
-	private AlertDialog.Builder mAlert;
 	private AlertDialog.Builder mConfirm;
+    private AlertDialog mAlertDialog;
 	private PromptDialog mPrompt;
 	private ResoureFinder finder;
 
@@ -465,6 +465,9 @@ public class EUExWindow extends EUExBase {
             }
         } catch (Exception e) {
             errorCallback(0, EUExCallback.F_E_UEXWINDOW_CLOSE, "Illegal parameter");
+        }
+        if (mAlertDialog!=null){
+            mAlertDialog.dismiss();
         }
         curWind.onCloseWindow(animId, duration);
     }
@@ -1186,7 +1189,7 @@ public class EUExWindow extends EUExBase {
             @Override
             public void run() {
                 if (params != null && params.length > 0) {
-                    EBrowserWindow curWindow=mBrwView.getBrowserWindow();
+                    EBrowserWindow curWindow = mBrwView.getBrowserWindow();
                     int flag = Integer.parseInt(params[0]);
                     curWindow.setWindowHWEnable(flag);
                 }
@@ -2597,28 +2600,28 @@ public class EUExWindow extends EUExBase {
 		/*if (!((EBrowserActivity) mContext).isVisable()) {
 			return;
 		}*/
-		if (null != mAlert) {
+		if (null != mAlertDialog) {
 			return;
 		}
 		try {
-			mAlert = new AlertDialog.Builder(mContext);
-			mAlert.setTitle(inTitle);
-			mAlert.setMessage(inMessage);
-			mAlert.setCancelable(false);
-			mAlert.setPositiveButton(inButtonLable, new OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					dialog.dismiss();
-					mAlert = null;
-				}
-			});
-			mAlert.show();
+            AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+			alert.setTitle(inTitle);
+			alert.setMessage(inMessage);
+			alert.setCancelable(false);
+			alert.setPositiveButton(inButtonLable, new OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    mAlertDialog = null;
+                }
+            });
+			mAlertDialog=alert.show();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void private_confirm(String inTitle, String inMessage, String[] inButtonLable) {
+    public void private_confirm(String inTitle, String inMessage, String[] inButtonLable) {
 		/*if (!((EBrowserActivity) mContext).isVisable()) {
 			return;
 		}*/
