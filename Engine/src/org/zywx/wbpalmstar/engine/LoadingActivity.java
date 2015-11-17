@@ -2,7 +2,6 @@ package org.zywx.wbpalmstar.engine;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -69,13 +68,17 @@ public class LoadingActivity extends Activity {
             @Override
             public void run() {
                 if (!isTemp) {
-                    Intent intent = getIntent();
-                    ComponentName cn = new ComponentName(getPackageName(),
-                            "org.zywx.wbpalmstar.engine.EBrowserActivity");
-                    intent.setComponent(cn);
-                    startActivity(intent);
-                    overridePendingTransition(EUExUtil.getResAnimID("platform_myspace_no_anim")
-                            , EUExUtil.getResAnimID("platform_myspace_no_anim"));
+                    try {
+                        Intent intent = new Intent(LoadingActivity.this, EBrowserActivity.class);
+                        Bundle bundle = getIntent().getExtras();
+                        if (null != bundle) {
+                            intent.putExtras(bundle);
+                        }
+                        startActivity(intent);
+                        overridePendingTransition(EUExUtil.getResAnimID("platform_myspace_no_anim")
+                                , EUExUtil.getResAnimID("platform_myspace_no_anim"));
+                    } catch (Exception e) {
+                    }
                 }
             }
         },700);
