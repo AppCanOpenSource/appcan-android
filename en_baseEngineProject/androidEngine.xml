@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <info>
-    <version>sdksuit_3.2_151113_01</version>
-	<package>android_Engine_3.2_151113_01</package>
-	<description>1、漏洞修改</description>
+    <version>sdksuit_3.2_151117_01</version>
+	<package>android_Engine_3.2_151117_01</package>
+	<description>1、未传递第三方intent问题</description>
 </info>
