@@ -33,6 +33,7 @@ public class c extends Handler {
     }
 
     public void handleMessage(Message msg) {
+        if (msg == null || msg.obj == null) return;
         EUExBase base = (EUExBase) msg.obj;
         base.onHandleMessage(msg);
     }
