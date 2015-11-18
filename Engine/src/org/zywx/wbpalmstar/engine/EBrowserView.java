@@ -1,18 +1,19 @@
 /*
- *  Copyright (C) 2014 The AppCan Open Source Project.
+ * Copyright (c) 2015.  The AppCan Open Source Project.
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
-
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
-
+ *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  *
  */
 
@@ -53,109 +54,118 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 public class EBrowserView extends WebView implements View.OnLongClickListener,
-		DownloadListener {
+        DownloadListener {
 
-	public static final String CONTENT_MIMETYPE_HTML = "text/html";
-	public static final String CONTENT_DEFAULT_CODE = "utf-8";
+    public static final String CONTENT_MIMETYPE_HTML = "text/html";
+    public static final String CONTENT_DEFAULT_CODE = "utf-8";
 
-	public static final int F_PRINT_TYPE_DOM_TREE = 0;
-	public static final int F_PRINT_TYPE_DISPLAY_TREE = 1;
-	public static final int F_PRINT_TYPE_RENDER_TREE = 2;
-	public static final int F_PRINT_TYPE_DRAW_PAGE = 3;
+    public static final int F_PRINT_TYPE_DOM_TREE = 0;
+    public static final int F_PRINT_TYPE_DISPLAY_TREE = 1;
+    public static final int F_PRINT_TYPE_RENDER_TREE = 2;
+    public static final int F_PRINT_TYPE_DRAW_PAGE = 3;
 
-	private int mType;
-	private String mName;
-	private String mQuery;
-	private String mRelativeUrl;
-	private Context mContext;
-	private EUExManager mUExMgr;
-	private EBrowserBaseSetting mBaSetting;
-	private EBrowserWindow mBroWind;
-	private boolean mShouldOpenInSystem;
-	private boolean mOpaque;
-	private boolean mOAuth;
-	private boolean mWebApp;
-	private boolean mSupportZoom;
-	private int mDateType;
-	private boolean mDestroyed;
-	private EBrwViewAnim mViewAnim;
-	private EXWebViewClient mEXWebViewClient;
-	private Method mDismissZoomControl;
+    private int mType;
+    private String mName;
+    private String mQuery;
+    private String mRelativeUrl;
+    private Context mContext;
+    private EUExManager mUExMgr;
+    private EBrowserBaseSetting mBaSetting;
+    private EBrowserWindow mBroWind;
+    private boolean mShouldOpenInSystem;
+    private boolean mOpaque;
+    private boolean mOAuth;
+    private boolean mWebApp;
+    private boolean mSupportZoom;
+    private int mDateType;
+    private boolean mDestroyed;
+    private EBrwViewAnim mViewAnim;
+    private EXWebViewClient mEXWebViewClient;
+    private Method mDismissZoomControl;
 
-	// use for debug
-	private Method mDumpDisplayTree;
-	private Method mDumpDomTree;
-	private Method mDumpRenderTree;
-	private Method mDrawPage;
+    // use for debug
+    private Method mDumpDisplayTree;
+    private Method mDumpDomTree;
+    private Method mDumpRenderTree;
+    private Method mDrawPage;
 
-	private int mMyCountId;
+    private int mMyCountId;
 
-	private int mScrollDistance = 10;
-	private EUExWindow callback;
-	private boolean mIsNeedScroll = false;
-	private boolean isMultilPopoverFlippingEnbaled = false;
+    private int mScrollDistance = 10;
+    private EUExWindow callback;
+    private boolean mIsNeedScroll = false;
+    private boolean isMultilPopoverFlippingEnbaled = false;
     private boolean isSupportSlideCallback = false;//is need callback,set by API interface.
 
-	protected EBrowserView(Context context, int inType, EBrowserWindow inParent) {
-		super(context);
-		mMyCountId = EBrowser.assignCountID();
-		mBroWind = inParent;
-		mContext = context;
-		mType = inType;
-		initPrivateVoid();
+    public static boolean sHardwareAccelerate = true;//配置全部WebView是否硬件加速,默认开启，config.xml 配置关闭
+
+    protected EBrowserView(Context context, int inType, EBrowserWindow inParent) {
+        super(context);
+        mMyCountId = EBrowser.assignCountID();
+        mBroWind = inParent;
+        mContext = context;
+        mType = inType;
+        initPrivateVoid();
 //		setOnLongClickListener(this);
-		setDownloadListener(this);
-	}
+        setDownloadListener(this);
+        setACEHardwareAccelerate();
+    }
 
-	public void setScrollCallBackContex(EUExWindow callback) {
-		this.callback = callback;
-	}
+    public void setScrollCallBackContex(EUExWindow callback) {
+        this.callback = callback;
+    }
 
-	protected void init() {
-		setInitialScale(100);
-		setVerticalScrollbarOverlay(true);
-		setHorizontalScrollbarOverlay(true);
-		setLayoutAnimation(null);
-		setAnimation(null);
-		setNetworkAvailable(true);
+    protected void init() {
+        setInitialScale(100);
+        setVerticalScrollbarOverlay(true);
+        setHorizontalScrollbarOverlay(true);
+        setLayoutAnimation(null);
+        setAnimation(null);
+        setNetworkAvailable(true);
         disableHW();
-		if (Build.VERSION.SDK_INT <= 7) {
-			if (mBaSetting == null) {
-				mBaSetting = new EBrowserSetting(this);
-				mBaSetting.initBaseSetting(mWebApp);
-				setWebViewClient(mEXWebViewClient = new CBrowserWindow());
-				setWebChromeClient(new CBrowserMainFrame(mContext));
-			}
-			
-		} else {
-			
-			if (mBaSetting == null) {
-				mBaSetting = new EBrowserSetting7(this);
-				mBaSetting.initBaseSetting(mWebApp);
-				setWebViewClient(mEXWebViewClient = new CBrowserWindow7());
-				setWebChromeClient(new CBrowserMainFrame7(mContext));
-			}
-			
-		}
-		mUExMgr = new EUExManager(mContext);
-		mUExMgr.addJavascriptInterface(this);
-	}
+        if (Build.VERSION.SDK_INT <= 7) {
+            if (mBaSetting == null) {
+                mBaSetting = new EBrowserSetting(this);
+                mBaSetting.initBaseSetting(mWebApp);
+                setWebViewClient(mEXWebViewClient = new CBrowserWindow());
+                setWebChromeClient(new CBrowserMainFrame(mContext));
+            }
 
-    private void disableHW(){
-        if (isDisableHWDevice()){
-            setLayerType(LAYER_TYPE_SOFTWARE,null);
+        } else {
+
+            if (mBaSetting == null) {
+                mBaSetting = new EBrowserSetting7(this);
+                mBaSetting.initBaseSetting(mWebApp);
+                setWebViewClient(mEXWebViewClient = new CBrowserWindow7());
+                setWebChromeClient(new CBrowserMainFrame7(mContext));
+            }
+
+        }
+        mUExMgr = new EUExManager(mContext);
+        mUExMgr.addJavascriptInterface(this);
+    }
+
+    private void setACEHardwareAccelerate() {
+        if (!sHardwareAccelerate) {
+            setLayerType(LAYER_TYPE_SOFTWARE, null);
         }
     }
 
-    public boolean isDisableHWDevice(){
-        String device=Build.BRAND+" "+Build.MODEL;
-        return  device.equalsIgnoreCase("Letv X600")||
+    private void disableHW() {
+        if (isDisableHWDevice()) {
+            setLayerType(LAYER_TYPE_SOFTWARE, null);
+        }
+    }
+
+    public boolean isDisableHWDevice() {
+        String device = Build.BRAND + " " + Build.MODEL;
+        return device.equalsIgnoreCase("Letv X600") ||
                 device.equalsIgnoreCase("Xiaomi 2013023");
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        if (getLayerType()==LAYER_TYPE_SOFTWARE){
+        if (getLayerType() == LAYER_TYPE_SOFTWARE) {
             invalidate();
         }
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -165,7 +175,7 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
     protected void onAttachedToWindow() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && !isHardwareAccelerated()) {
             setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-            BDebug.i("setLayerType","LAYER_TYPE_SOFTWARE");
+            BDebug.i("setLayerType", "LAYER_TYPE_SOFTWARE");
         }
         super.onAttachedToWindow();
     }
@@ -173,160 +183,160 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
     @Override
     public boolean isHardwareAccelerated() {
         //confirm view is attached to a window
-        boolean isHardwareAccelerated=super.isHardwareAccelerated();
+        boolean isHardwareAccelerated = super.isHardwareAccelerated();
         BDebug.v("isHardwareAccelerated", isHardwareAccelerated);
         return isHardwareAccelerated;
     }
 
     @Override
-	public void loadUrl(String url) {
-		if (mDestroyed) {
-			return;
-		}
-		try {
-			super.loadUrl(url);
-		} catch (Exception e) {
-			;
-		}
-	}
+    public void loadUrl(String url) {
+        if (mDestroyed) {
+            return;
+        }
+        try {
+            super.loadUrl(url);
+        } catch (Exception e) {
+            ;
+        }
+    }
 
-	@SuppressLint("NewApi")
-	@Override
-	public void loadUrl(String url, Map<String, String> extraHeaders) {
-		if (mDestroyed) {
-			return;
-		}
-		try {
-			super.loadUrl(url, extraHeaders);
-		} catch (Exception e) {
-			;
-		}
-	}
+    @SuppressLint("NewApi")
+    @Override
+    public void loadUrl(String url, Map<String, String> extraHeaders) {
+        if (mDestroyed) {
+            return;
+        }
+        try {
+            super.loadUrl(url, extraHeaders);
+        } catch (Exception e) {
+            ;
+        }
+    }
 
-	@Override
-	public void loadData(String data, String mimeType, String encoding) {
-		if (mDestroyed) {
-			return;
-		}
-		try {
-			super.loadData(data, mimeType, encoding);
-		} catch (Exception e) {
-			;
-		}
-	}
+    @Override
+    public void loadData(String data, String mimeType, String encoding) {
+        if (mDestroyed) {
+            return;
+        }
+        try {
+            super.loadData(data, mimeType, encoding);
+        } catch (Exception e) {
+            ;
+        }
+    }
 
-	@Override
-	public void loadDataWithBaseURL(String baseUrl, String data,
-			String mimeType, String encoding, String historyUrl) {
-		if (mDestroyed) {
-			return;
-		}
-		try {
-			super.loadDataWithBaseURL(baseUrl, data, mimeType, encoding,
-					historyUrl);
-		} catch (Exception e) {
-			;
-		}
-	}
+    @Override
+    public void loadDataWithBaseURL(String baseUrl, String data,
+                                    String mimeType, String encoding, String historyUrl) {
+        if (mDestroyed) {
+            return;
+        }
+        try {
+            super.loadDataWithBaseURL(baseUrl, data, mimeType, encoding,
+                    historyUrl);
+        } catch (Exception e) {
+            ;
+        }
+    }
 
-	public boolean checkType(int inType) {
+    public boolean checkType(int inType) {
 
-		return inType == mType;
-	}
+        return inType == mType;
+    }
 
-	public int getMyId() {
+    public int getMyId() {
 
-		return mMyCountId;
-	}
+        return mMyCountId;
+    }
 
-	public void setDefaultFontSize(int size) {
-		if (mDestroyed) {
-			return;
-		}
-		mBaSetting.setDefaultFontSize(size);
-	}
+    public void setDefaultFontSize(int size) {
+        if (mDestroyed) {
+            return;
+        }
+        mBaSetting.setDefaultFontSize(size);
+    }
 
-	public void setSupportZoom() {
-		mSupportZoom = true;
-		mBaSetting.setSupportZoom();
-	}
+    public void setSupportZoom() {
+        mSupportZoom = true;
+        mBaSetting.setSupportZoom();
+    }
 
-	public boolean supportZoom() {
+    public boolean supportZoom() {
 
-		return mSupportZoom;
-	}
+        return mSupportZoom;
+    }
 
-	@SuppressLint("NewApi")
-	private void initPrivateVoid() {
-		Class[] nullParm = {};
-		try {
-			mDismissZoomControl = WebView.class.getDeclaredMethod(
-					"dismissZoomControl", nullParm);
-			mDismissZoomControl.setAccessible(true);
-		} catch (Exception e) {
-			;
-		}
+    @SuppressLint("NewApi")
+    private void initPrivateVoid() {
+        Class[] nullParm = {};
+        try {
+            mDismissZoomControl = WebView.class.getDeclaredMethod(
+                    "dismissZoomControl", nullParm);
+            mDismissZoomControl.setAccessible(true);
+        } catch (Exception e) {
+            ;
+        }
 
-		try {
-			mDumpDisplayTree = WebView.class.getDeclaredMethod(
-					"dumpDisplayTree", nullParm);
-			mDumpDisplayTree.setAccessible(true);
-		} catch (Exception e) {
-			;
-		}
-		Class[] booleanParam = { boolean.class };
-		try {
-			mDumpDomTree = WebView.class.getDeclaredMethod("dumpDomTree",
-					booleanParam);
-			mDumpDomTree.setAccessible(true);
-		} catch (Exception e) {
-			;
-		}
-		try {
-			mDumpRenderTree = WebView.class.getDeclaredMethod("dumpRenderTree",
-					booleanParam);
-			mDumpRenderTree.setAccessible(true);
-		} catch (Exception e) {
-			;
-		}
-		try {
-			Class[] canvasParam = { Canvas.class };
-			mDrawPage = WebView.class
-					.getDeclaredMethod("drawPage", canvasParam);
-			mDrawPage.setAccessible(true);
-		} catch (Exception e) {
-			;
-		}
-		if (Build.VERSION.SDK_INT >= 9) {
-			setOverScrollMode(2);
-			return;
-		}
-		try {
-			Class[] intParam = { int.class };
-			Method setOverScrollMode = WebView.class.getDeclaredMethod(
-					"setOverScrollMode", intParam);
-			setOverScrollMode.invoke(this, 2);
-		} catch (Exception e) {
-			;
-		}
-	}
+        try {
+            mDumpDisplayTree = WebView.class.getDeclaredMethod(
+                    "dumpDisplayTree", nullParm);
+            mDumpDisplayTree.setAccessible(true);
+        } catch (Exception e) {
+            ;
+        }
+        Class[] booleanParam = {boolean.class};
+        try {
+            mDumpDomTree = WebView.class.getDeclaredMethod("dumpDomTree",
+                    booleanParam);
+            mDumpDomTree.setAccessible(true);
+        } catch (Exception e) {
+            ;
+        }
+        try {
+            mDumpRenderTree = WebView.class.getDeclaredMethod("dumpRenderTree",
+                    booleanParam);
+            mDumpRenderTree.setAccessible(true);
+        } catch (Exception e) {
+            ;
+        }
+        try {
+            Class[] canvasParam = {Canvas.class};
+            mDrawPage = WebView.class
+                    .getDeclaredMethod("drawPage", canvasParam);
+            mDrawPage.setAccessible(true);
+        } catch (Exception e) {
+            ;
+        }
+        if (Build.VERSION.SDK_INT >= 9) {
+            setOverScrollMode(2);
+            return;
+        }
+        try {
+            Class[] intParam = {int.class};
+            Method setOverScrollMode = WebView.class.getDeclaredMethod(
+                    "setOverScrollMode", intParam);
+            setOverScrollMode.invoke(this, 2);
+        } catch (Exception e) {
+            ;
+        }
+    }
 
-	public void dumpPageInfo(int type) {
-		switch (type) {
-		case F_PRINT_TYPE_DOM_TREE:
-			myDumpDomTree();
-			break;
-		case F_PRINT_TYPE_DISPLAY_TREE:
-			myDumpDisplayTree();
-			break;
-		case F_PRINT_TYPE_RENDER_TREE:
-			myDumpRenderTree();
-			break;
-		case F_PRINT_TYPE_DRAW_PAGE:
+    public void dumpPageInfo(int type) {
+        switch (type) {
+            case F_PRINT_TYPE_DOM_TREE:
+                myDumpDomTree();
+                break;
+            case F_PRINT_TYPE_DISPLAY_TREE:
+                myDumpDisplayTree();
+                break;
+            case F_PRINT_TYPE_RENDER_TREE:
+                myDumpRenderTree();
+                break;
+            case F_PRINT_TYPE_DRAW_PAGE:
 
-			break;
-		}
-	}
+                break;
+        }
+    }
 
 //	protected void setLayerTypeForHeighVersion() {
 //		// if(Build.VERSION.SDK_INT < 11){
@@ -373,121 +383,121 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 //		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 //	}
 
-	@SuppressLint("NewApi")
-	public void destroyControl() {
-		if (null != mDismissZoomControl) {
-			try {
-				mDismissZoomControl.invoke(this);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
+    @SuppressLint("NewApi")
+    public void destroyControl() {
+        if (null != mDismissZoomControl) {
+            try {
+                mDismissZoomControl.invoke(this);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-	@SuppressLint("NewApi")
-	private void pauseCore() {
-		if (Build.VERSION.SDK_INT >= 11) {
-			super.onPause();
-		} else {
-			try {
-				Class[] nullParm = {};
-				Method pause = WebView.class.getDeclaredMethod("onPause",
-						nullParm);
-				pause.setAccessible(true);
-				pause.invoke(this);
-			} catch (Exception e) {
-				;
-			}
-		}
-	}
+    @SuppressLint("NewApi")
+    private void pauseCore() {
+        if (Build.VERSION.SDK_INT >= 11) {
+            super.onPause();
+        } else {
+            try {
+                Class[] nullParm = {};
+                Method pause = WebView.class.getDeclaredMethod("onPause",
+                        nullParm);
+                pause.setAccessible(true);
+                pause.invoke(this);
+            } catch (Exception e) {
+                ;
+            }
+        }
+    }
 
-	@SuppressLint("NewApi")
-	private void resumeCore() {
-		if (Build.VERSION.SDK_INT >= 11) {
-			super.onResume();
-		} else {
-			try {
-				Class[] nullParm = {};
-				Method resume = WebView.class.getDeclaredMethod("onResume",
-						nullParm);
-				resume.setAccessible(true);
-				resume.invoke(this);
-			} catch (Exception e) {
-				;
-			}
-		}
-	}
+    @SuppressLint("NewApi")
+    private void resumeCore() {
+        if (Build.VERSION.SDK_INT >= 11) {
+            super.onResume();
+        } else {
+            try {
+                Class[] nullParm = {};
+                Method resume = WebView.class.getDeclaredMethod("onResume",
+                        nullParm);
+                resume.setAccessible(true);
+                resume.invoke(this);
+            } catch (Exception e) {
+                ;
+            }
+        }
+    }
 
-	public void myDumpDisplayTree() {
-		if (null != mDumpDisplayTree) {
-			try {
-				mDumpDisplayTree.invoke(this);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
+    public void myDumpDisplayTree() {
+        if (null != mDumpDisplayTree) {
+            try {
+                mDumpDisplayTree.invoke(this);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-	public void myDumpDomTree() {
-		if (null != mDumpDomTree) {
-			try {
-				mDumpDomTree.invoke(this, false);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
+    public void myDumpDomTree() {
+        if (null != mDumpDomTree) {
+            try {
+                mDumpDomTree.invoke(this, false);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-	public void myDumpRenderTree() {
-		if (null != mDumpRenderTree) {
-			try {
-				mDumpRenderTree.invoke(this, false);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
+    public void myDumpRenderTree() {
+        if (null != mDumpRenderTree) {
+            try {
+                mDumpRenderTree.invoke(this, false);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-	public void myDrawPage(Canvas canvas) {
-		if (null != mDrawPage) {
-			try {
-				mDrawPage.invoke(this, canvas);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
+    public void myDrawPage(Canvas canvas) {
+        if (null != mDrawPage) {
+            try {
+                mDrawPage.invoke(this, canvas);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-	@Override
-	public boolean onTouchEvent(MotionEvent ev) {
-		if (mDestroyed) {
-			return false;
-		}
-		switch (ev.getAction()) {
-		case MotionEvent.ACTION_DOWN:
-			if (!isFocused()) {
-				strugglefoucs();
-			}
-			
-			if(mIsNeedScroll){
-	            //modify no-response-for-onclick-event
-	            int temp_ScrollY = this.getScrollY();
-	            this.scrollTo(this.getScrollX(), this.getScrollY() + 1);
-	            this.scrollTo(this.getScrollX(), temp_ScrollY);	    
-			}
-			setMultilPopoverFlippingEnbaled();
-			break;
-		case MotionEvent.ACTION_MOVE:
-			setMultilPopoverFlippingEnbaled();
-			break;
-		case MotionEvent.ACTION_UP:
-		case MotionEvent.ACTION_CANCEL:
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        if (mDestroyed) {
+            return false;
+        }
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                if (!isFocused()) {
+                    strugglefoucs();
+                }
 
-			break;
-		}
-		return super.onTouchEvent(ev);
+                if (mIsNeedScroll) {
+                    //modify no-response-for-onclick-event
+                    int temp_ScrollY = this.getScrollY();
+                    this.scrollTo(this.getScrollX(), this.getScrollY() + 1);
+                    this.scrollTo(this.getScrollX(), temp_ScrollY);
+                }
+                setMultilPopoverFlippingEnbaled();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                setMultilPopoverFlippingEnbaled();
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
 
-	}
+                break;
+        }
+        return super.onTouchEvent(ev);
+
+    }
 
     @Override
     public boolean onGenericMotionEvent(MotionEvent event) {
@@ -495,331 +505,331 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
     }
 
     public void setIsMultilPopoverFlippingEnbaled(boolean isEnabled) {
-		isMultilPopoverFlippingEnbaled = isEnabled;
-	}
-	
-	private void setMultilPopoverFlippingEnbaled() {
-		EBounceView parentBounceView = (EBounceView) this.getParent();
-		if (parentBounceView instanceof EBounceView) {
-			ViewParent parentViewPager = parentBounceView.getParent();
-			if (parentViewPager instanceof ViewPager) {
-				parentViewPager.requestDisallowInterceptTouchEvent(isMultilPopoverFlippingEnbaled);
-			}
-		}
-	}
+        isMultilPopoverFlippingEnbaled = isEnabled;
+    }
 
-	private void strugglefoucs() {
-		requestFocus();
-		/**
-		 * InputManager.get().hideSoftInput(getWindowToken(), 0, null);
-		 * Log.d("ldx", "-------------- view in: " + mName);
-		 * 
-		 * Log.d("ldx", "hasFocus: " + hasFocus()); Log.d("ldx", "isFocused: " +
-		 * isFocused());
-		 * 
-		 * try{ Class[] nullParam = {}; Method clearHelpers =
-		 * WebView.class.getDeclaredMethod("clearHelpers", nullParam);
-		 * clearHelpers.setAccessible(true); clearHelpers.invoke(this); }catch
-		 * (Exception e) { e.printStackTrace(); } Log.d("ldx",
-		 * "-------------- --------------");
-		 * 
-		 * boolean Ac1 = InputManager.get().isActive(); boolean Ac2 =
-		 * InputManager.get().isActive(this); if(Ac1){
-		 * InputManager.get().hideSoftInput(this.getWindowToken(), 0, null); }
-		 * Log.d("ldx", "imm Ac1: " + Ac1); Log.d("ldx", "imm Ac2: " + Ac2); int
-		 * childCount = getChildCount(); Log.d("ldx", "childCount: " +
-		 * childCount); for(int i = 0; i < childCount; ++i){ View child =
-		 * getChildAt(i); boolean Ac3 = InputManager.get().isActive(child);
-		 * Log.d("ldx", "imm Ac3: " + Ac3); if(Ac3){
-		 * InputManager.get().hideSoftInput(child.getWindowToken(), 0, null); }
-		 * child.clearFocus(); } boolean requestFocusOk = requestFocus();
-		 * removeAllViews();
-		 * 
-		 * Log.d("ldx", "requestFocusOk: " + requestFocusOk);
-		 **/
-		// int childCount1 = getChildCount();
-		// Log.d("ldx", "childCount1: " + childCount1);
+    private void setMultilPopoverFlippingEnbaled() {
+        EBounceView parentBounceView = (EBounceView) this.getParent();
+        if (parentBounceView instanceof EBounceView) {
+            ViewParent parentViewPager = parentBounceView.getParent();
+            if (parentViewPager instanceof ViewPager) {
+                parentViewPager.requestDisallowInterceptTouchEvent(isMultilPopoverFlippingEnbaled);
+            }
+        }
+    }
 
-		Log.d("ldx", "hasFocus: " + hasFocus());
-		Log.d("ldx", "isFocused: " + isFocused());
+    private void strugglefoucs() {
+        requestFocus();
+        /**
+         * InputManager.get().hideSoftInput(getWindowToken(), 0, null);
+         * Log.d("ldx", "-------------- view in: " + mName);
+         *
+         * Log.d("ldx", "hasFocus: " + hasFocus()); Log.d("ldx", "isFocused: " +
+         * isFocused());
+         *
+         * try{ Class[] nullParam = {}; Method clearHelpers =
+         * WebView.class.getDeclaredMethod("clearHelpers", nullParam);
+         * clearHelpers.setAccessible(true); clearHelpers.invoke(this); }catch
+         * (Exception e) { e.printStackTrace(); } Log.d("ldx",
+         * "-------------- --------------");
+         *
+         * boolean Ac1 = InputManager.get().isActive(); boolean Ac2 =
+         * InputManager.get().isActive(this); if(Ac1){
+         * InputManager.get().hideSoftInput(this.getWindowToken(), 0, null); }
+         * Log.d("ldx", "imm Ac1: " + Ac1); Log.d("ldx", "imm Ac2: " + Ac2); int
+         * childCount = getChildCount(); Log.d("ldx", "childCount: " +
+         * childCount); for(int i = 0; i < childCount; ++i){ View child =
+         * getChildAt(i); boolean Ac3 = InputManager.get().isActive(child);
+         * Log.d("ldx", "imm Ac3: " + Ac3); if(Ac3){
+         * InputManager.get().hideSoftInput(child.getWindowToken(), 0, null); }
+         * child.clearFocus(); } boolean requestFocusOk = requestFocus();
+         * removeAllViews();
+         *
+         * Log.d("ldx", "requestFocusOk: " + requestFocusOk);
+         **/
+        // int childCount1 = getChildCount();
+        // Log.d("ldx", "childCount1: " + childCount1);
 
-		Log.d("ldx", "-------------- view out: " + mName);
+        Log.d("ldx", "hasFocus: " + hasFocus());
+        Log.d("ldx", "isFocused: " + isFocused());
 
-	}
+        Log.d("ldx", "-------------- view out: " + mName);
 
-	@Override
-	public boolean onLongClick(View v) {
+    }
 
-		return true;
-	}
+    @Override
+    public boolean onLongClick(View v) {
 
-	@SuppressLint("NewApi")
-	@Override
-	protected void onVisibilityChanged(View v, int visibility) {
-		super.onVisibilityChanged(v, visibility);
-		if ((v == this || v == mBroWind)
-				&& (visibility == INVISIBLE || visibility == GONE)) {
-			hideSoftKeyboard();
-		}
-	}
+        return true;
+    }
 
-	private void hideSoftKeyboard() {
-		try {
-			InputMethodManager imm = (InputMethodManager) getContext()
-					.getSystemService(Context.INPUT_METHOD_SERVICE);
-			if (imm.isActive()) {
-				imm.hideSoftInputFromWindow(this.getWindowToken(), 0);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+    @SuppressLint("NewApi")
+    @Override
+    protected void onVisibilityChanged(View v, int visibility) {
+        super.onVisibilityChanged(v, visibility);
+        if ((v == this || v == mBroWind)
+                && (visibility == INVISIBLE || visibility == GONE)) {
+            hideSoftKeyboard();
+        }
+    }
 
-	protected void onPageStarted(EBrowserView view, String url) {
-		if (mDestroyed) {
-			return;
-		}
-		mUExMgr.notifyDocChange();
-		if (checkType(EBrwViewEntry.VIEW_TYPE_POP) && mOAuth) {
-			mBroWind.onUrlChange(mName, url);
-			return;
-		}
-		if (!checkType(EBrwViewEntry.VIEW_TYPE_MAIN)) {
-			return;
-		}
-		mBroWind.onPageStarted(view, url);
-	}
+    private void hideSoftKeyboard() {
+        try {
+            InputMethodManager imm = (InputMethodManager) getContext()
+                    .getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm.isActive()) {
+                imm.hideSoftInputFromWindow(this.getWindowToken(), 0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-	protected void onPageFinished(EBrowserView view, String url) {
-		if (mDestroyed) {
-			return;
-		}
-		mBroWind.onPageFinished(view, url);
-	}
+    protected void onPageStarted(EBrowserView view, String url) {
+        if (mDestroyed) {
+            return;
+        }
+        mUExMgr.notifyDocChange();
+        if (checkType(EBrwViewEntry.VIEW_TYPE_POP) && mOAuth) {
+            mBroWind.onUrlChange(mName, url);
+            return;
+        }
+        if (!checkType(EBrwViewEntry.VIEW_TYPE_MAIN)) {
+            return;
+        }
+        mBroWind.onPageStarted(view, url);
+    }
 
-	public boolean isObfuscation() {
-		if (mDestroyed) {
-			return false;
-		}
-		return mBroWind.isObfuscation();
-	}
+    protected void onPageFinished(EBrowserView view, String url) {
+        if (mDestroyed) {
+            return;
+        }
+        mBroWind.onPageFinished(view, url);
+    }
 
-	public boolean isOAth() {
-		if (mDestroyed) {
-			return false;
-		}
-		return mBroWind.isOAuth();
-	}
+    public boolean isObfuscation() {
+        if (mDestroyed) {
+            return false;
+        }
+        return mBroWind.isObfuscation();
+    }
 
-	public String getName() {
+    public boolean isOAth() {
+        if (mDestroyed) {
+            return false;
+        }
+        return mBroWind.isOAuth();
+    }
 
-		return mName;
-	}
+    public String getName() {
 
-	public void setName(String name) {
+        return mName;
+    }
 
-		mName = name;
-	}
+    public void setName(String name) {
 
-	@Override
-	public void goBack() {
-		if (mDestroyed) {
-			return;
-		}
-		if (isObfuscation()) {
-			EHistoryEntry enty = mBroWind.getHistory(-1);
-			if (null != enty) {
-				String url = enty.mUrl;
-				if (Build.VERSION.SDK_INT >= 11) {
-					if (url.startsWith("file")) {
-						int index = url.indexOf("?");
-						if (index > 0) {
-							mQuery = url.substring(index + 1);
-							url = url.substring(0, index);
-						}
-					}
-				}
-				if (enty.mIsObfuscation) {
-					needToEncrypt(this, url, EBrowserHistory.UPDATE_STEP_BACK);
-				} else {
-					loadUrl(url);
-					updateObfuscationHistroy(url,
-							EBrowserHistory.UPDATE_STEP_BACK, false);
-				}
-			}
-		} else {
-			super.goBack();
-		}
-	}
+        mName = name;
+    }
 
-	@Override
-	public void goForward() {
-		if (mDestroyed) {
-			return;
-		}
-		if (isObfuscation()) {
-			EHistoryEntry enty = mBroWind.getHistory(1);
-			if (null != enty) {
-				if (enty.mIsObfuscation) {
-					needToEncrypt(this, enty.mUrl,
-							EBrowserHistory.UPDATE_STEP_FORWARD);
-				} else {
-					loadUrl(enty.mUrl);
-					updateObfuscationHistroy(enty.mUrl,
-							EBrowserHistory.UPDATE_STEP_FORWARD, false);
-				}
-			}
-		} else {
-			super.goForward();
-		}
-	}
+    @Override
+    public void goBack() {
+        if (mDestroyed) {
+            return;
+        }
+        if (isObfuscation()) {
+            EHistoryEntry enty = mBroWind.getHistory(-1);
+            if (null != enty) {
+                String url = enty.mUrl;
+                if (Build.VERSION.SDK_INT >= 11) {
+                    if (url.startsWith("file")) {
+                        int index = url.indexOf("?");
+                        if (index > 0) {
+                            mQuery = url.substring(index + 1);
+                            url = url.substring(0, index);
+                        }
+                    }
+                }
+                if (enty.mIsObfuscation) {
+                    needToEncrypt(this, url, EBrowserHistory.UPDATE_STEP_BACK);
+                } else {
+                    loadUrl(url);
+                    updateObfuscationHistroy(url,
+                            EBrowserHistory.UPDATE_STEP_BACK, false);
+                }
+            }
+        } else {
+            super.goBack();
+        }
+    }
 
-	protected void updateObfuscationHistroy(String inUrl, int step,
-			boolean isObfuscation) {
-		if (mDestroyed) {
-			return;
-		}
-		if (!checkType(EBrwViewEntry.VIEW_TYPE_MAIN)) {
-			return;
-		}
-		mBroWind.updateObfuscationHistroy(inUrl, step, isObfuscation);
-	}
+    @Override
+    public void goForward() {
+        if (mDestroyed) {
+            return;
+        }
+        if (isObfuscation()) {
+            EHistoryEntry enty = mBroWind.getHistory(1);
+            if (null != enty) {
+                if (enty.mIsObfuscation) {
+                    needToEncrypt(this, enty.mUrl,
+                            EBrowserHistory.UPDATE_STEP_FORWARD);
+                } else {
+                    loadUrl(enty.mUrl);
+                    updateObfuscationHistroy(enty.mUrl,
+                            EBrowserHistory.UPDATE_STEP_FORWARD, false);
+                }
+            }
+        } else {
+            super.goForward();
+        }
+    }
 
-	protected void clearObfuscationHistroy() {
-		if (mDestroyed) {
-			return;
-		}
-		mBroWind.clearObfuscationHistroy();
-	}
+    protected void updateObfuscationHistroy(String inUrl, int step,
+                                            boolean isObfuscation) {
+        if (mDestroyed) {
+            return;
+        }
+        if (!checkType(EBrwViewEntry.VIEW_TYPE_MAIN)) {
+            return;
+        }
+        mBroWind.updateObfuscationHistroy(inUrl, step, isObfuscation);
+    }
 
-	public void addViewToCurrentWindow(View child,
-			FrameLayout.LayoutParams parms) {
-		if (mDestroyed) {
-			return;
-		}
-		if (parms != null) {
-			child.setLayoutParams(parms);
-		}
-		mBroWind.addViewToCurrentWindow(child);
-	}
+    protected void clearObfuscationHistroy() {
+        if (mDestroyed) {
+            return;
+        }
+        mBroWind.clearObfuscationHistroy();
+    }
 
-	public void removeViewFromCurrentWindow(View child) {
-		if (mDestroyed) {
-			return;
-		}
-		mBroWind.removeViewFromCurrentWindow(child);
-	}
+    public void addViewToCurrentWindow(View child,
+                                       FrameLayout.LayoutParams parms) {
+        if (mDestroyed) {
+            return;
+        }
+        if (parms != null) {
+            child.setLayoutParams(parms);
+        }
+        mBroWind.addViewToCurrentWindow(child);
+    }
 
-	public final void startWidget(WWidgetData inData, EWgtResultInfo inResult) {
-		if (mDestroyed) {
-			return;
-		}
-		mBroWind.startWidget(inData, inResult);
-	}
+    public void removeViewFromCurrentWindow(View child) {
+        if (mDestroyed) {
+            return;
+        }
+        mBroWind.removeViewFromCurrentWindow(child);
+    }
 
-	protected void start1(String url) {
-		if (mDestroyed) {
-			return;
-		}
-		if (null == url || 0 == url.length()) {
-			return;
-		}
-		if (Build.VERSION.SDK_INT >= 11) {
-			if (url.startsWith("file")) {
-				int index = url.indexOf("?");
-				if (index > 0) {
-					setQuery(url.substring(index + 1));
-					url = url.substring(0, index);
-				}
-			}
-		}
-		addUriTask(url);
-	}
+    public final void startWidget(WWidgetData inData, EWgtResultInfo inResult) {
+        if (mDestroyed) {
+            return;
+        }
+        mBroWind.startWidget(inData, inResult);
+    }
 
-	private void eClearHistory() {
-		if (mDestroyed) {
-			return;
-		}
-		if (isObfuscation()) {
-			clearObfuscationHistroy();
-		} else {
-			clearHistory();
-		}
-	}
+    protected void start1(String url) {
+        if (mDestroyed) {
+            return;
+        }
+        if (null == url || 0 == url.length()) {
+            return;
+        }
+        if (Build.VERSION.SDK_INT >= 11) {
+            if (url.startsWith("file")) {
+                int index = url.indexOf("?");
+                if (index > 0) {
+                    setQuery(url.substring(index + 1));
+                    url = url.substring(0, index);
+                }
+            }
+        }
+        addUriTask(url);
+    }
 
-	protected void start(String url) {
-		if (mDestroyed) {
-			return;
-		}
-		if (null == url || 0 == url.length()) {
-			return;
-		}
-		if (isObfuscation()) {
-			clearObfuscationHistroy();
-			if (url.startsWith("http")) {
-				addUriTask(url);
-				updateObfuscationHistroy(url, EBrowserHistory.UPDATE_STEP_INIT,
-						false);
-			} else {
-				needToEncrypt(this, url, EBrowserHistory.UPDATE_STEP_INIT); // may
-																			// be
-																			// crash
-			}
-		} else {
-			if (Build.VERSION.SDK_INT >= 11) {
-				if (url.startsWith("file")) {
-					int index = url.indexOf("?");
-					if (index > 0) {
-						setQuery(url.substring(index + 1));
-						url = url.substring(0, index);
-					}
-				}
-			}
-			addUriTask(url);
-			clearHistory();
-		}
-	}
+    private void eClearHistory() {
+        if (mDestroyed) {
+            return;
+        }
+        if (isObfuscation()) {
+            clearObfuscationHistroy();
+        } else {
+            clearHistory();
+        }
+    }
 
-	public void newLoadUrl(String url) {
-		if (mDestroyed) {
-			return;
-		}
-		if (null == url || 0 == url.length()) {
-			return;
-		}
-		addUriTask(url);
-	}
+    protected void start(String url) {
+        if (mDestroyed) {
+            return;
+        }
+        if (null == url || 0 == url.length()) {
+            return;
+        }
+        if (isObfuscation()) {
+            clearObfuscationHistroy();
+            if (url.startsWith("http")) {
+                addUriTask(url);
+                updateObfuscationHistroy(url, EBrowserHistory.UPDATE_STEP_INIT,
+                        false);
+            } else {
+                needToEncrypt(this, url, EBrowserHistory.UPDATE_STEP_INIT); // may
+                // be
+                // crash
+            }
+        } else {
+            if (Build.VERSION.SDK_INT >= 11) {
+                if (url.startsWith("file")) {
+                    int index = url.indexOf("?");
+                    if (index > 0) {
+                        setQuery(url.substring(index + 1));
+                        url = url.substring(0, index);
+                    }
+                }
+            }
+            addUriTask(url);
+            clearHistory();
+        }
+    }
 
-	public void newLoadData(String inData) {
-		if (mDestroyed) {
-			return;
-		}
-		loadData(inData, CONTENT_MIMETYPE_HTML, CONTENT_DEFAULT_CODE);
-	}
+    public void newLoadUrl(String url) {
+        if (mDestroyed) {
+            return;
+        }
+        if (null == url || 0 == url.length()) {
+            return;
+        }
+        addUriTask(url);
+    }
 
-	protected void receivedError(int errorCode, String description,
-			String failingUrl) {
-		if (mDestroyed) {
-			return;
-		}
-		if (checkType(EBrwViewEntry.VIEW_TYPE_ADD)) {
-			loadUrl("about:bank");
-			mBroWind.closeAd();
-			return;
-		}
-		loadUrl("file:///android_asset/error/error.html");
-	}
+    public void newLoadData(String inData) {
+        if (mDestroyed) {
+            return;
+        }
+        loadData(inData, CONTENT_MIMETYPE_HTML, CONTENT_DEFAULT_CODE);
+    }
 
-	public int getType() {
+    protected void receivedError(int errorCode, String description,
+                                 String failingUrl) {
+        if (mDestroyed) {
+            return;
+        }
+        if (checkType(EBrwViewEntry.VIEW_TYPE_ADD)) {
+            loadUrl("about:bank");
+            mBroWind.closeAd();
+            return;
+        }
+        loadUrl("file:///android_asset/error/error.html");
+    }
 
-		return mType;
-	}
+    public int getType() {
 
-	public void addUriTask(String uri) {
-		if (null != mBroWind && !mDestroyed) {
-			mBroWind.addUriTask(this, uri);
-		}
-	}
+        return mType;
+    }
+
+    public void addUriTask(String uri) {
+        if (null != mBroWind && !mDestroyed) {
+            mBroWind.addUriTask(this, uri);
+        }
+    }
 
     public void addUriTaskAsyn(String uri) {
         if (null != mBroWind && !mDestroyed) {
@@ -829,37 +839,39 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 
     /**
      * 设置是否开启硬件加速
+     *
      * @param flag -1不处理，0关闭，1开启
      */
-    public void setHWEnable(int flag){
-        if (flag==-1){
+    public void setHWEnable(int flag) {
+        if (flag == -1) {
             return;
         }
-        if (flag==1){
-            setLayerType(View.LAYER_TYPE_HARDWARE,null);
-        }else{
+        if (flag == 1) {
+            setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        } else {
             setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
     }
 
-	protected void needToEncrypt(WebView view, String url, int inFlag) {
-		if (mDestroyed) {
-			return;
-		}
-		int index = url.indexOf("?");
-		String turl = url;
-		if (index > 0) {
-			setQuery(url.substring(index + 1));
-			turl = turl.substring(0, index);
-		}
-		
-		String data = ACEDes.decrypt(turl, mContext, false, null);;
-		
-		if (ACEDes.isSpecifiedEncrypt()) {
-			
+    protected void needToEncrypt(WebView view, String url, int inFlag) {
+        if (mDestroyed) {
+            return;
+        }
+        int index = url.indexOf("?");
+        String turl = url;
+        if (index > 0) {
+            setQuery(url.substring(index + 1));
+            turl = turl.substring(0, index);
+        }
+
+        String data = ACEDes.decrypt(turl, mContext, false, null);
+        ;
+
+        if (ACEDes.isSpecifiedEncrypt()) {
+
 //			data = SpecifiedEncrypt.parseSpecifiedEncryptHtml(data);
-			
-		}
+
+        }
 //		if (SpecifiedEncrypt.isSpecifiedEncrypt()) {
 //			
 //			data = SpecifiedEncrypt.parseSpecifiedEncrypt(turl);
@@ -867,87 +879,87 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 //		} else {
 //			data = BHtmlDecrypt.decrypt(turl, mContext, false, null);
 //		}
-		
-		view.loadDataWithBaseURL(url, data, CONTENT_MIMETYPE_HTML,
-				CONTENT_DEFAULT_CODE, url);
-		if (mType == EBrwViewEntry.VIEW_TYPE_MAIN) {
-			updateObfuscationHistroy(url, inFlag, true);
-		}
-	}
 
-	public EBrowserWindow getBrowserWindow() {
+        view.loadDataWithBaseURL(url, data, CONTENT_MIMETYPE_HTML,
+                CONTENT_DEFAULT_CODE, url);
+        if (mType == EBrwViewEntry.VIEW_TYPE_MAIN) {
+            updateObfuscationHistroy(url, inFlag, true);
+        }
+    }
 
-		return mBroWind;
-	}
+    public EBrowserWindow getBrowserWindow() {
 
-	public int getWidgetType() {
+        return mBroWind;
+    }
 
-		int type = mBroWind.getWidgetType();
-		return type;
-	}
+    public int getWidgetType() {
 
-	public String getWindowName() {
-		if (mDestroyed) {
-			return null;
-		}
-		return mBroWind.getName();
-	}
+        int type = mBroWind.getWidgetType();
+        return type;
+    }
 
-	public void setQuery(String query) {
-		if (mDestroyed) {
-			return;
-		}
-		mQuery = query;
-	}
+    public String getWindowName() {
+        if (mDestroyed) {
+            return null;
+        }
+        return mBroWind.getName();
+    }
 
-	public String getQuery() {
-		if (mDestroyed) {
-			return null;
-		}
-		return mQuery;
-	}
+    public void setQuery(String query) {
+        if (mDestroyed) {
+            return;
+        }
+        mQuery = query;
+    }
 
-	public String getRelativeUrl() {
-		if (mDestroyed) {
-			return null;
-		}
-		return mRelativeUrl;
-	}
+    public String getQuery() {
+        if (mDestroyed) {
+            return null;
+        }
+        return mQuery;
+    }
 
-	public void setRelativeUrl(String url) {
-		if (mDestroyed) {
-			return;
-		}
-		mRelativeUrl = url;
-	}
+    public String getRelativeUrl() {
+        if (mDestroyed) {
+            return null;
+        }
+        return mRelativeUrl;
+    }
 
-	public String getCurrentUrl() {
-		if (mDestroyed) {
-			return "";
-		}
-		//修改浮动窗口中不能打开窗口问题
-		//if (!checkType(EBrwViewEntry.VIEW_TYPE_MAIN)) {
-		//	return mBroWind.location();
-		//} else {
-		String url = getUrl();
-		int index = url.indexOf("?");
-		if (-1 != index) {
-			url = url.substring(0, index);
-		}
-		return url;
-		//}
-	}
+    public void setRelativeUrl(String url) {
+        if (mDestroyed) {
+            return;
+        }
+        mRelativeUrl = url;
+    }
+
+    public String getCurrentUrl() {
+        if (mDestroyed) {
+            return "";
+        }
+        //修改浮动窗口中不能打开窗口问题
+        //if (!checkType(EBrwViewEntry.VIEW_TYPE_MAIN)) {
+        //	return mBroWind.location();
+        //} else {
+        String url = getUrl();
+        int index = url.indexOf("?");
+        if (-1 != index) {
+            url = url.substring(0, index);
+        }
+        return url;
+        //}
+    }
 
     public String getCurrentUrl(String baseUrl) {
         if (mDestroyed) {
             return "";
         }
-		//修改浮动窗口中不能打开窗口问题
+        //修改浮动窗口中不能打开窗口问题
         //if (!checkType(EBrwViewEntry.VIEW_TYPE_MAIN)) {
         //    return mBroWind.location();
         //} else {
         String url = getUrl();
-        if(TextUtils.isEmpty(url)){
+        if (TextUtils.isEmpty(url)) {
             url = baseUrl;
         }
         int index = url.indexOf("?");
@@ -958,75 +970,75 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
         //}
     }
 
-	public String getWidgetPath() {
-		if (mDestroyed) {
-			return "";
-		}
-		String ret = getCurrentWidget().m_widgetPath;
-		return ret;
-	}
+    public String getWidgetPath() {
+        if (mDestroyed) {
+            return "";
+        }
+        String ret = getCurrentWidget().m_widgetPath;
+        return ret;
+    }
 
-	public WWidgetData getCurrentWidget() {
-		if (mDestroyed) {
-			return new WWidgetData();
-		}
-		return mBroWind.getWidget();
-	}
+    public WWidgetData getCurrentWidget() {
+        if (mDestroyed) {
+            return new WWidgetData();
+        }
+        return mBroWind.getWidget();
+    }
 
-	public WWidgetData getRootWidget() {
-		if (mDestroyed) {
-			return new WWidgetData();
-		}
-		return mBroWind.getRootWidget();
-	}
+    public WWidgetData getRootWidget() {
+        if (mDestroyed) {
+            return new WWidgetData();
+        }
+        return mBroWind.getRootWidget();
+    }
 
-	public boolean isOAuth() {
+    public boolean isOAuth() {
 
-		return mOAuth;
-	}
+        return mOAuth;
+    }
 
-	public void setOAuth(boolean flag) {
+    public void setOAuth(boolean flag) {
 
-		mOAuth = flag;
-	}
+        mOAuth = flag;
+    }
 
-	public boolean shouldOpenInSystem() {
+    public boolean shouldOpenInSystem() {
 
-		return mShouldOpenInSystem;
-	}
+        return mShouldOpenInSystem;
+    }
 
-	public void setShouldOpenInSystem(boolean flag) {
+    public void setShouldOpenInSystem(boolean flag) {
 
-		mShouldOpenInSystem = flag;
-	}
+        mShouldOpenInSystem = flag;
+    }
 
-	public void setOpaque(boolean flag) {
-		mOpaque = flag;
-		if (mOpaque) {
-			setBackgroundColor(0xFFFFFFFF);
-		} else {
-			setBackgroundColor(Color.TRANSPARENT);
-		}
-	}
+    public void setOpaque(boolean flag) {
+        mOpaque = flag;
+        if (mOpaque) {
+            setBackgroundColor(0xFFFFFFFF);
+        } else {
+            setBackgroundColor(Color.TRANSPARENT);
+        }
+    }
 
     public void setBrwViewBackground(boolean flag, String bgColor, String baseUrl) {
         if (flag) {
-            if(bgColor.startsWith("#") || bgColor.startsWith("rgb")){
+            if (bgColor.startsWith("#") || bgColor.startsWith("rgb")) {
                 int color = BUtility.parseColor(bgColor);
                 setBackgroundColor(color);
-            }else{
-                String path = BUtility.makeRealPath(BUtility.makeUrl(getCurrentUrl(baseUrl),bgColor),
+            } else {
+                String path = BUtility.makeRealPath(BUtility.makeUrl(getCurrentUrl(baseUrl), bgColor),
                         getCurrentWidget().m_widgetPath, getCurrentWidget().m_wgtType);
                 Bitmap bitmap = BUtility.getLocalImg(mContext, path);
                 Drawable d = null;
-                if(bitmap != null){
+                if (bitmap != null) {
                     d = new BitmapDrawable(mContext.getResources(), bitmap);
                 }
                 int version = Build.VERSION.SDK_INT;
-                if(version < 16){
+                if (version < 16) {
                     setBackgroundDrawable(d);
                     setBackgroundColor(Color.argb(0, 0, 0, 0));
-                }else{
+                } else {
                     setBackground(d);
                     setBackgroundColor(Color.argb(0, 0, 0, 0));
                 }
@@ -1036,380 +1048,380 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
         }
     }
 
-	public void setWebApp(boolean flag) {
-		mWebApp = flag;
-	}
+    public void setWebApp(boolean flag) {
+        mWebApp = flag;
+    }
 
-	public boolean isWebApp() {
+    public boolean isWebApp() {
 
-		return mWebApp;
-	}
+        return mWebApp;
+    }
 
-	public int getDateType() {
+    public int getDateType() {
 
-		return mDateType;
-	}
+        return mDateType;
+    }
 
-	public void setDateType(int dateType) {
+    public void setDateType(int dateType) {
 
-		mDateType = dateType;
-	}
+        mDateType = dateType;
+    }
 
-	public void beginAnimition() {
-		if (mDestroyed) {
-			return;
-		}
-		final EBrowserView v = this;
-		post(new Runnable() {
-			@Override
-			public void run() {
-				if (null == mViewAnim) {
-					mViewAnim = new EBrwViewAnim();
-				}
-				mViewAnim.beginAnimition(v);
-			}
-		});
-	}
+    public void beginAnimition() {
+        if (mDestroyed) {
+            return;
+        }
+        final EBrowserView v = this;
+        post(new Runnable() {
+            @Override
+            public void run() {
+                if (null == mViewAnim) {
+                    mViewAnim = new EBrwViewAnim();
+                }
+                mViewAnim.beginAnimition(v);
+            }
+        });
+    }
 
-	public void setAnimitionDelay(final long del) {
-		final EBrowserView v = this;
-		post(new Runnable() {
-			@Override
-			public void run() {
-				if (null != mViewAnim && !mDestroyed) {
-					mViewAnim.setAnimitionDelay(v, del);
-				}
-			}
-		});
-	}
+    public void setAnimitionDelay(final long del) {
+        final EBrowserView v = this;
+        post(new Runnable() {
+            @Override
+            public void run() {
+                if (null != mViewAnim && !mDestroyed) {
+                    mViewAnim.setAnimitionDelay(v, del);
+                }
+            }
+        });
+    }
 
-	public void setAnimitionDuration(final long dur) {
-		final EBrowserView v = this;
-		post(new Runnable() {
-			@Override
-			public void run() {
-				if (null != mViewAnim && !mDestroyed) {
-					mViewAnim.setAnimitionDuration(v, dur);
-				}
-			}
-		});
-	}
+    public void setAnimitionDuration(final long dur) {
+        final EBrowserView v = this;
+        post(new Runnable() {
+            @Override
+            public void run() {
+                if (null != mViewAnim && !mDestroyed) {
+                    mViewAnim.setAnimitionDuration(v, dur);
+                }
+            }
+        });
+    }
 
-	public void setAnimitionCurve(final int cur) {
-		final EBrowserView v = this;
-		post(new Runnable() {
-			@Override
-			public void run() {
-				if (null != mViewAnim && !mDestroyed) {
-					mViewAnim.setAnimitionCurve(v, cur);
-				}
-			}
-		});
-	}
+    public void setAnimitionCurve(final int cur) {
+        final EBrowserView v = this;
+        post(new Runnable() {
+            @Override
+            public void run() {
+                if (null != mViewAnim && !mDestroyed) {
+                    mViewAnim.setAnimitionCurve(v, cur);
+                }
+            }
+        });
+    }
 
-	public void setAnimitionRepeatCount(final int count) {
-		final EBrowserView v = this;
-		post(new Runnable() {
-			@Override
-			public void run() {
-				if (null != mViewAnim && !mDestroyed) {
-					mViewAnim.setAnimitionRepeatCount(v, count);
-				}
-			}
-		});
-	}
+    public void setAnimitionRepeatCount(final int count) {
+        final EBrowserView v = this;
+        post(new Runnable() {
+            @Override
+            public void run() {
+                if (null != mViewAnim && !mDestroyed) {
+                    mViewAnim.setAnimitionRepeatCount(v, count);
+                }
+            }
+        });
+    }
 
-	public void setAnimitionAutoReverse(final boolean flag) {
-		final EBrowserView v = this;
-		post(new Runnable() {
-			@Override
-			public void run() {
-				if (null != mViewAnim && !mDestroyed) {
-					mViewAnim.setAnimitionAutoReverse(v, flag);
-				}
-			}
-		});
-	}
+    public void setAnimitionAutoReverse(final boolean flag) {
+        final EBrowserView v = this;
+        post(new Runnable() {
+            @Override
+            public void run() {
+                if (null != mViewAnim && !mDestroyed) {
+                    mViewAnim.setAnimitionAutoReverse(v, flag);
+                }
+            }
+        });
+    }
 
-	public void makeTranslation(final float tx, final float ty, final float tz) {
-		final EBrowserView v = this;
-		post(new Runnable() {
-			@Override
-			public void run() {
-				if (null != mViewAnim && !mDestroyed) {
-					mViewAnim.makeTranslation(v, tx, ty, tz);
-				}
-			}
-		});
-	}
+    public void makeTranslation(final float tx, final float ty, final float tz) {
+        final EBrowserView v = this;
+        post(new Runnable() {
+            @Override
+            public void run() {
+                if (null != mViewAnim && !mDestroyed) {
+                    mViewAnim.makeTranslation(v, tx, ty, tz);
+                }
+            }
+        });
+    }
 
-	public void makeScale(final float tx, final float ty, final float tz) {
-		final EBrowserView v = this;
-		post(new Runnable() {
-			@Override
-			public void run() {
-				if (null != mViewAnim && !mDestroyed) {
-					mViewAnim.makeScale(v, tx, ty, tz);
-				}
-			}
-		});
-	}
+    public void makeScale(final float tx, final float ty, final float tz) {
+        final EBrowserView v = this;
+        post(new Runnable() {
+            @Override
+            public void run() {
+                if (null != mViewAnim && !mDestroyed) {
+                    mViewAnim.makeScale(v, tx, ty, tz);
+                }
+            }
+        });
+    }
 
-	public void makeRotate(final float fd, final float px, final float py,
-			final float pz) {
-		final EBrowserView v = this;
-		post(new Runnable() {
-			@Override
-			public void run() {
-				if (null != mViewAnim && !mDestroyed) {
-					mViewAnim.makeRotate(v, fd, px, py, pz);
-				}
-			}
-		});
-	}
+    public void makeRotate(final float fd, final float px, final float py,
+                           final float pz) {
+        final EBrowserView v = this;
+        post(new Runnable() {
+            @Override
+            public void run() {
+                if (null != mViewAnim && !mDestroyed) {
+                    mViewAnim.makeRotate(v, fd, px, py, pz);
+                }
+            }
+        });
+    }
 
-	public void makeAlpha(final float fc) {
-		final EBrowserView v = this;
-		post(new Runnable() {
-			@Override
-			public void run() {
-				if (null != mViewAnim && !mDestroyed) {
-					mViewAnim.makeAlpha(v, fc);
-				}
-			}
-		});
-	}
+    public void makeAlpha(final float fc) {
+        final EBrowserView v = this;
+        post(new Runnable() {
+            @Override
+            public void run() {
+                if (null != mViewAnim && !mDestroyed) {
+                    mViewAnim.makeAlpha(v, fc);
+                }
+            }
+        });
+    }
 
-	public void commitAnimition() {
-		final EBrowserView v = this;
-		post(new Runnable() {
-			@Override
-			public void run() {
-				if (null != mViewAnim && !mDestroyed) {
-					mViewAnim.commitAnimition(v);
-					mBroWind.invalidate();
-				}
-			}
-		});
-	}
-	
-	public void cbBounceState(int inData) {
-		String js = "javascript:if(" + EUExWindow.function_cbBounceState + "){"
-				+ EUExWindow.function_cbBounceState + "(" + 0 + "," + 2 + ","
-				+ inData + ")}";
-		addUriTask(js);
-	}
-	
-	public void getBounce() {
-		if (mDestroyed) {
-			return;
-		}
-		EViewEntry bounceEntry = new EViewEntry();
-		bounceEntry.obj = getParent();
-		mBroWind.addBounceTask(bounceEntry,
+    public void commitAnimition() {
+        final EBrowserView v = this;
+        post(new Runnable() {
+            @Override
+            public void run() {
+                if (null != mViewAnim && !mDestroyed) {
+                    mViewAnim.commitAnimition(v);
+                    mBroWind.invalidate();
+                }
+            }
+        });
+    }
+
+    public void cbBounceState(int inData) {
+        String js = "javascript:if(" + EUExWindow.function_cbBounceState + "){"
+                + EUExWindow.function_cbBounceState + "(" + 0 + "," + 2 + ","
+                + inData + ")}";
+        addUriTask(js);
+    }
+
+    public void getBounce() {
+        if (mDestroyed) {
+            return;
+        }
+        EViewEntry bounceEntry = new EViewEntry();
+        bounceEntry.obj = getParent();
+        mBroWind.addBounceTask(bounceEntry,
                 EViewEntry.F_BOUNCE_TASK_GET_BOUNCE_VIEW);
-	}
+    }
 
-	public void setBounce(int flag) {
-		if (mDestroyed) {
-			return;
-		}
-		EViewEntry bounceEntry = new EViewEntry();
-		bounceEntry.obj = getParent();
-		bounceEntry.flag = flag;
-		mBroWind.addBounceTask(bounceEntry,
-				EViewEntry.F_BOUNCE_TASK_SET_BOUNCE_VIEW);
-	}
+    public void setBounce(int flag) {
+        if (mDestroyed) {
+            return;
+        }
+        EViewEntry bounceEntry = new EViewEntry();
+        bounceEntry.obj = getParent();
+        bounceEntry.flag = flag;
+        mBroWind.addBounceTask(bounceEntry,
+                EViewEntry.F_BOUNCE_TASK_SET_BOUNCE_VIEW);
+    }
 
-	public void notifyBounceEvent(int inType, int inStatus) {
-		if (mDestroyed) {
-			return;
-		}
-		EViewEntry bounceEntry = new EViewEntry();
-		bounceEntry.type = inType;
-		bounceEntry.obj = getParent();
-		bounceEntry.flag = inStatus;
-		mBroWind.addBounceTask(bounceEntry,
-				EViewEntry.F_BOUNCE_TASK_NOTIFY_BOUNCE_VIEW);
-	}
+    public void notifyBounceEvent(int inType, int inStatus) {
+        if (mDestroyed) {
+            return;
+        }
+        EViewEntry bounceEntry = new EViewEntry();
+        bounceEntry.type = inType;
+        bounceEntry.obj = getParent();
+        bounceEntry.flag = inStatus;
+        mBroWind.addBounceTask(bounceEntry,
+                EViewEntry.F_BOUNCE_TASK_NOTIFY_BOUNCE_VIEW);
+    }
 
-	public void showBounceView(int inType, String inColor, int inFlag) {
-		if (mDestroyed) {
-			return;
-		}
-		EViewEntry bounceEntry = new EViewEntry();
-		bounceEntry.type = inType;
-		bounceEntry.obj = getParent();
-		bounceEntry.color = parseColor(inColor);
-		bounceEntry.flag = inFlag;
-		mBroWind.addBounceTask(bounceEntry,
-				EViewEntry.F_BOUNCE_TASK_SHOW_BOUNCE_VIEW);
-	}
+    public void showBounceView(int inType, String inColor, int inFlag) {
+        if (mDestroyed) {
+            return;
+        }
+        EViewEntry bounceEntry = new EViewEntry();
+        bounceEntry.type = inType;
+        bounceEntry.obj = getParent();
+        bounceEntry.color = parseColor(inColor);
+        bounceEntry.flag = inFlag;
+        mBroWind.addBounceTask(bounceEntry,
+                EViewEntry.F_BOUNCE_TASK_SHOW_BOUNCE_VIEW);
+    }
 
-	public void onBounceStateChange(int type, int state) {
-		String js = "javascript:if(uexWindow.onBounceStateChange){uexWindow.onBounceStateChange("
-				+ type + "," + state + ");}";
-		loadUrl(js);
-	}
+    public void onBounceStateChange(int type, int state) {
+        String js = "javascript:if(uexWindow.onBounceStateChange){uexWindow.onBounceStateChange("
+                + type + "," + state + ");}";
+        loadUrl(js);
+    }
 
-	public int parseColor(String inColor) {
-		int reColor = 0;
-		try {
-			if (inColor != null && inColor.length() != 0) {
-				inColor = inColor.replace(" ", "");
-				if (inColor.charAt(0) == 'r') { // rgba
-					int start = inColor.indexOf('(') + 1;
-					int off = inColor.indexOf(')');
-					inColor = inColor.substring(start, off);
-					String[] rgba = inColor.split(",");
-					int r = Integer.parseInt(rgba[0]);
-					int g = Integer.parseInt(rgba[1]);
-					int b = Integer.parseInt(rgba[2]);
-					int a = Integer.parseInt(rgba[3]);
-					reColor = (a << 24) | (r << 16) | (g << 8) | b;
-				} else { // #
-					inColor = inColor.substring(1);
-					if (3 == inColor.length()) {
-						char[] t = new char[6];
-						t[0] = inColor.charAt(0);
-						t[1] = inColor.charAt(0);
-						t[2] = inColor.charAt(1);
-						t[3] = inColor.charAt(1);
-						t[4] = inColor.charAt(2);
-						t[5] = inColor.charAt(2);
-						inColor = String.valueOf(t);
-					} else if (6 == inColor.length()) {
-						;
-					}
-					long color = Long.parseLong(inColor, 16);
-					reColor = (int) (color | 0x00000000ff000000);
-				}
-			}
-		} catch (Exception e) {
-			;
-		}
-		return reColor;
-	}
+    public int parseColor(String inColor) {
+        int reColor = 0;
+        try {
+            if (inColor != null && inColor.length() != 0) {
+                inColor = inColor.replace(" ", "");
+                if (inColor.charAt(0) == 'r') { // rgba
+                    int start = inColor.indexOf('(') + 1;
+                    int off = inColor.indexOf(')');
+                    inColor = inColor.substring(start, off);
+                    String[] rgba = inColor.split(",");
+                    int r = Integer.parseInt(rgba[0]);
+                    int g = Integer.parseInt(rgba[1]);
+                    int b = Integer.parseInt(rgba[2]);
+                    int a = Integer.parseInt(rgba[3]);
+                    reColor = (a << 24) | (r << 16) | (g << 8) | b;
+                } else { // #
+                    inColor = inColor.substring(1);
+                    if (3 == inColor.length()) {
+                        char[] t = new char[6];
+                        t[0] = inColor.charAt(0);
+                        t[1] = inColor.charAt(0);
+                        t[2] = inColor.charAt(1);
+                        t[3] = inColor.charAt(1);
+                        t[4] = inColor.charAt(2);
+                        t[5] = inColor.charAt(2);
+                        inColor = String.valueOf(t);
+                    } else if (6 == inColor.length()) {
+                        ;
+                    }
+                    long color = Long.parseLong(inColor, 16);
+                    reColor = (int) (color | 0x00000000ff000000);
+                }
+            }
+        } catch (Exception e) {
+            ;
+        }
+        return reColor;
+    }
 
-	public void resetBounceView(int inType) {
-		if (mDestroyed) {
-			return;
-		}
-		EViewEntry bounceEntry = new EViewEntry();
-		bounceEntry.type = inType;
-		bounceEntry.obj = getParent();
-		mBroWind.addBounceTask(bounceEntry,
-				EViewEntry.F_BOUNCE_TASK_RESET_BOUNCE_VIEW);
-	}
+    public void resetBounceView(int inType) {
+        if (mDestroyed) {
+            return;
+        }
+        EViewEntry bounceEntry = new EViewEntry();
+        bounceEntry.type = inType;
+        bounceEntry.obj = getParent();
+        mBroWind.addBounceTask(bounceEntry,
+                EViewEntry.F_BOUNCE_TASK_RESET_BOUNCE_VIEW);
+    }
 
-	public void hiddenBounceView(int inType) {
-		if (mDestroyed) {
-			return;
-		}
-		EViewEntry bounceEntry = new EViewEntry();
-		bounceEntry.type = inType;
-		bounceEntry.obj = getParent();
-		mBroWind.addBounceTask(bounceEntry,
-				EViewEntry.F_BOUNCE_TASK_HIDDEN_BOUNCE_VIEW);
-	}
+    public void hiddenBounceView(int inType) {
+        if (mDestroyed) {
+            return;
+        }
+        EViewEntry bounceEntry = new EViewEntry();
+        bounceEntry.type = inType;
+        bounceEntry.obj = getParent();
+        mBroWind.addBounceTask(bounceEntry,
+                EViewEntry.F_BOUNCE_TASK_HIDDEN_BOUNCE_VIEW);
+    }
 
-	public void setBounceParams(int inType, JSONObject json, String guestId) {
-		if (mDestroyed) {
-			return;
-		}
-		EViewEntry bounceEntry = new EViewEntry();
-		bounceEntry.type = inType;
-		bounceEntry.obj = getParent();
-		bounceEntry.obj1 = json;
-		bounceEntry.arg1 = guestId;
-		mBroWind.addBounceTask(bounceEntry,
-				EViewEntry.F_BOUNCE_TASK_SET_BOUNCE_PARMS);
-	}
+    public void setBounceParams(int inType, JSONObject json, String guestId) {
+        if (mDestroyed) {
+            return;
+        }
+        EViewEntry bounceEntry = new EViewEntry();
+        bounceEntry.type = inType;
+        bounceEntry.obj = getParent();
+        bounceEntry.obj1 = json;
+        bounceEntry.arg1 = guestId;
+        mBroWind.addBounceTask(bounceEntry,
+                EViewEntry.F_BOUNCE_TASK_SET_BOUNCE_PARMS);
+    }
 
-	public boolean beDestroy() {
+    public boolean beDestroy() {
 
-		return mDestroyed;
-	}
+        return mDestroyed;
+    }
 
-	protected void reset() {
-		mDestroyed = false;
-		View bv = (View) getParent();
-		if (bv != null && bv instanceof EBounceView) {
-			((EBounceView) bv).release();
-		}
-		clearView();
-		clearMatches();
-		mQuery = null;
-		mName = null;
-		mRelativeUrl = null;
-		mShouldOpenInSystem = false;
-		mOpaque = false;
-		mOAuth = false;
-		mWebApp = false;
-		mSupportZoom = false;
+    protected void reset() {
+        mDestroyed = false;
+        View bv = (View) getParent();
+        if (bv != null && bv instanceof EBounceView) {
+            ((EBounceView) bv).release();
+        }
+        clearView();
+        clearMatches();
+        mQuery = null;
+        mName = null;
+        mRelativeUrl = null;
+        mShouldOpenInSystem = false;
+        mOpaque = false;
+        mOAuth = false;
+        mWebApp = false;
+        mSupportZoom = false;
         isSupportSlideCallback = false;
-		eClearHistory();
-		resumeCore();
-		mUExMgr.notifyReset();
-	}
+        eClearHistory();
+        resumeCore();
+        mUExMgr.notifyReset();
+    }
 
-	@Override
-	public void stopLoading() {
-		super.stopLoading();
-		mUExMgr.notifyStop();
-		pauseCore();
-	}
+    @Override
+    public void stopLoading() {
+        super.stopLoading();
+        mUExMgr.notifyStop();
+        pauseCore();
+    }
 
-	@Override
-	public void destroy() {
-		if (mDestroyed) {
-			return;
-		}
-		mDestroyed = true;
-		mBroWind = null;
-		mBaSetting = null;
-		mContext = null;
-		clearView();
-		clearHistory();
-		ViewGroup parent = (ViewGroup) getParent();
-		if (null != parent) {
-			parent.removeView(this);
-		}
-		mUExMgr.notifyDestroy(this);
-		mUExMgr = null;
-		super.destroy();
-	}
+    @Override
+    public void destroy() {
+        if (mDestroyed) {
+            return;
+        }
+        mDestroyed = true;
+        mBroWind = null;
+        mBaSetting = null;
+        mContext = null;
+        clearView();
+        clearHistory();
+        ViewGroup parent = (ViewGroup) getParent();
+        if (null != parent) {
+            parent.removeView(this);
+        }
+        mUExMgr.notifyDestroy(this);
+        mUExMgr = null;
+        super.destroy();
+    }
 
-	protected void printThreadStackTrace() {
-		StackTraceElement[] stak = Thread.currentThread().getStackTrace();
-		String s = "";
-		int len = stak.length;
-		for (int i = 0; i < len; ++i) {
-			StackTraceElement one = stak[i];
-			String className = one.getClassName();
-			String methodName = one.getMethodName();
-			int line = one.getLineNumber();
-			String x = s + className + "." + methodName + " [" + line + "]";
-			x.charAt(0);
-			if (i == 0 || i == 1 || i == 2) {
-				s += " ";
-			}
-		}
-	}
+    protected void printThreadStackTrace() {
+        StackTraceElement[] stak = Thread.currentThread().getStackTrace();
+        String s = "";
+        int len = stak.length;
+        for (int i = 0; i < len; ++i) {
+            StackTraceElement one = stak[i];
+            String className = one.getClassName();
+            String methodName = one.getMethodName();
+            int line = one.getLineNumber();
+            String x = s + className + "." + methodName + " [" + line + "]";
+            x.charAt(0);
+            if (i == 0 || i == 1 || i == 2) {
+                s += " ";
+            }
+        }
+    }
 
-	@Override
-	protected void onScrollChanged(int l, int t, int oldl, int oldt) {
-		super.onScrollChanged(l, t, oldl, oldt);
-		//if (!EBrowserWindow.isShowDialog) {
+    @Override
+    protected void onScrollChanged(int l, int t, int oldl, int oldt) {
+        super.onScrollChanged(l, t, oldl, oldt);
+        //if (!EBrowserWindow.isShowDialog) {
         int versionA = Build.VERSION.SDK_INT;
         boolean isSlideCallback = false;
 
-        if (versionA >= 19){
+        if (versionA >= 19) {
             //system above 4.4, is support callback depend on isSupportSlideCallback which
             // set by developer.
             // 4.4以上手机系统，是否回调取决于前端接口设置。
             isSlideCallback = isSupportSlideCallback;
-        }else{
+        } else {
             //system below 4.4, is support callback depend on isSupportSlideCallback and
             //isShowDialog, isShowDialog indicate is pop-up keyboard or whether to switch
             // the screen.
@@ -1417,7 +1429,7 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
             // 条件下屏幕旋转之后，上滑下滑的监听不生效。
             isSlideCallback = isSupportSlideCallback && !EBrowserWindow.isShowDialog;
         }
-        if(isSlideCallback) {
+        if (isSlideCallback) {
             float nowScale = 1.0f;
 
             if (versionA <= 18) {
@@ -1448,18 +1460,18 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
                         EUExCallback.F_C_INT, 0);
             }
         }
-		//}
+        //}
 
-		super.onScrollChanged(l, t, oldl, oldt);
-	}
+        super.onScrollChanged(l, t, oldl, oldt);
+    }
 
-	@Override
-	public void onDownloadStart(String url, String userAgent,
-			String contentDisposition, String mimetype, long contentLength) {
+    @Override
+    public void onDownloadStart(String url, String userAgent,
+                                String contentDisposition, String mimetype, long contentLength) {
 
-		mEXWebViewClient.onDownloadStart(mContext, url, userAgent,
+        mEXWebViewClient.onDownloadStart(mContext, url, userAgent,
                 contentDisposition, mimetype, contentLength);
-	}
+    }
 
     public void setNeedScroll(boolean b) {
         this.mIsNeedScroll = b;
