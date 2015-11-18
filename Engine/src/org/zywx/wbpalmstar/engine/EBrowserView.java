@@ -18,27 +18,12 @@
 
 package org.zywx.wbpalmstar.engine;
 
-import java.lang.reflect.Method;
-import java.util.Map;
-
-import org.json.JSONObject;
-import org.zywx.wbpalmstar.acedes.ACEDes;
-import org.zywx.wbpalmstar.base.BDebug;
-import org.zywx.wbpalmstar.base.BUtility;
-import org.zywx.wbpalmstar.engine.EBrowserHistory.EHistoryEntry;
-import org.zywx.wbpalmstar.acedes.EXWebViewClient;
-import org.zywx.wbpalmstar.engine.universalex.EUExCallback;
-import org.zywx.wbpalmstar.engine.universalex.EUExManager;
-import org.zywx.wbpalmstar.engine.universalex.EUExWindow;
-import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.view.ViewPager;
@@ -52,6 +37,20 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.DownloadListener;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
+
+import org.json.JSONObject;
+import org.zywx.wbpalmstar.acedes.ACEDes;
+import org.zywx.wbpalmstar.acedes.EXWebViewClient;
+import org.zywx.wbpalmstar.base.BDebug;
+import org.zywx.wbpalmstar.base.BUtility;
+import org.zywx.wbpalmstar.engine.EBrowserHistory.EHistoryEntry;
+import org.zywx.wbpalmstar.engine.universalex.EUExCallback;
+import org.zywx.wbpalmstar.engine.universalex.EUExManager;
+import org.zywx.wbpalmstar.engine.universalex.EUExWindow;
+import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
+
+import java.lang.reflect.Method;
+import java.util.Map;
 
 public class EBrowserView extends WebView implements View.OnLongClickListener,
         DownloadListener {
@@ -931,6 +930,10 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
         if (-1 != index) {
             url = url.substring(0, index);
         }
+        int indexS = url.indexOf("#");
+        if (-1 != indexS) {
+            url = url.substring(0, indexS);
+        }
         return url;
         //}
     }
@@ -950,6 +953,10 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
         int index = url.indexOf("?");
         if (-1 != index) {
             url = url.substring(0, index);
+        }
+        int indexS = url.indexOf("#");
+        if (-1 != indexS) {
+            url = url.substring(0, indexS);
         }
         return url;
         //}
