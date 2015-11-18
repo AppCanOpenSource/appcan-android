@@ -173,6 +173,8 @@ public class EUExScript {
                 + "makeRotate:function(){uexDispatcher.dispatch('uexWindow','makeRotate',jo(arguments));},"
                 + "makeAlpha:function(){uexDispatcher.dispatch('uexWindow','makeAlpha',jo(arguments));},"
                 + "commitAnimition:function(){uexDispatcher.dispatch('uexWindow','commitAnimition',jo(arguments));},"
+                + "setHardwareEnable:function(){uexDispatcher.dispatch('uexWindow','setHardwareEnable',jo(arguments));},"
+                + "setPopHardwareEnable:function(){uexDispatcher.dispatch('uexWindow','setPopHardwareEnable',jo(arguments));},"
 
 
                 + "setSlidingWindow:function(){uexDispatcher.dispatch('uexWindow','setSlidingWindow',jo(arguments));},"
