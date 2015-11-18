@@ -68,9 +68,17 @@ public class LoadingActivity extends Activity {
             @Override
             public void run() {
                 if (!isTemp) {
-                    startActivity(new Intent(LoadingActivity.this, EBrowserActivity.class));
-                    overridePendingTransition(EUExUtil.getResAnimID("platform_myspace_no_anim")
-                            , EUExUtil.getResAnimID("platform_myspace_no_anim"));
+                    try {
+                        Intent intent = new Intent(LoadingActivity.this, EBrowserActivity.class);
+                        Bundle bundle = getIntent().getExtras();
+                        if (null != bundle) {
+                            intent.putExtras(bundle);
+                        }
+                        startActivity(intent);
+                        overridePendingTransition(EUExUtil.getResAnimID("platform_myspace_no_anim")
+                                , EUExUtil.getResAnimID("platform_myspace_no_anim"));
+                    } catch (Exception e) {
+                    }
                 }
             }
         },700);
