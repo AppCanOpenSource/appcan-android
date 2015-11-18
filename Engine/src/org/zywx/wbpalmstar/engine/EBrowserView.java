@@ -99,6 +99,8 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 
     private OnEBrowserViewChangeListener mBrowserViewChangeListener;
 
+    public static boolean sHardwareAccelerate = true;//配置全部WebView是否硬件加速,默认开启，config.xml 配置关闭
+
     protected EBrowserView(Context context, int inType, EBrowserWindow inParent) {
         super(context);
         mMyCountId = EBrowser.assignCountID();
@@ -108,6 +110,7 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
         initPrivateVoid();
 //		setOnLongClickListener(this);
         setDownloadListener(this);
+        setACEHardwareAccelerate();
     }
 
     public void setScrollCallBackContex(EUExWindow callback) {
@@ -141,6 +144,12 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
         }
         mUExMgr = new EUExManager(mContext);
         mUExMgr.addJavascriptInterface(this);
+    }
+
+    private void setACEHardwareAccelerate() {
+        if (!sHardwareAccelerate) {
+            setLayerType(LAYER_TYPE_SOFTWARE, null);
+        }
     }
 
     @Override

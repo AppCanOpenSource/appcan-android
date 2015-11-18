@@ -602,6 +602,7 @@ public class EUExWindow extends EUExBase {
         Bundle bd = new Bundle();
         bd.putStringArray(TAG_BUNDLE_PARAM, parm);
         msg.setData(bd);
+        mHandler.sendMessage(msg);
     }
 
     public void showSlibingMsg(String[] parm) {
