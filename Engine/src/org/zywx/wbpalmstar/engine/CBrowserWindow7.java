@@ -224,7 +224,9 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
 
 
 		if (!info.mFinished) {
-			((EBrowserActivity)target.getContext()).setContentViewVisible();
+			if (WWidgetData.m_remove_loading==1){
+				((EBrowserActivity)target.getContext()).setContentViewVisible(200);
+			}
 		}
 
 		info.mFinished = true;

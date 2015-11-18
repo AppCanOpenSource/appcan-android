@@ -92,6 +92,7 @@ public final class EBrowserActivity extends FragmentActivity {
 	
 	public SlidingMenu globalSlidingMenu;
 	private ValueCallback<Uri> mUploadMessage;
+	private boolean mLoadingRemoved=false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -232,7 +233,10 @@ public final class EBrowserActivity extends FragmentActivity {
 		return mEBrwMainFrame.customViewShown();
 	}
 
-	public void setContentViewVisible(){
+	public void setContentViewVisible(int delayTime){
+		if (mLoadingRemoved){
+			return;
+		}
 		final LocalBroadcastManager broadcastManager = LocalBroadcastManager
 				.getInstance(this);
 		mEHandler.postDelayed(new Runnable() {
@@ -241,14 +245,16 @@ public final class EBrowserActivity extends FragmentActivity {
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
+						mLoadingRemoved=true;
 						getWindow().setBackgroundDrawable(new ColorDrawable(0xFFFFFFFF));
 						Intent intent=new Intent(LoadingActivity.BROADCAST_ACTION);
 						broadcastManager.sendBroadcast(intent);
 					}
 				});
 			}
-		}, 200);
+		}, delayTime);
 	}
+
 
 	public final void showCustomView(View view, CustomViewCallback callback) {
 
@@ -820,7 +826,7 @@ public final class EBrowserActivity extends FragmentActivity {
 				}
 			case F_MSG_LOAD_HIDE_SH:
 				mScreen.setVisibility(View.VISIBLE);
-				setContentViewVisible();
+				setContentViewVisible(0);
 				if (mBrowserAround.checkTimeFlag()) {
 					mBrowser.hiddenShelter();
 				} else {
