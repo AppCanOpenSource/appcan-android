@@ -76,6 +76,7 @@ public class EBrowserSetting implements EBrowserBaseSetting {
 			invokeHtml5(mWebSetting);
 		}
 		if (webApp) {
+			mWebSetting.setUseWideViewPort(true);
 //			mWebSetting.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
 			return;
 		}
