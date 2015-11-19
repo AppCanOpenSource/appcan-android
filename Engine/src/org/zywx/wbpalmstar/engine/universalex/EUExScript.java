@@ -94,6 +94,7 @@ public class EUExScript {
                 + "delPushInfo:function(){uexDispatcher.dispatch('uexWidget','delPushInfo',jo(arguments));},"
                 + "isAppInstalled:function(){uexDispatcher.dispatch('uexWidget','isAppInstalled',jo(arguments));},"
                 + "getPushInfo:function(){uexDispatcher.dispatch('uexWidget','getPushInfo',jo(arguments));},"
+                + "closeLoading:function(){uexDispatcher.dispatch('uexWidget','closeLoading',jo(arguments));},"
                 + "setKeyboardMode:function(){uexDispatcher.dispatch('uexWidget','setKeyboardMode',jo(arguments));}};"
                 +
                 // Window
@@ -172,6 +173,8 @@ public class EUExScript {
                 + "makeRotate:function(){uexDispatcher.dispatch('uexWindow','makeRotate',jo(arguments));},"
                 + "makeAlpha:function(){uexDispatcher.dispatch('uexWindow','makeAlpha',jo(arguments));},"
                 + "commitAnimition:function(){uexDispatcher.dispatch('uexWindow','commitAnimition',jo(arguments));},"
+                + "setHardwareEnable:function(){uexDispatcher.dispatch('uexWindow','setHardwareEnable',jo(arguments));},"
+                + "setPopHardwareEnable:function(){uexDispatcher.dispatch('uexWindow','setPopHardwareEnable',jo(arguments));},"
 
 
                 + "setSlidingWindow:function(){uexDispatcher.dispatch('uexWindow','setSlidingWindow',jo(arguments));},"

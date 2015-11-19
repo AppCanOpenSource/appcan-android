@@ -135,7 +135,6 @@ public class EUExManager {
             BDebug.e("plugin", plugin.getUexName(), " has been destroyed");
             return;
         }
-
         ((Activity) mContext).runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -154,8 +153,6 @@ public class EUExManager {
                 }
             }
         });
-
-        BDebug.e("return null......");
     }
 
     public void notifyReset() {
