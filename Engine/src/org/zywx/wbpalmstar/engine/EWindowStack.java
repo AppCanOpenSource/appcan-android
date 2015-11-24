@@ -154,7 +154,6 @@ public class EWindowStack {
                 iterator.remove();
             }
         }
-        mWindMap.remove(null);
     }
 
     public void destroy() {
