@@ -25,6 +25,8 @@ import java.text.DecimalFormat;
 
 public class BConstant {
 
+    public static final String ENGINE_VERSION="3.2.1";
+
 	public static final String F_URL 					= "url";
 	public static final String F_WIDGET 				= "widget";
 	public static final String F_MULTIPLEWINDOW 		= "MultipleWindow";

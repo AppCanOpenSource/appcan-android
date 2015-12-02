@@ -48,6 +48,8 @@ import org.json.JSONObject;
 import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.ResoureFinder;
+import org.zywx.wbpalmstar.base.vo.SetSwipeCloseEnableVO;
+import org.zywx.wbpalmstar.engine.DataHelper;
 import org.zywx.wbpalmstar.engine.EBrowser;
 import org.zywx.wbpalmstar.engine.EBrowserActivity;
 import org.zywx.wbpalmstar.engine.EBrowserAnimation;
@@ -2292,6 +2294,14 @@ public class EUExWindow extends EUExBase {
         }
         if (swipe > 0) {
             ESystemInfo.getIntence().mSwipeRate = swipe;
+        }
+    }
+
+    public void setSwipeCloseEnable(String[] param){
+        SetSwipeCloseEnableVO input= DataHelper.gson.fromJson(param[0],SetSwipeCloseEnableVO.class);
+        if (input!=null){
+            EBrowserWindow curWindow=mBrwView.getBrowserWindow();
+            curWindow.setSwipeEnabled(input.getEnable()==1);
         }
     }
 

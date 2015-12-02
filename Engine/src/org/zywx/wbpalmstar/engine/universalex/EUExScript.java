@@ -175,6 +175,7 @@ public class EUExScript {
                 + "commitAnimition:function(){uexDispatcher.dispatch('uexWindow','commitAnimition',jo(arguments));},"
                 + "setHardwareEnable:function(){uexDispatcher.dispatch('uexWindow','setHardwareEnable',jo(arguments));},"
                 + "setPopHardwareEnable:function(){uexDispatcher.dispatch('uexWindow','setPopHardwareEnable',jo(arguments));},"
+                + "setSwipeCloseEnable:function(){uexDispatcher.dispatch('uexWindow','setSwipeCloseEnable',jo(arguments));},"
 
 
                 + "setSlidingWindow:function(){uexDispatcher.dispatch('uexWindow','setSlidingWindow',jo(arguments));},"
