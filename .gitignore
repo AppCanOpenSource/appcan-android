@@ -15,7 +15,7 @@ bin/
 # Gradle files
 .gradle/
 build/
-
+*.iml
 # Local configuration file (sdk path, etc)
 local.properties
 

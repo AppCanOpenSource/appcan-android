@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+
+    <script type="text/javascript">
+    function isAppInstalled(){
+        var appData = document.getElementById('isAppInstalled').value;
+        var params = {
+            appData:appData
+        };
+        var data = JSON.stringify(params);
+        uexWidget.isAppInstalled(data);
+    }
+
+    function startApp(){
+        var appData = document.getElementById('isAppInstalled').value;
+        uexWidget.startApp(0, appData);
+    }
+        window.uexOnload = function(type){
+            if(type == 0){
+                uexWidget.cbIsAppInstalled = cbIsAppInstalled;
+                uexWidget.cbStartApp = cbStartApp;
+            }
+        }
+    function cbIsAppInstalled(info){
+        var result = JSON.parse(info);
+        if(result.installed == 0){
+            alert('installed');
+        }else{
+            alert('not installed');
+        }
+    }
+
+    function cbStartApp(info){
+        alert("cbStartApp:" + info);
+    }
+    </script>
+</head>
+
+<body>
+<div class="tit">uexWidget</div>
+<div class="conbor">
+    <div class="consj">
+        <input class='textbox' type='text' value='com.tencent.mobileqq' id = "isAppInstalled">
+
+        <input class='btn' type='button' value='isAppInstalled' onclick='isAppInstalled()'>
+
+        <input class='btn' type='button' value='startApp' onclick='startApp()'>
+
+
+    </div>
+</div>
+</body>
+</html>

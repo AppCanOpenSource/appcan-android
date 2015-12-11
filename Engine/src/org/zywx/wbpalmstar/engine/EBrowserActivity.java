@@ -18,9 +18,7 @@
 
 package org.zywx.wbpalmstar.engine;
 
-import android.app.ActivityGroup;
 import android.app.AlertDialog;
-import android.app.LocalActivityManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -29,13 +27,16 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.*;
 import android.os.Process;
-import android.util.TypedValue;
-import android.view.Gravity;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient.CustomViewCallback;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -65,10 +66,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-@SuppressWarnings("deprecation")
-public final class EBrowserActivity extends ActivityGroup {
+public final class EBrowserActivity extends FragmentActivity {
 
 	public static final int F_OAUTH_CODE = 100001;
+	public final static int FILECHOOSER_RESULTCODE = 233;
 
 	private EBrowser mBrowser;
 	private boolean mKeyDown;
@@ -90,7 +91,8 @@ public final class EBrowserActivity extends ActivityGroup {
 	public static boolean isForground = false;
 	
 	public SlidingMenu globalSlidingMenu;
-
+	private ValueCallback<Uri> mUploadMessage;
+	private boolean mLoadingRemoved=false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -156,6 +158,13 @@ public final class EBrowserActivity extends ActivityGroup {
 //        globalSlidingMenu.setBehindWidthRes(R.dimen.slidingmenu_width);
 //        globalSlidingMenu.setBehindWidthRes(0);
         reflectionPluginMethod("onActivityCreate");
+        try {
+			activityWindow.clearFlags(
+					WindowManager.LayoutParams.class.getField(
+							"FLAG_NEEDS_MENU_KEY").getInt(null));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void reflectionPluginMethod(String method) {
@@ -173,7 +182,6 @@ public final class EBrowserActivity extends ActivityGroup {
 					m.invoke(c, new Object[] {this});
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
 			}
 		}
 	}
@@ -225,21 +233,28 @@ public final class EBrowserActivity extends ActivityGroup {
 		return mEBrwMainFrame.customViewShown();
 	}
 
-	public void setContentViewVisible(){
+	public void setContentViewVisible(int delayTime){
+		if (mLoadingRemoved){
+			return;
+		}
+		final LocalBroadcastManager broadcastManager = LocalBroadcastManager
+				.getInstance(this);
 		mEHandler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
+						mLoadingRemoved=true;
 						getWindow().setBackgroundDrawable(new ColorDrawable(0xFFFFFFFF));
 						Intent intent=new Intent(LoadingActivity.BROADCAST_ACTION);
-						sendBroadcast(intent);
+						broadcastManager.sendBroadcast(intent);
 					}
 				});
 			}
-		}, 200);
+		}, delayTime);
 	}
+
 
 	public final void showCustomView(View view, CustomViewCallback callback) {
 
@@ -409,27 +424,33 @@ public final class EBrowserActivity extends ActivityGroup {
 	    if(intent == null){
 	        return;
 	    }
-        Intent firstIntent = getIntent();
-        int type = intent.getIntExtra("ntype", 0);
-        switch (type) {
-        case ENotification.F_TYPE_PUSH:
-            if (null != mBrowser) {
-                String data = intent.getStringExtra("data");
-                firstIntent.putExtra("data", data);
-                mBrowser.pushNotify();
-            }
-            break;
-        case ENotification.F_TYPE_USER:
+        try {
+			Intent firstIntent = getIntent();
+			int type = intent.getIntExtra("ntype", 0);;
+			switch (type) {
+			case ENotification.F_TYPE_PUSH:
+			    if (null != mBrowser) {
+			        String data = intent.getStringExtra("data");
+					String pushMessage = intent.getStringExtra("message");
+			        firstIntent.putExtra("data", data);
+					firstIntent.putExtra("message", pushMessage);
+			        mBrowser.pushNotify();
+			    }
+			    break;
+			case ENotification.F_TYPE_USER:
 
-            break;
-        case ENotification.F_TYPE_SYS:
+			    break;
+			case ENotification.F_TYPE_SYS:
 
-            break;
-        default:
-            getIntentData(intent);
-            firstIntent.putExtras(intent);
-            break;
-        }
+			    break;
+			default:
+			    getIntentData(intent);
+			    firstIntent.putExtras(intent);
+			    break;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public final void exitApp(boolean showDilog) {
@@ -464,18 +485,21 @@ public final class EBrowserActivity extends ActivityGroup {
 			exitBrowser();
 			return;
 		}
-		AlertDialog.Builder tDialog = new AlertDialog.Builder(this);
-		tDialog.setTitle(EResources.display_exitdialog_msg);
-		tDialog.setNegativeButton(EResources.display_cancel, null);
-		tDialog.setMessage(EResources.display_exitdialog_app_text);
-		tDialog.setPositiveButton(EResources.display_confirm,
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						exitBrowser();
-					}
-				});
-		tDialog.show();
+		try {
+			AlertDialog.Builder tDialog = new AlertDialog.Builder(this);
+			tDialog.setTitle(EResources.display_exitdialog_msg);
+			tDialog.setNegativeButton(EResources.display_cancel, null);
+			tDialog.setMessage(EResources.display_exitdialog_app_text);
+			tDialog.setPositiveButton(EResources.display_confirm,
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							exitBrowser();
+						}
+					});
+			tDialog.show();
+		} catch (Exception e) {
+		}
 	}
 
 	public final void exitBrowser() {
@@ -490,8 +514,6 @@ public final class EBrowserActivity extends ActivityGroup {
 			mBrowser.onAppStop();
 		}
 		mBrowserAround.removeViewImmediate();
-		LocalActivityManager lm = getLocalActivityManager();
-		lm.removeAllActivities();
 		clean();
 		finish();
 		Process.killProcess(Process.myPid());
@@ -552,6 +574,12 @@ public final class EBrowserActivity extends ActivityGroup {
 				uexOnAuthorize(authorizeID);
 			}
 			return;
+		}else if (requestCode==FILECHOOSER_RESULTCODE){
+			if (null == mUploadMessage)
+				return;
+			Uri result = data == null || resultCode != RESULT_OK ? null : data.getData();
+			mUploadMessage.onReceiveValue(result);
+			mUploadMessage = null;
 		}
 		if (mCallbackRuning && null != mActivityCallback) {
 			mActivityCallback.onActivityResult(requestCode, resultCode, data);
@@ -571,6 +599,16 @@ public final class EBrowserActivity extends ActivityGroup {
 			super.startActivityForResult(intent, requestCode);
 		}
 	}
+
+    public final void registerActivityForResult(EUExBase callback){
+        if (mCallbackRuning) {
+            return;
+        }
+        if (null != callback) {
+            mActivityCallback = callback;
+            mCallbackRuning = true;
+        }
+    }
 
 	public final void registerAppEventListener(EUExEventListener listener) {
 		if (null != mBrowserAround) {
@@ -611,19 +649,7 @@ public final class EBrowserActivity extends ActivityGroup {
 				Compat.FILL, Compat.FILL);
 		splash.setLayoutParams(shelterPa);
 		mScreen.addView(splash);
-		if (develop) {
-			TextView worn = new TextView(this);
-			worn.setText("测试版本仅用于开发测试");
-			worn.setTextColor(0xffff0000);
-			worn.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-			FrameLayout.LayoutParams wornPa = new FrameLayout.LayoutParams(
-					Compat.FILL, Compat.WRAP);
-			wornPa.gravity = Gravity.TOP;
-			wornPa.leftMargin = 10;
-			wornPa.topMargin = 10;
-			worn.setLayoutParams(wornPa);
-			splash.addView(worn);
-		}
+
 
 		/*
 		 * ImageView background = new ImageView(this);
@@ -736,8 +762,11 @@ public final class EBrowserActivity extends ActivityGroup {
 			    while (it.hasNext()) {
                     try {
                         String key = it.next();
-                        String data = bundle.get(key).toString();
-                        OtherAppData.put(key, data);
+                        Object object = bundle.get(key);
+                        if (object != null) {
+                        	String data = object.toString();
+                        	OtherAppData.put(key, data);
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -745,6 +774,14 @@ public final class EBrowserActivity extends ActivityGroup {
 			    loadByOtherApp();
 			}
 		}
+	}
+
+	public ValueCallback<Uri> getmUploadMessage() {
+		return mUploadMessage;
+	}
+
+	public void setmUploadMessage(ValueCallback<Uri> mUploadMessage) {
+		this.mUploadMessage = mUploadMessage;
 	}
 
 	public class EHandler extends Handler {
@@ -771,20 +808,25 @@ public final class EBrowserActivity extends ActivityGroup {
 				initEngine(msg);
 				break;
 			case F_MSG_LOAD_DELAY:
-				Intent intent = getIntent();
-				int type = intent.getIntExtra("ntype", 0);
-				switch (type) {
-				case ENotification.F_TYPE_PUSH:
-					mBrowser.setFromPush(true);
+				try {
+					Intent intent = getIntent();
+					int type = intent.getIntExtra("ntype", 0);
+					switch (type) {
+					case ENotification.F_TYPE_PUSH:
+						mBrowser.setFromPush(true);
+						break;
+					case ENotification.F_TYPE_USER:
+						// onNewIntent(intent);
+						break;
+					}
+					mBrowser.start();
 					break;
-				case ENotification.F_TYPE_USER:
-					// onNewIntent(intent);
-					break;
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-				mBrowser.start();
-				break;
 			case F_MSG_LOAD_HIDE_SH:
 				mScreen.setVisibility(View.VISIBLE);
+				setContentViewVisible(0);
 				if (mBrowserAround.checkTimeFlag()) {
 					mBrowser.hiddenShelter();
 				} else {

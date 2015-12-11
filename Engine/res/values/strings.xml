@@ -37,16 +37,16 @@
     <string name="browser_init_error">程序不完整</string>
     <!-- 3000.1.02.000.00.00.9999.000 -->
 	<!-- Analytics config -->
-    <string name="appkey">640665ab-9bbd-dd63-0ca1-e09a152b729f</string>
-    <string name="appstatus">6E4E99740100CFB7447DAB9CCC55DD75F7D658</string>
-    <string name="push">true</string>
-    <string name="certificate_psw" />
-    <string name="widget_startup_report_host">http://newdc.appcan.cn/</string>
-    <string name="push_host">newpush.appcan.cn:1883</string>
-    <string name="bindUser_host">http://newpush.appcan.cn/</string>
-    <string name="analytics_host">http://newdc.appcan.cn/</string>
-    <string name="mam_host">http://newdc.appcan.cn/</string>
-    <string name="mam_push_host_and_port">newpush.appcan.cn:1883</string>
+    <string name="appkey" translatable="false">38c2a32f-999b-2cf3-3971-71bb074b2f27</string>
+    <string name="appstatus" translatable="false">6E4E99740100CFB7447DAB9CCC55DD75F7D658</string>
+    <string name="push" translatable="false">true</string>
+    <string name="certificate_psw" translatable="false"/>
+    <string name="widget_startup_report_host" translatable="false">http://newdc.appcan.cn/</string>
+    <string name="push_host" translatable="false">newpush.appcan.cn:1883</string>
+    <string name="bindUser_host" translatable="false">http://newpush.appcan.cn/</string>
+    <string name="analytics_host" translatable="false">http://newdc.appcan.cn/</string>
+    <string name="mam_host" translatable="false">http://newdc.appcan.cn/</string>
+    <string name="mam_push_host_and_port" translatable="false">newpush.appcan.cn:1883</string>
 
     <!-- platform myspace  use -->
     <string name="platform_myspace_app_center">应用中心</string>
@@ -54,7 +54,45 @@
     <string name="platform_myspace_my_apps">我的应用</string>
     <string name="platform_myspace_pull_to_refresh">下拉刷新推荐列表</string>
     <string name="platform_myspace_release_to_refresh">释放刷新推荐列表</string>
-    <string name="platform_myspace_loading">加载中...</string>
+    <string name="platform_myspace_loading">加载中…</string>
     <string name="platform_myspace_tap_to_refresh">点击刷新推荐列表</string>
+    <string name="widgetone_version" translatable="false">4030.1.02.001.00.00.9999.000</string>
+    <string name="platform_no_configuration_decryption_permissions">没有配置解密权限！</string>
+    <string name="platform_downloading_file">正在下载文件</string>
+    <string name="platform_connect_failed">连接失败,请重试!</string>
+    <string name="platform_download_failed">下载出错,请重试!</string>
+    <string name="platform_only_test">测试版本仅用于开发测试</string>
+    <string name="platform_choose_app">请选择:</string>
+    <string name="platform_widget_id_not_exist">AppId为 %1$s 的Widget不存在</string>
+    <string name="platform_widget_path_not_exist">路径为 %1$s 的Widget不存在</string>
+    <string name="platform_widget_search_failed">搜索Widget发生异常!请确认Widget是否损坏!</string>
 
+    <string name="warning">警告</string>
+    <string name="no_permission_to_open_window">没有打开%1$s窗口的权限</string>
+    <string name="load_uex_object_error">uex对象加载发生异常,请检查XML文件!</string>
+    <string name="install">安装…</string>
+    <string name="install_failed">安装失败</string>
+    <string name="get_open_login_list">尚未登录,正在获取开放平台登录列表</string>
+    <string name="operation_cancel">操作已取消!</string>
+    <string name="get_info_failed">获取信息失败!</string>
+    <string name="download_info_error">下载信息错误!</string>
+    <string name="app_has_download_please_run">应用已下载，请直接运行</string>
+    <string name="app_downloading">应用正在下载请稍候…</string>
+
+    <string name="get_user_info">正在获取用户登录信息…</string>
+    <string name="get_login_list">尚未登录,获取登录列表…</string>
+    <string name="app_is_download_please_wait">应用正在下载请稍候…</string>
+    <string name="get_user_info_failed">获取登录信息失败!</string>
+    <string name="delete">删除</string>
+    <string name="is_uninstalling">正在卸载…</string>
+    <string name="login_failed">登录失败…</string>
+    <string name="select_operation">请选择操作</string>
+    <string name="cannot_find_this_widget">未找到此widget，无法启动!</string>
+    <string name="refresh_success">更新成功!</string>
+    <string name="refresh_failed">刷新失败</string>
+    <string name="plugin_config_no_exist">插件配置文件不存在!</string>
+    <string name="more">更多</string>
+
+    <string name="widget_not_exist_id_path">在%1$s目录下的 appId 是%2$s的widget不存在</string>
+    <string name="not_any_widget">该应用下没有任何widget</string>
 </resources>

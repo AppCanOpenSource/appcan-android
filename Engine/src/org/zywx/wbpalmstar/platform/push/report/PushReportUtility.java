@@ -18,6 +18,22 @@
 
 package org.zywx.wbpalmstar.platform.push.report;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.lang.reflect.Method;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Map;
+
+import org.zywx.wbpalmstar.base.BUtility;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -33,21 +49,6 @@ import android.text.TextUtils;
 import android.text.format.Time;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import org.zywx.wbpalmstar.base.BUtility;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.lang.reflect.Method;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.Map;
 
 public class PushReportUtility {
 	private static boolean isLog = true;
@@ -156,6 +157,14 @@ public class PushReportUtility {
 		int sec = time.second;
 		return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":"
 				+ sec;
+	}
+
+	public static String getCurYearAndMonth() {
+		Time time = new Time();
+		time.setToNow();
+		int year = time.year;
+		int month = time.month + 1;
+		return year + "_" + month;
 	}
 
 	public static String getAppNameVer(Context activity, String name, String ver) {
@@ -410,6 +419,11 @@ public class PushReportUtility {
 		}
 	}
 
+	/**
+	 * sd卡记录信息
+	 * 
+	 * @param text
+	 */
 	public static void log(String text) {
 		Log.i("push", text);
 		if (!isLog) {
@@ -422,14 +436,15 @@ public class PushReportUtility {
 			if (!dir.exists()) {
 				dir.mkdirs();
 			}
-			File log = new File(developPath + "mam_log.txt");
+			File log = new File(developPath + "push_log_"
+					+ getCurYearAndMonth() + ".log");
 			try {
 				if (!log.exists()) {
 					log.createNewFile();
 				}
 				BufferedWriter m_fout = new BufferedWriter(new FileWriter(log,
 						true));
-				m_fout.write("\r" + PushReportUtility.getNowTime() + "\r"
+				m_fout.write("\r" + getNowTime() + "\r"
 						+ text);
 				m_fout.flush();
 				m_fout.close();
@@ -439,6 +454,19 @@ public class PushReportUtility {
 			}
 
 		}
+	}
+
+	/**
+	 * sd卡输出异常错误信息
+	 * 
+	 * @param methodName
+	 * @param e
+	 */
+	public static void oe(String methodName, Exception e) {
+		String outputExceptionStr = methodName + " Exception: "
+				+ e.getClass().getName() + " Details:" + e.getMessage()
+				+ " CauseBy: " + e.getCause();
+		log(outputExceptionStr);
 	}
 
 	public static String getSerialNumber() {

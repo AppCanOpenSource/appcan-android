@@ -24,8 +24,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Locale;
+import java.util.zip.DeflaterInputStream;
+import java.util.zip.GZIPInputStream;
+
 import org.apache.http.cookie.SM;
 import org.apache.http.protocol.HTTP;
+import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -37,6 +43,7 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.webkit.CookieManager;
 import android.webkit.MimeTypeMap;
+import android.webkit.URLUtil;
 import android.widget.Toast;
 
 public class EDownloadDialog extends ProgressDialog implements Runnable{
@@ -80,10 +87,10 @@ public class EDownloadDialog extends ProgressDialog implements Runnable{
 		setProgress(0);
 		setIcon(EResources.icon);
 		setCancelable(false);
-		setTitle("正在下载文件");
+		setTitle(EUExUtil.getString("platform_downloading_file"));
 		setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		setMax(100);
-		setButton("取消", new DialogInterface.OnClickListener() {
+		setButton(EUExUtil.getString("cancel"), new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				mFromStop = true;
 				stopDownload();
@@ -135,7 +142,8 @@ public class EDownloadDialog extends ProgressDialog implements Runnable{
 		try {
 			if (!Environment.getExternalStorageState().equals(
 					Environment.MEDIA_MOUNTED)) {
-				mProgressHandler.sendMessage(mProgressHandler.obtainMessage(-2, "您的手机未安装SD卡!"));
+				mProgressHandler.sendMessage(mProgressHandler.obtainMessage(-2, EUExUtil.getString
+						("error_sdcard_is_not_available")));
 				mProgressHandler.sendEmptyMessage(-3);
 				return ;
 			}
@@ -150,7 +158,7 @@ public class EDownloadDialog extends ProgressDialog implements Runnable{
 			mConnection.setUseCaches(false);
 			mConnection.setRequestProperty("Connection", "Keep-Alive");
 			mConnection.setRequestProperty("Charset", HTTP.UTF_8);
-			mConnection.setRequestProperty("User-Agent", EBrowserSetting.USERAGENT);
+			mConnection.setRequestProperty("User-Agent", EBrowserSetting.USERAGENT_NEW);
 			mConnection.setReadTimeout(1000 * 30);
 			mConnection.setConnectTimeout(1000 * 30);
 			mConnection.setInstanceFollowRedirects(false);
@@ -159,13 +167,13 @@ public class EDownloadDialog extends ProgressDialog implements Runnable{
 			if(200 == responseCode){
 				saveToFile();
 			}else{
-				mProgressHandler.sendMessage(mProgressHandler.obtainMessage(-2, "连接失败,请重试!"));
+				mProgressHandler.sendMessage(mProgressHandler.obtainMessage(-2, EUExUtil.getString("platform_connect_failed")));
 				mProgressHandler.sendEmptyMessage(-3);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			if(!mFromStop){
-				mProgressHandler.sendMessage(mProgressHandler.obtainMessage(-2, "下载出错,请重试!"));
+				mProgressHandler.sendMessage(mProgressHandler.obtainMessage(-2, EUExUtil.getString("platform_download_failed")));
 			}
 			mProgressHandler.sendEmptyMessage(-3);
 		}
@@ -176,6 +184,12 @@ public class EDownloadDialog extends ProgressDialog implements Runnable{
 		mInStream = mConnection.getInputStream();
 		if (mInStream == null) {
 			return;
+		}
+		String encoding = mConnection.getContentEncoding();
+		if ("gzip".equalsIgnoreCase(encoding)) {
+			mInStream = new GZIPInputStream(mInStream);
+		} else if ("deflate".equalsIgnoreCase(encoding)) {
+			mInStream = new DeflaterInputStream(mInStream);
 		}
 		if(contentLength <= 0){
 			String cLength = mConnection.getHeaderField("Content-Length");
@@ -194,11 +208,12 @@ public class EDownloadDialog extends ProgressDialog implements Runnable{
             extension = mtm.getExtensionFromMimeType(mimetype);
         }
         if (extension==null){
-            if (!TextUtils.isEmpty(contentDisposition)){
-                String fileName=contentDisposition.replaceFirst("attachment; filename=","");
-                fileName.replaceAll("/","");
-                mTmpFile=new File(target,fileName);
-            }
+			String fileName = URLUtil.guessFileName(url, contentDisposition,
+					mimetype);
+			if (!TextUtils.isEmpty(fileName)) {
+				fileName.replaceAll("/", "");
+				mTmpFile = new File(target, fileName);
+			}
         }else{
              mTmpFile = File.createTempFile("/Download/", "." + extension, tm);
         }
@@ -229,13 +244,15 @@ public class EDownloadDialog extends ProgressDialog implements Runnable{
         if (path.getScheme() == null) {
             path = Uri.fromFile(new File(filename));
         }
+		String suffix = makeFileSuffix(filename).toLowerCase(Locale.US);
+		mimetype = MimeTypeMap.getSingleton().getMimeTypeFromExtension(suffix);
 	    installIntent.setDataAndType(path, mimetype); 
 	    installIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 	    try {
 	    	getContext().startActivity(installIntent);
 	    }catch (Exception e) {
 	    	e.printStackTrace();
-	    	mProgressHandler.sendMessage(mProgressHandler.obtainMessage(-2, "未找到可执行的应用"));
+	    	mProgressHandler.sendMessage(mProgressHandler.obtainMessage(-2, EUExUtil.getString("can_not_find_suitable_app_perform_this_operation")));
 	    }
 	}
 	

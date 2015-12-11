@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+
+    <!-- common use通用字符串 -->
+    <string name="app_name">appcantemplate</string>
+    <string name="back">Back</string>
+    <string name="confirm">Ok</string>
+    <string name="cancel">Cancel</string>
+    <string name="prompt">Prompt</string>
+    <string name="complete">complete</string>
+    <string name="path_error">Path error!</string>
+    <string name="settings">Settings</string>
+    <string name="save">Save</string>
+
+    <!-- browser use -->
+    <string name="browser_exitdialog_app_text">exit application?</string>
+    <string name="browser_exitdialog_msg">Exit Application</string>
+    <string name="browser_dialog_error">Error</string>
+    <string name="browser_init_error">Application broken!</string>
+
+    <!-- WidgetOne use -->
+    <string name="can_not_find_suitable_app_perform_this_operation">can not  find app perform this operation</string>
+    <string name="exit">exit</string>
+    <string name="confirm_delete">confirm delete</string>
+    <string name="ma">ma?</string>
+    <string name="exit_message_server">app stop server</string>
+    <string name="exit_message_appid">app id forbidden</string>
+    
+
+
+
+    <!-- error callback use string -->
+    <string name="error_parameter">parameter error!</string>
+    <string name="error_sdcard_is_not_available">sdcard is not available!</string>
+     <string name="error_file_does_not_exist">file does not exist</string>
+     
+      <!-- error no permisson -->
+    <string name="error_no_permisson_RW">no permission read</string>
+    <string name="error_no_permisson_INTERNET">no permission write</string>
+    <string name="cancel_select_all">Cancel select all</string>
+    <string name="mam_host"></string>
+    <string name="platform_myspace_loading">Loading...</string>
+    <string name="platform_myspace_my_apps">My apps</string>
+    <string name="platform_myspace_pull_to_refresh">Pull to refresh</string>
+    <string name="platform_myspace_app_center">App center</string>
+    <string name="no_permisson_declare">No permission declare</string>
+    <string name="no_have_write_limits_power">No write permission</string>
+    <string name="no_have_read_limits_power">No read permission</string>
+    <string name="info_update">Found the new version,whether to upgrade?</string>
+    <string name="platform_myspace_recommend_apps">Recommended App</string>
+    <string name="select_all">Select All</string>
+    <string name="select">Select</string>
+    <string name="platform_myspace_release_to_refresh">Release to refresh</string>
+    <string name="platform_myspace_tap_to_refresh">Tap to refresh</string>
+    <string name="app_downloading">App is downloading...</string>
+    <string name="app_has_download_please_run">App has download</string>
+    <string name="app_is_download_please_wait">App is downloading, wait a moment...</string>
+    <string name="cannot_find_this_widget">Cannot find the widget,unable to launch...</string>
+    <string name="delete">Delete</string>
+    <string name="download_info_error">Download info error</string>
+    <string name="get_info_failed">Get info failed</string>
+    <string name="get_login_list">fetching login list...</string>
+    <string name="get_open_login_list">fetching open platform</string>
+    <string name="get_user_info">fetching user info</string>
+    <string name="get_user_info_failed">fetching user info failed</string>
+    <string name="install">install</string>
+    <string name="install_failed">install failed</string>
+    <string name="is_uninstalling">uninstalling...</string>
+    <string name="load_uex_object_error">load uex object failed,please check your xml file</string>
+    <string name="login_failed">login failed</string>
+    <string name="more">more</string>
+    <string name="mam_push_host_and_port" translatable="false"></string>
+    <string name="no_permission_to_open_window">no permission to open window named %1$1</string>
+    <string name="not_any_widget">the app has no widget</string>
+    <string name="operation_cancel">operation has canceled</string>
+    <string name="platform_choose_app">choose app</string>
+    <string name="platform_connect_failed">connect failed,please retry</string>
+    <string name="platform_download_failed">download failed,please retry</string>
+    <string name="platform_downloading_file">downloading..</string>
+    <string name="platform_no_configuration_decryption_permissions">no configuration decryption permissions</string>
+    <string name="platform_only_test">test version only for dev and test</string>
+    <string name="platform_widget_id_not_exist">widget is not exist which id is %1$s</string>
+    <string name="platform_widget_path_not_exist">widget is not exist which path is %1$s</string>
+    <string name="platform_widget_search_failed">search widget fail.</string>
+    <string name="plugin_config_no_exist">plugin config not exist</string>
+    <string name="refresh_failed">refresh failed</string>
+    <string name="refresh_success">refresh success</string>
+    <string name="select_operation">select operation</string>
+    <string name="warning">warning</string>
+    <string name="widget_not_exist_id_path">widget is not exist which appid is %1$s and path is %2$s</string>
+</resources>

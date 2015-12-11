@@ -32,9 +32,23 @@ import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.DisplayMetrics;
+
+import org.zywx.wbpalmstar.engine.EBrowserView;
+import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.widgetone.dataservice.WDataManager;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.text.BreakIterator;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -321,7 +335,7 @@ public class BUtility {
 	 */
 	public static boolean sdCardIsWork() {
 		if (Environment.getExternalStorageState().equals(
-				Environment.MEDIA_MOUNTED)) {
+                Environment.MEDIA_MOUNTED)) {
 			return true;
 		}
 		return false;
@@ -424,7 +438,6 @@ public class BUtility {
 	 * 根据file://res/协议的路径获得AssetFileDescriptor对象用于设置DataSource
 	 * 
 	 * @param context
-	 * @param totalPath
 	 * @return
 	 */
 	public static AssetFileDescriptor getFileDescriptorByResPath(
@@ -495,11 +508,10 @@ public class BUtility {
 	/**
 	 * 制造一个真实的路径
 	 * 
-	 * @param context
 	 * @param path
-	 * @param appID
 	 * @return
 	 */
+    @Deprecated
 	public static String makeRealPath(String path, String widgetPath,
 			int wgtType) {
 		// path = makeUrl(currentUrl, path);
@@ -537,6 +549,18 @@ public class BUtility {
 			return path;
 		}
 	}
+
+    /**
+     * 制造一个真实的路径
+     *
+     * @return
+     */
+    public static String makeRealPath(String path, EBrowserView browserView) {
+        path=makeUrl(browserView.getCurrentUrl(),path);
+        int wgtType=browserView.getCurrentWidget().m_wgtType;
+        String widgetPath=browserView.getCurrentWidget().getWidgetPath();
+        return makeRealPath(path,widgetPath,wgtType);
+    }
 
 	/**
 	 * 获得带协议的全路径
@@ -636,7 +660,7 @@ public class BUtility {
 			String message, final boolean exitOnClicked) {
 		new AlertDialog.Builder(activity).setTitle(title).setMessage(message)
 				.setCancelable(false)
-				.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+				.setPositiveButton(EUExUtil.getString("confirm"), new DialogInterface.OnClickListener() {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
@@ -699,5 +723,90 @@ public class BUtility {
 			name = name.substring(0, index1);
 		}
 		return name;
+	}
+
+    /**
+     * 获取外置SD卡路径
+     * @return  路径列表
+     */
+    public static List<String> getAllExtraSdcardPath() {
+        List<String> sdList = new ArrayList<String>();
+        try {
+            Runtime runtime = Runtime.getRuntime();
+            Process process = runtime.exec("mount");
+            InputStream is = process.getInputStream();
+            InputStreamReader isr = new InputStreamReader(is);
+            String line;
+            BufferedReader br = new BufferedReader(isr);
+            while ((line = br.readLine()) != null) {
+                // 将常见的linux分区过滤掉
+                if (line.contains("secure") || line.contains("asec")
+                        || line.contains("system")
+                        || line.contains("cache") || line.contains("sys")
+                        || line.contains("data") || line.contains("tmpfs")
+                        || line.contains("shell") || line.contains("root")
+                        || line.contains("acct") || line.contains("proc")
+                        || line.contains("misc") || line.contains("obb")) {
+                    continue;
+                }
+                if (line.contains("fat") || line.contains("fuse")
+                        || line.contains("ntfs") || line.contains("extSdCard")) {
+                    String columns[] = line.split(" ");
+                    if (columns != null && columns.length > 1) {
+                        String path = columns[1];
+                        if (path != null && !sdList.contains(path)
+                                && path.toLowerCase().contains("sd")){
+                            File file = new File(path);
+                            if (file.isDirectory()){
+                                sdList.add(columns[1]);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return sdList;
+    }
+
+	public static Bitmap createBitmapWithStream(InputStream inputStream,
+			int reqWidth, int reqHeight) {
+		Bitmap bm = null;
+		if (inputStream != null) {
+			bm =decodeSamplerBitmap(transStreamToBytes(inputStream,64*1024),reqWidth,reqHeight);
+		}
+		return bm;
+	}
+
+    public static Bitmap decodeSamplerBitmap(byte[] data, int reqWidth, int reqHeight) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeByteArray(data, 0, data.length, options);
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeByteArray(data, 0, data.length, options);
+    }
+
+	public static int calculateInSampleSize(BitmapFactory.Options options,
+			int reqWidth, int reqHeight) {
+		// Raw height and width of image
+		final int height = options.outHeight;
+		final int width = options.outWidth;
+		int inSampleSize = 1;
+
+		if (height > reqHeight || width > reqWidth) {
+			final int halfHeight = height / 2;
+			final int halfWidth = width / 2;
+
+			// Calculate the largest inSampleSize value that is a power of 2 and
+			// keeps both
+			// height and width larger than the requested height and width.
+			while ((halfHeight / inSampleSize) > reqHeight
+					&& (halfWidth / inSampleSize) > reqWidth) {
+				inSampleSize *= 2;
+			}
+		}
+		return inSampleSize;
 	}
 }

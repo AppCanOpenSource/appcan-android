@@ -19,43 +19,57 @@
 package org.zywx.wbpalmstar.engine;
 
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
+import android.net.Uri;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.EditText;
 
+import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
+
 public class CBrowserMainFrame extends WebChromeClient {
+
+    public Context mContext;
+
 	/**
 	 *android version < 2.1 use 
 	 */
-	public CBrowserMainFrame(){
+	public CBrowserMainFrame(Context context){
+        this.mContext=context;
 	}
-	
+
 	@Override
 	public void onProgressChanged(WebView view, int newProgress) {
-		EBrowserView target = (EBrowserView)view;
-		EBrowserWindow bWindow = target.getBrowserWindow();
-		bWindow.setGlobalProgress(newProgress);
-		if(100 == newProgress){
-			bWindow.hiddenProgress();
+		if (view != null) {
+			EBrowserView target = (EBrowserView)view;
+			EBrowserWindow bWindow = target.getBrowserWindow();
+			if (bWindow != null) {
+				bWindow.setGlobalProgress(newProgress);
+				if (100 == newProgress) {
+					bWindow.hiddenProgress();
+				}
+			}
 		}
 	}
 
 	@Override
 	public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
 		if (!((EBrowserActivity)view.getContext()).isVisable()){
-			result.cancel();
-			return true;
+			result.confirm();
 		}
 		AlertDialog.Builder dia = new AlertDialog.Builder(view.getContext());
-		dia.setTitle("提示消息");
+		dia.setTitle(EUExUtil.getResStringID("prompt"));
 		dia.setMessage(message);
 		dia.setCancelable(false);
-		dia.setPositiveButton("确定", new OnClickListener() {
+		dia.setPositiveButton(EUExUtil.getResStringID("confirm"), new OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				result.confirm();
 			}
@@ -73,15 +87,15 @@ public class CBrowserMainFrame extends WebChromeClient {
 		} 
 		AlertDialog.Builder dia = new AlertDialog.Builder(view.getContext());
 		 dia.setMessage(message);
-		 dia.setTitle("确认消息");
+		 dia.setTitle(EUExUtil.getResStringID("prompt"));
 		 dia.setCancelable(false);
-		 dia.setPositiveButton("确定", 
+		 dia.setPositiveButton(EUExUtil.getResStringID("confirm"),
          	new DialogInterface.OnClickListener() {
              	public void onClick(DialogInterface dialog, int which) {
              		result.confirm();
                  }
              });
-		 dia.setNegativeButton("取消", 
+		 dia.setNegativeButton(EUExUtil.getResStringID("cancel"),
                  	new DialogInterface.OnClickListener() {
              	public void onClick(DialogInterface dialog, int which) {
              		result.cancel();
@@ -108,13 +122,13 @@ public class CBrowserMainFrame extends WebChromeClient {
 		input.setSelectAllOnFocus(true);
 		dia.setView(input);
 		dia.setCancelable(false);
-		dia.setPositiveButton("确定", 
+		dia.setPositiveButton(EUExUtil.getResStringID("confirm"),
 			new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
 					result.confirm(input.getText().toString());
 			}
 		});
-		dia.setNegativeButton("取消", 
+		dia.setNegativeButton(EUExUtil.getResStringID("cancel"),
 			new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
 					result.cancel();
@@ -124,5 +138,36 @@ public class CBrowserMainFrame extends WebChromeClient {
 		dia.show();
 		return true;
 	}
+
+
+    // For Android 3.0-
+    public void openFileChooser(ValueCallback<Uri> uploadMsg) {
+        ((EBrowserActivity)mContext).setmUploadMessage(uploadMsg);
+        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+        i.addCategory(Intent.CATEGORY_OPENABLE);
+        i.setType("image/*");
+        ((EBrowserActivity)mContext).startActivityForResult(Intent.createChooser(i, "File Chooser"),
+                EBrowserActivity.FILECHOOSER_RESULTCODE);
+    }
+
+    // For Android 3.0+
+    public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType) {
+        ((EBrowserActivity)mContext).setmUploadMessage(uploadMsg);
+        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+        i.addCategory(Intent.CATEGORY_OPENABLE);
+        i.setType("*/*");
+        ((EBrowserActivity)mContext).startActivityForResult(Intent.createChooser(i, "File Browser"),
+                EBrowserActivity.FILECHOOSER_RESULTCODE);
+    }
+
+    // For Android 4.1
+    public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
+        ((EBrowserActivity)mContext).setmUploadMessage(uploadMsg);
+        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+        i.addCategory(Intent.CATEGORY_OPENABLE);
+        i.setType("image/*");
+        ((EBrowserActivity)mContext).startActivityForResult(Intent.createChooser(i, "File Chooser"),
+                EBrowserActivity.FILECHOOSER_RESULTCODE);
+    }
 
 }

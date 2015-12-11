@@ -27,13 +27,16 @@ import org.zywx.wbpalmstar.widgetone.WidgetOneApplication;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 
 public class EBrowserWidgetPool {
@@ -122,6 +125,10 @@ public class EBrowserWidgetPool {
 	public WWidgetData getRootWidget() {
 
 		return mRootWidget;
+	}
+	
+	public EWidgetStack getWidgetStack() {
+		return mWgtStack;
 	}
 
 	public EBrowserWidget getWidget(String inWidgetNmae) {
@@ -371,6 +378,19 @@ public class EBrowserWidgetPool {
 		inWidget.setVisibility(View.VISIBLE);
 		outWidget.startAnimation(outAnim);
 		inWidget.startAnimation(inAnim);
+		
+		try {
+			int versionA = Build.VERSION.SDK_INT;
+			if (versionA == 19) {
+				InputMethodManager imm = (InputMethodManager) mContext
+						.getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(((EBrowserActivity) mContext)
+						.getCurrentFocus().getWindowToken(),
+						InputMethodManager.HIDE_NOT_ALWAYS);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void goForward() {

@@ -28,6 +28,7 @@ import android.webkit.CookieSyncManager;
 import dalvik.system.DexClassLoader;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.zywx.wbpalmstar.base.BConstant;
 import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.engine.EBrowserView;
@@ -63,7 +64,7 @@ public class WidgetOneApplication extends Application {
 		mListenerQueue = new ELinkedList<EngineEventListener>();
 		PushEngineEventListener pushlistener = new PushEngineEventListener();
 		mListenerQueue.add(pushlistener);
-	}
+ 	}
 
 	@Override
 	public void onCreate() {
@@ -75,14 +76,14 @@ public class WidgetOneApplication extends Application {
 		CookieManager.getInstance().removeExpiredCookie();
 		mCrashReport = new ECrashHandler();
 		cachePath = getCacheDir().getAbsolutePath();
-		if (BDebug.DEBUG) {
-			copyLib();
-			copyJar();
-			initClassLoader();
-		}
+		copyLib();
+		copyJar();
+		initClassLoader();
 		initPlugin();
 		reflectionPluginMethod("onApplicationCreate");
-	}
+        BConstant.app=this;
+        BDebug.init();
+    }
 
 	private void reflectionPluginMethod(String method) {
 		ThirdPluginMgr tpm = getThirdPlugins();
@@ -98,7 +99,6 @@ public class WidgetOneApplication extends Application {
 					m.invoke(c, new Object[] {this});
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
 			}
 		}
 	}
@@ -231,7 +231,7 @@ public class WidgetOneApplication extends Application {
 	private final void initPlugin() {
 		int id = EUExUtil.getResXmlID("plugin");
 		if (id == 0) {
-			throw new RuntimeException("插件配置文件不存在!");
+			throw new RuntimeException(EUExUtil.getString("plugin_config_no_exist"));
 		}
 		XmlResourceParser plugins = getResources().getXml(id);
 		if (null == mThirdPluginMgr) {

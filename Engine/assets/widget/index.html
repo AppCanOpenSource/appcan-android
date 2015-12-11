@@ -41,8 +41,10 @@
                 },
                 rightSliding:{
                     width:w_1,
-                    url:"wintestNav/uexWindow_left.html"
-                }
+                    url:"wintestNav/uexWindow_right.html"
+                },
+                animationId:'1', //仿QQ侧滑
+                bg:'res://1_1.jpg' //仿QQ侧滑
                 
             };
             
@@ -70,16 +72,41 @@
         }
     
         function openTest1(name){
-            uexWindow.open(name, '0', name+".html", '2', '', '', 0);
+            uexWindow.open(name, '0', name+".html", '2', '', '', 1024);
         }
     
     function openWinInMainWithSliding() {
-        uexWindow.toggleSlidingWindow(0);
+        var params  = {
+            mark:0
+            
+        };
+        
+        var paramStr = JSON.stringify(params);
+        uexWindow.toggleSlidingWindow(paramStr);
+        openTest('wintestNav/uexWindow');
+    }
+    
+    function openWinInMainWithRightSliding() {
+        alert('aaaaa');
+        
+        var params  = {
+            mark:1
+
+        };
+        
+        var paramStr = JSON.stringify(params);
+        uexWindow.toggleSlidingWindow(paramStr);
         openTest('wintestNav/uexWindow');
     }
     
     function openLeftSlidingWin() {
-        uexWindow.toggleSlidingWindow(0);
+        var params  = {
+            mark:0
+            
+        };
+        
+        var paramStr = JSON.stringify(params);
+        uexWindow.toggleSlidingWindow(paramStr);
     }
 	</script>
 </head>
@@ -88,7 +115,7 @@
 	<div class="tit">平台插件汇总</div>
 		<div class="conbor">
 			<div class="consj">
-			
+			     
 <!--			<div onclick="openTest('system/system')" class="testbtn">系统插件</div><br>-->
 <!--                <div onclick="openTest('UI/UI')" class="testbtn">UI界面插件</div><br>-->
 <!--                <div onclick="openTest('network/network')" class="testbtn">网络插件</div><br>-->
@@ -97,19 +124,8 @@
                 <div onclick="openTest1('wintestNormal/uexWindow')" class="testbtn">打开普通窗口</div><br>
                 <div onclick="openLeftSlidingWin()" class="testbtn">打开侧边栏窗口</div><br>
                 <div onclick="openTest('wintestNav/uexWindow')" class="testbtn">打开导航视图窗口(iOS)</div><br>
+                <div onclick="openTest('uexWidget')" class="testbtn">uexWidget</div><br>
                 
-                
-<!--                <div onclick="openTest('wintestNav/uexWindow')" class="testbtn">打开导航视图窗口</div><br>-->
-<!--                <div onclick="openTest('wintestNav/uexWindow')" class="testbtn">打开导航视图窗口</div><br>-->
-<!--                <div onclick="openTest('wintestNav/uexWindow')" class="testbtn">打开导航视图窗口</div><br>-->
-<!--                <div onclick="openTest('wintestNav/uexWindow')" class="testbtn">打开导航视图窗口</div><br>-->
-<!--                <div onclick="openTest('wintestNav/uexWindow')" class="testbtn">打开导航视图窗口</div><br>-->
-<!--                <div onclick="openTest('wintestNav/uexWindow')" class="testbtn">打开导航视图窗口</div><br>-->
-<!--                <div onclick="openTest('wintestNav/uexWindow')" class="testbtn">打开导航视图窗口</div><br>-->
-<!--                <div onclick="openTest('wintestNav/uexWindow')" class="testbtn">打开导航视图窗口</div><br>-->
-<!--                <div onclick="openTest('wintestNav/uexWindow')" class="testbtn">打开导航视图窗口</div><br>-->
-<!--                <div onclick="openTest('wintestNav/uexWindow')" class="testbtn">打开导航视图窗口</div><br>-->
-<!--                <div onclick="openTest('wintestNav/uexWindow')" class="testbtn">打开导航视图窗口</div><br>-->
 <!--                <div onclick="openTest('wintestNav/uexWindow')" class="testbtn">打开导航视图窗口</div><br>-->
 
 			</div>

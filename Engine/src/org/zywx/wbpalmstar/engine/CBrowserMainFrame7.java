@@ -29,20 +29,22 @@ import android.view.ViewGroup.LayoutParams;
 import android.webkit.WebStorage.QuotaUpdater;
 import android.widget.FrameLayout;
 
+import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
+
 public class CBrowserMainFrame7  extends CBrowserMainFrame {
 
-	private Context mContext;
 	final long MAX_QUOTA = 104857600L;
-	
-//	private ValueCallback<Uri> mFile;
-	
-	
+
 	/**
-	 *android version >= 2.1 use 
+	 * android version < 2.1 use
+	 *
+	 * @param context
 	 */
-	public CBrowserMainFrame7(Context context){
-		mContext = context;
+	public CBrowserMainFrame7(Context context) {
+		super(context);
 	}
+
+//	private ValueCallback<Uri> mFile;
 
 	public void onHideCustomView() {
 		((EBrowserActivity)mContext).hideCustomView();
@@ -60,7 +62,7 @@ public class CBrowserMainFrame7  extends CBrowserMainFrame {
 	@Override
 	public View getVideoLoadingProgressView() {
 		EBrowserToast progress = new EBrowserToast(mContext);
-		progress.setMsg("加载中...");
+		progress.setMsg(mContext.getString(EUExUtil.getResStringID("platform_myspace_loading")));
 		progress.setInLargeModul();
 		progress.showProgress();
 		return progress;

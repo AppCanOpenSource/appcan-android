@@ -21,6 +21,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/browser_main_theme"
+            android:exported="true"
             android:windowSoftInputMode="stateHidden|adjustResize" >
         </activity>
         <activity android:name="org.zywx.wbpalmstar.engine.TempActivity"
@@ -29,7 +30,7 @@
             android:theme="@style/browser_loading_theme"/>
         <activity android:name="org.zywx.wbpalmstar.engine.LoadingActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:theme="@style/browser_main_theme"
+            android:theme="@style/browser_loading_theme"
             android:screenOrientation="portrait"
             android:launchMode="standard"
             >
@@ -59,7 +60,8 @@
         <!-- push -->
         <service
             android:name="org.zywx.wbpalmstar.platform.push.PushService"
-           android:process=":push"
+            android:process=":push"
+            android:exported="false"
             android:enabled="true" />
 
         <receiver
@@ -70,7 +72,7 @@
         </receiver>
 
         <receiver
-            android:name="org.zywx.wbpalmstar.platform.push.PushRecieveMsgReceiver">
+            android:name="org.zywx.wbpalmstar.platform.push.PushRecieveMsgReceiver" android:exported="false">
             <intent-filter>
                 <action android:name="org.zywx.push.receive" />
             </intent-filter>

@@ -239,8 +239,7 @@ public class PushReportHttpClient {
 			}
 
 		} catch (Exception e) {
-			PushReportUtility.log("Exception ==" + e.getMessage());
-			e.printStackTrace();
+			PushReportUtility.oe("sendPostDataByNameValuePair: "+ url, e);
 		} finally {
 			if (post != null) {
 				post.abort();

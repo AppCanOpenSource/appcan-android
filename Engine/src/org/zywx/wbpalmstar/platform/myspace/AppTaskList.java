@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.GridView;
 import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.cache.MyAsyncTask;
+import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.platform.myspace.AppInfo.InstallInfo;
 
 import java.io.*;
@@ -188,7 +189,7 @@ public class AppTaskList {
 				viewCache.downloadProgressBar.setVisibility(View.VISIBLE);
 				viewCache.downloadProgressBar.setProgress(percent);
 				if (percent >= 100) {
-					viewCache.nameTextView.setText("安装...");
+					viewCache.nameTextView.setText(EUExUtil.getString("install"));
 				}
 				gridView.invalidate();
 			}

@@ -29,7 +29,7 @@ public class PushBroadCastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (intent.getAction().equals(ACTION)) {
+        if (ACTION.equals(intent.getAction())) {
             SharedPreferences sp = context.getSharedPreferences("saveData",
                     Context.MODE_PRIVATE);
             String pushMes = sp.getString("pushMes", "0");

@@ -609,6 +609,10 @@ public class SlidingMenu extends RelativeLayout {
 	public boolean isSecondaryMenuShowing() {
 		return mViewAbove.getCurrentItem() == 2;
 	}
+	
+	public int getCurrentItem() {
+		return mViewAbove.getCurrentItem();
+	}
 
 	/**
 	 * Gets the behind offset.
@@ -1058,9 +1062,9 @@ public class SlidingMenu extends RelativeLayout {
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void manageLayers(float percentOpen) {
-		if (!isHardwareAccelerated() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && !isHardwareAccelerated()) {
 			boolean layer = percentOpen > 0.0f && percentOpen < 1.0f;
-			final int layerType = layer ? View.LAYER_TYPE_HARDWARE : View.LAYER_TYPE_NONE;
+			final int layerType = layer ? View.LAYER_TYPE_HARDWARE : View.LAYER_TYPE_SOFTWARE;
 			
 			if (layerType != getContent().getLayerType()) {
 				getHandler().post(new Runnable() {
