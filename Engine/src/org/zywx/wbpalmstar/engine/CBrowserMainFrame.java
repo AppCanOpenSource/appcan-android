@@ -19,6 +19,8 @@
 package org.zywx.wbpalmstar.engine;
 
 
+import java.util.Map;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -33,7 +35,16 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.EditText;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.zywx.wbpalmstar.base.BDebug;
+import org.zywx.wbpalmstar.engine.callback.EUExDispatcherCallback;
+import org.zywx.wbpalmstar.engine.universalex.EUExBase;
+import org.zywx.wbpalmstar.engine.universalex.EUExDispatcher;
+import org.zywx.wbpalmstar.engine.universalex.EUExManager;
+import org.zywx.wbpalmstar.engine.universalex.EUExScript;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
+import org.zywx.wbpalmstar.engine.universalex.ThirdPluginObject;
 
 public class CBrowserMainFrame extends WebChromeClient {
 
@@ -108,37 +119,104 @@ public class CBrowserMainFrame extends WebChromeClient {
 
 	@Override
 	public boolean onJsPrompt(WebView view, String url, String message, String defaultValue, final JsPromptResult result) {
-		if (!((EBrowserActivity)view.getContext()).isVisable()){
-			result.cancel();
-			return true;
-		}
-		AlertDialog.Builder dia = new AlertDialog.Builder(view.getContext());
-		dia.setTitle(null);
-		dia.setMessage(message);
-		final EditText input = new EditText(view.getContext());
-		if (defaultValue != null) {
-			input.setText(defaultValue);
-		}
-		input.setSelectAllOnFocus(true);
-		dia.setView(input);
-		dia.setCancelable(false);
-		dia.setPositiveButton(EUExUtil.getResStringID("confirm"),
-			new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-					result.confirm(input.getText().toString());
-			}
-		});
-		dia.setNegativeButton(EUExUtil.getResStringID("cancel"),
-			new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-					result.cancel();
-			}
-		});
-		dia.create();
-		dia.show();
-		return true;
-	}
+        if (message != null
+                && message.startsWith(EUExScript.JS_APPCAN_ONJSPARSE)) {
+            result.cancel();
+            appCanJsParse(view,
+                    message.substring(EUExScript.JS_APPCAN_ONJSPARSE.length()));
+        } else {
+            if (!((EBrowserActivity)view.getContext()).isVisable()){
+                result.cancel();
+                return true;
+            }
+            AlertDialog.Builder dia = new AlertDialog.Builder(view.getContext());
+            dia.setTitle(null);
+            dia.setMessage(message);
+            final EditText input = new EditText(view.getContext());
+            if (defaultValue != null) {
+                input.setText(defaultValue);
+            }
+            input.setSelectAllOnFocus(true);
+            dia.setView(input);
+            dia.setCancelable(false);
+            dia.setPositiveButton(EUExUtil.getResStringID("confirm"), 
+                    new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    result.confirm(input.getText().toString());
+                }
+            });
+            dia.setNegativeButton(EUExUtil.getResStringID("cancel"), 
+                    new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    result.cancel();
+                }
+            });
+            dia.create();
+            dia.show();
+        }
+        return true;
+    }
 
+    private void appCanJsParse(WebView view, String parseStr) {
+        try {
+            if (!(view instanceof EBrowserView)) {
+                return;
+            }
+            JSONObject json = new JSONObject(parseStr);
+            String uexName = json.optString("uexName");
+            String method = json.optString("method");
+            JSONArray jsonArray = json.getJSONArray("args");
+            JSONArray typesArray = json.getJSONArray("types");
+            int length = jsonArray.length();
+            String[] args = new String[length];
+            for (int i = 0; i < length; i++) {
+                String type = typesArray.getString(i);
+                String arg = jsonArray.getString(i);
+                if ("undefined".equals(type) && "null".equals(arg)) {
+                    args[i] = null;
+                } else {
+                    args[i] = arg;
+                }
+            }
+            EBrowserView browserView = (EBrowserView) view;
+            final EUExManager uexManager = browserView.getEUExManager();
+            if (uexManager != null) {
+                EUExDispatcher uexDispatcher = new EUExDispatcher(
+                        new EUExDispatcherCallback() {
+                            @Override
+                            public void onDispatch(String pluginName,
+                                    String methodName, String[] params) {
+                                ELinkedList<EUExBase> plugins = uexManager
+                                        .getThirdPlugins();
+                                for (EUExBase plugin : plugins) {
+                                    if (plugin.getUexName().equals(pluginName)) {
+                                        uexManager.callMethod(plugin,
+                                                methodName, params);
+                                        return;
+                                    }
+                                }
+                                // 调用单实例插件
+                                Map<String, ThirdPluginObject> thirdPlugins = uexManager
+                                        .getPlugins();
+                                ThirdPluginObject thirdPluginObject = thirdPlugins
+                                        .get(pluginName);
+                                if (thirdPluginObject != null
+                                        && thirdPluginObject.isGlobal
+                                        && thirdPluginObject.pluginObj != null) {
+                                    uexManager.callMethod(
+                                            thirdPluginObject.pluginObj,
+                                            methodName, params);
+                                }
+                                BDebug.e("plugin", pluginName, "not exist...");
+                            }
+                        });
+                uexDispatcher.dispatch(uexName, method, args);
+                BDebug.i("appCanJsParse", "dispatch parseStr " + parseStr);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     // For Android 3.0-
     public void openFileChooser(ValueCallback<Uri> uploadMsg) {

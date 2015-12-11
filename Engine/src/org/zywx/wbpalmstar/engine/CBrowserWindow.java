@@ -174,6 +174,7 @@ public class CBrowserWindow extends EXWebViewClient {
 		}
 
 		info.mFinished = true;
+        view.loadUrl(EUExScript.F_UEX_DISPATCHER_SCRIPT);
 		view.loadUrl(EUExScript.F_UEX_SCRIPT);
 		target.onPageFinished(target, url);
 		CookieSyncManager.getInstance().sync();
