@@ -230,6 +230,7 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
         }
 
         info.mFinished = true;
+        target.loadUrl(EUExScript.F_UEX_DISPATCHER_SCRIPT);
         target.loadUrl(EUExScript.F_UEX_SCRIPT);
         target.onPageFinished(target, url);
 

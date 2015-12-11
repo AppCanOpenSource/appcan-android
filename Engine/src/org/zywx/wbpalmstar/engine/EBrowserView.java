@@ -112,6 +112,10 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
         setACEHardwareAccelerate();
     }
 
+    public EUExManager getEUExManager() {
+        return mUExMgr;
+    }
+
     public void setScrollCallBackContex(EUExWindow callback) {
         this.callback = callback;
     }
