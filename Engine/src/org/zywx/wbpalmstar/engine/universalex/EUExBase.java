@@ -39,9 +39,12 @@ import org.zywx.wbpalmstar.engine.EBrowserActivity;
 import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.EBrowserWindow;
 import org.zywx.wbpalmstar.engine.EWgtResultInfo;
+import org.zywx.wbpalmstar.engine.universalex.EUExWindow.MyPagerAdapter;
+import org.zywx.wbpalmstar.engine.universalex.EUExWindow.MyViewPager;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
 import java.io.File;
+import java.util.Vector;
 
 public abstract class EUExBase {
 
@@ -233,6 +236,98 @@ public abstract class EUExBase {
 		mBrwView.addViewToCurrentWindow(child, lp);
 	}
 
+    /**
+     * 添加一个view到指定id的容器中
+     * @param child
+     * @param index
+     * @param opid
+     */
+    public final void addSubviewToContainer(final View child, final int index,
+            final String opid, final FrameLayout.LayoutParams parms) {
+        if (null == mBrwView || opid == null) {
+            return;
+        }
+        ((EBrowserActivity) mContext).runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                EBrowserWindow mWindow = mBrwView.getBrowserWindow();
+                int count = mWindow.getChildCount();
+                for (int i = 0; i < count ;i++ ) {
+                    View view = mWindow.getChildAt(i);
+                    if (view instanceof MyViewPager) {
+                        MyViewPager pager = (MyViewPager)view;
+                        if (opid.equals((String)pager.getOpId())) {
+                            MyPagerAdapter adapter = (MyPagerAdapter) pager.getAdapter();
+                            Vector<View> views = adapter.getViewList();
+                            int l = (int) (parms.leftMargin);
+                            int t = (int) (parms.topMargin);
+                            int w = parms.width;
+                            int h = parms.height;
+                            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(w, h);
+                            lp.gravity = Gravity.NO_GRAVITY;
+                            lp.leftMargin = l;
+                            lp.topMargin = t;
+                            child.setLayoutParams(lp);
+                            if (views.size() <= index) {
+                                for(int j = views.size(); j <= index ; j++){
+                                    if(j == index){
+                                        views.add(child);
+                                    }else{
+                                        views.add(new View(mContext));
+                                    }
+                                }
+                            }else{
+                                views.set(index, child);
+                            }
+                            adapter.setViewList(views);
+                            adapter.notifyDataSetChanged();
+                            return;
+                        }//end equals opid
+                    }//end instanceof
+                }//end for
+            }// end run 
+        });// end runOnUI
+    }
+
+    /**
+     * 移除一个view在指定id的容器中
+     * @param child
+     * @param index
+     * @param opid
+     */
+    public final void removeSubviewFromContainer(final int index,final String opid) {
+        if (null == mBrwView || opid == null) {
+            return;
+        }
+        ((EBrowserActivity) mContext).runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                EBrowserWindow mWindow = mBrwView.getBrowserWindow();
+                int count = mWindow.getChildCount();
+                for (int i = 0; i < count ;i++ ) {
+                    View view = mWindow.getChildAt(i);
+                    if (view instanceof MyViewPager) {
+                        MyViewPager pager = (MyViewPager)view;
+                        if (opid.equals((String)pager.getOpId())) {
+                            MyPagerAdapter adapter = (MyPagerAdapter) pager.getAdapter();
+                            Vector<View> views = adapter.getViewList();
+                            if (index < views.size()) {
+                                adapter.destroyItem(pager, index, null);
+                                views.set(index,new View(mContext));
+                            }else{
+                                return;
+                            }
+                            adapter.setViewList(views);
+                            adapter.notifyDataSetChanged();
+                            return;
+                        }//end equals opid
+                    }//end instanceof
+                }//end for
+            }// end run 
+        });// end runOnUI
+    }
 
     /**
      * 将View嵌入到webview随view一起滚动

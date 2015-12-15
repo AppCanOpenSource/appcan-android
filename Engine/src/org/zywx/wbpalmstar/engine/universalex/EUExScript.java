@@ -221,6 +221,9 @@ public class EUExScript {
                 + "reload:function(){uexDispatcher.dispatch('uexWindow','reload',jo(arguments));},"
                 + "reloadWidgetByAppId:function(){uexDispatcher.dispatch('uexWindow','reloadWidgetByAppId',jo(arguments));},"
                 + "setIsSupportSlideCallback:function(){uexDispatcher.dispatch('uexWindow','setIsSupportSlideCallback',jo(arguments));},"
+                + "setPageInContainer:function(){uexDispatcher.dispatch('uexWindow','setPageInContainer',jo(arguments));},"
+                + "closePluginViewContainer:function(){uexDispatcher.dispatch('uexWindow','closePluginViewContainer',jo(arguments));},"
+                + "creatPluginViewContainer:function(){uexDispatcher.dispatch('uexWindow','creatPluginViewContainer',jo(arguments));},"
                 + "getUrlQuery:function(){return uexDispatcher.dispatch('uexWindow','getUrlQuery',jo(arguments))}};"
                 +
 //				// DataAnalysis 

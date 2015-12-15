@@ -32,12 +32,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Message;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import com.slidingmenu.lib.SlidingMenu;
@@ -67,6 +71,7 @@ import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Vector;
 
 public class EUExWindow extends EUExBase {
     public static final String tag = "uexWindow";
@@ -85,6 +90,8 @@ public class EUExWindow extends EUExBase {
     public static final String function_cbslipedDownward = "uexWindow.slipedDownward";//不建议使用
     public static final String function_cbslipedUpEdge = "uexWindow.slipedUpEdge";//不建议使用
     public static final String function_cbslipedDownEdge = "uexWindow.slipedDownEdge";//不建议使用
+    public static final String function_cbCreatePluginViewContainer = "uexWindow.cbCreatePluginViewContainer";
+    public static final String function_cbClosePluginViewContainer = "uexWindow.cbClosePluginViewContainer";
 
     public static final String function_onSlipedUpward = "uexWindow.onSlipedUpward";
     public static final String function_onSlipedDownward = "uexWindow.onSlipedDownward";
@@ -148,6 +155,9 @@ public class EUExWindow extends EUExBase {
     private static final int MSG_FUNCTION_RELOAD_WIDGET_BY_APPID= 49;
     private static final int MSG_FUNCTION_GET_SLIDING_WINDOW_STATE = 50;
     private static final int MSG_SET_IS_SUPPORT_SLIDE_CALLBACK = 51;
+    private static final int MSG_PLUGINVIEW_CONTAINER_CREATE = 52;
+    private static final int MSG_PLUGINVIEW_CONTAINER_CLOSE = 53;
+    private static final int MSG_PLUGINVIEW_CONTAINER_SET = 54;
     private AlertDialog mAlert;
     private AlertDialog.Builder mConfirm;
     private PromptDialog mPrompt;
@@ -3105,6 +3115,200 @@ public class EUExWindow extends EUExBase {
         }
     }
 
+    public void creatPluginViewContainer(String[] parm) {
+        Message msg = mHandler.obtainMessage();
+        msg.what = MSG_PLUGINVIEW_CONTAINER_CREATE;
+        msg.obj = this;
+        Bundle bd = new Bundle();
+        bd.putStringArray(TAG_BUNDLE_PARAM, parm);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
+    }
+
+    /**
+     * 添加一个容器
+     * @param params
+     */
+    private void creatPluginViewContainerMsg(String[] params) {
+        if (params == null || params.length < 1) {
+            errorCallback(0, 0, "error params!");
+            return;
+        }
+        try {
+            JSONObject json = new JSONObject(params[0].toString());
+            float x = Float.parseFloat(json.getString("x"));
+            float y = Float.parseFloat(json.getString("y"));
+            float w = Float.parseFloat(json.getString("w"));
+            float h = Float.parseFloat(json.getString("h"));
+            String opid = json.getString("id");
+
+            MyViewPager myPager = new MyViewPager(mContext);
+            MyPagerAdapter adapter = new MyPagerAdapter(new Vector<View>());
+            myPager.setAdapter(adapter);
+            myPager.setOpId(opid);
+            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams((int) w,    (int) h);
+            lp.leftMargin = (int) x;
+            lp.topMargin = (int) y;
+            mBrwView.addViewToCurrentWindow(myPager, lp);
+            String js = SCRIPT_HEADER + "if(" + function_cbCreatePluginViewContainer + "){"
+                    + function_cbCreatePluginViewContainer + "(" + opid + "," + EUExCallback.F_C_TEXT + ",'"
+                    + "success" + "'"+ SCRIPT_TAIL;
+            onCallback(js);
+        } catch (Exception e) {
+            e.printStackTrace();
+            errorCallback(0, 0, "error params!");
+        }
+    }
+
+    public void closePluginViewContainer(String[] parm) {
+        Message msg = mHandler.obtainMessage();
+        msg.what = MSG_PLUGINVIEW_CONTAINER_CLOSE;
+        msg.obj = this;
+        Bundle bd = new Bundle();
+        bd.putStringArray(TAG_BUNDLE_PARAM, parm);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
+    }
+
+    /**
+     * 移除一个容器
+     * @param params
+     */
+    private void closePluginViewContainerMsg(String[] params) {
+        if (params == null || params.length < 1) {
+            errorCallback(0, 0, "error params!");
+            return;
+        }
+        try {
+            JSONObject json = new JSONObject(params[0].toString());
+            String opid = json.getString("id");
+
+            EBrowserWindow mWindow = mBrwView.getBrowserWindow();
+            int count = mWindow.getChildCount();
+            for (int i = 0; i < count ;i++ ) {
+                View view = mWindow.getChildAt(i);
+                if (view instanceof MyViewPager) {
+                    MyViewPager pager = (MyViewPager)view;
+                    if (opid.equals((String)pager.getOpId())) {
+                        mBrwView.removeViewFromCurrentWindow(pager);
+                        pager = null;
+                        String js = SCRIPT_HEADER + "if(" + function_cbClosePluginViewContainer + "){"
+                                + function_cbClosePluginViewContainer + "(" + opid + "," + EUExCallback.F_C_TEXT + ",'"
+                                + "success" + "'"+ SCRIPT_TAIL;
+                        onCallback(js);
+                        return;
+                    }
+                }//end instance
+            }//end for
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setPageInContainer(String[] parm){
+        Message msg = mHandler.obtainMessage();
+        msg.what = MSG_PLUGINVIEW_CONTAINER_SET;
+        msg.obj = this;
+        Bundle bd = new Bundle();
+        bd.putStringArray(TAG_BUNDLE_PARAM, parm);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
+    }
+
+    private void setPageInContainerMsg(String[] params){
+        if (params == null || params.length < 1) {
+            errorCallback(0, 0, "error params!");
+            return;
+        }
+        try {
+            JSONObject json = new JSONObject(params[0].toString());
+            String opid = json.getString("id");
+
+            EBrowserWindow mWindow = mBrwView.getBrowserWindow();
+            int count = mWindow.getChildCount();
+            for (int i = 0; i < count ;i++ ) {
+                View view = mWindow.getChildAt(i);
+                if (view instanceof MyViewPager) {
+                    MyViewPager pager = (MyViewPager)view;
+                    if (opid.equals((String)pager.getOpId())) {
+                        int index = json.optInt("index");
+                        pager.setCurrentItem(index);
+                        return;
+                    }
+                }//end instance
+            }//end for
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    class MyViewPager extends ViewPager{
+        private String opId = "";
+
+        public MyViewPager(Context context) {
+            super(context);
+        }
+        public String getOpId() {
+            return opId;
+        }
+        public void setOpId(String opId) {
+            this.opId = opId;
+        }
+    }
+
+    class MyPagerAdapter extends PagerAdapter{
+        Vector<View> viewList;
+        int mChildCount = 0;
+        public MyPagerAdapter(Vector<View> viewList) {
+            this.viewList = viewList;
+        }
+
+        public Vector<View> getViewList() {
+            return viewList;
+        }
+
+        public void setViewList(Vector<View> viewList) {
+            this.viewList = viewList;
+        }
+
+        @Override
+        public int getCount() {
+            return viewList.size();
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object arg1) {
+            return view == arg1;
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            container.addView(viewList.get(position));
+            return viewList.get(position);
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            if (mChildCount > 0) {
+                mChildCount--;
+                return POSITION_NONE;
+            }
+            return super.getItemPosition(object);
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
+            mChildCount = getCount();
+            super.notifyDataSetChanged();
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            View item = viewList.get(position);
+            container.removeView(item);
+        }
+    }
+
     @Override
     public void onHandleMessage(Message msg) {
         if(mBrwView == null || mBrwView.getBrowserWindow() == null || msg == null){
@@ -3276,6 +3480,15 @@ public class EUExWindow extends EUExBase {
                 break;
             case MSG_SET_IS_SUPPORT_SLIDE_CALLBACK:
                 setIsSupportSlideCallbackMsg(param);
+                break;
+            case MSG_PLUGINVIEW_CONTAINER_CREATE:
+                creatPluginViewContainerMsg(param);
+                break;
+            case MSG_PLUGINVIEW_CONTAINER_CLOSE:
+                closePluginViewContainerMsg(param);
+                break;
+            case MSG_PLUGINVIEW_CONTAINER_SET:
+                setPageInContainerMsg(param);
                 break;
             default:
                 break;
