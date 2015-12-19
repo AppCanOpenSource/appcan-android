@@ -3141,9 +3141,21 @@ public class EUExWindow extends EUExBase {
             float w = Float.parseFloat(json.getString("w"));
             float h = Float.parseFloat(json.getString("h"));
             String opid = json.getString("id");
+            
+            EBrowserWindow mWindow = mBrwView.getBrowserWindow();
+			int count = mWindow.getChildCount();
+			for (int i = 0; i < count ;i++ ) {
+				View view = mWindow.getChildAt(i);
+		        if (view instanceof MyViewPager) {
+		        	MyViewPager pager = (MyViewPager)view;
+		            if (opid.equals((String)pager.getOpId())) {
+		            	return;
+		            }
+		        }//end instance
+			}//end for
 
             MyViewPager myPager = new MyViewPager(mContext);
-            MyPagerAdapter adapter = new MyPagerAdapter(new Vector<View>());
+            MyPagerAdapter adapter = new MyPagerAdapter(new Vector<FrameLayout>());
             myPager.setAdapter(adapter);
             myPager.setOpId(opid);
             FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams((int) w,    (int) h);
@@ -3191,6 +3203,13 @@ public class EUExWindow extends EUExBase {
                     MyViewPager pager = (MyViewPager)view;
                     if (opid.equals((String)pager.getOpId())) {
                         mBrwView.removeViewFromCurrentWindow(pager);
+                        MyPagerAdapter adapter = (MyPagerAdapter) pager.getAdapter();
+                        Vector<FrameLayout> views = adapter.getViewList();
+                        int size = views.size();
+                        for(int j = 0 ; j < size ; j++){
+                        	views.get(j).removeAllViews();
+                        }
+                        views.clear();
                         pager = null;
                         String js = SCRIPT_HEADER + "if(" + function_cbClosePluginViewContainer + "){"
                                 + function_cbClosePluginViewContainer + "(" + opid + "," + EUExCallback.F_C_TEXT + ",'"
@@ -3257,17 +3276,17 @@ public class EUExWindow extends EUExBase {
     }
 
     class MyPagerAdapter extends PagerAdapter{
-        Vector<View> viewList;
+        Vector<FrameLayout> viewList;
         int mChildCount = 0;
-        public MyPagerAdapter(Vector<View> viewList) {
+        public MyPagerAdapter(Vector<FrameLayout> viewList) {
             this.viewList = viewList;
         }
 
-        public Vector<View> getViewList() {
+        public Vector<FrameLayout> getViewList() {
             return viewList;
         }
 
-        public void setViewList(Vector<View> viewList) {
+        public void setViewList(Vector<FrameLayout> viewList) {
             this.viewList = viewList;
         }
 
