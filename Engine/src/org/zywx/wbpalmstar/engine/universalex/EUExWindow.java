@@ -3022,7 +3022,7 @@ public class EUExWindow extends EUExBase {
         }
         String channelId = params[0];
         if (TextUtils.isEmpty(channelId)) {
-            Log.e("subscribeChannelNotification", "channelId is empty!!!");
+            BDebug.e("channelId is empty!!!");
             return;
         }
         String callbackFunction = params[1];
@@ -3115,7 +3115,7 @@ public class EUExWindow extends EUExBase {
         }
     }
 
-    public void creatPluginViewContainer(String[] parm) {
+    public void createPluginViewContainer(String[] parm) {
         Message msg = mHandler.obtainMessage();
         msg.what = MSG_PLUGINVIEW_CONTAINER_CREATE;
         msg.obj = this;
@@ -3129,7 +3129,7 @@ public class EUExWindow extends EUExBase {
      * 添加一个容器
      * @param params
      */
-    private void creatPluginViewContainerMsg(String[] params) {
+    private void createPluginViewContainerMsg(String[] params) {
         if (params == null || params.length < 1) {
             errorCallback(0, 0, "error params!");
             return;
@@ -3482,7 +3482,7 @@ public class EUExWindow extends EUExBase {
                 setIsSupportSlideCallbackMsg(param);
                 break;
             case MSG_PLUGINVIEW_CONTAINER_CREATE:
-                creatPluginViewContainerMsg(param);
+                createPluginViewContainerMsg(param);
                 break;
             case MSG_PLUGINVIEW_CONTAINER_CLOSE:
                 closePluginViewContainerMsg(param);

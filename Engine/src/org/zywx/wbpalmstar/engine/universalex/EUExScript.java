@@ -43,11 +43,11 @@ public class EUExScript {
     public static final String JS_APPCAN_ONJSPARSE_HEADER = "'"+JS_APPCAN_ONJSPARSE+"'+";
 
     static {
-        // 1¡¢È¥µôuexDispatcherÖÐdispatch½Ó¿ÚaddJavascriptInterface·½Ê½µÄ×¢Èë·½Ê½£¬ÔÚJSÖÐÉùÃ÷dispatch½Ó¿ÚÏÈÖ´ÐÐfo()º¯Êý£»
-        // 2¡¢ÔÚfo()º¯ÊýÖÐ£¬ÏÈ´¦Àí´«¹ýÀ´µÄuexName¡¢method¡¢argsÄÚÈÝ£¬µ÷ÓÃWebView×ÔÉíµÄprompt()º¯Êý£¬
-        //   ¸ømessage¼ÓÉÏ"AppCan_onJsParse:"Ç°×º£¬²¢°ÑuexName¡¢method¡¢argsµÈÄÚÈÝ´«¹ýÈ¥£»
-        // 3¡¢ÔÚWebChromeClientµÄonJsPrompt()»Øµ÷ÖÐÅÐ¶ÏmessageÊÇ·ñ°üº¬"AppCan_onJsParse:"Ç°×º£¬Èç¹û°üº¬£¬Ôò»ñÈ¡messageÖÐµÄuexName¡¢method¡¢argsµÈÄÚÈÝ£»
-        // 4¡¢Ö´ÐÐEUExDispatcherµÄdispatch()º¯Êý
+        // 1ï¿½ï¿½È¥ï¿½ï¿½uexDispatcherï¿½ï¿½dispatchï¿½Ó¿ï¿½addJavascriptInterfaceï¿½ï¿½Ê½ï¿½ï¿½×¢ï¿½ë·½Ê½ï¿½ï¿½ï¿½ï¿½JSï¿½ï¿½ï¿½ï¿½ï¿½ï¿½dispatchï¿½Ó¿ï¿½ï¿½ï¿½Ö´ï¿½ï¿½fo()ï¿½ï¿½ï¿½ï¿½
+        // 2ï¿½ï¿½ï¿½ï¿½fo()ï¿½ï¿½ï¿½ï¿½ï¿½Ð£ï¿½ï¿½È´ï¿½ï¿½?ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½uexNameï¿½ï¿½methodï¿½ï¿½argsï¿½ï¿½ï¿½Ý£ï¿½ï¿½ï¿½ï¿½ï¿½WebViewï¿½ï¿½ï¿½ï¿½ï¿½prompt()ï¿½ï¿½ï¿½ï¿½
+        //   ï¿½ï¿½messageï¿½ï¿½ï¿½ï¿½"AppCan_onJsParse:"Ç°×ºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½uexNameï¿½ï¿½methodï¿½ï¿½argsï¿½ï¿½ï¿½ï¿½ï¿½Ý´ï¿½ï¿½ï¿½È¥ï¿½ï¿½
+        // 3ï¿½ï¿½ï¿½ï¿½WebChromeClientï¿½ï¿½onJsPrompt()ï¿½Øµï¿½ï¿½ï¿½ï¿½Ð¶ï¿½messageï¿½Ç·ï¿½ï¿½"AppCan_onJsParse:"Ç°×ºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡messageï¿½Ðµï¿½uexNameï¿½ï¿½methodï¿½ï¿½argsï¿½ï¿½ï¿½ï¿½ï¿½Ý£ï¿½
+        // 4ï¿½ï¿½Ö´ï¿½ï¿½EUExDispatcherï¿½ï¿½dispatch()ï¿½ï¿½ï¿½ï¿½
         F_UEX_DISPATCHER_SCRIPT = "javascript:"
                                 +"function fo(){" +
                                     "var args_all = Array.prototype.slice.call(arguments, 0);"+
@@ -223,7 +223,7 @@ public class EUExScript {
                 + "setIsSupportSlideCallback:function(){uexDispatcher.dispatch('uexWindow','setIsSupportSlideCallback',jo(arguments));},"
                 + "setPageInContainer:function(){uexDispatcher.dispatch('uexWindow','setPageInContainer',jo(arguments));},"
                 + "closePluginViewContainer:function(){uexDispatcher.dispatch('uexWindow','closePluginViewContainer',jo(arguments));},"
-                + "creatPluginViewContainer:function(){uexDispatcher.dispatch('uexWindow','creatPluginViewContainer',jo(arguments));},"
+                + "createPluginViewContainer:function(){uexDispatcher.dispatch('uexWindow','createPluginViewContainer',jo(arguments));},"
                 + "getUrlQuery:function(){return uexDispatcher.dispatch('uexWindow','getUrlQuery',jo(arguments))}};"
                 +
 //				// DataAnalysis 
