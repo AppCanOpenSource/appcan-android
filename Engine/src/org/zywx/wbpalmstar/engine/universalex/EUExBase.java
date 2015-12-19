@@ -244,7 +244,7 @@ public abstract class EUExBase {
      */
     public final void addSubviewToContainer(final View child, final int index,
             final String opid, final FrameLayout.LayoutParams parms) {
-        if (null == mBrwView || opid == null) {
+        if (null == mBrwView || opid == null || index < 0 || parms == null) {
             return;
         }
         ((EBrowserActivity) mContext).runOnUiThread(new Runnable() {
@@ -253,32 +253,30 @@ public abstract class EUExBase {
             public void run() {
                 EBrowserWindow mWindow = mBrwView.getBrowserWindow();
                 int count = mWindow.getChildCount();
+                int l = (int) (parms.leftMargin);
+                int t = (int) (parms.topMargin);
+                int w = parms.width;
+                int h = parms.height;
                 for (int i = 0; i < count ;i++ ) {
                     View view = mWindow.getChildAt(i);
                     if (view instanceof MyViewPager) {
                         MyViewPager pager = (MyViewPager)view;
                         if (opid.equals((String)pager.getOpId())) {
                             MyPagerAdapter adapter = (MyPagerAdapter) pager.getAdapter();
-                            Vector<View> views = adapter.getViewList();
-                            int l = (int) (parms.leftMargin);
-                            int t = (int) (parms.topMargin);
-                            int w = parms.width;
-                            int h = parms.height;
-                            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(w, h);
-                            lp.gravity = Gravity.NO_GRAVITY;
-                            lp.leftMargin = l;
-                            lp.topMargin = t;
-                            child.setLayoutParams(lp);
+                            Vector<FrameLayout> views = adapter.getViewList();
+                            child.setLayoutParams(parms);
+                            FrameLayout layout = new FrameLayout(mContext);
+                        	layout.addView(child);
                             if (views.size() <= index) {
                                 for(int j = views.size(); j <= index ; j++){
                                     if(j == index){
-                                        views.add(child);
+                                        views.add(layout);
                                     }else{
-                                        views.add(new View(mContext));
+                                        views.add(new FrameLayout(mContext));
                                     }
                                 }
                             }else{
-                                views.set(index, child);
+                                views.set(index, layout);
                             }
                             adapter.setViewList(views);
                             adapter.notifyDataSetChanged();
@@ -286,6 +284,10 @@ public abstract class EUExBase {
                         }//end equals opid
                     }//end instanceof
                 }//end for
+                RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(w,h);
+                lp.leftMargin = l;
+                lp.topMargin = t;
+                addViewToCurrentWindow(child, lp);
             }// end run 
         });// end runOnUI
     }
@@ -312,10 +314,11 @@ public abstract class EUExBase {
                         MyViewPager pager = (MyViewPager)view;
                         if (opid.equals((String)pager.getOpId())) {
                             MyPagerAdapter adapter = (MyPagerAdapter) pager.getAdapter();
-                            Vector<View> views = adapter.getViewList();
-                            if (index < views.size()) {
+                            Vector<FrameLayout> views = adapter.getViewList();
+                            if (index < views.size() && index >= 0) {
                                 adapter.destroyItem(pager, index, null);
-                                views.set(index,new View(mContext));
+                                views.get(index).removeAllViews();
+                                views.set(index,new FrameLayout(mContext));
                             }else{
                                 return;
                             }
