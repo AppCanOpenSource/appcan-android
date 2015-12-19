@@ -38,7 +38,6 @@
     <string name="error_no_permisson_RW">no permission read</string>
     <string name="error_no_permisson_INTERNET">no permission write</string>
     <string name="cancel_select_all">Cancel select all</string>
-    <string name="mam_host"></string>
     <string name="platform_myspace_loading">Loading...</string>
     <string name="platform_myspace_my_apps">My apps</string>
     <string name="platform_myspace_pull_to_refresh">Pull to refresh</string>
@@ -69,7 +68,6 @@
     <string name="load_uex_object_error">load uex object failed,please check your xml file</string>
     <string name="login_failed">login failed</string>
     <string name="more">more</string>
-    <string name="mam_push_host_and_port" translatable="false"></string>
     <string name="no_permission_to_open_window">no permission to open window named %1$1</string>
     <string name="not_any_widget">the app has no widget</string>
     <string name="operation_cancel">operation has canceled</string>
