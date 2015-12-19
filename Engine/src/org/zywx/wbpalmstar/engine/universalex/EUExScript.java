@@ -43,11 +43,11 @@ public class EUExScript {
     public static final String JS_APPCAN_ONJSPARSE_HEADER = "'"+JS_APPCAN_ONJSPARSE+"'+";
 
     static {
-        // 1、去掉uexDispatcher中dispatch接口addJavascriptInterface方式的注入方式，在JS中声明dispatch接口先执行fo()函数；
-        // 2、在fo()函数中，先处理传过来的uexName、method、args内容，调用WebView自身的prompt()函数，
-        //   给message加上"AppCan_onJsParse:"前缀，并把uexName、method、args等内容传过去；
-        // 3、在WebChromeClient的onJsPrompt()回调中判断message是否包含"AppCan_onJsParse:"前缀，如果包含，则获取message中的uexName、method、args等内容；
-        // 4、执行EUExDispatcher的dispatch()函数
+        // 1��ȥ��uexDispatcher��dispatch�ӿ�addJavascriptInterface��ʽ��ע�뷽ʽ����JS������dispatch�ӿ���ִ��fo()����
+        // 2����fo()�����У��ȴ��?������uexName��method��args���ݣ�����WebView�����prompt()����
+        //   ��message����"AppCan_onJsParse:"ǰ׺������uexName��method��args�����ݴ���ȥ��
+        // 3����WebChromeClient��onJsPrompt()�ص����ж�message�Ƿ��"AppCan_onJsParse:"ǰ׺���������ȡmessage�е�uexName��method��args�����ݣ�
+        // 4��ִ��EUExDispatcher��dispatch()����
         F_UEX_DISPATCHER_SCRIPT = "javascript:"
                                 +"function fo(){" +
                                     "var args_all = Array.prototype.slice.call(arguments, 0);"+
