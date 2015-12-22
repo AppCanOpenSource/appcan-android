@@ -160,7 +160,8 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
     public boolean isDisableHWDevice() {
         String device = Build.BRAND + " " + Build.MODEL;
         return device.equalsIgnoreCase("Letv X600") ||
-                device.equalsIgnoreCase("Xiaomi 2013023");
+                device.equalsIgnoreCase("Xiaomi 2013023")||
+                device.equalsIgnoreCase("huawei ATH_AL00");
     }
 
     @Override
