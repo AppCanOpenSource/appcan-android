@@ -2568,6 +2568,9 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         if (mChannelList == null) {
             mChannelList = new ArrayList<HashMap<String, String>>();
         }
+        if (hasChannel(channelId)){
+            return;
+        }
         HashMap<String, String> item = new HashMap<String, String>();
         item.put(TAG_CHANNEL_ID, channelId);
         item.put(TAG_CHANNEL_FUNNAME, callbackFunction);
@@ -2576,6 +2579,15 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
             item.put(TAG_CHANNEL_WINNAME, name);
         }
         mChannelList.add(item);
+    }
+
+    private boolean hasChannel(String channelId){
+        for (HashMap<String,String> item:mChannelList){
+            if (channelId.equals(item.get(TAG_CHANNEL_ID))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void publishChannelNotification(String channelId, String des) {

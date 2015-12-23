@@ -43,11 +43,11 @@ public class EUExScript {
     public static final String JS_APPCAN_ONJSPARSE_HEADER = "'"+JS_APPCAN_ONJSPARSE+"'+";
 
     static {
-        // 1¡¢È¥µôuexDispatcherÖĞdispatch½Ó¿ÚaddJavascriptInterface·½Ê½µÄ×¢Èë·½Ê½£¬ÔÚJSÖĞÉùÃ÷dispatch½Ó¿ÚÏÈÖ´ĞĞfo()º¯Êı£»
-        // 2¡¢ÔÚfo()º¯ÊıÖĞ£¬ÏÈ´¦Àí´«¹ıÀ´µÄuexName¡¢method¡¢argsÄÚÈİ£¬µ÷ÓÃWebView×ÔÉíµÄprompt()º¯Êı£¬
-        //   ¸ømessage¼ÓÉÏ"AppCan_onJsParse:"Ç°×º£¬²¢°ÑuexName¡¢method¡¢argsµÈÄÚÈİ´«¹ıÈ¥£»
-        // 3¡¢ÔÚWebChromeClientµÄonJsPrompt()»Øµ÷ÖĞÅĞ¶ÏmessageÊÇ·ñ°üº¬"AppCan_onJsParse:"Ç°×º£¬Èç¹û°üº¬£¬Ôò»ñÈ¡messageÖĞµÄuexName¡¢method¡¢argsµÈÄÚÈİ£»
-        // 4¡¢Ö´ĞĞEUExDispatcherµÄdispatch()º¯Êı
+        // 1ã€å»æ‰uexDispatcherä¸­dispatchæ¥å£addJavascriptInterfaceæ–¹å¼çš„æ³¨å…¥æ–¹å¼ï¼Œåœ¨JSä¸­å£°æ˜dispatchæ¥å£å…ˆæ‰§è¡Œfo()å‡½æ•°ï¼›
+        // 2ã€åœ¨fo()å‡½æ•°ä¸­ï¼Œå…ˆå¤„ç†ä¼ è¿‡æ¥çš„uexNameã€methodã€argså†…å®¹ï¼Œè°ƒç”¨WebViewè‡ªèº«çš„prompt()å‡½æ•°ï¼Œ
+        //   ç»™messageåŠ ä¸Š"AppCan_onJsParse:"å‰ç¼€ï¼Œå¹¶æŠŠuexNameã€methodã€argsç­‰å†…å®¹ä¼ è¿‡å»ï¼›
+        // 3ã€åœ¨WebChromeClientçš„onJsPrompt()å›è°ƒä¸­åˆ¤æ–­messageæ˜¯å¦åŒ…å«"AppCan_onJsParse:"å‰ç¼€ï¼Œå¦‚æœåŒ…å«ï¼Œåˆ™è·å–messageä¸­çš„uexNameã€methodã€argsç­‰å†…å®¹ï¼›
+        // 4ã€æ‰§è¡ŒEUExDispatcherçš„dispatch()å‡½æ•°
         F_UEX_DISPATCHER_SCRIPT = "javascript:"
                                 +"function fo(){" +
                                     "var args_all = Array.prototype.slice.call(arguments, 0);"+
@@ -223,7 +223,7 @@ public class EUExScript {
                 + "setIsSupportSlideCallback:function(){uexDispatcher.dispatch('uexWindow','setIsSupportSlideCallback',jo(arguments));},"
                 + "setPageInContainer:function(){uexDispatcher.dispatch('uexWindow','setPageInContainer',jo(arguments));},"
                 + "closePluginViewContainer:function(){uexDispatcher.dispatch('uexWindow','closePluginViewContainer',jo(arguments));},"
-                + "creatPluginViewContainer:function(){uexDispatcher.dispatch('uexWindow','creatPluginViewContainer',jo(arguments));},"
+                + "createPluginViewContainer:function(){uexDispatcher.dispatch('uexWindow','createPluginViewContainer',jo(arguments));},"
                 + "getUrlQuery:function(){return uexDispatcher.dispatch('uexWindow','getUrlQuery',jo(arguments))}};"
                 +
 //				// DataAnalysis 
