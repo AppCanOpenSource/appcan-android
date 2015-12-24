@@ -321,7 +321,7 @@ public class EBrowserAnimation {
 
     public static void animFromRight(View target, float width,long duration,final AnimatorListener callback){
         ObjectAnimator animator=ObjectAnimator.ofFloat(target,"translationX",width,0);
-        animator.setDuration(500);
+        animator.setDuration(duration);
         animator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animator) {
