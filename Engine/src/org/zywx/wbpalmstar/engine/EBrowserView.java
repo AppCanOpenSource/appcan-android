@@ -1334,6 +1334,16 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
                 EViewEntry.F_BOUNCE_TASK_SET_BOUNCE_PARMS);
     }
 
+    public void topBounceViewRefresh() {
+        if (mDestroyed) {
+            return;
+        }
+        EViewEntry bounceEntry = new EViewEntry();
+        bounceEntry.obj = getParent();
+        mBroWind.addBounceTask(bounceEntry,
+                EViewEntry.F_BOUNCE_TASK_TOP_BOUNCE_VIEW_REFRESH);
+    }
+
     public boolean beDestroy() {
 
         return mDestroyed;
