@@ -282,15 +282,14 @@ public abstract class EUExBase {
                             }
                             adapter.setViewList(views);
                             adapter.notifyDataSetChanged();
-                            if (needAnim){
-                                EBrowserAnimation.animFromRight(view,pager.getWidth(),pager.getContainerVO().getAnimTime(),new
-                                        EBrowserAnimation
-                                        .AnimatorListener
-                                        () {
-                                    @Override
-                                    public void onAnimationEnd() {
+                            if (needAnim) {
+                                EBrowserAnimation.animFromRight(view, pager.getContainerVO().getW(), pager.getContainerVO()
+                                        .getAnimTime()
+                                        , new EBrowserAnimation.AnimatorListener() {
+                                            @Override
+                                            public void onAnimationEnd() {
 
-                                    }
+                                        }
                                 });
                             }
                             return;
