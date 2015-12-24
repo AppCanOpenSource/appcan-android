@@ -217,6 +217,7 @@ public class EUExScript {
                 + "resetBounceView:function(){uexDispatcher.dispatch('uexWindow','resetBounceView',jo(arguments));},"
                 + "setBounceParams:function(){uexDispatcher.dispatch('uexWindow','setBounceParams',jo(arguments));},"
                 + "hiddenBounceView:function(){uexDispatcher.dispatch('uexWindow','hiddenBounceView',jo(arguments));},"
+                + "topBounceViewRefresh:function(){uexDispatcher.dispatch('uexWindow','topBounceViewRefresh',jo(arguments));},"
                 + "refresh:function(){uexDispatcher.dispatch('uexWindow','refresh',jo(arguments));},"
                 + "reload:function(){uexDispatcher.dispatch('uexWindow','reload',jo(arguments));},"
                 + "reloadWidgetByAppId:function(){uexDispatcher.dispatch('uexWindow','reloadWidgetByAppId',jo(arguments));},"

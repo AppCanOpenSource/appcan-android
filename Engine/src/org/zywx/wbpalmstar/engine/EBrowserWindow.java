@@ -1949,6 +1949,9 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
                 BView.setBounceParms(bunceEnty.type, (JSONObject) bunceEnty.obj1,
                         bunceEnty.arg1);
                 break;
+            case EViewEntry.F_BOUNCE_TASK_TOP_BOUNCE_VIEW_REFRESH:
+                BView.topBounceViewRefresh();
+                break;
         }
     }
 

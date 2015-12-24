@@ -52,6 +52,7 @@ public class EBounceView extends LinearLayout {
 	private boolean mBottomLoading;
 	private boolean mTopNotify;
 	private boolean mBottomNotify;
+    private boolean mTopAutoRefresh = false;
 	private int mTopState;
 	private int mBottomState;
 	private int mTopBund;
@@ -139,7 +140,7 @@ public class EBounceView extends LinearLayout {
 		case MotionEvent.ACTION_MOVE:
 			int m = y - mLastY;
 			boolean can = (m >= 0 ? m : -m) > mTouchSlop;
-			if (m > 0 && !mBottomLoading && can) {
+            if (m > 0 && !mBottomLoading && can && !mTopAutoRefresh) {
 				if (topCanBounce()) {
 					mIsTop = true;
 					if (mTopNotify) {
@@ -320,6 +321,23 @@ public class EBounceView extends LinearLayout {
 		}
 	}
 
+    public void topBounceViewRefresh() {
+        if (!mTopLoading) {
+            scrollTo(0, mTopBund);
+            if (mShowTopView) {
+                mHeaderView.setArrowVisibility(GONE);
+                mHeaderView.setProgressBarVisibility(VISIBLE);
+                mHeaderView.setTextVisibility(VISIBLE);
+                mHeaderView.showLoadingText();
+            }
+            mTopAutoRefresh = true;
+            mTopLoading = true;
+            if (mTopNotify) {
+                mBrwView.onBounceStateChange(EViewEntry.F_BOUNCE_TYPE_TOP, F_BOUNCEVIEW_STATE_LOADING);
+            }
+        }
+    }
+
 	private void topRefreshing() {
 		if (mTopNotify) {
 			mBrwView.onBounceStateChange(EViewEntry.F_BOUNCE_TYPE_TOP, F_BOUNCEVIEW_STATE_RELEASE_RELOAD);
@@ -363,11 +381,16 @@ public class EBounceView extends LinearLayout {
 	}
 
 	private void backToTop() {
-		int sy = getScrollY();
-		int dist = 0 - sy;
-		mScroller.startScroll(0, sy, 0, dist);
-		postInvalidate();
-	}
+        if (mTopAutoRefresh) {
+            scrollTo(0, 0);
+            mTopAutoRefresh = false;
+        } else {
+            int sy = getScrollY();
+            int dist = 0 - sy;
+            mScroller.startScroll(0, sy, 0, dist);
+            postInvalidate();
+        }
+    }
 
 	private void backToBottom() {
 		int sy = getScrollY();
@@ -404,6 +427,8 @@ public class EBounceView extends LinearLayout {
 			if (mShowTopView) {
 				mHeaderView.setArrowVisibility(VISIBLE);
 				mHeaderView.setProgressBarVisibility(GONE);
+                mHeaderView.showPullToReloadText();
+                mHeaderView.rotateArrowImage(EBounceViewHeader.F_ROTATE_DOWN);
 			}
 			backToTop();
 			break;
@@ -414,6 +439,8 @@ public class EBounceView extends LinearLayout {
 			if (mShowBottomView) {
 				mTailView.setArrowVisibility(VISIBLE);
 				mTailView.setProgressBarVisibility(GONE);
+                mTailView.showPullToReloadText();
+                mTailView.rotateArrowImage(EBounceViewHeader.F_ROTATE_DOWN);
 			}
 			backToBottom();
 			break;
@@ -567,15 +594,15 @@ public class EBounceView extends LinearLayout {
 				if (null != levelText && 0 != levelText.trim().length()) {
 					mHeaderView.setLevelText(levelText);
 				}
-				if (null != pullToReloadText && 0 != pullToReloadText.trim().length()) {
-					mHeaderView.setPullToReloadText(pullToReloadText);
-				}
 				if (null != releaseToReloadText && 0 != releaseToReloadText.trim().length()) {
 					mHeaderView.setReleaseToReloadText(releaseToReloadText);
 				}
 				if (null != loadingText && 0 != loadingText.trim().length()) {
 					mHeaderView.setLoadingText(loadingText);
 				}
+                if (null != pullToReloadText && 0 != pullToReloadText.trim().length()) {
+                    mHeaderView.setPullToReloadText(pullToReloadText);
+                }
 			}
 			break;
 		case EViewEntry.F_BOUNCE_TYPE_BOTTOM:
@@ -598,15 +625,15 @@ public class EBounceView extends LinearLayout {
 				if (null != levelText && 0 != levelText.trim().length()) {
 					mTailView.setLevelText(levelText);
 				}
-				if (null != pullToReloadText && 0 != pullToReloadText.trim().length()) {
-					mTailView.setPullToReloadText(pullToReloadText);
-				}
 				if (null != releaseToReloadText && 0 != releaseToReloadText.trim().length()) {
 					mTailView.setReleaseToReloadText(releaseToReloadText);
 				}
 				if (null != loadingText && 0 != loadingText.trim().length()) {
 					mTailView.setLoadingText(loadingText);
 				}
+                if (null != pullToReloadText && 0 != pullToReloadText.trim().length()) {
+                    mTailView.setPullToReloadText(pullToReloadText);
+                }
 			}
 			break;
 		}

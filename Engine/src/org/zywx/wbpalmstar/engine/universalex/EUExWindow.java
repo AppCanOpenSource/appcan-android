@@ -2500,6 +2500,12 @@ public class EUExWindow extends EUExBase {
         mBrwView.hiddenBounceView(type);
     }
 
+    public void topBounceViewRefresh(String[] parm) {
+        if (!mBrwView.checkType(EBrwViewEntry.VIEW_TYPE_MAIN)) {
+            mBrwView.topBounceViewRefresh();
+        }
+    }
+
     public void alert(String[] parm) {
         if (parm.length < 3) {
             return;
