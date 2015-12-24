@@ -52,6 +52,7 @@ import org.json.JSONObject;
 import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.ResoureFinder;
+import org.zywx.wbpalmstar.base.vo.CreateContainerVO;
 import org.zywx.wbpalmstar.base.vo.SetSwipeCloseEnableVO;
 import org.zywx.wbpalmstar.engine.DataHelper;
 import org.zywx.wbpalmstar.engine.EBrowser;
@@ -3140,42 +3141,32 @@ public class EUExWindow extends EUExBase {
             errorCallback(0, 0, "error params!");
             return;
         }
-        try {
-            JSONObject json = new JSONObject(params[0].toString());
-            float x = Float.parseFloat(json.getString("x"));
-            float y = Float.parseFloat(json.getString("y"));
-            float w = Float.parseFloat(json.getString("w"));
-            float h = Float.parseFloat(json.getString("h"));
-            String opid = json.getString("id");
-            
-            EBrowserWindow mWindow = mBrwView.getBrowserWindow();
-			int count = mWindow.getChildCount();
-			for (int i = 0; i < count ;i++ ) {
-				View view = mWindow.getChildAt(i);
-		        if (view instanceof MyViewPager) {
-		        	MyViewPager pager = (MyViewPager)view;
-		            if (opid.equals((String)pager.getOpId())) {
-		            	return;
-		            }
-		        }//end instance
-			}//end for
+        CreateContainerVO inputVO = DataHelper.gson.fromJson(params[0], CreateContainerVO.class);
 
-            MyViewPager myPager = new MyViewPager(mContext);
-            MyPagerAdapter adapter = new MyPagerAdapter(new Vector<FrameLayout>());
-            myPager.setAdapter(adapter);
-            myPager.setOpId(opid);
-            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams((int) w,    (int) h);
-            lp.leftMargin = (int) x;
-            lp.topMargin = (int) y;
-            mBrwView.addViewToCurrentWindow(myPager, lp);
-            String js = SCRIPT_HEADER + "if(" + function_cbCreatePluginViewContainer + "){"
-                    + function_cbCreatePluginViewContainer + "(" + opid + "," + EUExCallback.F_C_TEXT + ",'"
-                    + "success" + "'"+ SCRIPT_TAIL;
-            onCallback(js);
-        } catch (Exception e) {
-            e.printStackTrace();
-            errorCallback(0, 0, "error params!");
-        }
+        EBrowserWindow mWindow = mBrwView.getBrowserWindow();
+        int count = mWindow.getChildCount();
+        for (int i = 0; i < count; i++) {
+            View view = mWindow.getChildAt(i);
+            if (view instanceof ContainerViewPager) {
+                ContainerViewPager pager = (ContainerViewPager) view;
+                if (inputVO.getId().equals((String) pager.getContainerVO().getId())) {
+                    return;
+                }
+            }//end instance
+        }//end for
+
+        ContainerViewPager containerViewPager = new ContainerViewPager(mContext,inputVO);
+        ContainerAdapter containerAdapter = new ContainerAdapter(new
+                Vector<FrameLayout>());
+        containerViewPager.setAdapter(containerAdapter);
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams((int) inputVO.getW(), (int) inputVO.getH());
+        lp.leftMargin = (int) inputVO.getX();
+        lp.topMargin = (int) inputVO.getY();
+        mBrwView.addViewToCurrentWindow(containerViewPager, lp);
+        String js = SCRIPT_HEADER + "if(" + function_cbCreatePluginViewContainer + "){"
+                + function_cbCreatePluginViewContainer + "(" + inputVO.getId() + "," + EUExCallback.F_C_TEXT + ",'"
+                + "success" + "'" + SCRIPT_TAIL;
+        onCallback(js);
     }
 
     public void closePluginViewContainer(String[] parm) {
@@ -3205,11 +3196,11 @@ public class EUExWindow extends EUExBase {
             int count = mWindow.getChildCount();
             for (int i = 0; i < count ;i++ ) {
                 View view = mWindow.getChildAt(i);
-                if (view instanceof MyViewPager) {
-                    MyViewPager pager = (MyViewPager)view;
-                    if (opid.equals((String)pager.getOpId())) {
+                if (view instanceof ContainerViewPager) {
+                    ContainerViewPager pager = (ContainerViewPager)view;
+                    if (opid.equals((String)pager.getContainerVO().getId())) {
                         mBrwView.removeViewFromCurrentWindow(pager);
-                        MyPagerAdapter adapter = (MyPagerAdapter) pager.getAdapter();
+                        ContainerAdapter adapter = (ContainerAdapter) pager.getAdapter();
                         Vector<FrameLayout> views = adapter.getViewList();
                         int size = views.size();
                         for(int j = 0 ; j < size ; j++){
@@ -3253,9 +3244,9 @@ public class EUExWindow extends EUExBase {
             int count = mWindow.getChildCount();
             for (int i = 0; i < count ;i++ ) {
                 View view = mWindow.getChildAt(i);
-                if (view instanceof MyViewPager) {
-                    MyViewPager pager = (MyViewPager)view;
-                    if (opid.equals((String)pager.getOpId())) {
+                if (view instanceof ContainerViewPager) {
+                    ContainerViewPager pager = (ContainerViewPager)view;
+                    if (opid.equals((String)pager.getContainerVO().getId())) {
                         int index = json.optInt("index");
                         pager.setCurrentItem(index);
                         return;
@@ -3267,24 +3258,24 @@ public class EUExWindow extends EUExBase {
         }
     }
 
-    class MyViewPager extends ViewPager{
+    class ContainerViewPager extends ViewPager{
         private String opId = "";
+        private CreateContainerVO mContainerVO;
 
-        public MyViewPager(Context context) {
+        public ContainerViewPager(Context context,CreateContainerVO containerVO) {
             super(context);
+            this.mContainerVO=containerVO;
         }
-        public String getOpId() {
-            return opId;
-        }
-        public void setOpId(String opId) {
-            this.opId = opId;
+
+        public CreateContainerVO getContainerVO() {
+            return mContainerVO;
         }
     }
 
-    class MyPagerAdapter extends PagerAdapter{
+    class ContainerAdapter extends PagerAdapter{
         Vector<FrameLayout> viewList;
         int mChildCount = 0;
-        public MyPagerAdapter(Vector<FrameLayout> viewList) {
+        public ContainerAdapter(Vector<FrameLayout> viewList) {
             this.viewList = viewList;
         }
 

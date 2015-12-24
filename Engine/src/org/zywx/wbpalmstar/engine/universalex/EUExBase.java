@@ -36,11 +36,12 @@ import android.widget.RelativeLayout;
 
 import org.zywx.wbpalmstar.base.view.BaseFragment;
 import org.zywx.wbpalmstar.engine.EBrowserActivity;
+import org.zywx.wbpalmstar.engine.EBrowserAnimation;
 import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.EBrowserWindow;
 import org.zywx.wbpalmstar.engine.EWgtResultInfo;
-import org.zywx.wbpalmstar.engine.universalex.EUExWindow.MyPagerAdapter;
-import org.zywx.wbpalmstar.engine.universalex.EUExWindow.MyViewPager;
+import org.zywx.wbpalmstar.engine.universalex.EUExWindow.ContainerAdapter;
+import org.zywx.wbpalmstar.engine.universalex.EUExWindow.ContainerViewPager;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
 import java.io.File;
@@ -169,7 +170,7 @@ public abstract class EUExBase {
 			return;
 		}
 		((EBrowserActivity) mContext).startActivityForResult(this, intent,
-				requestCode);
+                requestCode);
 	}
 
     /**
@@ -259,14 +260,15 @@ public abstract class EUExBase {
                 int h = parms.height;
                 for (int i = 0; i < count ;i++ ) {
                     View view = mWindow.getChildAt(i);
-                    if (view instanceof MyViewPager) {
-                        MyViewPager pager = (MyViewPager)view;
-                        if (opid.equals((String)pager.getOpId())) {
-                            MyPagerAdapter adapter = (MyPagerAdapter) pager.getAdapter();
+                    if (view instanceof ContainerViewPager) {
+                        ContainerViewPager pager = (ContainerViewPager)view;
+                        if (opid.equals(pager.getContainerVO().getId())) {
+                            ContainerAdapter adapter = (ContainerAdapter) pager.getAdapter();
                             Vector<FrameLayout> views = adapter.getViewList();
+                            boolean needAnim=views.size()==0;//第一次添加view时播放动画
                             child.setLayoutParams(parms);
                             FrameLayout layout = new FrameLayout(mContext);
-                        	layout.addView(child);
+                            layout.addView(child);
                             if (views.size() <= index) {
                                 for(int j = views.size(); j <= index ; j++){
                                     if(j == index){
@@ -280,6 +282,17 @@ public abstract class EUExBase {
                             }
                             adapter.setViewList(views);
                             adapter.notifyDataSetChanged();
+                            if (needAnim){
+                                EBrowserAnimation.animFromRight(view,pager.getWidth(),pager.getContainerVO().getAnimTime(),new
+                                        EBrowserAnimation
+                                        .AnimatorListener
+                                        () {
+                                    @Override
+                                    public void onAnimationEnd() {
+
+                                    }
+                                });
+                            }
                             return;
                         }//end equals opid
                     }//end instanceof
@@ -294,7 +307,6 @@ public abstract class EUExBase {
 
     /**
      * 移除一个view在指定id的容器中
-     * @param child
      * @param index
      * @param opid
      */
@@ -310,10 +322,10 @@ public abstract class EUExBase {
                 int count = mWindow.getChildCount();
                 for (int i = 0; i < count ;i++ ) {
                     View view = mWindow.getChildAt(i);
-                    if (view instanceof MyViewPager) {
-                        MyViewPager pager = (MyViewPager)view;
-                        if (opid.equals((String)pager.getOpId())) {
-                            MyPagerAdapter adapter = (MyPagerAdapter) pager.getAdapter();
+                    if (view instanceof ContainerViewPager) {
+                        ContainerViewPager pager = (ContainerViewPager)view;
+                        if (opid.equals((String)pager.getContainerVO().getId())) {
+                            ContainerAdapter adapter = (ContainerAdapter) pager.getAdapter();
                             Vector<FrameLayout> views = adapter.getViewList();
                             if (index < views.size() && index >= 0) {
                                 adapter.destroyItem(pager, index, null);
