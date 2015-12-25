@@ -32,6 +32,7 @@ public class CreateContainerVO implements Serializable{
     private float h;
     private String id;
     private long animTime=500;
+    private long animDelayTime=200;
 
     public float getX() {
         return x;
@@ -79,5 +80,13 @@ public class CreateContainerVO implements Serializable{
 
     public void setAnimTime(long animTime) {
         this.animTime = animTime;
+    }
+
+    public long getAnimDelayTime() {
+        return animDelayTime;
+    }
+
+    public void setAnimDelayTime(long animDelayTime) {
+        this.animDelayTime = animDelayTime;
     }
 }

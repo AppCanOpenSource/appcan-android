@@ -28,6 +28,8 @@ import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.view.animation.TranslateAnimation;
 
+import org.zywx.wbpalmstar.base.BDebug;
+
 public class EBrowserAnimation {
 
     public static final int BASE = 999;
@@ -319,7 +321,9 @@ public class EBrowserAnimation {
         }
     }
 
-    public static void animFromRight(View target, float width,long duration,final AnimatorListener callback){
+    public static void animFromRight(View target, float width,long duration,long delayTime,final AnimatorListener
+            callback){
+        BDebug.i("width",width);
         ObjectAnimator animator=ObjectAnimator.ofFloat(target,"translationX",width,0);
         animator.setDuration(duration);
         animator.addListener(new Animator.AnimatorListener() {
@@ -330,7 +334,9 @@ public class EBrowserAnimation {
 
             @Override
             public void onAnimationEnd(Animator animator) {
-                callback.onAnimationEnd();
+                if (callback != null) {
+                    callback.onAnimationEnd();
+                }
             }
 
             @Override
@@ -343,6 +349,7 @@ public class EBrowserAnimation {
 
             }
         });
+        animator.setStartDelay(delayTime);
         animator.start();
     }
 
