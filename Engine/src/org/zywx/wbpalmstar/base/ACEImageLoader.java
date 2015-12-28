@@ -1,17 +1,17 @@
 package org.zywx.wbpalmstar.base;
 
-import org.zywx.wbpalmstar.base.cache.DiskCache;
-
-import android.app.Application;
 import android.widget.ImageView;
 
 import com.ace.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
-import com.ace.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
+import com.ace.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.ace.universalimageloader.cache.memory.impl.LRULimitedMemoryCache;
 import com.ace.universalimageloader.core.DisplayImageOptions;
 import com.ace.universalimageloader.core.ImageLoader;
 import com.ace.universalimageloader.core.ImageLoaderConfiguration;
 import com.ace.universalimageloader.core.assist.QueueProcessingType;
 import com.ace.universalimageloader.core.download.BaseImageDownloader;
+
+import org.zywx.wbpalmstar.base.cache.DiskCache;
 
 /**
  * Created by ylt on 2015/4/28.
@@ -27,14 +27,14 @@ public class ACEImageLoader {
         DiskCache.initDiskCache(BConstant.app);
         ImageLoaderConfiguration  config=new ImageLoaderConfiguration
                 .Builder(BConstant.app)
-                .memoryCacheExtraOptions(480, 800) // max width, max height，即保存的每个缓存文件的最大长宽
-                .threadPoolSize(3)//线程池内加载的数量
                 .threadPriority(Thread.NORM_PRIORITY - 2)
                 .denyCacheImageMultipleSizesInMemory()
-                .memoryCache(new UsingFreqLimitedMemoryCache(2 * 1024 * 1024)) // You can pass your own memory cache implementation/你可以通过自己的内存缓存实现
-                .memoryCacheSize(2 * 1024 * 1024)
                 .tasksProcessingOrder(QueueProcessingType.LIFO)
+                .memoryCache(new LRULimitedMemoryCache(10 * 1024 * 1024))
+                .memoryCacheSize(10 * 1024 * 1024)
                 .diskCache(new UnlimitedDiskCache(DiskCache.cacheFolder))//自定义缓存路径
+                .diskCacheFileNameGenerator(new Md5FileNameGenerator())
+                .diskCacheSize(200*1024*1024)
                 .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
                 .imageDownloader(new BaseImageDownloader(BConstant.app, 5 * 1000, 30 * 1000)) // connectTimeout (5 s),
                 // readTimeout (30 s)超时时间
@@ -62,10 +62,12 @@ public class ACEImageLoader {
             realImgUrl="assets://"+imgUrl;
         } else if (imgUrl.startsWith("/")) {
             realImgUrl=BUtility.F_FILE_SCHEMA+imgUrl;
-        } else if (imgUrl.startsWith("http://")) {
+        } else {
             realImgUrl=imgUrl;
         }
         ImageLoader.getInstance().displayImage(realImgUrl,imageView);
     }
+
+
 
 }
