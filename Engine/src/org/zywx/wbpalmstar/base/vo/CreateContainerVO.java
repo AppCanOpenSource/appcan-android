@@ -31,8 +31,8 @@ public class CreateContainerVO implements Serializable{
     private float w;
     private float h;
     private String id;
-    private long animTime=500;
-    private long animDelayTime=200;
+    private long animTime=300;
+    private long animDelayTime=100;
 
     public float getX() {
         return x;
