@@ -122,6 +122,7 @@ public class EUExScript {
                 + "isAppInstalled:function(){uexDispatcher.dispatch('uexWidget','isAppInstalled',jo(arguments));},"
                 + "getPushInfo:function(){uexDispatcher.dispatch('uexWidget','getPushInfo',jo(arguments));},"
                 + "closeLoading:function(){uexDispatcher.dispatch('uexWidget','closeLoading',jo(arguments));},"
+                + "moveToBack:function(){uexDispatcher.dispatch('uexWidget','moveToBack',jo(arguments));},"
                 + "setKeyboardMode:function(){uexDispatcher.dispatch('uexWidget','setKeyboardMode',jo(arguments));}};"
                 +
                 // Window
