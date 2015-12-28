@@ -2482,7 +2482,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         }
 
 		/*
-		 * 当页面在滑动的时候会调用此方法，在滑动被停止之前，此方法回一直得到 调用。其中三个参数的含义分别为： arg0
+         * 当页面在滑动的时候会调用此方法，在滑动被停止之前，此方法回一直得到 调用。其中三个参数的含义分别为： arg0
 		 * :当前页面，及你点击滑动的页面 arg1:当前页面偏移的百分比 arg2:当前页面偏移的像素位置
 		 */
 
@@ -2571,7 +2571,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         if (mChannelList == null) {
             mChannelList = new ArrayList<HashMap<String, String>>();
         }
-        if (hasChannel(channelId)){
+        if (hasChannel(channelId)) {
             return;
         }
         HashMap<String, String> item = new HashMap<String, String>();
@@ -2584,8 +2584,8 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         mChannelList.add(item);
     }
 
-    private boolean hasChannel(String channelId){
-        for (HashMap<String,String> item:mChannelList){
+    private boolean hasChannel(String channelId) {
+        for (HashMap<String, String> item : mChannelList) {
             if (channelId.equals(item.get(TAG_CHANNEL_ID))) {
                 return true;
             }

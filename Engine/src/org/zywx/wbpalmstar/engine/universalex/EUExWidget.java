@@ -155,7 +155,7 @@ public class EUExWidget extends EUExBase {
 
     private void showErrorAlert(final String msg) {
         /*Runnable ui = new Runnable() {
-			@Override
+            @Override
 			public void run() {
 				final AlertDialog.Builder dialog = new AlertDialog.Builder(
 						mContext);
@@ -790,8 +790,8 @@ public class EUExWidget extends EUExBase {
         mContext.startActivity(Intent.createChooser(intent, inShareTitle));
     }
 
-    public void moveToBack(String[] params){
-        ((Activity)mContext).moveTaskToBack(true);
+    public void moveToBack(String[] params) {
+        ((Activity) mContext).moveTaskToBack(true);
     }
 
     public void openFile(String path) {

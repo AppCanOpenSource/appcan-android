@@ -49,243 +49,243 @@ import android.view.WindowManager.LayoutParams;
 
 public class GSenseView extends View implements SensorEventListener {
 
-	public static final String TAG = "GSenseView";
-	private static final int GSENSE_MIN_VELOCITY = 300;
-	private Bitmap bitmapBall;
-	private Bitmap bitmapHole;
-	private int bitmapW;
-	private int bitmapH;
-	public static float left;
-	public static float top;
-	private float radius;
-	public static int viewWith;
-	public static int viewHeight;
-	private int maxLeft;
-	private int maxTop;
-	private float dissAreaLeft;
-	private float dissAreaTop;
-	private float dissAreaRight;
-	private float dissAreaBottom;
-	private Paint paint = new Paint();
-	private Activity activity;
-	public int windowHeight;
-	public int windowWidth;
-	private Vibrator mVibrator;
-	private SensorManager sm;
-	private long mLastTime;
-	public static float ballXVelocity;
-	public static float ballYVelocity;
-	private WindowManager.LayoutParams params;
-	private OnBallFallIntoCallback sensorCallback;
-	private SoundPool soundPool;
-	private int soundId;
+    public static final String TAG = "GSenseView";
+    private static final int GSENSE_MIN_VELOCITY = 300;
+    private Bitmap bitmapBall;
+    private Bitmap bitmapHole;
+    private int bitmapW;
+    private int bitmapH;
+    public static float left;
+    public static float top;
+    private float radius;
+    public static int viewWith;
+    public static int viewHeight;
+    private int maxLeft;
+    private int maxTop;
+    private float dissAreaLeft;
+    private float dissAreaTop;
+    private float dissAreaRight;
+    private float dissAreaBottom;
+    private Paint paint = new Paint();
+    private Activity activity;
+    public int windowHeight;
+    public int windowWidth;
+    private Vibrator mVibrator;
+    private SensorManager sm;
+    private long mLastTime;
+    public static float ballXVelocity;
+    public static float ballYVelocity;
+    private WindowManager.LayoutParams params;
+    private OnBallFallIntoCallback sensorCallback;
+    private SoundPool soundPool;
+    private int soundId;
 
-	private ResoureFinder finder;
+    private ResoureFinder finder;
 
-	public GSenseView(Context context) {
-		super(context);
-		init();
-	}
+    public GSenseView(Context context) {
+        super(context);
+        init();
+    }
 
-	public GSenseView(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		init();
-	}
+    public GSenseView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
 
-	public void addBallFallIntoCallback(OnBallFallIntoCallback callback) {
-		this.sensorCallback = callback;
-	}
+    public void addBallFallIntoCallback(OnBallFallIntoCallback callback) {
+        this.sensorCallback = callback;
+    }
 
-	private void init() {
-		finder = ResoureFinder.getInstance(getContext());
-		soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
-		soundId = soundPool.load(getContext(), finder.getRawId("collision"), 1);
-		touchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
-		DisplayMetrics dm = getResources().getDisplayMetrics();
-		bitmapBall = BitmapFactory.decodeResource(getResources(), finder.getDrawableId("platform_myspace_ball"));
-		bitmapHole = BitmapFactory.decodeResource(getResources(), finder.getDrawableId("platform_myspace_hole"));
-		bitmapW = bitmapBall.getWidth();
-		bitmapH = bitmapBall.getHeight();
-		radius = bitmapW / 2;
-		dissAreaLeft = 200 * dm.density;
-		dissAreaTop = 50 * dm.density;
-		dissAreaRight = dissAreaLeft + bitmapHole.getWidth();
-		dissAreaBottom = dissAreaTop + bitmapHole.getHeight();
-		activity = (Activity) getContext();
-		Rect rectgle = new Rect();
-		Window window = activity.getWindow();
-		window.getDecorView().getWindowVisibleDisplayFrame(rectgle);
-		windowWidth = rectgle.width();
-		windowHeight = rectgle.height();
-		mVibrator = (Vibrator) activity.getApplication().getSystemService(Service.VIBRATOR_SERVICE);
-		sm = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
-		setBackgroundDrawable(finder.getDrawable("platform_myspace_gsense_bg_shape"));
-		params = new WindowManager.LayoutParams();
-		params.height = windowHeight;
-		params.width = windowWidth;
-		params.type = WindowManager.LayoutParams.TYPE_APPLICATION | WindowManager.LayoutParams.FIRST_SUB_WINDOW;
-		params.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-				| WindowManager.LayoutParams.FLAG_BLUR_BEHIND;// 模态，不能获得焦点，背景失焦
-		params.alpha = 1.0f;
-		params.format = PixelFormat.TRANSPARENT;
-		params.gravity = Gravity.LEFT | Gravity.TOP;
-		params.screenOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-		params.x = dm.widthPixels - windowWidth;
-		params.y = dm.heightPixels - windowHeight;
-		params.windowAnimations = finder.getStyleId("Anim_platform_myspace_fade");
-	}
+    private void init() {
+        finder = ResoureFinder.getInstance(getContext());
+        soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+        soundId = soundPool.load(getContext(), finder.getRawId("collision"), 1);
+        touchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        bitmapBall = BitmapFactory.decodeResource(getResources(), finder.getDrawableId("platform_myspace_ball"));
+        bitmapHole = BitmapFactory.decodeResource(getResources(), finder.getDrawableId("platform_myspace_hole"));
+        bitmapW = bitmapBall.getWidth();
+        bitmapH = bitmapBall.getHeight();
+        radius = bitmapW / 2;
+        dissAreaLeft = 200 * dm.density;
+        dissAreaTop = 50 * dm.density;
+        dissAreaRight = dissAreaLeft + bitmapHole.getWidth();
+        dissAreaBottom = dissAreaTop + bitmapHole.getHeight();
+        activity = (Activity) getContext();
+        Rect rectgle = new Rect();
+        Window window = activity.getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(rectgle);
+        windowWidth = rectgle.width();
+        windowHeight = rectgle.height();
+        mVibrator = (Vibrator) activity.getApplication().getSystemService(Service.VIBRATOR_SERVICE);
+        sm = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
+        setBackgroundDrawable(finder.getDrawable("platform_myspace_gsense_bg_shape"));
+        params = new WindowManager.LayoutParams();
+        params.height = windowHeight;
+        params.width = windowWidth;
+        params.type = WindowManager.LayoutParams.TYPE_APPLICATION | WindowManager.LayoutParams.FIRST_SUB_WINDOW;
+        params.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                | WindowManager.LayoutParams.FLAG_BLUR_BEHIND;// 模态，不能获得焦点，背景失焦
+        params.alpha = 1.0f;
+        params.format = PixelFormat.TRANSPARENT;
+        params.gravity = Gravity.LEFT | Gravity.TOP;
+        params.screenOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+        params.x = dm.widthPixels - windowWidth;
+        params.y = dm.heightPixels - windowHeight;
+        params.windowAnimations = finder.getStyleId("Anim_platform_myspace_fade");
+    }
 
-	public LayoutParams getLayoutParams() {
-		return params;
-	}
+    public LayoutParams getLayoutParams() {
+        return params;
+    }
 
-	@Override
-	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-		super.onSizeChanged(w, h, oldw, oldh);
-		viewWith = w;
-		viewHeight = h;
-		maxLeft = viewWith - bitmapW;
-		maxTop = viewHeight - bitmapH;
-	}
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        viewWith = w;
+        viewHeight = h;
+        maxLeft = viewWith - bitmapW;
+        maxTop = viewHeight - bitmapH;
+    }
 
-	@Override
-	protected void onDraw(Canvas canvas) {
-		super.onDraw(canvas);
-		if (left < 0.0f) {
-			if (Math.abs(ballXVelocity) > GSENSE_MIN_VELOCITY) {
-				soundPool.play(soundId, 1.0f, 1.0f, 0, 1, 1.0f);
-			}
-			left = 0.0f;
-			ballXVelocity = -(ballXVelocity / 1.4f);
-		} else if (left > maxLeft) {
-			if (Math.abs(ballXVelocity) > GSENSE_MIN_VELOCITY) {
-				soundPool.play(soundId, 1.0f, 1.0f, 0, 1, 1.0f);
-			}
-			left = maxLeft;
-			ballXVelocity = -(ballXVelocity / 1.4f);
-		}
-		if (top < 0.0f) {
-			if (Math.abs(ballYVelocity) > GSENSE_MIN_VELOCITY) {
-				soundPool.play(soundId, 1.0f, 1.0f, 0, 1, 1.0f);
-			}
-			top = 0.0f;
-			ballYVelocity = -(ballYVelocity / 1.4f);
-		} else if (top > maxTop) {
-			if (Math.abs(ballYVelocity) > GSENSE_MIN_VELOCITY) {
-				soundPool.play(soundId, 1.0f, 1.0f, 0, 1, 1.0f);
-			}
-			top = maxTop;
-			ballYVelocity = -(ballYVelocity / 1.4f);
-		}
-		canvas.drawBitmap(bitmapHole, dissAreaLeft, dissAreaTop, paint);
-		canvas.drawBitmap(bitmapBall, left, top, paint);
-		float ballX = left + radius;
-		float ballY = top + radius;
-		float xRange = (dissAreaRight - dissAreaLeft) / 3f;
-		float yRange = (dissAreaBottom - dissAreaTop) / 3f;
-		if (ballX >= dissAreaLeft + xRange && ballX <= dissAreaRight - xRange && ballY >= dissAreaTop + yRange
-				&& ballY <= dissAreaBottom - yRange) {
-			mVibrator.vibrate(500);
-			performSenseAction();
-		}
-	}
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        if (left < 0.0f) {
+            if (Math.abs(ballXVelocity) > GSENSE_MIN_VELOCITY) {
+                soundPool.play(soundId, 1.0f, 1.0f, 0, 1, 1.0f);
+            }
+            left = 0.0f;
+            ballXVelocity = -(ballXVelocity / 1.4f);
+        } else if (left > maxLeft) {
+            if (Math.abs(ballXVelocity) > GSENSE_MIN_VELOCITY) {
+                soundPool.play(soundId, 1.0f, 1.0f, 0, 1, 1.0f);
+            }
+            left = maxLeft;
+            ballXVelocity = -(ballXVelocity / 1.4f);
+        }
+        if (top < 0.0f) {
+            if (Math.abs(ballYVelocity) > GSENSE_MIN_VELOCITY) {
+                soundPool.play(soundId, 1.0f, 1.0f, 0, 1, 1.0f);
+            }
+            top = 0.0f;
+            ballYVelocity = -(ballYVelocity / 1.4f);
+        } else if (top > maxTop) {
+            if (Math.abs(ballYVelocity) > GSENSE_MIN_VELOCITY) {
+                soundPool.play(soundId, 1.0f, 1.0f, 0, 1, 1.0f);
+            }
+            top = maxTop;
+            ballYVelocity = -(ballYVelocity / 1.4f);
+        }
+        canvas.drawBitmap(bitmapHole, dissAreaLeft, dissAreaTop, paint);
+        canvas.drawBitmap(bitmapBall, left, top, paint);
+        float ballX = left + radius;
+        float ballY = top + radius;
+        float xRange = (dissAreaRight - dissAreaLeft) / 3f;
+        float yRange = (dissAreaBottom - dissAreaTop) / 3f;
+        if (ballX >= dissAreaLeft + xRange && ballX <= dissAreaRight - xRange && ballY >= dissAreaTop + yRange
+                && ballY <= dissAreaBottom - yRange) {
+            mVibrator.vibrate(500);
+            performSenseAction();
+        }
+    }
 
-	public void startSense() {
-		mLastTime = 0;
-		ballXVelocity = 0.0f;
-		ballYVelocity = 0.0f;
-		sm.registerListener(this, sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
-	}
+    public void startSense() {
+        mLastTime = 0;
+        ballXVelocity = 0.0f;
+        ballYVelocity = 0.0f;
+        sm.registerListener(this, sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
+    }
 
-	public void stopSense() {
-		sm.unregisterListener(this);
-		mLastTime = 0;
-		ballXVelocity = 0.0f;
-		ballYVelocity = 0.0f;
-	}
+    public void stopSense() {
+        sm.unregisterListener(this);
+        mLastTime = 0;
+        ballXVelocity = 0.0f;
+        ballYVelocity = 0.0f;
+    }
 
-	private float startX;
-	private float startY;
-	private int touchSlop;
+    private float startX;
+    private float startY;
+    private int touchSlop;
 
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		switch (event.getAction()) {
-		case MotionEvent.ACTION_DOWN:
-			startX = event.getX();
-			startY = event.getY();
-			break;
-		case MotionEvent.ACTION_MOVE:
-			if (Math.abs(event.getX() - startX) > touchSlop || Math.abs(event.getY() - startY) > touchSlop) {
-				return false;
-			}
-			break;
-		case MotionEvent.ACTION_UP:
-			if ((Math.abs(event.getX() - startX) < touchSlop && Math.abs(event.getY() - startY) < touchSlop)) {
-				performSenseAction();
-			}
-			break;
-		}
-		return super.onTouchEvent(event);
-	}
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                startX = event.getX();
+                startY = event.getY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                if (Math.abs(event.getX() - startX) > touchSlop || Math.abs(event.getY() - startY) > touchSlop) {
+                    return false;
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+                if ((Math.abs(event.getX() - startX) < touchSlop && Math.abs(event.getY() - startY) < touchSlop)) {
+                    performSenseAction();
+                }
+                break;
+        }
+        return super.onTouchEvent(event);
+    }
 
-	private void performSenseAction() {
-		if (sensorCallback != null) {
-			stopSense();
-			sensorCallback.onFallInto();
-			left = 0.0f;
-			top = 0.0f;
-		}
+    private void performSenseAction() {
+        if (sensorCallback != null) {
+            stopSense();
+            sensorCallback.onFallInto();
+            left = 0.0f;
+            top = 0.0f;
+        }
 
-	}
+    }
 
-	@Override
-	public void onSensorChanged(SensorEvent event) {
+    @Override
+    public void onSensorChanged(SensorEvent event) {
 
-		long now = System.currentTimeMillis();
-		{
-			long diff = 0;
-			if (mLastTime != 0)
-				diff = now - mLastTime;
-			if (Math.abs(event.values[SensorManager.DATA_X]) > 1.5f) { //
-				if (Math.abs(event.values[SensorManager.DATA_X]) < 10.0f)
-					diff = 1;
-				if (mLastTime != 0)
-					ballXVelocity = ballXVelocity + (-event.values[SensorManager.DATA_X] * diff * 20);
-			} else {
-				ballXVelocity = ballXVelocity + (event.values[SensorManager.DATA_X]); //
-			}
+        long now = System.currentTimeMillis();
+        {
+            long diff = 0;
+            if (mLastTime != 0)
+                diff = now - mLastTime;
+            if (Math.abs(event.values[SensorManager.DATA_X]) > 1.5f) { //
+                if (Math.abs(event.values[SensorManager.DATA_X]) < 10.0f)
+                    diff = 1;
+                if (mLastTime != 0)
+                    ballXVelocity = ballXVelocity + (-event.values[SensorManager.DATA_X] * diff * 20);
+            } else {
+                ballXVelocity = ballXVelocity + (event.values[SensorManager.DATA_X]); //
+            }
 
-			if (Math.abs(event.values[SensorManager.DATA_Y]) > 1.5f) { //
-				if (Math.abs(event.values[SensorManager.DATA_Y]) < 10.0f)
-					diff = 1;
-				if (mLastTime != 0)
-					ballYVelocity = ballYVelocity + (event.values[SensorManager.DATA_Y] * diff * 10);
-			} else {
-				ballYVelocity = ballYVelocity + (-event.values[SensorManager.DATA_Y]);
-			}
-			mLastTime = now;
-			left += ballXVelocity / 200;
-			top += ballYVelocity / 200;
-			invalidate();
-		}
-	}
+            if (Math.abs(event.values[SensorManager.DATA_Y]) > 1.5f) { //
+                if (Math.abs(event.values[SensorManager.DATA_Y]) < 10.0f)
+                    diff = 1;
+                if (mLastTime != 0)
+                    ballYVelocity = ballYVelocity + (event.values[SensorManager.DATA_Y] * diff * 10);
+            } else {
+                ballYVelocity = ballYVelocity + (-event.values[SensorManager.DATA_Y]);
+            }
+            mLastTime = now;
+            left += ballXVelocity / 200;
+            top += ballYVelocity / 200;
+            invalidate();
+        }
+    }
 
-	@Override
-	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
-	}
+    }
 
-	public void startVibrate() {
-		mVibrator.vibrate(new long[] { 100, 100, 100, 1000 }, -1);
-	}
+    public void startVibrate() {
+        mVibrator.vibrate(new long[]{100, 100, 100, 1000}, -1);
+    }
 
-	public void cancelVibrate() {
-		mVibrator.cancel();
-	}
+    public void cancelVibrate() {
+        mVibrator.cancel();
+    }
 
-	public static interface OnBallFallIntoCallback {
-		void onFallInto();
-	}
+    public static interface OnBallFallIntoCallback {
+        void onFallInto();
+    }
 
 }

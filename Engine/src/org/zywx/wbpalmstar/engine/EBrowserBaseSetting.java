@@ -19,7 +19,9 @@
 package org.zywx.wbpalmstar.engine;
 
 public interface EBrowserBaseSetting {
-	void initBaseSetting(boolean webApp);
-	void setDefaultFontSize(int size);
-	void setSupportZoom();
+    void initBaseSetting(boolean webApp);
+
+    void setDefaultFontSize(int size);
+
+    void setSupportZoom();
 }

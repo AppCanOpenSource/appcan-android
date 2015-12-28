@@ -24,15 +24,15 @@ import java.io.Serializable;
 /**
  * Created by ylt on 15/12/24.
  */
-public class CreateContainerVO implements Serializable{
+public class CreateContainerVO implements Serializable {
 
     private float x;
     private float y;
     private float w;
     private float h;
     private String id;
-    private long animTime=300;
-    private long animDelayTime=100;
+    private long animTime = 300;
+    private long animDelayTime = 100;
 
     public float getX() {
         return x;

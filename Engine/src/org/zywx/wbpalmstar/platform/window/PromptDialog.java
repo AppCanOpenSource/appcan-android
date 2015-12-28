@@ -19,6 +19,7 @@
 package org.zywx.wbpalmstar.platform.window;
 
 import org.zywx.wbpalmstar.base.ResoureFinder;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.IBinder;
@@ -29,65 +30,65 @@ import android.widget.TextView;
 
 public class PromptDialog extends AlertDialog {
 
-	private TextView tvDesc;
-	private EditText etInput;
+    private TextView tvDesc;
+    private EditText etInput;
 
-	private ResoureFinder finder;
+    private ResoureFinder finder;
 
-	public PromptDialog(Context context) {
-		super(context);
-		finder = ResoureFinder.getInstance(context);
-		final LayoutInflater inflater = LayoutInflater.from(getContext());
-		final RelativeLayout layout = (RelativeLayout) inflater.inflate(
-				finder.getLayoutId("platform_window_dialog_prompt_layout"), null);
-		tvDesc = (TextView) layout.findViewById(finder.getId("tv_dialog_input_desc"));
-		etInput = (EditText) layout.findViewById(finder.getId("et_dialog_input_text"));
-		etInput.setSelectAllOnFocus(true);
-		setView(layout);
-	}
+    public PromptDialog(Context context) {
+        super(context);
+        finder = ResoureFinder.getInstance(context);
+        final LayoutInflater inflater = LayoutInflater.from(getContext());
+        final RelativeLayout layout = (RelativeLayout) inflater.inflate(
+                finder.getLayoutId("platform_window_dialog_prompt_layout"), null);
+        tvDesc = (TextView) layout.findViewById(finder.getId("tv_dialog_input_desc"));
+        etInput = (EditText) layout.findViewById(finder.getId("et_dialog_input_text"));
+        etInput.setSelectAllOnFocus(true);
+        setView(layout);
+    }
 
-	public String getInput() {
-		return etInput.getText().toString();
-	}
+    public String getInput() {
+        return etInput.getText().toString();
+    }
 
-	public void setInputText(String text) {
-		if (text != null && text.length() > 0) {
-			etInput.setText(text);
-		}
-	}
+    public void setInputText(String text) {
+        if (text != null && text.length() > 0) {
+            etInput.setText(text);
+        }
+    }
 
-	public void setInputDesc(String desc) {
-		if (desc != null && desc.length() > 0) {
-			tvDesc.setText(desc);
-		}
-	}
-	
-	public IBinder getWindowToken(){
-		
-		return etInput.getWindowToken();
-	}
+    public void setInputDesc(String desc) {
+        if (desc != null && desc.length() > 0) {
+            tvDesc.setText(desc);
+        }
+    }
 
-	public static PromptDialog show(Context context, String title, String desc, String defalutValue,
-			String confirmLabel, OnClickListener confirmListener, String cancelLabel, OnClickListener cancelListener) {
-		final PromptDialog dialog = new PromptDialog(context);
-		dialog.setCancelable(false);
-		if (title != null) {
-			dialog.setTitle(title);
-		}
-		if (desc != null) {
-			dialog.setInputDesc(desc);
-		}
-		if (defalutValue != null) {
-			dialog.setInputText(defalutValue);
-		}
-		if (confirmLabel != null) {
-			dialog.setButton(confirmLabel, confirmListener);
-		}
-		if (cancelLabel != null) {
-			dialog.setButton3(cancelLabel, cancelListener);
-		}
-		dialog.show();
-		return dialog;
-	}
+    public IBinder getWindowToken() {
+
+        return etInput.getWindowToken();
+    }
+
+    public static PromptDialog show(Context context, String title, String desc, String defalutValue,
+                                    String confirmLabel, OnClickListener confirmListener, String cancelLabel, OnClickListener cancelListener) {
+        final PromptDialog dialog = new PromptDialog(context);
+        dialog.setCancelable(false);
+        if (title != null) {
+            dialog.setTitle(title);
+        }
+        if (desc != null) {
+            dialog.setInputDesc(desc);
+        }
+        if (defalutValue != null) {
+            dialog.setInputText(defalutValue);
+        }
+        if (confirmLabel != null) {
+            dialog.setButton(confirmLabel, confirmListener);
+        }
+        if (cancelLabel != null) {
+            dialog.setButton3(cancelLabel, cancelListener);
+        }
+        dialog.show();
+        return dialog;
+    }
 
 }

@@ -18,9 +18,9 @@ import android.widget.FrameLayout;
 @SuppressLint("NewApi")
 public class SwipeView extends FrameLayout {
 
-    public static final String TAG=SwipeView.class.getSimpleName();
+    public static final String TAG = SwipeView.class.getSimpleName();
 
-    public static boolean sNavFlag=false;//设置全部Window是否可以滑动
+    public static boolean sNavFlag = false;//设置全部Window是否可以滑动
 
     /**
      * 是否可以滑动关闭页面
@@ -51,9 +51,9 @@ public class SwipeView extends FrameLayout {
     int mTouchSlopDP = 30;
     int mTouchSlop = 60;
 
-    boolean mAbleToSwipe =true;//控制每个Window是否可以滑动（root Window不能滑动）
+    boolean mAbleToSwipe = true;//控制每个Window是否可以滑动（root Window不能滑动）
 
-    private OnViewClosedListener mOnViewClosedListener=null;
+    private OnViewClosedListener mOnViewClosedListener = null;
 
     public SwipeView(Context context) {
         super(context);
@@ -101,7 +101,7 @@ public class SwipeView extends FrameLayout {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (mAbleToSwipe &&sNavFlag&&Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        if (mAbleToSwipe && sNavFlag && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             if (mSwipeEnabled && !mCanSwipe && !mIgnoreSwipe) {
                 if (mSwipeAnyWhere) {
                     switch (ev.getAction()) {
@@ -175,7 +175,7 @@ public class SwipeView extends FrameLayout {
                     if (getContentX() + dx < 0) {
                         setContentX(0);
                     } else {
-                        Log.i(TAG,"dx: "+dx);
+                        Log.i(TAG, "dx: " + dx);
                         setContentX(mCurrentX);
                     }
                     mLastX = mCurrentX;
@@ -216,7 +216,7 @@ public class SwipeView extends FrameLayout {
 
     public void setContentX(float x) {
         int ix = (int) x;
-        Log.i(TAG,"ContentX: "+ix);
+        Log.i(TAG, "ContentX: " + ix);
         this.setX(ix);
         invalidate();
     }
@@ -243,7 +243,7 @@ public class SwipeView extends FrameLayout {
         animator.start();
     }
 
-     private void animateFinish(boolean withVel) {
+    private void animateFinish(boolean withVel) {
         cancelPotentialAnimation();
         animator = ObjectAnimator.ofFloat(this, "contentX", getContentX(), mScreenWidth);
         int tmpDuration = withVel ? ((int) (duration * (mScreenWidth - getContentX()) / mScreenWidth)) : duration;
@@ -303,12 +303,12 @@ public class SwipeView extends FrameLayout {
         mOnViewClosedListener = onViewClosedListener;
     }
 
-    public interface OnViewClosedListener{
+    public interface OnViewClosedListener {
         void onViewClosed();
     }
 
-    public void setAbleToSwipe(boolean ableToSwipe){
-        this.mAbleToSwipe =ableToSwipe;
+    public void setAbleToSwipe(boolean ableToSwipe) {
+        this.mAbleToSwipe = ableToSwipe;
     }
 
 }

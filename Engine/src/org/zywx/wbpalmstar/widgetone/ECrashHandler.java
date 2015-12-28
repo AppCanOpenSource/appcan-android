@@ -28,63 +28,63 @@ import java.util.Date;
 
 public class ECrashHandler implements UncaughtExceptionHandler {
 
-	private Thread.UncaughtExceptionHandler mDefaultHandler;
-	private DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+    private Thread.UncaughtExceptionHandler mDefaultHandler;
+    private DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
 
-	public ECrashHandler() {
-		mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
-		Thread.setDefaultUncaughtExceptionHandler(this);
-	}
+    public ECrashHandler() {
+        mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
+        Thread.setDefaultUncaughtExceptionHandler(this);
+    }
 
-	@Override
-	public void uncaughtException(Thread thread, Throwable ex) {
-		if (!handleException(ex)) {
-			mDefaultHandler.uncaughtException(thread, ex);
-		} 
-	}
-	
-	public void destroy(){
-		mDefaultHandler = null;
-	}
+    @Override
+    public void uncaughtException(Thread thread, Throwable ex) {
+        if (!handleException(ex)) {
+            mDefaultHandler.uncaughtException(thread, ex);
+        }
+    }
 
-	private boolean handleException(Throwable ex) {
-		saveCrashInfo2File(ex);
-		return false;
-	}
+    public void destroy() {
+        mDefaultHandler = null;
+    }
 
-	public void saveCrashInfo2File(Throwable ex) {
-		if (ex == null) {
-			return;
-		}
-		StringBuffer sb = new StringBuffer();
-		Writer writer = new StringWriter();
-		PrintWriter printWriter = new PrintWriter(writer);
-		ex.printStackTrace(printWriter);
-		Throwable cause = ex.getCause();
-		while (cause != null) {
-			cause.printStackTrace(printWriter);
-			cause = cause.getCause();
-		}
-		printWriter.close();
-		String result = writer.toString();
-		sb.append(result);
-		try {
-			String time = formatter.format(new Date());
-			String fileName = time + ".log";
-			if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-				String ePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-				String path = ePath + "/widgetone/log/crash/";
-				File dir = new File(path);
-				if (!dir.exists()) {
-					dir.mkdirs();
-				}
-				FileOutputStream fos = new FileOutputStream(path + fileName);
-				fos.write(sb.toString().getBytes());
-				fos.flush();
-				fos.close();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+    private boolean handleException(Throwable ex) {
+        saveCrashInfo2File(ex);
+        return false;
+    }
+
+    public void saveCrashInfo2File(Throwable ex) {
+        if (ex == null) {
+            return;
+        }
+        StringBuffer sb = new StringBuffer();
+        Writer writer = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(writer);
+        ex.printStackTrace(printWriter);
+        Throwable cause = ex.getCause();
+        while (cause != null) {
+            cause.printStackTrace(printWriter);
+            cause = cause.getCause();
+        }
+        printWriter.close();
+        String result = writer.toString();
+        sb.append(result);
+        try {
+            String time = formatter.format(new Date());
+            String fileName = time + ".log";
+            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                String ePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+                String path = ePath + "/widgetone/log/crash/";
+                File dir = new File(path);
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
+                FileOutputStream fos = new FileOutputStream(path + fileName);
+                fos.write(sb.toString().getBytes());
+                fos.flush();
+                fos.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
