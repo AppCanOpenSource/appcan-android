@@ -19,5 +19,5 @@
 package org.zywx.wbpalmstar.engine;
 
 public interface ECallback {
-    public void callback(Object obj);
+	public void callback(Object obj);
 }

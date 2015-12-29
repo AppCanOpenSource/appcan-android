@@ -17,13 +17,13 @@ public class BaseFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        if (mOnViewCreatedListener != null) {
+        if (mOnViewCreatedListener!=null){
             mOnViewCreatedListener.onViewCreated(view);
         }
         super.onViewCreated(view, savedInstanceState);
     }
 
-    public interface OnViewCreatedListener {
+    public interface OnViewCreatedListener{
         void onViewCreated(View view);
     }
 

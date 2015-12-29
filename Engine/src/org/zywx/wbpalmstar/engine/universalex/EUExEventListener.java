@@ -19,5 +19,5 @@
 package org.zywx.wbpalmstar.engine.universalex;
 
 public interface EUExEventListener {
-    public boolean onEvent(int type);
+	public boolean onEvent(int type);
 }

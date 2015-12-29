@@ -22,35 +22,35 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class WWidgetOneData implements Parcelable {
-    public String m_widgetOneId;
-    public String m_widgetOneVer;
-    public String m_screenSize;
+	public String m_widgetOneId;
+	public String m_widgetOneVer;
+	public String m_screenSize;
 
-    public static final Parcelable.Creator<WWidgetOneData> CREATOR = new Creator<WWidgetOneData>() {
-        public WWidgetOneData createFromParcel(Parcel source) {
-            WWidgetOneData widgetOne = new WWidgetOneData();
-            widgetOne.m_widgetOneId = source.readString();
-            widgetOne.m_widgetOneVer = source.readString();
-            widgetOne.m_screenSize = source.readString();
-            return widgetOne;
-        }
+	public static final Parcelable.Creator<WWidgetOneData> CREATOR = new Creator<WWidgetOneData>() {
+		public WWidgetOneData createFromParcel(Parcel source) {
+			WWidgetOneData widgetOne = new WWidgetOneData();
+			widgetOne.m_widgetOneId = source.readString();
+			widgetOne.m_widgetOneVer = source.readString();
+			widgetOne.m_screenSize = source.readString();
+			return widgetOne;
+		}
 
-        public WWidgetOneData[] newArray(int size) {
-            return new WWidgetOneData[size];
-        }
-    };
+		public WWidgetOneData[] newArray(int size) {
+			return new WWidgetOneData[size];
+		}
+	};
 
-    @Override
-    public int describeContents() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        // TODO Auto-generated method stub
-        dest.writeString(m_widgetOneId);
-        dest.writeString(m_widgetOneVer);
-        dest.writeString(m_screenSize);
-    }
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		// TODO Auto-generated method stub
+		dest.writeString(m_widgetOneId);
+		dest.writeString(m_widgetOneVer);
+		dest.writeString(m_screenSize);
+	}
 }

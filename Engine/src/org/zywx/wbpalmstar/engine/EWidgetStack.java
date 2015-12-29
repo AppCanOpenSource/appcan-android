@@ -22,75 +22,75 @@ import java.util.Hashtable;
 
 public class EWidgetStack {
 
-    private ELinkedList<EBrowserWidget> mWidgetList;
-    private Hashtable<String, EBrowserWidget> mWidgetTable;
-    private int m_curWidgetIndex;
-
-    public EWidgetStack() {
-        m_curWidgetIndex = -1;
-        mWidgetTable = new Hashtable<String, EBrowserWidget>();
-        mWidgetList = new ELinkedList<EBrowserWidget>();
-    }
-
-    public EBrowserWidget get(String inWidgetNmae) {
-
-        return mWidgetTable.get(inWidgetNmae);
-    }
-
-    public EBrowserWidget get(int index) {
-        if (index < 0 && index >= length()) {
-
-            return null;
-        }
-        return mWidgetList.get(index);
-    }
-
-    public int indexOf(EBrowserWidget wgt) {
-
-        return mWidgetList.indexOf(wgt);
-    }
-
-    public void remove(EBrowserWidget widget) {
-        String key = widget.getWidget().m_appId;
-        mWidgetTable.remove(key);
-        mWidgetList.remove(widget);
-        m_curWidgetIndex--;
-    }
-
-    public EBrowserWidget peek() {
-
-        return get(m_curWidgetIndex);
-    }
-
-    public EBrowserWidget first() {
-
-        return get(0);
-    }
-
-    public EBrowserWidget last() {
-
-        return get(length() - 1);
-    }
-
-    public EBrowserWidget next() {
-
-        return get(m_curWidgetIndex + 1);
-    }
-
-    public EBrowserWidget prev() {
-
-        return get(m_curWidgetIndex - 1);
-    }
-
-    public int length() {
-
-        return mWidgetList.size();
-    }
-
-    public void add(EBrowserWidget inBrwWidget) {
-        String key = inBrwWidget.getWidget().m_appId;
-        mWidgetTable.put(key, inBrwWidget);
-        mWidgetList.add(inBrwWidget);
-        m_curWidgetIndex++;
-    }
+	private ELinkedList<EBrowserWidget> mWidgetList;
+	private Hashtable<String, EBrowserWidget> mWidgetTable;
+	private int m_curWidgetIndex;
+	
+	public EWidgetStack(){
+		m_curWidgetIndex = -1;
+		mWidgetTable = new Hashtable<String, EBrowserWidget>();
+		mWidgetList = new ELinkedList<EBrowserWidget>();
+	}
+	
+	public EBrowserWidget get(String inWidgetNmae){
+		
+		return mWidgetTable.get(inWidgetNmae);
+	}
+	
+	public EBrowserWidget get(int index){
+		if(index < 0 && index >= length()){
+			
+			return null;
+		}
+		return mWidgetList.get(index);
+	}
+	
+	public int indexOf(EBrowserWidget wgt){
+		
+		return mWidgetList.indexOf(wgt);
+	}
+	
+	public void remove(EBrowserWidget widget){
+		String key = widget.getWidget().m_appId;
+		mWidgetTable.remove(key);
+		mWidgetList.remove(widget);
+		m_curWidgetIndex--;
+	}
+	
+	public EBrowserWidget peek(){
+		
+		return get(m_curWidgetIndex);
+	}
+	
+	public EBrowserWidget first(){
+		
+		return get(0);
+	}
+	
+	public EBrowserWidget last(){
+		
+		return get(length() - 1);
+	}
+	
+	public EBrowserWidget next(){
+		
+		return get(m_curWidgetIndex + 1);
+	}
+	
+	public EBrowserWidget prev(){
+		
+		return get(m_curWidgetIndex - 1);
+	}
+	
+	public int length(){
+		
+		return mWidgetList.size();
+	}
+	
+	public void add(EBrowserWidget inBrwWidget){
+		String key = inBrwWidget.getWidget().m_appId;
+		mWidgetTable.put(key, inBrwWidget);
+		mWidgetList.add(inBrwWidget);
+		m_curWidgetIndex++;
+	}
 }

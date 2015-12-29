@@ -26,25 +26,25 @@ import android.os.Build;
 
 public class MEMControl {
 
-    static final String largeHeap_action = "appcan.intent.action.largeHeap";
-    static boolean inLargeHeap = false;
-    static int SDK_INT = Build.VERSION.SDK_INT;
-
-    public static void setProcessInLargeHeap(Context context) {
-        if (inLargeHeap || SDK_INT < 14) {
-            return;
-        }
-        inLargeHeap = true;
-        Intent remoteIntent = new Intent(context, KeepForeService.class);
-        context.startService(remoteIntent);
-    }
-
-    public static void setProcessInLowHeap(Context context) {
-        if (!inLargeHeap || SDK_INT < 14) {
-            return;
-        }
-        inLargeHeap = false;
-        Intent remoteIntent = new Intent(context, KeepForeService.class);
-        context.stopService(remoteIntent);
-    }
+	static final String largeHeap_action = "appcan.intent.action.largeHeap";
+	static boolean inLargeHeap = false;
+	static int SDK_INT = Build.VERSION.SDK_INT;
+	
+	public static void setProcessInLargeHeap(Context context){
+		if(inLargeHeap || SDK_INT < 14){
+			return;
+		}
+		inLargeHeap = true;
+		Intent remoteIntent = new Intent(context, KeepForeService.class);
+		context.startService(remoteIntent);
+	}
+	
+	public static void setProcessInLowHeap(Context context){
+		if(!inLargeHeap || SDK_INT < 14){
+			return;
+		}
+		inLargeHeap = false;
+		Intent remoteIntent = new Intent(context, KeepForeService.class);
+		context.stopService(remoteIntent);
+	}
 }

@@ -26,7 +26,6 @@ import android.content.SharedPreferences.Editor;
 import android.os.Process;
 import android.text.TextUtils;
 import android.util.Log;
-
 import org.zywx.wbpalmstar.base.ResoureFinder;
 import org.zywx.wbpalmstar.platform.push.PushService;
 
@@ -34,92 +33,92 @@ import java.util.List;
 
 @SuppressWarnings("rawtypes")
 public class PushReportThread extends Thread implements PushReportConstants {
-    public Context m_activity = null;
-    private int mThreadType;
-    private String host_pushReport = null;
-    private String host_pushBindUser = null;
-    // private PushReportAgent mPushAgent = null;
-    private List mNameValuePairs = null;
-    private boolean mIsRun;
+	public Context m_activity = null;
+	private int mThreadType;
+	private String host_pushReport = null;
+	private String host_pushBindUser = null;
+	// private PushReportAgent mPushAgent = null;
+	private List mNameValuePairs = null;
+	private boolean mIsRun;
 
-    public PushReportThread(Context inActivity, int threadType) {
-        m_activity = inActivity;
-        // mPushAgent = pushAgent;
-        mThreadType = threadType;
-        host_pushReport = ResoureFinder.getInstance().getString(inActivity,
-                KEY_PUSH_REPORT_HOST);
-        host_pushBindUser = ResoureFinder.getInstance().getString(inActivity,
-                KEY_PUSH_BINDUSER_HOST);
-        setName("Appcan-Push");
-    }
+	public PushReportThread(Context inActivity, int threadType) {
+		m_activity = inActivity;
+		// mPushAgent = pushAgent;
+		mThreadType = threadType;
+		host_pushReport = ResoureFinder.getInstance().getString(inActivity,
+				KEY_PUSH_REPORT_HOST);
+		host_pushBindUser = ResoureFinder.getInstance().getString(inActivity,
+				KEY_PUSH_BINDUSER_HOST);
+		setName("Appcan-Push");
+	}
 
-    public static PushReportThread getPushThread(Context inActivity,
-                                                 PushReportAgent pushAgent, int threadType) {
-        PushReportThread pushReportThread = new PushReportThread(inActivity,
-                threadType);
-        return pushReportThread;
-    }
+	public static PushReportThread getPushThread(Context inActivity,
+			PushReportAgent pushAgent, int threadType) {
+		PushReportThread pushReportThread = new PushReportThread(inActivity,
+				threadType);
+		return pushReportThread;
+	}
 
-    public static PushReportThread getPushBindUserThread(Context inActivity,
-                                                         PushReportAgent pushAgent, int threadType, List nameValuePairs) {
-        PushReportThread pushReportThread = new PushReportThread(inActivity,
-                threadType);
-        pushReportThread.mNameValuePairs = nameValuePairs;
-        return pushReportThread;
-    }
+	public static PushReportThread getPushBindUserThread(Context inActivity,
+			PushReportAgent pushAgent, int threadType, List nameValuePairs) {
+		PushReportThread pushReportThread = new PushReportThread(inActivity,
+				threadType);
+		pushReportThread.mNameValuePairs = nameValuePairs;
+		return pushReportThread;
+	}
 
-    public static PushReportThread getPushReportThread(Context inActivity,
-                                                       PushReportAgent pushAgent, int threadType, List nameValuePairs) {
-        PushReportThread pushReportThread = new PushReportThread(inActivity,
-                threadType);
-        pushReportThread.mNameValuePairs = nameValuePairs;
-        return pushReportThread;
-    }
+	public static PushReportThread getPushReportThread(Context inActivity,
+			PushReportAgent pushAgent, int threadType, List nameValuePairs) {
+		PushReportThread pushReportThread = new PushReportThread(inActivity,
+				threadType);
+		pushReportThread.mNameValuePairs = nameValuePairs;
+		return pushReportThread;
+	}
 
-    @Override
-    public void run() {
-        Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
-        mIsRun = true;
-        try {
-            while (mIsRun) {
-                switch (mThreadType) {
-                    case TYPE_INIT_PUSH:
-                        initPush();
+	@Override
+	public void run() {
+		Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
+		mIsRun = true;
+		try {
+			while (mIsRun) {
+				switch (mThreadType) {
+				case TYPE_INIT_PUSH:
+					initPush();
+					break;
+				case TYPE_PUSH_BINDUSER:
+					if (TextUtils.isEmpty(host_pushBindUser)) {
+						Log.w("PushReportThread", "host_pushBindUser is empty");
+						break;
+					}
+					bindUserInfo();
+					break;
+                case TYPE_PUSH_UNBINDUSER:
+                    if (TextUtils.isEmpty(host_pushBindUser)) {
+                        Log.w("PushReportThread", "host_pushBindUser is empty");
                         break;
-                    case TYPE_PUSH_BINDUSER:
-                        if (TextUtils.isEmpty(host_pushBindUser)) {
-                            Log.w("PushReportThread", "host_pushBindUser is empty");
-                            break;
-                        }
-                        bindUserInfo();
-                        break;
-                    case TYPE_PUSH_UNBINDUSER:
-                        if (TextUtils.isEmpty(host_pushBindUser)) {
-                            Log.w("PushReportThread", "host_pushBindUser is empty");
-                            break;
-                        }
-                        unBindUserInfo();
-                        break;
-                    case TYPE_PUSH_REPORT_OPEN:
-                        if (TextUtils.isEmpty(host_pushReport)) {
-                            Log.w("PushReportThread", "host_pushReport is empty");
-                            break;
-                        }
-                        pushReportOpen();
-                        break;
-                    case TYPE_PUSH_REPORT_ARRIVED:
-                        if (TextUtils.isEmpty(host_pushReport)) {
-                            Log.w("PushReportThread", "host_pushReport is empty");
-                            break;
-                        }
-                        pushReportArrive();
-                        break;
-                }
-                mIsRun = false;
-            }
-        } catch (Exception e) {
-            Log.e("PushReportThread", e.getMessage());
-        }
+                    }
+                    unBindUserInfo();
+                    break;
+				case TYPE_PUSH_REPORT_OPEN:
+					if (TextUtils.isEmpty(host_pushReport)) {
+						Log.w("PushReportThread", "host_pushReport is empty");
+						break;
+					}
+					pushReportOpen();
+					break;
+				case TYPE_PUSH_REPORT_ARRIVED:
+					if (TextUtils.isEmpty(host_pushReport)) {
+						Log.w("PushReportThread", "host_pushReport is empty");
+						break;
+					}
+					pushReportArrive();
+					break;
+				}
+				mIsRun = false;
+			}
+		} catch (Exception e) {
+			Log.e("PushReportThread", e.getMessage());
+		}
     }
 
     private void unBindUserInfo() {
@@ -131,48 +130,48 @@ public class PushReportThread extends Thread implements PushReportConstants {
         Log.i("PushReportThread", "unBindUserInfo======" + bu);
     }
 
-    private void initPush() {
-        String localPushMes = "0";// setPushState 可以改变
-        String pushMes = "1";
-        SharedPreferences sp = m_activity.getSharedPreferences("saveData",
-                Context.MODE_PRIVATE);
-        Editor editor = sp.edit();
-        if (!PushReportAgent.widgetPush) {
-            pushMes = "0";
-        }
-        editor.putString("pushMes", pushMes);
-        editor.commit();
-        localPushMes = sp.getString("localPushMes", pushMes);
-        if ("1".equals(localPushMes) && "1".equals(pushMes)) {
-            Intent myIntent = new Intent(m_activity, PushService.class);
-            myIntent.putExtra("type", 1);
-            m_activity.startService(myIntent);
-        } else {
-            Intent myIntent = new Intent(m_activity, PushService.class);
-            myIntent.putExtra("type", 0);
-            m_activity.startService(myIntent);
-        }
-    }
+	private void initPush() {
+		String localPushMes = "0";// setPushState 可以改变
+		String pushMes = "1";
+		SharedPreferences sp = m_activity.getSharedPreferences("saveData",
+				Context.MODE_PRIVATE);
+		Editor editor = sp.edit();
+		if (!PushReportAgent.widgetPush) {
+			pushMes = "0";
+		}
+		editor.putString("pushMes", pushMes);
+		editor.commit();
+		localPushMes = sp.getString("localPushMes", pushMes);
+		if ("1".equals(localPushMes) && "1".equals(pushMes)) {
+			Intent myIntent = new Intent(m_activity, PushService.class);
+			myIntent.putExtra("type", 1);
+			m_activity.startService(myIntent);
+		} else {
+			Intent myIntent = new Intent(m_activity, PushService.class);
+			myIntent.putExtra("type", 0);
+			m_activity.startService(myIntent);
+		}
+	}
 
-    private void bindUserInfo() {
-        String bu = PushReportHttpClient.sendPostDataByNameValuePair(
-                (host_pushBindUser + url_push_bindUser), mNameValuePairs,
-                m_activity);
-        Log.i("PushReportThread", "bindUserInfo======" + bu);
-    }
+	private void bindUserInfo() {
+		String bu = PushReportHttpClient.sendPostDataByNameValuePair(
+				(host_pushBindUser + url_push_bindUser), mNameValuePairs,
+				m_activity);
+		Log.i("PushReportThread", "bindUserInfo======" + bu);
+	}
 
-    private void pushReportOpen() {
-        String result = PushReportHttpClient.sendPostDataByNameValuePair(
-                (host_pushReport + url_push_report), mNameValuePairs,
-                m_activity);
-        Log.i("PushReportThread", "pushReportOpen result======" + result);
-    }
+	private void pushReportOpen() {
+		String result = PushReportHttpClient.sendPostDataByNameValuePair(
+				(host_pushReport + url_push_report), mNameValuePairs,
+				m_activity);
+		Log.i("PushReportThread", "pushReportOpen result======" + result);
+	}
 
-    private void pushReportArrive() {
-        String result = PushReportHttpClient.sendPostDataByNameValuePair(
-                (host_pushReport + url_push_report), mNameValuePairs,
-                m_activity);
-        Log.i("PushReportThread", "pushReportArrive result======" + result);
-    }
+	private void pushReportArrive() {
+		String result = PushReportHttpClient.sendPostDataByNameValuePair(
+				(host_pushReport + url_push_report), mNameValuePairs,
+				m_activity);
+		Log.i("PushReportThread", "pushReportArrive result======" + result);
+	}
 
 }

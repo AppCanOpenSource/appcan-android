@@ -27,73 +27,74 @@ import android.content.Context;
 
 public class EUExAppCenter extends EUExBase {
 
-    public static final String tag = "uexAppCenter";
-    public static final String F_CALLBACK_LOGIN_OUT = "uexAppCenter.cbLoginOut";
-    public static final String F_CALLBACK_GET_SESSION_KEY = "uexAppCenter.cbGetSessionKey";
+	public static final String tag = "uexAppCenter";
+	public static final String F_CALLBACK_LOGIN_OUT = "uexAppCenter.cbLoginOut";
+	public static final String F_CALLBACK_GET_SESSION_KEY = "uexAppCenter.cbGetSessionKey";
 
-    public EUExAppCenter(Context context, EBrowserView inParent) {
-        super(context, inParent);
-    }
+	public EUExAppCenter(Context context, EBrowserView inParent) {
+		super(context, inParent);
+	}
 
-    public void getSessionKey(String[] params) {
-        MySpaceView myspaceView = mBrwView.getBrowserWindow().getBrowser().getAppCenter();
-        if (myspaceView != null) {
-            String sessionKey = myspaceView.getSessionKey();
-            jsCallback(F_CALLBACK_GET_SESSION_KEY, 0, EUExCallback.F_C_TEXT, sessionKey);
-        }
-    }
+	public void getSessionKey(String[] params) {
+		MySpaceView myspaceView = mBrwView.getBrowserWindow().getBrowser().getAppCenter();
+		if (myspaceView != null) {
+			String sessionKey = myspaceView.getSessionKey();
+			jsCallback(F_CALLBACK_GET_SESSION_KEY, 0, EUExCallback.F_C_TEXT, sessionKey);
+		}
+	}
 
-    /**
-     * 登录返回用户登录信息接口
-     *
-     * @param userId
-     */
-    public void appCenterLoginResult(String[] params) {
-        if (params.length > 0) {
-            MySpaceView myspaceView = mBrwView.getBrowserWindow().getBrowser().getAppCenter();
-            if (myspaceView != null) {
-                myspaceView.onUserLoginCallback(params[0]);
-            }
-        } else {
-            BDebug.e(tag, "appCenterLoginResult()--->params error!");
-        }
-    }
+	/**
+	 * 登录返回用户登录信息接口
+	 * 
+	 * @param userId
+	 */
+	public void appCenterLoginResult(String[] params) {
+		if (params.length > 0) {
+			MySpaceView myspaceView = mBrwView.getBrowserWindow().getBrowser().getAppCenter();
+			if (myspaceView != null) {
+				myspaceView.onUserLoginCallback(params[0]);
+			}
+		} else {
+			BDebug.e(tag, "appCenterLoginResult()--->params error!");
+		}
+	}
 
-    /**
-     * 下载应用
-     *
-     * @param json JSON格式的应用下载信息
-     */
-    public void downloadApp(String[] params) {
-        if (params.length > 0) {
-            BDebug.d(tag, "JSON:" + params[0]);
-            MySpaceView myspaceView = mBrwView.getBrowserWindow().getBrowser().getAppCenter();
-            if (myspaceView != null) {
-                myspaceView.notifyDownloadApp(params[0]);
-            }
-        } else {
-            BDebug.e(tag, "downloadApp()--->params error!");
-        }
-    }
+	/**
+	 * 下载应用
+	 * 
+	 * @param json
+	 *            JSON格式的应用下载信息
+	 */
+	public void downloadApp(String[] params) {
+		if (params.length > 0) {
+			BDebug.d(tag, "JSON:" + params[0]);
+			MySpaceView myspaceView = mBrwView.getBrowserWindow().getBrowser().getAppCenter();
+			if (myspaceView != null) {
+				myspaceView.notifyDownloadApp(params[0]);
+			}
+		} else {
+			BDebug.e(tag, "downloadApp()--->params error!");
+		}
+	}
 
-    public void loginOut(String[] params) {
-        BDebug.d(tag, "onLoginOut----------->");
-        MySpaceView myspaceView = mBrwView.getBrowserWindow().getBrowser().getAppCenter();
-        if (myspaceView != null) {
-            myspaceView.notifyLoginOut(new OnLoginOutCallback() {
-                @Override
-                public void onLoginOut(boolean result) {
-                    jsCallback(F_CALLBACK_LOGIN_OUT, 0, EUExCallback.F_C_INT, result ? EUExCallback.F_C_SUCCESS
-                            : EUExCallback.F_C_FAILED);
-                }
-            });
-        }
-    }
+	public void loginOut(String[] params) {
+		BDebug.d(tag, "onLoginOut----------->");
+		MySpaceView myspaceView = mBrwView.getBrowserWindow().getBrowser().getAppCenter();
+		if (myspaceView != null) {
+			myspaceView.notifyLoginOut(new OnLoginOutCallback() {
+				@Override
+				public void onLoginOut(boolean result) {
+					jsCallback(F_CALLBACK_LOGIN_OUT, 0, EUExCallback.F_C_INT, result ? EUExCallback.F_C_SUCCESS
+							: EUExCallback.F_C_FAILED);
+				}
+			});
+		}
+	}
 
-    @Override
-    protected boolean clean() {
+	@Override
+	protected boolean clean() {
 
-        return true;
-    }
+		return true;
+	}
 
 }

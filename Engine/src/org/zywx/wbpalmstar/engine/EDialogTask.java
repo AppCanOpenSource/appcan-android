@@ -21,42 +21,41 @@ package org.zywx.wbpalmstar.engine;
 import org.zywx.wbpalmstar.engine.universalex.EUExWindow;
 
 public class EDialogTask {
-
-    public static final int F_TYPE_ALERT = 0;
-    public static final int F_TYPE_CONFIRM = 1;
-    public static final int F_TYPE_PROMPT = 2;
-
-    public String title;
-    public String msg;
-    public String defaultValue;
-    public String[] buttonLables;
-    public int type;
-    public EUExWindow mUexWind;
-
-    public EDialogTask() {
-
-    }
-
-    public EDialogTask(EUExWindow inUexWind, String inTitle, String inMessage, String inDefaultValue, String[] inButtonLables) {
-        mUexWind = inUexWind;
-        title = inTitle;
-        msg = inMessage;
-        defaultValue = inDefaultValue;
-        buttonLables = inButtonLables;
-    }
-
-    public void exc() {
-        switch (type) {
-            case F_TYPE_ALERT:
-                mUexWind.private_alert(title, msg, defaultValue);
-                break;
-            case F_TYPE_CONFIRM:
-                mUexWind.private_confirm(title, msg, buttonLables);
-                break;
-            case F_TYPE_PROMPT:
-                mUexWind.private_prompt(title, msg, defaultValue, buttonLables);
-                break;
-        }
-        mUexWind = null;
-    }
+	
+	public static final int F_TYPE_ALERT 	= 0;
+	public static final int F_TYPE_CONFIRM 	= 1;
+	public static final int F_TYPE_PROMPT 	= 2;
+	
+	public String title;
+	public String msg;
+	public String defaultValue;
+	public String[] buttonLables;
+	public int type;
+	public EUExWindow mUexWind;
+	
+	public EDialogTask(){
+		
+	}
+	public EDialogTask(EUExWindow inUexWind, String inTitle, String inMessage, String inDefaultValue, String[] inButtonLables){
+		mUexWind = inUexWind;
+		title = inTitle;
+		msg = inMessage;
+		defaultValue = inDefaultValue;
+		buttonLables = inButtonLables;
+	}
+	
+	public void exc(){
+		switch (type) {
+		case F_TYPE_ALERT:
+			mUexWind.private_alert(title, msg, defaultValue);
+			break;
+		case F_TYPE_CONFIRM:
+			mUexWind.private_confirm(title, msg, buttonLables);
+			break;
+		case F_TYPE_PROMPT:
+			mUexWind.private_prompt(title, msg, defaultValue, buttonLables);
+			break;
+		}
+		mUexWind = null;
+	}
 }

@@ -25,59 +25,59 @@ import android.webkit.WebSettings.PluginState;
 import java.lang.reflect.Method;
 
 
-public class EBrowserSetting7 extends EBrowserSetting {
+public class EBrowserSetting7 extends EBrowserSetting{
+	
 
+	public EBrowserSetting7(EBrowserView inView){
+		super(inView);
+	}
+	
+	public void initBaseSetting(boolean webApp){
+		super.initBaseSetting(webApp);
+		mWebSetting.setAppCacheEnabled(true);
+		mWebSetting.setAppCachePath(mBrwView.getContext().getDir("cache", 0).getPath());
+		mWebSetting.setDatabaseEnabled(true);
+		mWebSetting.setDomStorageEnabled(true);
+		mWebSetting.setLoadWithOverviewMode(false);
+		mWebSetting.setDatabasePath(mBrwView.getContext().getDir("database", 0).getPath());
+		if(Build.VERSION.SDK_INT >= 8){
+			try{
+				mWebSetting.setPluginState(PluginState.ON);
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		if(Build.VERSION.SDK_INT > 10){
+			invoke();	
+		}
+	}
 
-    public EBrowserSetting7(EBrowserView inView) {
-        super(inView);
-    }
-
-    public void initBaseSetting(boolean webApp) {
-        super.initBaseSetting(webApp);
-        mWebSetting.setAppCacheEnabled(true);
-        mWebSetting.setAppCachePath(mBrwView.getContext().getDir("cache", 0).getPath());
-        mWebSetting.setDatabaseEnabled(true);
-        mWebSetting.setDomStorageEnabled(true);
-        mWebSetting.setLoadWithOverviewMode(false);
-        mWebSetting.setDatabasePath(mBrwView.getContext().getDir("database", 0).getPath());
-        if (Build.VERSION.SDK_INT >= 8) {
-            try {
-                mWebSetting.setPluginState(PluginState.ON);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        if (Build.VERSION.SDK_INT > 10) {
-            invoke();
-        }
-    }
-
-    @SuppressWarnings("rawtypes")
-    private void invoke() {
-        Class[] paramTypes = {boolean.class};
-        try {
-            Method setEnableSmoothTransition = WebSettings.class.getDeclaredMethod("setEnableSmoothTransition", paramTypes);
-            setEnableSmoothTransition.invoke(mWebSetting, true);
-        } catch (Exception e) {
+	@SuppressWarnings("rawtypes")
+	private void invoke(){
+		Class[] paramTypes = {boolean.class};
+		try{
+			Method setEnableSmoothTransition = WebSettings.class.getDeclaredMethod("setEnableSmoothTransition", paramTypes);
+			setEnableSmoothTransition.invoke(mWebSetting, true);
+		}catch (Exception e) {
 //			e.printStackTrace();
-        }
-        try {
-            Method setAutoFillEnabled = WebSettings.class.getDeclaredMethod("setAutoFillEnabled", paramTypes);
-            setAutoFillEnabled.invoke(mWebSetting, false);
-        } catch (Exception e) {
+		} 
+		try{
+			Method setAutoFillEnabled = WebSettings.class.getDeclaredMethod("setAutoFillEnabled", paramTypes);
+			setAutoFillEnabled.invoke(mWebSetting, false);
+		}catch (Exception e) {
 //			e.printStackTrace();
-        }
-        try {
-            Method setHardwareAccelSkiaEnabled = WebSettings.class.getDeclaredMethod("setHardwareAccelSkiaEnabled", paramTypes);
-            setHardwareAccelSkiaEnabled.invoke(mWebSetting, false);
-        } catch (Exception e) {
+		}
+		try{
+			Method setHardwareAccelSkiaEnabled = WebSettings.class.getDeclaredMethod("setHardwareAccelSkiaEnabled", paramTypes);
+			setHardwareAccelSkiaEnabled.invoke(mWebSetting, false);
+		}catch (Exception e) {
 //			e.printStackTrace();
-        }
-        try {
-            Method setForceUserScalable = WebSettings.class.getDeclaredMethod("setForceUserScalable", paramTypes);
-            setForceUserScalable.invoke(mWebSetting, false);
-        } catch (Exception e) {
+		}
+		try{
+			Method setForceUserScalable = WebSettings.class.getDeclaredMethod("setForceUserScalable", paramTypes);
+			setForceUserScalable.invoke(mWebSetting, false);
+		}catch (Exception e) {
 //			e.printStackTrace();
-        }
-    }
+		}
+	}
 }

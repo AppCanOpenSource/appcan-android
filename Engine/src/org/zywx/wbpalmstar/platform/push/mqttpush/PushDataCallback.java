@@ -20,6 +20,6 @@ package org.zywx.wbpalmstar.platform.push.mqttpush;
 
 import org.json.JSONObject;
 
-public interface PushDataCallback {
-    public void pushData(JSONObject text);
+public   interface  PushDataCallback {
+	public void pushData(JSONObject text);
 }

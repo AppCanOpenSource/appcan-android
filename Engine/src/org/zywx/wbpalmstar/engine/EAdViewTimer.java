@@ -26,43 +26,42 @@ public abstract class EAdViewTimer {
 
     private long mTime;
     private long mInterval;
-
+    
     private static final int F_AD_VIEW_MSG_SHOW = 0;
     private static final int F_AD_VIEW_MSG_CLOSE = 1;
 
     public EAdViewTimer(long time, long interval) {
-        mTime = time;
-        mInterval = interval;
+    	mTime = time;
+    	mInterval = interval;
     }
 
     public final void cancel() {
-        onClose();
+    	onClose();
         mHandler.removeMessages(F_AD_VIEW_MSG_SHOW);
         mHandler.removeMessages(F_AD_VIEW_MSG_CLOSE);
     }
-
+    
     public final void showAlway() {
-        onShow();
-        mHandler.removeMessages(F_AD_VIEW_MSG_SHOW);
+    	onShow();
+    	mHandler.removeMessages(F_AD_VIEW_MSG_SHOW);
         mHandler.removeMessages(F_AD_VIEW_MSG_CLOSE);
     }
 
     public synchronized final EAdViewTimer start() {
         mHandler.sendMessage(mHandler.obtainMessage(F_AD_VIEW_MSG_SHOW));
-
+        
         return this;
     }
-
+    
     public synchronized final void reStart(long time, long interval) {
-        mTime = time;
-        mInterval = interval;
-        mHandler.removeMessages(F_AD_VIEW_MSG_SHOW);
+    	mTime = time;
+    	mInterval = interval;
+    	mHandler.removeMessages(F_AD_VIEW_MSG_SHOW);
         mHandler.removeMessages(F_AD_VIEW_MSG_CLOSE);
         mHandler.sendMessage(mHandler.obtainMessage(F_AD_VIEW_MSG_SHOW));
-    }
+    } 
 
     public abstract void onShow();
-
     public abstract void onClose();
 
     private Handler mHandler = new Handler() {
@@ -70,15 +69,15 @@ public abstract class EAdViewTimer {
         public void handleMessage(Message msg) {
             synchronized (EAdViewTimer.this) {
                 switch (msg.what) {
-                    case F_AD_VIEW_MSG_SHOW:
-                        onShow();
-                        sendMessageDelayed(obtainMessage(F_AD_VIEW_MSG_CLOSE), mTime);
-                        break;
-                    case F_AD_VIEW_MSG_CLOSE:
-                        onClose();
-                        sendMessageDelayed(obtainMessage(F_AD_VIEW_MSG_SHOW), mInterval);
-                        break;
-                }
+				case F_AD_VIEW_MSG_SHOW:
+					onShow();
+					sendMessageDelayed(obtainMessage(F_AD_VIEW_MSG_CLOSE), mTime);
+					break;
+				case F_AD_VIEW_MSG_CLOSE:
+					onClose();
+					sendMessageDelayed(obtainMessage(F_AD_VIEW_MSG_SHOW), mInterval);
+					break;
+				}
             }
         }
     };

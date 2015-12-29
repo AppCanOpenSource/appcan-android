@@ -24,47 +24,47 @@ import android.webkit.WebChromeClient.CustomViewCallback;
 import android.widget.FrameLayout;
 
 
-public class EBrowserMainFrame extends FrameLayout {
+public class EBrowserMainFrame extends FrameLayout{
 
-    private EBrowser mBrw;
-    private View mCustomPlayer;
-    private CustomViewCallback mCustomCallback;
+	private EBrowser mBrw;
+	private View mCustomPlayer;
+	private CustomViewCallback mCustomCallback;
 
 
-    public EBrowserMainFrame(Context context) {
-        super(context);
-        setBackgroundColor(0);
-    }
+	public EBrowserMainFrame(Context context) {
+		super(context);
+		setBackgroundColor(0);
+	}
 
-    public void init(EBrowser eInBrw) {
-
-        mBrw = eInBrw;
-    }
-
-    public void showCustomView(View view, CustomViewCallback callback) {
-        if (null != mCustomPlayer) {
-            removeView(mCustomPlayer);
-            mCustomCallback.onCustomViewHidden();
-        }
-        addView(view);
-        mCustomPlayer = view;
-        mCustomCallback = callback;
-    }
-
-    public void hideCustomView() {
-        removeView(mCustomPlayer);
-        mCustomCallback.onCustomViewHidden();
-        mCustomPlayer = null;
-        mCustomCallback = null;
-    }
-
-    public boolean customViewShown() {
-
-        return mCustomPlayer != null;
-    }
-
-    public EBrowser getBrowser() {
-
-        return mBrw;
-    }
+	public void init(EBrowser eInBrw) {
+		
+		mBrw = eInBrw;
+	}
+	
+	public void showCustomView(View view, CustomViewCallback callback){
+		if(null != mCustomPlayer){
+			removeView(mCustomPlayer);
+			mCustomCallback.onCustomViewHidden();
+		}
+		addView(view);
+		mCustomPlayer = view;
+		mCustomCallback = callback;
+	}
+	
+	public void hideCustomView(){
+		removeView(mCustomPlayer);
+		mCustomCallback.onCustomViewHidden();
+		mCustomPlayer = null;
+		mCustomCallback = null;
+	}
+	
+	public boolean customViewShown(){
+		
+		return mCustomPlayer != null;
+	}
+	
+	public EBrowser getBrowser() {
+		
+		return mBrw;
+	}
 }

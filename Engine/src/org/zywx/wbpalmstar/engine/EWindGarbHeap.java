@@ -20,47 +20,47 @@ package org.zywx.wbpalmstar.engine;
 
 
 public class EWindGarbHeap {
+	
+	private ELinkedList<EBrowserWindow> mInvalidHeap;
+	private static final int mCount = 5;
 
-    private ELinkedList<EBrowserWindow> mInvalidHeap;
-    private static final int mCount = 5;
+	
+	public EWindGarbHeap(){
 
-
-    public EWindGarbHeap() {
-
-        mInvalidHeap = new ELinkedList<EBrowserWindow>();
-    }
-
-    public void put(EBrowserWindow wind) {
-        if (mInvalidHeap.contains(wind)) {
-            return;
-        }
-        wind.stopLoop();
-        wind.stopLoad();
-        mInvalidHeap.addFirst(wind);
-        if (mInvalidHeap.size >= mCount) {
-            for (int i = 4; i > 1; i--) {
-                mInvalidHeap.get(i).destory();
-                mInvalidHeap.remove(i);
-            }
-            Runtime.getRuntime().gc();
-        }
-    }
-
-    public EBrowserWindow get() {
-        EBrowserWindow last = mInvalidHeap.pollLast();
-        if (null != last) {
-            last.reset();
-            return last;
-        }
-        return null;
-    }
-
-    public void destroy() {
-        int len = mInvalidHeap.size;
-        for (int i = 0; i < len; ++i) {
-            mInvalidHeap.get(i).destory();
-        }
-        mInvalidHeap.clear();
+		mInvalidHeap = new ELinkedList<EBrowserWindow>();
+	}
+	
+	public void put(EBrowserWindow wind){
+		if(mInvalidHeap.contains(wind)){
+			return;
+		}
+		wind.stopLoop();
+		wind.stopLoad();
+		mInvalidHeap.addFirst(wind);
+		if(mInvalidHeap.size >= mCount){
+			for(int i = 4; i > 1; i--){
+				mInvalidHeap.get(i).destory();
+				mInvalidHeap.remove(i);
+			}
+			Runtime.getRuntime().gc();
+		}
+	}
+	
+	public EBrowserWindow get(){
+		EBrowserWindow last = mInvalidHeap.pollLast();
+		if(null != last){
+			last.reset();
+			return last;
+		}
+		return null;
+	}
+	
+	public void destroy(){
+		int len = mInvalidHeap.size;
+		for(int i = 0; i < len; ++i){
+			mInvalidHeap.get(i).destory();
+		}
+		mInvalidHeap.clear();
 //		mInvalidHeap = null;
-    }
+	}
 }

@@ -9,7 +9,7 @@ import java.io.OutputStream;
 
 public class ACEParcelFileDescriptorUtil {
 
-    public static ParcelFileDescriptor pipeFrom(InputStream inputStream)
+	public static ParcelFileDescriptor pipeFrom(InputStream inputStream)
             throws IOException {
         ParcelFileDescriptor[] pipe = ParcelFileDescriptor.createPipe();
         ParcelFileDescriptor readSide = pipe[0];
@@ -43,7 +43,7 @@ public class ACEParcelFileDescriptorUtil {
             super("ParcelFileDescriptor Transfer Thread");
             mIn = in;
             mOut = out;
-
+ 
             setDaemon(true);
         }
 
@@ -72,7 +72,7 @@ public class ACEParcelFileDescriptorUtil {
                     e.printStackTrace();
                 }
             }
-
+           
         }
     }
 }

@@ -319,7 +319,7 @@ public abstract class EUExBase {
                             public void onAnimationEnd() {
 
                             }
-                        });
+                });
             }
         });
     }

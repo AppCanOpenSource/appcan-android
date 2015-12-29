@@ -29,74 +29,74 @@ import android.os.IBinder;
 
 public class KeepForeService extends Service {
 
-    static final int nid = 100000;
+	static final int nid = 100000;
+	
+	@Override
+	public IBinder onBind(Intent intent) {
+		
+		return null;
+	}
 
-    @Override
-    public IBinder onBind(Intent intent) {
+	@Override
+	public void onCreate() {
+		BDebug.d("ldx", "KeepForeService: onCreate");
+		startForeground(nid, makeNotify());
+	}
+	
+	@Override
+	public void onStart(Intent intent, int startId) {
+		BDebug.d("ldx", "KeepForeService: onStart");
+		startForeground(nid, makeNotify());
+	}
+	
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		BDebug.d("ldx", "KeepForeService: onStartCommand");
+		onStart(intent, startId);
+		return Service.START_STICKY_COMPATIBILITY;
+	}
+	
+	private Notification makeNotify(){
+		Intent notyIntent = new Intent(this, KeepForeService.class);
+		PendingIntent contentIntent = PendingIntent.getService(this, nid, notyIntent, PendingIntent.FLAG_ONE_SHOT);
+		Notification notification = new Notification();
+		notification.defaults = 0;
+		notification.flags = Notification.FLAG_FOREGROUND_SERVICE;
+		notification.setLatestEventInfo(this, "", "", contentIntent); 
+		return notification;
+	}
 
-        return null;
-    }
+	@Override
+	public void onDestroy() {
+		BDebug.d("ldx", "KeepForeService: onDestroy");
+	}
 
-    @Override
-    public void onCreate() {
-        BDebug.d("ldx", "KeepForeService: onCreate");
-        startForeground(nid, makeNotify());
-    }
+	public void onLowMemory() {
+		BDebug.d("ldx", "KeepForeService: onDestroy");
+	}
 
-    @Override
-    public void onStart(Intent intent, int startId) {
-        BDebug.d("ldx", "KeepForeService: onStart");
-        startForeground(nid, makeNotify());
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        BDebug.d("ldx", "KeepForeService: onStartCommand");
-        onStart(intent, startId);
-        return Service.START_STICKY_COMPATIBILITY;
-    }
-
-    private Notification makeNotify() {
-        Intent notyIntent = new Intent(this, KeepForeService.class);
-        PendingIntent contentIntent = PendingIntent.getService(this, nid, notyIntent, PendingIntent.FLAG_ONE_SHOT);
-        Notification notification = new Notification();
-        notification.defaults = 0;
-        notification.flags = Notification.FLAG_FOREGROUND_SERVICE;
-        notification.setLatestEventInfo(this, "", "", contentIntent);
-        return notification;
-    }
-
-    @Override
-    public void onDestroy() {
-        BDebug.d("ldx", "KeepForeService: onDestroy");
-    }
-
-    public void onLowMemory() {
-        BDebug.d("ldx", "KeepForeService: onDestroy");
-    }
-
-    public void onTrimMemory(int level) {
-        String levelStr = "none";
-        switch (level) {
-            case 80://ComponentCallbacks2.TRIM_MEMORY_COMPLETE:
-                levelStr = "complete";
-                break;
-            case 60://ComponentCallbacks2.TRIM_MEMORY_MODERATE:
-                levelStr = "moderate";
-                break;
-            case 40://ComponentCallbacks2.TRIM_MEMORY_BACKGROUND:
-                levelStr = "background";
-                break;
-            case 20://ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN:
-                levelStr = "ui_hidden";
-                break;
-            case 15://ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL:
-                levelStr = "running_critical";
-                break;
-            case 10://ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW:
-                levelStr = "running_low";
-                break;
-        }
-        BDebug.d("ldx", "KeepForeService: onTrimMemory " + level + " , " + levelStr);
-    }
+	public void onTrimMemory(int level) {
+		String levelStr = "none";
+		switch (level) {
+		case 80://ComponentCallbacks2.TRIM_MEMORY_COMPLETE:
+			levelStr = "complete";
+			break;
+		case 60://ComponentCallbacks2.TRIM_MEMORY_MODERATE:
+			levelStr = "moderate";
+			break;
+		case 40://ComponentCallbacks2.TRIM_MEMORY_BACKGROUND:
+			levelStr = "background";
+			break;
+		case 20://ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN:
+			levelStr = "ui_hidden";
+			break;
+		case 15://ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL:
+			levelStr = "running_critical";
+			break;
+		case 10://ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW:
+			levelStr = "running_low";
+			break;
+		}
+		BDebug.d("ldx", "KeepForeService: onTrimMemory " + level + " , " + levelStr);
+	}
 }

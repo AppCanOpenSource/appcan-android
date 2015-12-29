@@ -31,76 +31,76 @@ import android.widget.FrameLayout;
 
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 
-public class CBrowserMainFrame7 extends CBrowserMainFrame {
+public class CBrowserMainFrame7  extends CBrowserMainFrame {
 
-    final long MAX_QUOTA = 104857600L;
+	final long MAX_QUOTA = 104857600L;
 
-    /**
-     * android version < 2.1 use
-     *
-     * @param context
-     */
-    public CBrowserMainFrame7(Context context) {
-        super(context);
-    }
+	/**
+	 * android version < 2.1 use
+	 *
+	 * @param context
+	 */
+	public CBrowserMainFrame7(Context context) {
+		super(context);
+	}
 
 //	private ValueCallback<Uri> mFile;
 
-    public void onHideCustomView() {
-        ((EBrowserActivity) mContext).hideCustomView();
-    }
+	public void onHideCustomView() {
+		((EBrowserActivity)mContext).hideCustomView();
+	}
+	
+	@Override
+	public Bitmap getDefaultVideoPoster() {
+		String packg = mContext.getPackageName();
+		Resources res = mContext.getResources();
+		int id = res.getIdentifier("plugin_file_video", "drawable", packg);
+		Bitmap map = BitmapFactory.decodeResource(res, id);
+		return map;
+	}
 
-    @Override
-    public Bitmap getDefaultVideoPoster() {
-        String packg = mContext.getPackageName();
-        Resources res = mContext.getResources();
-        int id = res.getIdentifier("plugin_file_video", "drawable", packg);
-        Bitmap map = BitmapFactory.decodeResource(res, id);
-        return map;
-    }
+	@Override
+	public View getVideoLoadingProgressView() {
+		EBrowserToast progress = new EBrowserToast(mContext);
+		progress.setMsg(mContext.getString(EUExUtil.getResStringID("platform_myspace_loading")));
+		progress.setInLargeModul();
+		progress.showProgress();
+		return progress;
+	}
 
-    @Override
-    public View getVideoLoadingProgressView() {
-        EBrowserToast progress = new EBrowserToast(mContext);
-        progress.setMsg(mContext.getString(EUExUtil.getResStringID("platform_myspace_loading")));
-        progress.setInLargeModul();
-        progress.showProgress();
-        return progress;
-    }
+	public void onShowCustomView(View view, int requestedOrientation, CustomViewCallback callback) {
+		FrameLayout container = new FrameLayout(mContext);
+		container.setBackgroundColor(0xff000000);
+		FrameLayout.LayoutParams parm = new FrameLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+		container.setLayoutParams(parm);
+		container.setClickable(true);
+		container.addView(view);
+	//	((EBrowserActivity)mContext).requestWindowFeature()
+		((EBrowserActivity)mContext).showCustomView(container, callback);
+	
+	}
 
-    public void onShowCustomView(View view, int requestedOrientation, CustomViewCallback callback) {
-        FrameLayout container = new FrameLayout(mContext);
-        container.setBackgroundColor(0xff000000);
-        FrameLayout.LayoutParams parm = new FrameLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-        container.setLayoutParams(parm);
-        container.setClickable(true);
-        container.addView(view);
-        //	((EBrowserActivity)mContext).requestWindowFeature()
-        ((EBrowserActivity) mContext).showCustomView(container, callback);
+	@Override
+	public void onShowCustomView(View view, CustomViewCallback callback) {
+		FullscreenHolder container = new FullscreenHolder(mContext);
+		FrameLayout.LayoutParams parm = new FrameLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+		container.setLayoutParams(parm);
+		container.addView(view);
+		((EBrowserActivity)mContext).showCustomView(container, callback);
+		
+	}
 
-    }
-
-    @Override
-    public void onShowCustomView(View view, CustomViewCallback callback) {
-        FullscreenHolder container = new FullscreenHolder(mContext);
-        FrameLayout.LayoutParams parm = new FrameLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-        container.setLayoutParams(parm);
-        container.addView(view);
-        ((EBrowserActivity) mContext).showCustomView(container, callback);
-
-    }
-
-    @Override
-    public void onExceededDatabaseQuota(String url, String databaseIdentifier, long currentQuota, long estimatedSize, long totalUsedQuota,
-                                        QuotaUpdater quotaUpdater) {
-        if (estimatedSize < MAX_QUOTA) {
-            long newQuota = estimatedSize;
-            quotaUpdater.updateQuota(newQuota);
-        } else {
-            quotaUpdater.updateQuota(currentQuota);
-        }
-    }
-
+	@Override
+	public void onExceededDatabaseQuota(String url, String databaseIdentifier, long currentQuota, long estimatedSize, long totalUsedQuota,
+			QuotaUpdater quotaUpdater) {
+		if (estimatedSize < MAX_QUOTA){
+	        long newQuota = estimatedSize;
+	        quotaUpdater.updateQuota(newQuota);
+	      }else{
+	        quotaUpdater.updateQuota(currentQuota);
+	      }
+	}
+	
     static class FullscreenHolder extends FrameLayout {
 
         public FullscreenHolder(Context ctx) {
@@ -130,5 +130,5 @@ public class CBrowserMainFrame7 extends CBrowserMainFrame {
 //		mFile.onReceiveValue(uri);
 //		mFile = null;
 //	}
-
+	
 }

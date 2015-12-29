@@ -20,12 +20,12 @@ public class ACEImageLoader {
 
     private static ACEImageLoader aceImageLoader;
 
-    private ACEImageLoader() {
-        if (BConstant.app == null) {
+    private ACEImageLoader(){
+        if (BConstant.app==null){
             return;
         }
         DiskCache.initDiskCache(BConstant.app);
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration
+        ImageLoaderConfiguration  config=new ImageLoaderConfiguration
                 .Builder(BConstant.app)
                 .threadPriority(Thread.NORM_PRIORITY - 2)
                 .denyCacheImageMultipleSizesInMemory()
@@ -34,39 +34,40 @@ public class ACEImageLoader {
                 .memoryCacheSize(10 * 1024 * 1024)
                 .diskCache(new UnlimitedDiskCache(DiskCache.cacheFolder))//自定义缓存路径
                 .diskCacheFileNameGenerator(new Md5FileNameGenerator())
-                .diskCacheSize(200 * 1024 * 1024)
+                .diskCacheSize(200*1024*1024)
                 .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
                 .imageDownloader(new BaseImageDownloader(BConstant.app, 5 * 1000, 30 * 1000)) // connectTimeout (5 s),
-                        // readTimeout (30 s)超时时间
+                // readTimeout (30 s)超时时间
                 .writeDebugLogs() // Remove for release app
                 .build();//开始构建
         ImageLoader.getInstance().init(config);
     }
 
-    public synchronized static ACEImageLoader getInstance() {
-        if (aceImageLoader == null) {
-            aceImageLoader = new ACEImageLoader();
+    public synchronized static ACEImageLoader getInstance(){
+        if (aceImageLoader==null){
+            aceImageLoader=new ACEImageLoader();
         }
         return aceImageLoader;
     }
 
-    public <T extends ImageView> void displayImage(T imageView, String imgUrl) {
-        String realImgUrl = null;
+    public <T extends ImageView> void displayImage(T imageView,String imgUrl){
+        String realImgUrl=null;
         if (imgUrl.startsWith(BUtility.F_Widget_RES_SCHEMA)) {
-            String assetFileName = BUtility.F_Widget_RES_path
+            String assetFileName =BUtility.F_Widget_RES_path
                     + imgUrl.substring(BUtility.F_Widget_RES_SCHEMA.length());
-            realImgUrl = "assets://" + assetFileName;
+            realImgUrl="assets://"+assetFileName;
         } else if (imgUrl.startsWith(BUtility.F_FILE_SCHEMA)) {
-            realImgUrl = imgUrl;
+            realImgUrl=imgUrl;
         } else if (imgUrl.startsWith(BUtility.F_Widget_RES_path)) {
-            realImgUrl = "assets://" + imgUrl;
+            realImgUrl="assets://"+imgUrl;
         } else if (imgUrl.startsWith("/")) {
-            realImgUrl = BUtility.F_FILE_SCHEMA + imgUrl;
+            realImgUrl=BUtility.F_FILE_SCHEMA+imgUrl;
         } else {
-            realImgUrl = imgUrl;
+            realImgUrl=imgUrl;
         }
-        ImageLoader.getInstance().displayImage(realImgUrl, imageView);
+        ImageLoader.getInstance().displayImage(realImgUrl,imageView);
     }
+
 
 
 }

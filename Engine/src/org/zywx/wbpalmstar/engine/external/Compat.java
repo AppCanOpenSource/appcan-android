@@ -22,10 +22,10 @@ import android.os.Build;
 import android.view.ViewGroup;
 
 public class Compat {
-
-    static int sdkInt = Build.VERSION.SDK_INT;
-
-    public static int FILL = sdkInt >= 8 ? ViewGroup.LayoutParams.MATCH_PARENT : ViewGroup.LayoutParams.FILL_PARENT;
-    public static int WRAP = ViewGroup.LayoutParams.WRAP_CONTENT;
+	
+	static int sdkInt = Build.VERSION.SDK_INT;
+	
+	public static int FILL = sdkInt >= 8 ? ViewGroup.LayoutParams.MATCH_PARENT : ViewGroup.LayoutParams.FILL_PARENT;
+	public static int WRAP = ViewGroup.LayoutParams.WRAP_CONTENT;
 
 }

@@ -19,23 +19,23 @@
 package org.zywx.wbpalmstar.platform.push.mqttpush;
 
 public class Rc4Encrypt {
-
+    
     public static String decry_RC4(byte[] data, String key) {
         if (data == null || key == null) {
             return null;
         }
         return asString(RC4Base(data, key));
     }
-
-
+   
+   
     public static String decry_RC4(String data, String key) {
         if (data == null || key == null) {
             return null;
         }
         return new String(RC4Base(HexString2Bytes(data), key));
     }
-
-
+   
+   
     public static byte[] encry_RC4_byte(String data, String key) {
         if (data == null || key == null) {
             return null;
@@ -43,16 +43,16 @@ public class Rc4Encrypt {
         byte b_data[] = data.getBytes();
         return RC4Base(b_data, key);
     }
-
-
+   
+   
     public static String encry_RC4_string(String data, String key) {
         if (data == null || key == null) {
             return null;
         }
         return toHexString(asString(encry_RC4_byte(data, key)));
     }
-
-
+   
+   
     private static String asString(byte[] buf) {
         StringBuffer strbuf = new StringBuffer(buf.length);
         for (int i = 0; i < buf.length; i++) {
@@ -60,7 +60,7 @@ public class Rc4Encrypt {
         }
         return strbuf.toString();
     }
-
+   
 
     private static byte[] initKey(String aKey) {
         byte[] b_key = aKey.getBytes();
@@ -83,7 +83,7 @@ public class Rc4Encrypt {
         }
         return state;
     }
-
+   
     private static String toHexString(String s) {
         String str = "";
         for (int i = 0; i < s.length(); i++) {
@@ -96,8 +96,8 @@ public class Rc4Encrypt {
         }
         return str;// 0x表示十六进制
     }
-
-
+   
+   
     private static byte[] HexString2Bytes(String src) {
         int size = src.length();
         byte[] ret = new byte[size / 2];
@@ -107,18 +107,18 @@ public class Rc4Encrypt {
         }
         return ret;
     }
-
+   
     private static byte uniteBytes(byte src0, byte src1) {
-        char _b0 = (char) Byte.decode("0x" + new String(new byte[]{src0}))
+        char _b0 = (char)Byte.decode("0x" + new String(new byte[] { src0 }))
                 .byteValue();
         _b0 = (char) (_b0 << 4);
-        char _b1 = (char) Byte.decode("0x" + new String(new byte[]{src1}))
+        char _b1 = (char)Byte.decode("0x" + new String(new byte[] { src1 }))
                 .byteValue();
         byte ret = (byte) (_b0 ^ _b1);
         return ret;
     }
-
-    private static byte[] RC4Base(byte[] input, String mKkey) {
+   
+    private static byte[] RC4Base (byte [] input, String mKkey) {
         int x = 0;
         int y = 0;
         byte key[] = initKey(mKkey);

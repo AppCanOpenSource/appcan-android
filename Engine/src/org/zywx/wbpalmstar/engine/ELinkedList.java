@@ -252,7 +252,8 @@ public class ELinkedList<E> extends AbstractSequentialList<E> implements
      * elements in this new {@code LinkedList} will be determined by the
      * iteration order of {@code collection}.
      *
-     * @param collection the collection of elements to add.
+     * @param collection
+     *            the collection of elements to add.
      */
     public ELinkedList(Collection<? extends E> collection) {
         this();
@@ -265,9 +266,12 @@ public class ELinkedList<E> extends AbstractSequentialList<E> implements
      * the specified location. If the location is equal to the size of this
      * {@code LinkedList}, the object is added at the end.
      *
-     * @param location the index at which to insert.
-     * @param object   the object to add.
-     * @throws IndexOutOfBoundsException if {@code location < 0 || >= size()}
+     * @param location
+     *            the index at which to insert.
+     * @param object
+     *            the object to add.
+     * @throws IndexOutOfBoundsException
+     *             if {@code location < 0 || >= size()}
      */
     @Override
     public void add(int location, E object) {
@@ -296,7 +300,8 @@ public class ELinkedList<E> extends AbstractSequentialList<E> implements
     /**
      * Adds the specified object at the end of this {@code LinkedList}.
      *
-     * @param object the object to add.
+     * @param object
+     *            the object to add.
      * @return always true
      */
     @Override
@@ -319,13 +324,18 @@ public class ELinkedList<E> extends AbstractSequentialList<E> implements
      * in this {@code LinkedList}. The objects are added in the order they are
      * returned from the collection's iterator.
      *
-     * @param location   the index at which to insert.
-     * @param collection the collection of objects
+     * @param location
+     *            the index at which to insert.
+     * @param collection
+     *            the collection of objects
      * @return {@code true} if this {@code LinkedList} is modified,
-     * {@code false} otherwise.
-     * @throws ClassCastException        if the class of an object is inappropriate for this list.
-     * @throws IllegalArgumentException  if an object cannot be added to this list.
-     * @throws IndexOutOfBoundsException if {@code location < 0 || > size()}
+     *         {@code false} otherwise.
+     * @throws ClassCastException
+     *             if the class of an object is inappropriate for this list.
+     * @throws IllegalArgumentException
+     *             if an object cannot be added to this list.
+     * @throws IndexOutOfBoundsException
+     *             if {@code location < 0 || > size()}
      */
     @Override
     public boolean addAll(int location, Collection<? extends E> collection) {
@@ -365,9 +375,10 @@ public class ELinkedList<E> extends AbstractSequentialList<E> implements
     /**
      * Adds the objects in the specified Collection to this {@code LinkedList}.
      *
-     * @param collection the collection of objects.
+     * @param collection
+     *            the collection of objects.
      * @return {@code true} if this {@code LinkedList} is modified,
-     * {@code false} otherwise.
+     *         {@code false} otherwise.
      */
     @Override
     public boolean addAll(Collection<? extends E> collection) {
@@ -394,7 +405,8 @@ public class ELinkedList<E> extends AbstractSequentialList<E> implements
     /**
      * Adds the specified object at the beginning of this {@code LinkedList}.
      *
-     * @param object the object to add.
+     * @param object
+     *            the object to add.
      */
     public void addFirst(E object) {
         addFirstImpl(object);
@@ -413,7 +425,8 @@ public class ELinkedList<E> extends AbstractSequentialList<E> implements
     /**
      * Adds the specified object at the end of this {@code LinkedList}.
      *
-     * @param object the object to add.
+     * @param object
+     *            the object to add.
      */
     public void addLast(E object) {
         addLastImpl(object);
@@ -461,9 +474,10 @@ public class ELinkedList<E> extends AbstractSequentialList<E> implements
     /**
      * Searches this {@code LinkedList} for the specified object.
      *
-     * @param object the object to search for.
+     * @param object
+     *            the object to search for.
      * @return {@code true} if {@code object} is an element of this
-     * {@code LinkedList}, {@code false} otherwise
+     *         {@code LinkedList}, {@code false} otherwise
      */
     @Override
     public boolean contains(Object object) {
@@ -508,7 +522,8 @@ public class ELinkedList<E> extends AbstractSequentialList<E> implements
      * Returns the first element in this {@code LinkedList}.
      *
      * @return the first element.
-     * @throws NoSuchElementException if this {@code LinkedList} is empty.
+     * @throws NoSuchElementException
+     *             if this {@code LinkedList} is empty.
      */
     public E getFirst() {
         return getFirstImpl();
@@ -526,7 +541,8 @@ public class ELinkedList<E> extends AbstractSequentialList<E> implements
      * Returns the last element in this {@code LinkedList}.
      *
      * @return the last element
-     * @throws NoSuchElementException if this {@code LinkedList} is empty
+     * @throws NoSuchElementException
+     *             if this {@code LinkedList} is empty
      */
     public E getLast() {
         Link<E> last = voidLink.previous;
@@ -564,9 +580,10 @@ public class ELinkedList<E> extends AbstractSequentialList<E> implements
      * Searches this {@code LinkedList} for the specified object and returns the
      * index of the last occurrence.
      *
-     * @param object the object to search for
+     * @param object
+     *            the object to search for
      * @return the index of the last occurrence of the object, or -1 if it was
-     * not found.
+     *         not found.
      */
     @Override
     public int lastIndexOf(Object object) {
@@ -597,9 +614,11 @@ public class ELinkedList<E> extends AbstractSequentialList<E> implements
      * elements are iterated in the same order that they occur in the
      * {@code LinkedList}. The iteration starts at the specified location.
      *
-     * @param location the index at which to start the iteration
+     * @param location
+     *            the index at which to start the iteration
      * @return a ListIterator on the elements of this {@code LinkedList}
-     * @throws IndexOutOfBoundsException if {@code location < 0 || >= size()}
+     * @throws IndexOutOfBoundsException
+     *             if {@code location < 0 || >= size()}
      * @see ListIterator
      */
     @Override
@@ -610,9 +629,11 @@ public class ELinkedList<E> extends AbstractSequentialList<E> implements
     /**
      * Removes the object at the specified location from this {@code LinkedList}.
      *
-     * @param location the index of the object to remove
+     * @param location
+     *            the index of the object to remove
      * @return the removed object
-     * @throws IndexOutOfBoundsException if {@code location < 0 || >= size()}
+     * @throws IndexOutOfBoundsException
+     *             if {@code location < 0 || >= size()}
      */
     @Override
     public E remove(int location) {
@@ -647,7 +668,8 @@ public class ELinkedList<E> extends AbstractSequentialList<E> implements
      * Removes the first object from this {@code LinkedList}.
      *
      * @return the removed object.
-     * @throws NoSuchElementException if this {@code LinkedList} is empty.
+     * @throws NoSuchElementException
+     *             if this {@code LinkedList} is empty.
      */
     public E removeFirst() {
         return removeFirstImpl();
@@ -670,7 +692,8 @@ public class ELinkedList<E> extends AbstractSequentialList<E> implements
      * Removes the last object from this {@code LinkedList}.
      *
      * @return the removed object.
-     * @throws NoSuchElementException if this {@code LinkedList} is empty.
+     * @throws NoSuchElementException
+     *             if this {@code LinkedList} is empty.
      */
     public E removeLast() {
         return removeLastImpl();
@@ -821,12 +844,17 @@ public class ELinkedList<E> extends AbstractSequentialList<E> implements
      * Replaces the element at the specified location in this {@code LinkedList}
      * with the specified object.
      *
-     * @param location the index at which to put the specified object.
-     * @param object   the object to add.
+     * @param location
+     *            the index at which to put the specified object.
+     * @param object
+     *            the object to add.
      * @return the previous element at the index.
-     * @throws ClassCastException        if the class of an object is inappropriate for this list.
-     * @throws IllegalArgumentException  if an object cannot be added to this list.
-     * @throws IndexOutOfBoundsException if {@code location < 0 || >= size()}
+     * @throws ClassCastException
+     *             if the class of an object is inappropriate for this list.
+     * @throws IllegalArgumentException
+     *             if an object cannot be added to this list.
+     * @throws IndexOutOfBoundsException
+     *             if {@code location < 0 || >= size()}
      */
     @Override
     public E set(int location, E object) {
@@ -909,10 +937,12 @@ public class ELinkedList<E> extends AbstractSequentialList<E> implements
      * {@code LinkedList}, the array element following the collection elements
      * is set to null.
      *
-     * @param contents the array.
+     * @param contents
+     *            the array.
      * @return an array of the elements from this {@code LinkedList}.
-     * @throws ArrayStoreException if the type of an element in this {@code LinkedList} cannot
-     *                             be stored in the type of the specified array.
+     * @throws ArrayStoreException
+     *             if the type of an element in this {@code LinkedList} cannot
+     *             be stored in the type of the specified array.
      */
     @Override
     @SuppressWarnings("unchecked")
@@ -949,7 +979,7 @@ public class ELinkedList<E> extends AbstractSequentialList<E> implements
         size = stream.readInt();
         voidLink = new Link<E>(null, null, null);
         Link<E> link = voidLink;
-        for (int i = size; --i >= 0; ) {
+        for (int i = size; --i >= 0;) {
             Link<E> nextLink = new Link<E>((E) stream.readObject(), link, null);
             link.next = nextLink;
             link = nextLink;

@@ -19,13 +19,13 @@
 package org.zywx.wbpalmstar.widgetone.dataservice;
 
 public class ReData {
-    public String widgetOneId;
-    public String widgetId;
-    public String fileName;
-    public String fileUrl;
-    public int fileSize;
-    public String version;
-    public int mySpaceStatus;
-    public int mySpaceMoreApp;
-    public int widgetAdStatus;
+	public String widgetOneId;
+	public String widgetId;
+	public String fileName;
+	public String fileUrl;
+	public int fileSize;
+	public String version;
+	public int mySpaceStatus;
+	public int mySpaceMoreApp;
+	public int widgetAdStatus;
 }

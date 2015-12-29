@@ -145,9 +145,9 @@ public class EWindowStack {
     }
 
     private void checkRemnant() {
-        Iterator<Map.Entry<String, EBrowserWindow>> iterator = mWindMap.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<String, EBrowserWindow> entry = iterator.next();
+        Iterator<Map.Entry<String,EBrowserWindow>> iterator=mWindMap.entrySet().iterator();
+        while (iterator.hasNext()){
+           Map.Entry<String,EBrowserWindow> entry=iterator.next();
             EBrowserWindow temp = entry.getValue();
             if (!mWindList.contains(temp)) {
                 temp.destory();
