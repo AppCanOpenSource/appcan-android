@@ -22,6 +22,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Canvas;
+import android.graphics.Point;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -32,11 +33,11 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -54,7 +55,12 @@ import org.zywx.wbpalmstar.engine.universalex.EUExWidget.SpaceClickListener;
 import org.zywx.wbpalmstar.engine.universalex.EUExWindow;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 
 public class EBrowserWindow extends SwipeView implements AnimationListener {
 
@@ -2524,9 +2530,12 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
     public void createProgressDialog(String title, String content,
                                      boolean isCancel) {
         if (mGlobalProDialog == null) {
-            mGlobalProDialog = new ProgressDialog(mContext);
+            mGlobalProDialog = new ProgressDialog(mContext,ProgressDialog.THEME_HOLO_DARK);
         }
-        mGlobalProDialog.setTitle(title);
+        mGlobalProDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        if (!TextUtils.isEmpty(title)){
+            mGlobalProDialog.setTitle(title);
+        }
         mGlobalProDialog.setMessage(content);
         mGlobalProDialog.setCancelable(isCancel);
         mGlobalProDialog.show();
