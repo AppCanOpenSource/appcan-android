@@ -321,10 +321,10 @@ public class EBrowserAnimation {
         }
     }
 
-    public static void animFromRight(View target, float width,long duration,long delayTime,final AnimatorListener
-            callback){
-        BDebug.i("width",width);
-        ObjectAnimator animator=ObjectAnimator.ofFloat(target,"translationX",width,0);
+    public static void animFromRight(View target, float width, long duration, long delayTime, final AnimatorListener
+            callback) {
+        BDebug.i("width", width);
+        ObjectAnimator animator = ObjectAnimator.ofFloat(target, "translationX", width, 0);
         animator.setDuration(duration);
         animator.addListener(new Animator.AnimatorListener() {
             @Override
@@ -353,7 +353,7 @@ public class EBrowserAnimation {
         animator.start();
     }
 
-    public interface AnimatorListener{
+    public interface AnimatorListener {
         void onAnimationEnd();
     }
 

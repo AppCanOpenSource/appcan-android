@@ -7,6 +7,6 @@ import com.google.gson.Gson;
  */
 public class DataHelper {
 
-    public static Gson gson=new Gson();
+    public static Gson gson = new Gson();
 
 }

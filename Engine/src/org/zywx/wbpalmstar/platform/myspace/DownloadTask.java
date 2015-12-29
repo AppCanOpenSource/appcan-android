@@ -22,54 +22,54 @@ import android.os.AsyncTask;
 
 public abstract class DownloadTask extends AsyncTask<Object, Integer, Boolean> {
 
-	private static final int MSG_ACTION_PRE_DOWNLOAD = 1;
-	private static final int MSG_ACTION_COMPLETED_DOWNLOAD = 2;
-	private static final int MSG_ACTION_UPDATE_PROGRESS = 3;
-	private static final int MSG_ACTION_CANCEL_DOWNLOAD = 4;
-	private DownloadTaskCallback callback;
+    private static final int MSG_ACTION_PRE_DOWNLOAD = 1;
+    private static final int MSG_ACTION_COMPLETED_DOWNLOAD = 2;
+    private static final int MSG_ACTION_UPDATE_PROGRESS = 3;
+    private static final int MSG_ACTION_CANCEL_DOWNLOAD = 4;
+    private DownloadTaskCallback callback;
 
-	public DownloadTask() {
+    public DownloadTask() {
 
-	}
+    }
 
-	@Override
-	protected void onPostExecute(Boolean result) {
+    @Override
+    protected void onPostExecute(Boolean result) {
 
-	}
+    }
 
-	public static interface DownloadTaskCallback {
-		void onPreDownload(DownloadTask task);
+    public static interface DownloadTaskCallback {
+        void onPreDownload(DownloadTask task);
 
-		void onUpdateProgress(DownloadTask task, int percent);
+        void onUpdateProgress(DownloadTask task, int percent);
 
-		void onCancelDownload(DownloadTask task);
+        void onCancelDownload(DownloadTask task);
 
-		void onCompletedDowload(DownloadTask task);
-	}
+        void onCompletedDowload(DownloadTask task);
+    }
 
-	public static class DefaultDownloadTaskCallback implements
-			DownloadTaskCallback {
+    public static class DefaultDownloadTaskCallback implements
+            DownloadTaskCallback {
 
-		@Override
-		public void onCancelDownload(DownloadTask task) {
+        @Override
+        public void onCancelDownload(DownloadTask task) {
 
-		}
+        }
 
-		@Override
-		public void onCompletedDowload(DownloadTask task) {
+        @Override
+        public void onCompletedDowload(DownloadTask task) {
 
-		}
+        }
 
-		@Override
-		public void onPreDownload(DownloadTask task) {
+        @Override
+        public void onPreDownload(DownloadTask task) {
 
-		}
+        }
 
-		@Override
-		public void onUpdateProgress(DownloadTask task, int percent) {
+        @Override
+        public void onUpdateProgress(DownloadTask task, int percent) {
 
-		}
+        }
 
-	}
+    }
 
 }

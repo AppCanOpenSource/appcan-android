@@ -21,40 +21,40 @@ package org.zywx.wbpalmstar.engine;
 import java.util.ArrayList;
 
 public class EPreloadQueue {
-	
-	private ArrayList<String> eventQueue;
-	
-	public EPreloadQueue(){
-		eventQueue = new ArrayList<String>();
-	}
-	
-	public void add(String name){
-		synchronized (eventQueue) {
-			eventQueue.add(name);
-		}
-	}
-	
-	public void remove(String name){
-		synchronized (eventQueue){
-			eventQueue.remove(name);
-		}
-	}
-	
-	public void notifyFinish(String name){
-		synchronized (eventQueue){
-			eventQueue.remove(name);
-		}
-	}
-	
-	public boolean isEmpty(){
-		synchronized (eventQueue){
-			return eventQueue.isEmpty();
-		}
-	}
-	
-	public void clear(){
-		synchronized (eventQueue){
-			eventQueue.clear();
-		}
-	}
+
+    private ArrayList<String> eventQueue;
+
+    public EPreloadQueue() {
+        eventQueue = new ArrayList<String>();
+    }
+
+    public void add(String name) {
+        synchronized (eventQueue) {
+            eventQueue.add(name);
+        }
+    }
+
+    public void remove(String name) {
+        synchronized (eventQueue) {
+            eventQueue.remove(name);
+        }
+    }
+
+    public void notifyFinish(String name) {
+        synchronized (eventQueue) {
+            eventQueue.remove(name);
+        }
+    }
+
+    public boolean isEmpty() {
+        synchronized (eventQueue) {
+            return eventQueue.isEmpty();
+        }
+    }
+
+    public void clear() {
+        synchronized (eventQueue) {
+            eventQueue.clear();
+        }
+    }
 }

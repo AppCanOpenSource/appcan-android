@@ -19,18 +19,18 @@
 package org.zywx.wbpalmstar.engine;
 
 public class EUriTask {
-	
-	public String uri;
-	public EBrowserView target;
-	
-	public EUriTask(EBrowserView inTarget, String inUri) {
-		target = inTarget;
-		uri = inUri;
-	}
-	
-	public void exc(){
-		target.loadUrl(uri);
-		target = null;
-		uri = null;
-	}
+
+    public String uri;
+    public EBrowserView target;
+
+    public EUriTask(EBrowserView inTarget, String inUri) {
+        target = inTarget;
+        uri = inUri;
+    }
+
+    public void exc() {
+        target.loadUrl(uri);
+        target = null;
+        uri = null;
+    }
 }

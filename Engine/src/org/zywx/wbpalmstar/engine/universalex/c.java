@@ -24,7 +24,7 @@ import android.os.Looper;
 import android.os.Message;
 
 /**
- *历史遗留问题，需要保证混淆后的类名是c，此类名不能更改
+ * 历史遗留问题，需要保证混淆后的类名是c，此类名不能更改
  */
 public class c extends Handler {
 

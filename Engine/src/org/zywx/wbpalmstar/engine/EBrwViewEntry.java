@@ -20,28 +20,28 @@ package org.zywx.wbpalmstar.engine;
 
 
 public class EBrwViewEntry {
-    public static final int VIEW_TYPE_MAIN =                0;
-    public static final int VIEW_TYPE_TOP =                 1;
-    public static final int VIEW_TYPE_BOTTOM =              2;
-    public static final int VIEW_TYPE_POP =                 3;
-    public static final int VIEW_TYPE_ADD =                 4;
+    public static final int VIEW_TYPE_MAIN = 0;
+    public static final int VIEW_TYPE_TOP = 1;
+    public static final int VIEW_TYPE_BOTTOM = 2;
+    public static final int VIEW_TYPE_POP = 3;
+    public static final int VIEW_TYPE_ADD = 4;
 
-    public static final int WINDOW_DATA_TYPE_URL =          0;
-    public static final int WINDOW_DATA_TYPE_DATA =         1;
-    public static final int WINDOW_DATA_TYPE_DATA_URL =     2;
+    public static final int WINDOW_DATA_TYPE_URL = 0;
+    public static final int WINDOW_DATA_TYPE_DATA = 1;
+    public static final int WINDOW_DATA_TYPE_DATA_URL = 2;
 
-    public static final int F_FLAG_NORMAL =                 0x0;
-    public static final int F_FLAG_OAUTH =                  0x1;
-    public static final int F_FLAG_OBFUSCATION =            0x2;
-    public static final int F_FLAG_RElOAD =                 0x4;
-    public static final int F_FLAG_SHOULD_OP_SYS =          0x8;
-    public static final int F_FLAG_OPAQUE =                 0x10;
-    public static final int F_FLAG_HIDDEN =                 0x20;
-    public static final int F_FLAG_PREOP =                  0x40;
-    public static final int F_FLAG_GESTURE =                0x80;
-    public static final int F_FLAG_NOT_HIDDEN =             0x100;
-    public static final int F_FLAG_WEBAPP =                 0x200;
-    public static final int F_FLAG_NAV_TYPE =               0x400;
+    public static final int F_FLAG_NORMAL = 0x0;
+    public static final int F_FLAG_OAUTH = 0x1;
+    public static final int F_FLAG_OBFUSCATION = 0x2;
+    public static final int F_FLAG_RElOAD = 0x4;
+    public static final int F_FLAG_SHOULD_OP_SYS = 0x8;
+    public static final int F_FLAG_OPAQUE = 0x10;
+    public static final int F_FLAG_HIDDEN = 0x20;
+    public static final int F_FLAG_PREOP = 0x40;
+    public static final int F_FLAG_GESTURE = 0x80;
+    public static final int F_FLAG_NOT_HIDDEN = 0x100;
+    public static final int F_FLAG_WEBAPP = 0x200;
+    public static final int F_FLAG_NAV_TYPE = 0x400;
     public static final String TAG_EXTRAINFO = "extraInfo";
     public static final String TAG_DELAYTIME = "delayTime";
 

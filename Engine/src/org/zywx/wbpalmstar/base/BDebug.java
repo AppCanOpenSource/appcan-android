@@ -26,19 +26,18 @@ import java.io.File;
 
 /**
  * SD卡根目录新建文件“appcandebug.txt”，即打开debug开关，删除文件即关闭
- *
+ * <p/>
  * Log输出用逗号隔开
  * 如Log.i("key","value","end");
- *
  */
 public class BDebug {
 
-    public static final String FILE_NAME="appcandebug.txt";
-	public static boolean DEBUG = false;
+    public static final String FILE_NAME = "appcandebug.txt";
+    public static boolean DEBUG = false;
 
-    public static final String TAG="appcan";
+    public static final String TAG = "appcan";
 
-    public static void init(){
+    public static void init() {
         if (Environment.MEDIA_MOUNTED.equals(Environment
                 .getExternalStorageState())) {
             File file = new File(Environment.getExternalStorageDirectory(), FILE_NAME);
@@ -48,100 +47,100 @@ public class BDebug {
         }
     }
 
-	public static void log(String msg) {
-		if (DEBUG) {
-			System.out.println(msg);
-		}
-	}
+    public static void log(String msg) {
+        if (DEBUG) {
+            System.out.println(msg);
+        }
+    }
 
-	public static void e(Object... msg) {
-		if (DEBUG) {
-			Log.e(TAG, getMsg(msg));
-		}
-	}
+    public static void e(Object... msg) {
+        if (DEBUG) {
+            Log.e(TAG, getMsg(msg));
+        }
+    }
 
-	public static void d(Object... msg) {
-		if (DEBUG) {
-			Log.d(TAG, getMsg(msg));
-		}
-	}
+    public static void d(Object... msg) {
+        if (DEBUG) {
+            Log.d(TAG, getMsg(msg));
+        }
+    }
 
-	public static void v(Object... msg) {
-		if (DEBUG) {
-			Log.v(TAG, getMsg(msg));
-		}
-	}
+    public static void v(Object... msg) {
+        if (DEBUG) {
+            Log.v(TAG, getMsg(msg));
+        }
+    }
 
-	public static void w(Object... msg) {
-		if (DEBUG) {
-			Log.w(TAG, getMsg(msg));
-		}
-	}
+    public static void w(Object... msg) {
+        if (DEBUG) {
+            Log.w(TAG, getMsg(msg));
+        }
+    }
 
-	public static void i(Object... msg) {
-		if (DEBUG) {
-			Log.i(TAG, getMsg(msg));
-		}
-	}
-	
-	public static void e(String tag, String msg) {
-		if (DEBUG) {
-			e(tag, msg, "");
-		}
-	}
+    public static void i(Object... msg) {
+        if (DEBUG) {
+            Log.i(TAG, getMsg(msg));
+        }
+    }
 
-	public static void d(String tag, String msg) {
-		if (DEBUG) {
-			d(tag, msg, "");
-		}
-	}
+    public static void e(String tag, String msg) {
+        if (DEBUG) {
+            e(tag, msg, "");
+        }
+    }
 
-	public static void v(String tag, String msg) {
-		if (DEBUG) {
-			v(tag, msg, "");
-		}
-	}
+    public static void d(String tag, String msg) {
+        if (DEBUG) {
+            d(tag, msg, "");
+        }
+    }
 
-	public static void w(String tag, String msg) {
-		if (DEBUG) {
-			w(tag, msg, "");
-		}
-	}
+    public static void v(String tag, String msg) {
+        if (DEBUG) {
+            v(tag, msg, "");
+        }
+    }
 
-	public static void i(String tag, String msg) {
-		if (DEBUG) {
-			i(tag, msg, "");
-		}
-	}
+    public static void w(String tag, String msg) {
+        if (DEBUG) {
+            w(tag, msg, "");
+        }
+    }
 
-    public static String getMsg(Object... msg){
-		StringBuilder str=new StringBuilder();
-		if (msg!=null){
-			for (Object obj:msg){
-				if (obj==null){
-					continue;
-				}
-				str.append(obj).append(" ");
-			}
-		}else {
-			str.append("null");
-		}
-		try{
-			StackTraceElement[] sts = Thread.currentThread().getStackTrace();
-			StackTraceElement st = null;
-			String tag = null;
-			if (sts != null && sts.length > 4) {
-				st = sts[4];
-				if (st != null) {
-					String fileName = st.getFileName();
-					tag = (fileName == null) ? "Unkown" : fileName.replace(".java", "");
-					str.insert(0, "[ "+tag + "." + st.getMethodName() + "()" + " ] \n");
-				}
-			}
-		}catch(Exception e){
+    public static void i(String tag, String msg) {
+        if (DEBUG) {
+            i(tag, msg, "");
+        }
+    }
 
-		}
-		return str.toString();
+    public static String getMsg(Object... msg) {
+        StringBuilder str = new StringBuilder();
+        if (msg != null) {
+            for (Object obj : msg) {
+                if (obj == null) {
+                    continue;
+                }
+                str.append(obj).append(" ");
+            }
+        } else {
+            str.append("null");
+        }
+        try {
+            StackTraceElement[] sts = Thread.currentThread().getStackTrace();
+            StackTraceElement st = null;
+            String tag = null;
+            if (sts != null && sts.length > 4) {
+                st = sts[4];
+                if (st != null) {
+                    String fileName = st.getFileName();
+                    tag = (fileName == null) ? "Unkown" : fileName.replace(".java", "");
+                    str.insert(0, "[ " + tag + "." + st.getMethodName() + "()" + " ] \n");
+                }
+            }
+        } catch (Exception e) {
+
+        }
+        return str.toString();
     }
 
 }
