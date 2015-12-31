@@ -66,6 +66,18 @@ gradle.addListener new TimingsListener()
 
 apply plugin: 'com.android.application'
 
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+//依赖libs下的所有的aar
+fileTree(dir: 'libs', include: '**/*.aar')
+        .each { File file ->
+    dependencies.add("compile", [name: file.name.lastIndexOf('.').with { it != -1 ? file.name[0..<it] : file.name }, ext: 'aar'])
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
 }
