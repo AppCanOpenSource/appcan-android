@@ -163,7 +163,6 @@ public final class EBrowserActivity extends FragmentActivity {
                     WindowManager.LayoutParams.class.getField(
                             "FLAG_NEEDS_MENU_KEY").getInt(null));
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 

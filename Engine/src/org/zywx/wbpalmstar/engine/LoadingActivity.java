@@ -106,7 +106,6 @@ public class LoadingActivity extends Activity {
                     WindowManager.LayoutParams.class.getField(
                             "FLAG_NEEDS_MENU_KEY").getInt(null));
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
