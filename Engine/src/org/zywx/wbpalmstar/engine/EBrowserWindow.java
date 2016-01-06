@@ -22,6 +22,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Handler;
 import android.os.Looper;
@@ -2252,6 +2253,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         mPager.setOnPageChangeListener(new MyPageChangedListener(
                 parentBrowerview.getName()));
         mPager.setLayoutParams(pagerParm);
+        mPager.setBackgroundColor(Color.TRANSPARENT);
         parentBrowerview.addView(mPager);
         mMultiPopPager.put(parentBrowerview.getName(), mPager);
         final ArrayList<EBrowserView> list = new ArrayList<EBrowserView>();
