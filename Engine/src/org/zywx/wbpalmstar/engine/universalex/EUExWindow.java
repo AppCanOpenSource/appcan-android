@@ -3181,11 +3181,13 @@ public class EUExWindow extends EUExBase {
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams((int) inputVO.getW(), (int) inputVO.getH());
         lp.leftMargin = (int) inputVO.getX();
         lp.topMargin = (int) inputVO.getY();
-        mBrwView.addViewToCurrentWindow(containerViewPager, lp);
-        String js = SCRIPT_HEADER + "if(" + function_cbCreatePluginViewContainer + "){"
-                + function_cbCreatePluginViewContainer + "(" + inputVO.getId() + "," + EUExCallback.F_C_TEXT + ",'"
-                + "success" + "'" + SCRIPT_TAIL;
-        onCallback(js);
+        if(mBrwView != null){
+        	mBrwView.addViewToCurrentWindow(containerViewPager, lp);
+            String js = SCRIPT_HEADER + "if(" + function_cbCreatePluginViewContainer + "){"
+                    + function_cbCreatePluginViewContainer + "(" + inputVO.getId() + "," + EUExCallback.F_C_TEXT + ",'"
+                    + "success" + "'" + SCRIPT_TAIL;
+            onCallback(js);
+        }
     }
 
     public void closePluginViewContainer(String[] parm) {
@@ -3219,7 +3221,7 @@ public class EUExWindow extends EUExBase {
                 if (view instanceof ContainerViewPager) {
                     ContainerViewPager pager = (ContainerViewPager) view;
                     if (opid.equals((String) pager.getContainerVO().getId())) {
-                        mBrwView.removeViewFromCurrentWindow(pager);
+                        removeViewFromCurrentWindow(pager);
                         ContainerAdapter adapter = (ContainerAdapter) pager.getAdapter();
                         Vector<FrameLayout> views = adapter.getViewList();
                         int size = views.size();
