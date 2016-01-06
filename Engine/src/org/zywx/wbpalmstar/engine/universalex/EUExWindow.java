@@ -93,6 +93,7 @@ public class EUExWindow extends EUExBase {
     public static final String function_cbslipedDownEdge = "uexWindow.slipedDownEdge";//不建议使用
     public static final String function_cbCreatePluginViewContainer = "uexWindow.cbCreatePluginViewContainer";
     public static final String function_cbClosePluginViewContainer = "uexWindow.cbClosePluginViewContainer";
+    public static final String function_onPluginContainerPageChange = "uexWindow.onPluginContainerPageChange";
 
     public static final String function_onSlipedUpward = "uexWindow.onSlipedUpward";
     public static final String function_onSlipedDownward = "uexWindow.onSlipedDownward";
@@ -3139,7 +3140,7 @@ public class EUExWindow extends EUExBase {
             errorCallback(0, 0, "error params!");
             return;
         }
-        CreateContainerVO inputVO = DataHelper.gson.fromJson(params[0], CreateContainerVO.class);
+        final CreateContainerVO inputVO = DataHelper.gson.fromJson(params[0], CreateContainerVO.class);
 
         EBrowserWindow mWindow = mBrwView.getBrowserWindow();
         int count = mWindow.getChildCount();
@@ -3157,6 +3158,26 @@ public class EUExWindow extends EUExBase {
         ContainerAdapter containerAdapter = new ContainerAdapter(new
                 Vector<FrameLayout>());
         containerViewPager.setAdapter(containerAdapter);
+        containerViewPager.setOnPageChangeListener(new ContainerViewPager.OnPageChangeListener() {
+			
+			@Override
+			public void onPageSelected(int index) {
+				String js = SCRIPT_HEADER + "if("
+						+ function_onPluginContainerPageChange + "){"
+						+ function_onPluginContainerPageChange + "(" + inputVO.getId()
+						+ "," + EUExCallback.F_C_INT + "," + index
+						+ SCRIPT_TAIL;
+				onCallback(js);
+			}
+			
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+			}
+			
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
+			}
+		});
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams((int) inputVO.getW(), (int) inputVO.getH());
         lp.leftMargin = (int) inputVO.getX();
         lp.topMargin = (int) inputVO.getY();
@@ -3258,7 +3279,6 @@ public class EUExWindow extends EUExBase {
     }
 
     class ContainerViewPager extends ViewPager {
-        private String opId = "";
         private CreateContainerVO mContainerVO;
 
         public ContainerViewPager(Context context, CreateContainerVO containerVO) {
