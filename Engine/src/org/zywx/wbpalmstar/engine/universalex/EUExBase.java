@@ -451,6 +451,9 @@ public abstract class EUExBase {
     }
 
     private void removeFragment(Fragment fragment) {
+        if (mContext==null){
+            return;
+        }
         ((FragmentActivity) mContext).getSupportFragmentManager().beginTransaction()
                 .remove(fragment).commit();
     }
