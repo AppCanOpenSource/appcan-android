@@ -121,9 +121,9 @@ public class CBrowserMainFrame extends WebChromeClient {
     public boolean onJsPrompt(WebView view, String url, String message, String defaultValue, final JsPromptResult result) {
         if (message != null
                 && message.startsWith(EUExScript.JS_APPCAN_ONJSPARSE)) {
-            result.cancel();
-            appCanJsParse(view,
+            appCanJsParse(result, view,
                     message.substring(EUExScript.JS_APPCAN_ONJSPARSE.length()));
+            result.cancel();
         } else {
             if (!((EBrowserActivity) view.getContext()).isVisable()) {
                 result.cancel();
@@ -157,7 +157,7 @@ public class CBrowserMainFrame extends WebChromeClient {
         return true;
     }
 
-    private void appCanJsParse(WebView view, String parseStr) {
+    private void appCanJsParse(final JsPromptResult result, WebView view, String parseStr) {
         try {
             if (!(view instanceof EBrowserView)) {
                 return;
@@ -184,15 +184,18 @@ public class CBrowserMainFrame extends WebChromeClient {
                 EUExDispatcher uexDispatcher = new EUExDispatcher(
                         new EUExDispatcherCallback() {
                             @Override
-                            public void onDispatch(String pluginName,
-                                                   String methodName, String[] params) {
+                            public Object onDispatch(String pluginName,
+                                    String methodName, String[] params) {
                                 ELinkedList<EUExBase> plugins = uexManager
                                         .getThirdPlugins();
                                 for (EUExBase plugin : plugins) {
                                     if (plugin.getUexName().equals(pluginName)) {
-                                        uexManager.callMethod(plugin,
+                                        Object object = uexManager.callMethod(plugin,
                                                 methodName, params);
-                                        return;
+                                        if (null != object) {
+                                            result.confirm(object.toString());
+                                        }
+                                        return object;
                                     }
                                 }
                                 // 调用单实例插件
@@ -203,11 +206,16 @@ public class CBrowserMainFrame extends WebChromeClient {
                                 if (thirdPluginObject != null
                                         && thirdPluginObject.isGlobal
                                         && thirdPluginObject.pluginObj != null) {
-                                    uexManager.callMethod(
+                                    Object object = uexManager.callMethod(
                                             thirdPluginObject.pluginObj,
                                             methodName, params);
+                                    if (null != object) {
+                                        result.confirm(object.toString());
+                                    }
+                                    return object;
                                 }
                                 BDebug.e("plugin", pluginName, "not exist...");
+                                return null;
                             }
                         });
                 uexDispatcher.dispatch(uexName, method, args);
