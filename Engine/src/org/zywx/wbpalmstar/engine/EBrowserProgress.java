@@ -25,49 +25,49 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class EBrowserProgress extends RelativeLayout implements View.OnClickListener{
-	
+public class EBrowserProgress extends RelativeLayout implements View.OnClickListener {
 
-	private TextView mMessege;
-	private ProgressBar mProgress;
 
-	public EBrowserProgress(Context context) {
-		super(context);
-		mProgress = new ProgressBar(context);
-		mProgress.setIndeterminate(true);
-		mMessege = new TextView(context);
-		RelativeLayout.LayoutParams parmPro = new LayoutParams(-2, -2);
-		parmPro.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-		mProgress.setLayoutParams(parmPro);
-		
-		RelativeLayout.LayoutParams parmMsg = new LayoutParams(-2, -2);
-		parmMsg.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-		mMessege.setLayoutParams(parmMsg);
-		mMessege.setTextColor(0xFFFF0000);
-		mMessege.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
-		addView(mProgress);
-		addView(mMessege);
-		setOnClickListener(this);
-	}
-	
-	public void hiddenProgress(){
-		
-		mProgress.setVisibility(View.GONE);
-	}
-	
-	public void showProgress(){
-		
-		mProgress.setVisibility(View.VISIBLE);
-	}
-	
-	public void setProgress(int p){
-		
-		mMessege.setText(p + "%");
-	}
+    private TextView mMessege;
+    private ProgressBar mProgress;
 
-	@Override
-	public void onClick(View v) {
-		hiddenProgress();
-		setVisibility(View.GONE);
-	}
+    public EBrowserProgress(Context context) {
+        super(context);
+        mProgress = new ProgressBar(context);
+        mProgress.setIndeterminate(true);
+        mMessege = new TextView(context);
+        RelativeLayout.LayoutParams parmPro = new LayoutParams(-2, -2);
+        parmPro.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+        mProgress.setLayoutParams(parmPro);
+
+        RelativeLayout.LayoutParams parmMsg = new LayoutParams(-2, -2);
+        parmMsg.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+        mMessege.setLayoutParams(parmMsg);
+        mMessege.setTextColor(0xFFFF0000);
+        mMessege.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
+        addView(mProgress);
+        addView(mMessege);
+        setOnClickListener(this);
+    }
+
+    public void hiddenProgress() {
+
+        mProgress.setVisibility(View.GONE);
+    }
+
+    public void showProgress() {
+
+        mProgress.setVisibility(View.VISIBLE);
+    }
+
+    public void setProgress(int p) {
+
+        mMessege.setText(p + "%");
+    }
+
+    @Override
+    public void onClick(View v) {
+        hiddenProgress();
+        setVisibility(View.GONE);
+    }
 }

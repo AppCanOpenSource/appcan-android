@@ -1404,7 +1404,7 @@ public class WDataManager {
                             if ("true".equals(text)) {
                                 WWidgetData.m_remove_loading = 0;
                             }
-                        }else if ("hardware".equals(localName)) {
+                        } else if ("hardware".equals(localName)) {
                             String text = parser.nextText();
                             if ("false".equals(text)) {
                                 EBrowserView.sHardwareAccelerate = false;

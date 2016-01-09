@@ -277,7 +277,7 @@ public class WWidgetData implements Parcelable {
         sb.append("\n");
         sb.append("m_id: " + m_id);
         sb.append("\n");
-        sb.append("m_remove_loading:"+m_remove_loading);
+        sb.append("m_remove_loading:" + m_remove_loading);
         sb.append("\n");
         return sb.toString();
     }

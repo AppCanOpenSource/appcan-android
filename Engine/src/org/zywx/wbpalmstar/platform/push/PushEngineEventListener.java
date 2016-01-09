@@ -20,6 +20,7 @@ package org.zywx.wbpalmstar.platform.push;
 
 import android.content.Context;
 import android.util.Log;
+
 import org.apache.http.NameValuePair;
 import org.zywx.wbpalmstar.engine.EngineEventListener;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
@@ -31,103 +32,103 @@ import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 import java.util.List;
 
 public class PushEngineEventListener implements EngineEventListener {
-	PushReportAgent pushReportAgent = null;
+    PushReportAgent pushReportAgent = null;
 
-	public PushEngineEventListener() {
-		pushReportAgent = PushReportAgent.getInstance();
-	}
+    public PushEngineEventListener() {
+        pushReportAgent = PushReportAgent.getInstance();
+    }
 
-	@Override
-	public void onWidgetStart(int wgtType, WWidgetData wgtData, Context context) {
-		Log.i("push", "wgtType==" + wgtType);
-		if (wgtType == WGT_TYPE_MAIN) {
-			wgtData.m_appkey = EUExUtil.getString("appkey");
-			wgtData.m_appkey = PushReportUtility.decodeStr(wgtData.m_appkey);
-			// PushReportAgent.m_appId = wgtData.m_appId;
-			// PushReportAgent.m_appKey = wgtData.m_appkey;
-			PushReportAgent.mCurWgt = wgtData;
-			pushReportAgent.initPush(wgtData, context);
-			Log.i("zyp", "Push onMainWidgetStart");
-		}
-	}
+    @Override
+    public void onWidgetStart(int wgtType, WWidgetData wgtData, Context context) {
+        Log.i("push", "wgtType==" + wgtType);
+        if (wgtType == WGT_TYPE_MAIN) {
+            wgtData.m_appkey = EUExUtil.getString("appkey");
+            wgtData.m_appkey = PushReportUtility.decodeStr(wgtData.m_appkey);
+            // PushReportAgent.m_appId = wgtData.m_appId;
+            // PushReportAgent.m_appKey = wgtData.m_appkey;
+            PushReportAgent.mCurWgt = wgtData;
+            pushReportAgent.initPush(wgtData, context);
+            Log.i("zyp", "Push onMainWidgetStart");
+        }
+    }
 
-	@Override
-	public void onWindowOpen(String beEndUrl, String beShowUrl,
-			String[] beEndPopupUrls) {
-	}
+    @Override
+    public void onWindowOpen(String beEndUrl, String beShowUrl,
+                             String[] beEndPopupUrls) {
+    }
 
-	@Override
-	public void onWindowClose(String beEndUrl, String beShowUrl,
-			String[] beEndPopupUrls, String[] beShowPopupUrls) {
-	}
+    @Override
+    public void onWindowClose(String beEndUrl, String beShowUrl,
+                              String[] beEndPopupUrls, String[] beShowPopupUrls) {
+    }
 
-	@Override
-	public void onWindowBack(String beEndUrl, String beShowUrl,
-			String[] beEndPopupUrls, String[] beShowPopupUrls) {
+    @Override
+    public void onWindowBack(String beEndUrl, String beShowUrl,
+                             String[] beEndPopupUrls, String[] beShowPopupUrls) {
 
-	}
+    }
 
-	@Override
-	public void onWindowForward(String beEndUrl, String beShowUrl,
-			String[] beEndPopupUrls, String[] beShowPopupUrls) {
-	}
+    @Override
+    public void onWindowForward(String beEndUrl, String beShowUrl,
+                                String[] beEndPopupUrls, String[] beShowPopupUrls) {
+    }
 
-	@Override
-	public void onPopupOpen(String curWindowUrl, String beShowPopupUrl) {
-	}
+    @Override
+    public void onPopupOpen(String curWindowUrl, String beShowPopupUrl) {
+    }
 
-	@Override
-	public void onPopupClose(String beEndPopupUrl) {
-	}
+    @Override
+    public void onPopupClose(String beEndPopupUrl) {
+    }
 
-	@Override
-	public void onAppResume(String beEndUrl, String beShowUrl,
-			String[] beShowPopupUrls) {
-	}
+    @Override
+    public void onAppResume(String beEndUrl, String beShowUrl,
+                            String[] beShowPopupUrls) {
+    }
 
-	@Override
-	public void onAppPause(String beEndUrl, String beShowUrl,
-			String[] beEndPopupUrls) {
-	}
+    @Override
+    public void onAppPause(String beEndUrl, String beShowUrl,
+                           String[] beEndPopupUrls) {
+    }
 
-	@Override
-	public void onAppStart(String startUrl) {
-	}
+    @Override
+    public void onAppStart(String startUrl) {
+    }
 
-	@Override
-	public void onAppStop() {
-	}
+    @Override
+    public void onAppStop() {
+    }
 
-	@Override
-	public void onOther(int type, Object any) {
+    @Override
+    public void onOther(int type, Object any) {
 
-	}
+    }
 
-	public void widgetReport(final WWidgetData data, final Context ctx) {
+    public void widgetReport(final WWidgetData data, final Context ctx) {
 
-	}
+    }
 
-	@Override
-	public void setPushInfo(final Context context, final List nameValuePairs) {
-		Log.i("push", "setPushInfo");
-		PushReportAgent.setPushInfo(context, nameValuePairs);
-	}
+    @Override
+    public void setPushInfo(final Context context, final List nameValuePairs) {
+        Log.i("push", "setPushInfo");
+        PushReportAgent.setPushInfo(context, nameValuePairs);
+    }
 
-	@Override
-	public void setPushState(Context context, int state) {
-		Log.i("push", "setPushState");
-		PushReportAgent.setPushState(context, state);
-	}
+    @Override
+    public void setPushState(Context context, int state) {
+        Log.i("push", "setPushState");
+        PushReportAgent.setPushState(context, state);
+    }
 
-	@Override
-	public void getPushInfo(Context context, String pushInfo, String occuredAt) {
-		Log.i("push", "getPushInfo");
-		String appKey = EUExUtil.getString("appkey");
-		appKey = PushReportUtility.decodeStr(appKey);
-		String softToken = PushReportUtility.getSoftToken(context, appKey);
-		PushReportAgent.reportPush(pushInfo, occuredAt,
-				PushReportConstants.EVENT_TYPE_OPEN, softToken, context);
-	}
+    @Override
+    public void getPushInfo(Context context, String pushInfo, String occuredAt) {
+        Log.i("push", "getPushInfo");
+        String appKey = EUExUtil.getString("appkey");
+        appKey = PushReportUtility.decodeStr(appKey);
+        String softToken = PushReportUtility.getSoftToken(context, appKey);
+        PushReportAgent.reportPush(pushInfo, occuredAt,
+                PushReportConstants.EVENT_TYPE_OPEN, softToken, context);
+    }
 
     @Override
     public void delPushInfo(Context context, List<NameValuePair> nameValuePairs) {

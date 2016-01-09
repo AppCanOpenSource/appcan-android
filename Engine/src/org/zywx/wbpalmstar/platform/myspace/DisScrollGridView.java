@@ -27,42 +27,42 @@ import android.widget.ListAdapter;
 
 public class DisScrollGridView extends GridView {
 
-	public DisScrollGridView(Context context) {
-		super(context);
-	}
+    public DisScrollGridView(Context context) {
+        super(context);
+    }
 
-	public DisScrollGridView(Context context, AttributeSet attrs) {
-		super(context, attrs);
-	}
+    public DisScrollGridView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
 
-	public DisScrollGridView(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
-	}
+    public DisScrollGridView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+    }
 
-	private int srcPaddingTop = -1;
-	private int srcPaddingBottom = -1;
+    private int srcPaddingTop = -1;
+    private int srcPaddingBottom = -1;
 
-	@Override
-	protected void dispatchDraw(Canvas canvas) {
-		if (srcPaddingTop == -1 || srcPaddingBottom == -1) {
-			srcPaddingTop = getPaddingTop();
-			srcPaddingBottom = getPaddingBottom();
-		}
-		ListAdapter adapter = getAdapter();
-		if (adapter == null || adapter.getCount() == 0) {
-			DisplayMetrics dm = getContext().getResources().getDisplayMetrics();
-			this.setPadding(getPaddingLeft(), getPaddingLeft() + (int) (40 * dm.density), getPaddingRight(),
-					getPaddingRight() + (int) (40 * dm.density));
-		} else {
-			this.setPadding(getPaddingLeft(), srcPaddingTop, getPaddingRight(), srcPaddingBottom);
-		}
-		super.dispatchDraw(canvas);
-	}
+    @Override
+    protected void dispatchDraw(Canvas canvas) {
+        if (srcPaddingTop == -1 || srcPaddingBottom == -1) {
+            srcPaddingTop = getPaddingTop();
+            srcPaddingBottom = getPaddingBottom();
+        }
+        ListAdapter adapter = getAdapter();
+        if (adapter == null || adapter.getCount() == 0) {
+            DisplayMetrics dm = getContext().getResources().getDisplayMetrics();
+            this.setPadding(getPaddingLeft(), getPaddingLeft() + (int) (40 * dm.density), getPaddingRight(),
+                    getPaddingRight() + (int) (40 * dm.density));
+        } else {
+            this.setPadding(getPaddingLeft(), srcPaddingTop, getPaddingRight(), srcPaddingBottom);
+        }
+        super.dispatchDraw(canvas);
+    }
 
-	@Override
-	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		int expandSpec = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE >> 2, MeasureSpec.AT_MOST);
-		super.onMeasure(widthMeasureSpec, expandSpec);
-	}
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int expandSpec = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE >> 2, MeasureSpec.AT_MOST);
+        super.onMeasure(widthMeasureSpec, expandSpec);
+    }
 
 }

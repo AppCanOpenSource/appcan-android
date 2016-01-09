@@ -129,7 +129,7 @@ public class EUExManager {
                 } catch (IllegalAccessException e) {
                     BDebug.e(plugin.getUexName(), methodName, e.toString());
                 } catch (InvocationTargetException e) {
-                    BDebug.e(plugin.getUexName(),methodName, " InvocationTargetException");
+                    BDebug.e(plugin.getUexName(), methodName, " InvocationTargetException");
                     if (BDebug.DEBUG) {
                         e.printStackTrace();
                     }

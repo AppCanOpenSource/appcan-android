@@ -51,12 +51,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-		<!-- push -->
-        <service
-            android:name="org.zywx.wbpalmstar.platform.push.PushService"
-            android:process=":push"
-            android:exported="false"
-            android:enabled="true" />
         <receiver
             android:name="org.zywx.wbpalmstar.platform.push.PushRecieveMsgReceiver"
 			android:exported="false">

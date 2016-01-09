@@ -65,97 +65,97 @@ import java.util.List;
 import java.util.Set;
 
 public class EUExWidget extends EUExBase {
-	public static final String tag = "uexWidget";
+    public static final String tag = "uexWidget";
 
-	public static final int LOADAPP_RQ_CODE = 1000001;
+    public static final int LOADAPP_RQ_CODE = 1000001;
 
-	public static final String function_getOpenerInfo = "uexWidget.cbGetOpenerInfo";
-	public static final String function_checkUpdate = "uexWidget.cbCheckUpdate";
-	public static final String function_startWidget = "uexWidget.cbStartWidget";
-	public static final String function_removeWidget = "uexWidget.cbRemoveWidget";
-	public static final String function_getPushInfo = "uexWidget.cbGetPushInfo";
-	public static final String function_getPushState = "uexWidget.cbGetPushState";
+    public static final String function_getOpenerInfo = "uexWidget.cbGetOpenerInfo";
+    public static final String function_checkUpdate = "uexWidget.cbCheckUpdate";
+    public static final String function_startWidget = "uexWidget.cbStartWidget";
+    public static final String function_removeWidget = "uexWidget.cbRemoveWidget";
+    public static final String function_getPushInfo = "uexWidget.cbGetPushInfo";
+    public static final String function_getPushState = "uexWidget.cbGetPushState";
     public static final String function_onSpaceClick = "uexWidget.onSpaceClick";
-	public static final String function_loadApp = "uexWidget.cbLoadApp";
+    public static final String function_loadApp = "uexWidget.cbLoadApp";
     private static final String BUNDLE_DATA = "data";
-	private static final String BUNDLE_MESSAGE = "message";
-	private static final String PUSH_MSG_BODY = "0";
-	private static final String PUSH_MSG_ALL = "1";
+    private static final String BUNDLE_MESSAGE = "message";
+    private static final String PUSH_MSG_BODY = "0";
+    private static final String PUSH_MSG_ALL = "1";
     private static final int MSG_IS_APP_INSTALLED = 0;
 
-	public EUExWidget(Context context, EBrowserView inParent) {
-		super(context, inParent);
-	}
+    public EUExWidget(Context context, EBrowserView inParent) {
+        super(context, inParent);
+    }
 
-	public void startWidget(String[] parm) {
-		if (parm.length < 4) {
-			return;
-		}
-		EBrowserWindow curWind = mBrwView.getBrowserWindow();
-		if (null == curWind) {
-			return;
-		}
-		String inAppId = parm[0];
-		String inAnimiId = parm[1];
-		String inForResult = parm[2];
-		String inInfo = parm[3];
-		String animDuration = null;
-		String appKey = null;
-		if (parm.length == 5) {
-			animDuration = parm[4];
-		}
-		if (parm.length == 6) {
-			appKey = parm[5];
-		}
-		int animId = EBrowserAnimation.ANIM_ID_NONE;
-		long duration = EBrowserAnimation.defaultDuration;
-		try {
-			if (null != inAnimiId && inAnimiId.length() != 0) {
-				animId = Integer.parseInt(inAnimiId);
-			}
-			if (null != animDuration && animDuration.length() != 0) {
-				duration = Long.parseLong(animDuration);
-			}
-		} catch (Exception e) {
-			;
-		}
-		try {
-			WDataManager widgetData = new WDataManager(mContext);
-			// WWidgetData data = widgetData.getWidgetDataByAppId(inAppId,
-			// mBrwView.getCurrentWidget());
-			// 修改可以子widget可以打开子widget
-			WWidgetData data = widgetData.getWidgetDataByAppId(inAppId,
-					mBrwView.getRootWidget());
-			if (data == null) {
-				showErrorAlert(String.format(EUExUtil.getString("platform_widget_not_exist")
-				,inAppId+""));
-				jsCallback(function_startWidget, 0, EUExCallback.F_C_INT,
-						EUExCallback.F_C_FAILED);
-				return;
-			}
-			data.m_appkey = appKey;
-			EWgtResultInfo info = new EWgtResultInfo(inForResult, inInfo);
-			info.setAnimiId(animId);
-			info.setDuration(duration);
-			if (startWidget(data, info)) {
-				jsCallback(function_startWidget, 0, EUExCallback.F_C_INT,
-						EUExCallback.F_C_SUCCESS);
-			} else {
-				jsCallback(function_startWidget, 0, EUExCallback.F_C_INT,
-						EUExCallback.F_C_FAILED);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			showErrorAlert(EUExUtil.getString("platform_widget_search_failed"));
-			jsCallback(function_startWidget, 0, EUExCallback.F_C_INT,
-					EUExCallback.F_C_FAILED);
-		}
+    public void startWidget(String[] parm) {
+        if (parm.length < 4) {
+            return;
+        }
+        EBrowserWindow curWind = mBrwView.getBrowserWindow();
+        if (null == curWind) {
+            return;
+        }
+        String inAppId = parm[0];
+        String inAnimiId = parm[1];
+        String inForResult = parm[2];
+        String inInfo = parm[3];
+        String animDuration = null;
+        String appKey = null;
+        if (parm.length == 5) {
+            animDuration = parm[4];
+        }
+        if (parm.length == 6) {
+            appKey = parm[5];
+        }
+        int animId = EBrowserAnimation.ANIM_ID_NONE;
+        long duration = EBrowserAnimation.defaultDuration;
+        try {
+            if (null != inAnimiId && inAnimiId.length() != 0) {
+                animId = Integer.parseInt(inAnimiId);
+            }
+            if (null != animDuration && animDuration.length() != 0) {
+                duration = Long.parseLong(animDuration);
+            }
+        } catch (Exception e) {
+            ;
+        }
+        try {
+            WDataManager widgetData = new WDataManager(mContext);
+            // WWidgetData data = widgetData.getWidgetDataByAppId(inAppId,
+            // mBrwView.getCurrentWidget());
+            // 修改可以子widget可以打开子widget
+            WWidgetData data = widgetData.getWidgetDataByAppId(inAppId,
+                    mBrwView.getRootWidget());
+            if (data == null) {
+                showErrorAlert(String.format(EUExUtil.getString("platform_widget_not_exist")
+                        , inAppId + ""));
+                jsCallback(function_startWidget, 0, EUExCallback.F_C_INT,
+                        EUExCallback.F_C_FAILED);
+                return;
+            }
+            data.m_appkey = appKey;
+            EWgtResultInfo info = new EWgtResultInfo(inForResult, inInfo);
+            info.setAnimiId(animId);
+            info.setDuration(duration);
+            if (startWidget(data, info)) {
+                jsCallback(function_startWidget, 0, EUExCallback.F_C_INT,
+                        EUExCallback.F_C_SUCCESS);
+            } else {
+                jsCallback(function_startWidget, 0, EUExCallback.F_C_INT,
+                        EUExCallback.F_C_FAILED);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            showErrorAlert(EUExUtil.getString("platform_widget_search_failed"));
+            jsCallback(function_startWidget, 0, EUExCallback.F_C_INT,
+                    EUExCallback.F_C_FAILED);
+        }
 
-	}
+    }
 
-	private void showErrorAlert(final String msg) {
-		/*Runnable ui = new Runnable() {
-			@Override
+    private void showErrorAlert(final String msg) {
+        /*Runnable ui = new Runnable() {
+            @Override
 			public void run() {
 				final AlertDialog.Builder dialog = new AlertDialog.Builder(
 						mContext);
@@ -173,10 +173,10 @@ public class EUExWidget extends EUExBase {
 		};
 		Activity uiThread = (Activity) mContext;
 		uiThread.runOnUiThread(ui);*/
-	}
+    }
 
-    public void setSpaceEnable(String[] params){
-        mBrwView.getBrowserWindow().setSpaceEnable(new SpaceClickListener(){
+    public void setSpaceEnable(String[] params) {
+        mBrwView.getBrowserWindow().setSpaceEnable(new SpaceClickListener() {
             @Override
             public void onSpaceClick() {
                 jsCallback(function_onSpaceClick, 0, 0, 0);
@@ -184,8 +184,8 @@ public class EUExWidget extends EUExBase {
         });
     }
 
-    public void setLogServerIp(String[] params){
-        if(params.length < 2){
+    public void setLogServerIp(String[] params) {
+        if (params.length < 2) {
             return;
         }
         int debug = 0;
@@ -200,13 +200,13 @@ public class EUExWidget extends EUExBase {
         widgetData.m_appdebug = debug;
     }
 
-    public void delPushInfo(String[] params){
+    public void delPushInfo(String[] params) {
         String uId = "";
         String uNickName = "";
-        if(params.length > 0){
+        if (params.length > 0) {
             uId = params[0];
         }
-        if(params.length > 1){
+        if (params.length > 1) {
             uNickName = params[1];
         }
         WidgetOneApplication app = (WidgetOneApplication) ((Activity) mContext)
@@ -214,62 +214,62 @@ public class EUExWidget extends EUExBase {
         app.delPushInfo(uId, uNickName, mContext, mBrwView);
     }
 
-    public void startApp(String[] params){
-        if(params.length < 2){
+    public void startApp(String[] params) {
+        if (params.length < 2) {
             Log.e(tag, "startApp has error params!!!");
             return;
         }
         String startMode = params[0];
         Intent intent = null;
         String extraJson = null;
-        if(!TextUtils.isEmpty(startMode)){
-            if("0".equals(startMode)){
+        if (!TextUtils.isEmpty(startMode)) {
+            if ("0".equals(startMode)) {
                 String pkgName = params[1];
                 String clsName = null;
-                if(TextUtils.isEmpty(pkgName)){
+                if (TextUtils.isEmpty(pkgName)) {
                     Log.e(tag, "startApp has error params!!!");
                     callBackPluginJs(JsConst.CALLBACK_START_APP, "error params");
-                    return; 
+                    return;
                 }
-                
-                if(params.length > 2){
+
+                if (params.length > 2) {
                     clsName = params[2];
                 }
-                if(TextUtils.isEmpty(clsName)){
+                if (TextUtils.isEmpty(clsName)) {
                     clsName = getMainActivity(pkgName);
                 }
-                if(TextUtils.isEmpty(clsName)){
+                if (TextUtils.isEmpty(clsName)) {
                     Log.e(tag, "startApp has error params!!!");
                     callBackPluginJs(JsConst.CALLBACK_START_APP, "package is not exist!");
-                    return; 
+                    return;
                 }
                 ComponentName component = new ComponentName(pkgName, clsName);
                 intent = new Intent();
                 intent.setComponent(component);
-            }else if("1".equals(startMode)){
+            } else if ("1".equals(startMode)) {
                 String action = params[1];
                 String filterJson = null;
                 intent = new Intent(action);
-                if(params.length > 2){
+                if (params.length > 2) {
                     filterJson = params[2];
                 }
-                if(!TextUtils.isEmpty(filterJson)){
+                if (!TextUtils.isEmpty(filterJson)) {
                     intent = setIntentFilter(intent, filterJson);
                 }
-            }else{
+            } else {
                 Log.e(tag, "startApp has error params!!!");
                 callBackPluginJs(JsConst.CALLBACK_START_APP, "error params!");
                 return;
             }
         }
-        if(intent == null){
+        if (intent == null) {
             Log.e(tag, "startApp has error params!!!");
             callBackPluginJs(JsConst.CALLBACK_START_APP, "error params!");
             return;
         }
-        if(params.length > 3){
+        if (params.length > 3) {
             extraJson = params[3];
-            if(!TextUtils.isEmpty(extraJson)){
+            if (!TextUtils.isEmpty(extraJson)) {
                 intent = setIntentExtras(intent, extraJson);
             }
         }
@@ -284,33 +284,33 @@ public class EUExWidget extends EUExBase {
     private Intent setIntentFilter(Intent intent, String filterJson) {
         try {
             JSONObject json = new JSONObject(filterJson);
-            if(json.has("category")){
+            if (json.has("category")) {
                 JSONArray category = json.getJSONArray("category");
-                if(category != null){
-                    for(int i = 0; i < category.length(); i++){
+                if (category != null) {
+                    for (int i = 0; i < category.length(); i++) {
                         String ctg = category.opt(i).toString();
-                        if(!TextUtils.isEmpty(ctg)){
-                            intent.addCategory(ctg); 
+                        if (!TextUtils.isEmpty(ctg)) {
+                            intent.addCategory(ctg);
                         }
                     }
                 }
             }
-            if(json.has("data")){
+            if (json.has("data")) {
                 JSONObject dataJson = json.getJSONObject("data");
                 String mimeType = null;
                 String scheme = null;
-                if(dataJson != null){
-                    if(dataJson.has("mimeType")){
-                        mimeType =  dataJson.getString("mimeType");
+                if (dataJson != null) {
+                    if (dataJson.has("mimeType")) {
+                        mimeType = dataJson.getString("mimeType");
                     }
-                    if(dataJson.has("scheme")){
-                        scheme =  dataJson.getString("scheme");
+                    if (dataJson.has("scheme")) {
+                        scheme = dataJson.getString("scheme");
                     }
-                    if(TextUtils.isEmpty(mimeType) && !TextUtils.isEmpty(scheme)){
-                        intent.setData(Uri.parse(scheme));      
-                    }else if(!TextUtils.isEmpty(mimeType) && !TextUtils.isEmpty(scheme)){
+                    if (TextUtils.isEmpty(mimeType) && !TextUtils.isEmpty(scheme)) {
+                        intent.setData(Uri.parse(scheme));
+                    } else if (!TextUtils.isEmpty(mimeType) && !TextUtils.isEmpty(scheme)) {
                         intent.setDataAndType(Uri.parse(scheme), mimeType);
-                    }else if(!TextUtils.isEmpty(mimeType) && TextUtils.isEmpty(scheme)){
+                    } else if (!TextUtils.isEmpty(mimeType) && TextUtils.isEmpty(scheme)) {
                         intent.setType(mimeType);
                     }
                 }
@@ -330,17 +330,17 @@ public class EUExWidget extends EUExBase {
             e.printStackTrace();
         }
 
-        if(pi == null) return null;
+        if (pi == null) return null;
 
         Intent resolveIntent = new Intent(Intent.ACTION_MAIN, null);
         resolveIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         resolveIntent.setPackage(pi.packageName);
 
         List<ResolveInfo> apps = mContext.getPackageManager().queryIntentActivities(resolveIntent, 0);
-        if(apps == null || apps.size() == 0) return null;
+        if (apps == null || apps.size() == 0) return null;
 
         ResolveInfo ri = apps.iterator().next();
-        if (ri != null ) {
+        if (ri != null) {
             className = ri.activityInfo.name;
         }
         return className;
@@ -348,7 +348,7 @@ public class EUExWidget extends EUExBase {
 
     private Intent setIntentExtras(Intent intent, String extraJson) {
         String[] list = extraJson.split(",");
-        for(int i = 0; i < list.length; i++){
+        for (int i = 0; i < list.length; i++) {
             try {
                 JSONObject json = new JSONObject(list[i]);
                 Iterator<?> keys = json.keys();
@@ -366,381 +366,381 @@ public class EUExWidget extends EUExBase {
         return intent;
     }
 
-	public void startWidgetWithPath(String[] parm) {
-		if (parm.length < 4) {
-			return;
-		}
-		EBrowserWindow curWind = mBrwView.getBrowserWindow();
-		if (null == curWind) {
-			return;
-		}
-		String path = parm[0];
-		String inAnimiId = parm[1];
-		String inForResult = parm[2];
-		String inInfo = parm[3];
-		String animDuration = null;
-		String appKey = null;
-		if (parm.length == 5) {
-			animDuration = parm[4];
-		}
-		if (parm.length == 6) {
-			appKey = parm[5];
-		}
-		int animId = EBrowserAnimation.ANIM_ID_NONE;
-		long duration = EBrowserAnimation.defaultDuration;
-		try {
-			if (null != inAnimiId && inAnimiId.length() != 0) {
-				animId = Integer.parseInt(inAnimiId);
-			}
-			if (null != animDuration && animDuration.length() != 0) {
-				duration = Long.parseLong(animDuration);
-			}
-		} catch (Exception e) {
-			;
-		}
-		try {
-			WDataManager widgetData = new WDataManager(mContext);
-			WWidgetData data = widgetData.getWidgetDataByAppPath(path);
-			if (data == null) {
-				showErrorAlert(String.format(EUExUtil.getString("platform_widget_path_not_exist"),path));
-				jsCallback(function_startWidget, 0, EUExCallback.F_C_INT,
-						EUExCallback.F_C_FAILED);
-				return;
-			}
-			data.m_appkey = appKey;
-			EWgtResultInfo info = new EWgtResultInfo(inForResult, inInfo);
-			info.setAnimiId(animId);
-			info.setDuration(duration);
-			if (startWidget(data, info)) {
-				jsCallback(function_startWidget, 0, EUExCallback.F_C_INT,
-						EUExCallback.F_C_SUCCESS);
-			} else {
-				jsCallback(function_startWidget, 0, EUExCallback.F_C_INT,
-						EUExCallback.F_C_FAILED);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			showErrorAlert(EUExUtil.getString("platform_widget_search_failed"));
-			jsCallback(function_startWidget, 0, EUExCallback.F_C_INT,
-					EUExCallback.F_C_FAILED);
-		}
-	}
+    public void startWidgetWithPath(String[] parm) {
+        if (parm.length < 4) {
+            return;
+        }
+        EBrowserWindow curWind = mBrwView.getBrowserWindow();
+        if (null == curWind) {
+            return;
+        }
+        String path = parm[0];
+        String inAnimiId = parm[1];
+        String inForResult = parm[2];
+        String inInfo = parm[3];
+        String animDuration = null;
+        String appKey = null;
+        if (parm.length == 5) {
+            animDuration = parm[4];
+        }
+        if (parm.length == 6) {
+            appKey = parm[5];
+        }
+        int animId = EBrowserAnimation.ANIM_ID_NONE;
+        long duration = EBrowserAnimation.defaultDuration;
+        try {
+            if (null != inAnimiId && inAnimiId.length() != 0) {
+                animId = Integer.parseInt(inAnimiId);
+            }
+            if (null != animDuration && animDuration.length() != 0) {
+                duration = Long.parseLong(animDuration);
+            }
+        } catch (Exception e) {
+            ;
+        }
+        try {
+            WDataManager widgetData = new WDataManager(mContext);
+            WWidgetData data = widgetData.getWidgetDataByAppPath(path);
+            if (data == null) {
+                showErrorAlert(String.format(EUExUtil.getString("platform_widget_path_not_exist"), path));
+                jsCallback(function_startWidget, 0, EUExCallback.F_C_INT,
+                        EUExCallback.F_C_FAILED);
+                return;
+            }
+            data.m_appkey = appKey;
+            EWgtResultInfo info = new EWgtResultInfo(inForResult, inInfo);
+            info.setAnimiId(animId);
+            info.setDuration(duration);
+            if (startWidget(data, info)) {
+                jsCallback(function_startWidget, 0, EUExCallback.F_C_INT,
+                        EUExCallback.F_C_SUCCESS);
+            } else {
+                jsCallback(function_startWidget, 0, EUExCallback.F_C_INT,
+                        EUExCallback.F_C_FAILED);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            showErrorAlert(EUExUtil.getString("platform_widget_search_failed"));
+            jsCallback(function_startWidget, 0, EUExCallback.F_C_INT,
+                    EUExCallback.F_C_FAILED);
+        }
+    }
 
-	public void finishWidget(String[] parm) {
-		if (parm.length < 1) {
-			return;
-		}
-		EBrowserWindow curWind = mBrwView.getBrowserWindow();
-		if (null == curWind) {
-			return;
-		}
-		String inResultInfo = parm[0];
-		String appId = null;
+    public void finishWidget(String[] parm) {
+        if (parm.length < 1) {
+            return;
+        }
+        EBrowserWindow curWind = mBrwView.getBrowserWindow();
+        if (null == curWind) {
+            return;
+        }
+        String inResultInfo = parm[0];
+        String appId = null;
         boolean isWgtBG = false;
         if (parm.length > 1) {
-            if(!TextUtils.isEmpty(parm[1]) && parm[1].trim().length() != 0){
+            if (!TextUtils.isEmpty(parm[1]) && parm[1].trim().length() != 0) {
                 appId = parm[1];
             }
         }
-        if(parm.length > 2){
-            if(!TextUtils.isEmpty(parm[2]) && parm[2].trim().length() != 0){
+        if (parm.length > 2) {
+            if (!TextUtils.isEmpty(parm[2]) && parm[2].trim().length() != 0) {
                 isWgtBG = "1".equals(parm[2]);
             }
         }
         finishWidget(inResultInfo, appId, isWgtBG);
     }
 
-	public void removeWidget(String[] parm) {
-		if (parm.length < 1) {
-			return;
-		}
-		String inAppId = parm[0];
-		WDataManager dm = new WDataManager(mContext);
-		String info = dm.removeWgtByAppID(inAppId);
-		if (info.equals("0")) {
-			jsCallback(function_removeWidget, 0, EUExCallback.F_C_INT,
-					EUExCallback.F_C_SUCCESS);
-		} else {
-			jsCallback(function_removeWidget, 0, EUExCallback.F_C_INT,
-					EUExCallback.F_C_FAILED);
-		}
-	}
+    public void removeWidget(String[] parm) {
+        if (parm.length < 1) {
+            return;
+        }
+        String inAppId = parm[0];
+        WDataManager dm = new WDataManager(mContext);
+        String info = dm.removeWgtByAppID(inAppId);
+        if (info.equals("0")) {
+            jsCallback(function_removeWidget, 0, EUExCallback.F_C_INT,
+                    EUExCallback.F_C_SUCCESS);
+        } else {
+            jsCallback(function_removeWidget, 0, EUExCallback.F_C_INT,
+                    EUExCallback.F_C_FAILED);
+        }
+    }
 
-	public void closeLoading(String[] params) {
+    public void closeLoading(String[] params) {
         ((EBrowserActivity) mContext).setContentViewVisible(0);
-	}
+    }
 
 
-	public void loadApp(String[] parm) {
-		if (parm.length < 3) {
-			return;
-		}
-		String inAppInfo = parm[0];
-		String inFilter = parm[1];
-		String inDataUri = parm[2];
-		String data = null;
-		if (4 == parm.length) {
-			data = parm[3];
-		}
-		if (null == inAppInfo || 0 == inAppInfo.length()) {
+    public void loadApp(String[] parm) {
+        if (parm.length < 3) {
+            return;
+        }
+        String inAppInfo = parm[0];
+        String inFilter = parm[1];
+        String inDataUri = parm[2];
+        String data = null;
+        if (4 == parm.length) {
+            data = parm[3];
+        }
+        if (null == inAppInfo || 0 == inAppInfo.length()) {
 
-			return;
-		}
-		Intent intent = new Intent(inAppInfo);
-		if ((null != inDataUri && 0 != inDataUri.length())
-				&& (null != inFilter && 0 != inFilter.length())) {
-			Uri uri = Uri.parse(inDataUri);
-			intent.setDataAndType(uri, inFilter);
-		} else {
-			if (null != inDataUri && 0 != inDataUri.length()) {
-				Uri uri = Uri.parse(inDataUri);
-				intent.setData(uri);
-			}
-			if (null != inFilter && 0 != inFilter.length()) {
-				intent.setType(inFilter);
-			}
-		}
-		if (null != data) {
-			try {
-				JSONObject json = new JSONObject(data);
-				Iterator<?> keys = json.keys();
-				while (keys.hasNext()) {
-					String key = (String) keys.next();
-					String value = json.optString(key);
-					if (null != key && null != value) {
-						intent.putExtra(key, value);
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		try {
-			startActivityForResult(Intent.createChooser(intent, EUExUtil.getString("platform_choose_app")),
-					LOADAPP_RQ_CODE);
-		} catch (Exception e) {
-			Toast.makeText(mContext, "not find any app", Toast.LENGTH_SHORT)
-					.show();
-		}
-		/**
-		 * load UC intent.putExtra("UC_LOADURL", inDataInfo);
-		 * intent.putExtra("time_stamp", System.currentTimeMillis());
-		 * intent.putExtra("recall_action", "com.test.openintenttouc");
-		 */
-	}
+            return;
+        }
+        Intent intent = new Intent(inAppInfo);
+        if ((null != inDataUri && 0 != inDataUri.length())
+                && (null != inFilter && 0 != inFilter.length())) {
+            Uri uri = Uri.parse(inDataUri);
+            intent.setDataAndType(uri, inFilter);
+        } else {
+            if (null != inDataUri && 0 != inDataUri.length()) {
+                Uri uri = Uri.parse(inDataUri);
+                intent.setData(uri);
+            }
+            if (null != inFilter && 0 != inFilter.length()) {
+                intent.setType(inFilter);
+            }
+        }
+        if (null != data) {
+            try {
+                JSONObject json = new JSONObject(data);
+                Iterator<?> keys = json.keys();
+                while (keys.hasNext()) {
+                    String key = (String) keys.next();
+                    String value = json.optString(key);
+                    if (null != key && null != value) {
+                        intent.putExtra(key, value);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            startActivityForResult(Intent.createChooser(intent, EUExUtil.getString("platform_choose_app")),
+                    LOADAPP_RQ_CODE);
+        } catch (Exception e) {
+            Toast.makeText(mContext, "not find any app", Toast.LENGTH_SHORT)
+                    .show();
+        }
+        /**
+         * load UC intent.putExtra("UC_LOADURL", inDataInfo);
+         * intent.putExtra("time_stamp", System.currentTimeMillis());
+         * intent.putExtra("recall_action", "com.test.openintenttouc");
+         */
+    }
 
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == LOADAPP_RQ_CODE) {
-			JSONObject json = new JSONObject();
-			JSONObject jValue = new JSONObject();
-			try {
-				if (null != data) {
-					Bundle bundle = data.getExtras();
-					if (null != bundle) {
-						Set<String> keys = bundle.keySet();
-						if (null != keys) {
-							for (String key : keys) {
-								Object value = bundle.get(key);
-								jValue.put(key, value);
-							}
-						}
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			try {
-				json.put("value", jValue);
-				if (resultCode == Activity.RESULT_OK) {
-					json.put("resultCode", 1);
-				} else {
-					json.put("resultCode", 0);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			jsCallback(function_loadApp, 0, EUExCallback.F_C_JSON,
-					json.toString());
-		}
-	}
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == LOADAPP_RQ_CODE) {
+            JSONObject json = new JSONObject();
+            JSONObject jValue = new JSONObject();
+            try {
+                if (null != data) {
+                    Bundle bundle = data.getExtras();
+                    if (null != bundle) {
+                        Set<String> keys = bundle.keySet();
+                        if (null != keys) {
+                            for (String key : keys) {
+                                Object value = bundle.get(key);
+                                jValue.put(key, value);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                json.put("value", jValue);
+                if (resultCode == Activity.RESULT_OK) {
+                    json.put("resultCode", 1);
+                } else {
+                    json.put("resultCode", 0);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            jsCallback(function_loadApp, 0, EUExCallback.F_C_JSON,
+                    json.toString());
+        }
+    }
 
-	public void installApp(String[] parm) {
-		if (parm.length < 1) {
-			return;
-		}
-		EBrowserWindow curWind = mBrwView.getBrowserWindow();
-		if (null == curWind) {
-			return;
-		}
-		String inAppPath = parm[0];
-		if (null == inAppPath || 0 == inAppPath.trim().length()) {
-			return;
-		}
-		inAppPath = BUtility.makeRealPath(inAppPath,
-				mBrwView.getCurrentWidget().m_widgetPath,
-				curWind.getWidgetType());
-		if (inAppPath.contains("wgtRes")) {
-			InputStream is;
-			try {
-				// String tPath = m_eContext.getCacheDir().getAbsolutePath() +
-				// "/temp.apk";
-				String tPath = Environment.getExternalStorageDirectory().getPath() + "/temp.apk";
-				is = mContext.getAssets().open(inAppPath);
-				File file = new File(tPath);
-				file.createNewFile();
-				FileOutputStream fos = new FileOutputStream(file);
-				byte[] temp = new byte[8 * 1024];
-				int i = 0;
-				while ((i = is.read(temp)) > 0) {
-					fos.write(temp, 0, i);
-				}
-				fos.close();
-				is.close();
-				inAppPath = tPath;
-				// modify permission
-				// String command = "chmod777" + " " + inAppPath;
-				// Runtime.getRuntime().exec(command);
-			} catch (IOException e) {
-				Toast.makeText(
-						mContext,
-						ResoureFinder.getInstance().getString(mContext,
-								"error_sdcard_is_not_available"),
-						Toast.LENGTH_SHORT).show();
-				return;
-			}
-		}
-		// install apk.
-		Intent intent = new Intent(Intent.ACTION_VIEW);
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		MimeTypeMap type = MimeTypeMap.getSingleton();
-		String mime = type.getMimeTypeFromExtension("apk");
-		intent.setDataAndType(Uri.parse("file://" + inAppPath), mime);
-		mContext.startActivity(intent);
-	}
+    public void installApp(String[] parm) {
+        if (parm.length < 1) {
+            return;
+        }
+        EBrowserWindow curWind = mBrwView.getBrowserWindow();
+        if (null == curWind) {
+            return;
+        }
+        String inAppPath = parm[0];
+        if (null == inAppPath || 0 == inAppPath.trim().length()) {
+            return;
+        }
+        inAppPath = BUtility.makeRealPath(inAppPath,
+                mBrwView.getCurrentWidget().m_widgetPath,
+                curWind.getWidgetType());
+        if (inAppPath.contains("wgtRes")) {
+            InputStream is;
+            try {
+                // String tPath = m_eContext.getCacheDir().getAbsolutePath() +
+                // "/temp.apk";
+                String tPath = Environment.getExternalStorageDirectory().getPath() + "/temp.apk";
+                is = mContext.getAssets().open(inAppPath);
+                File file = new File(tPath);
+                file.createNewFile();
+                FileOutputStream fos = new FileOutputStream(file);
+                byte[] temp = new byte[8 * 1024];
+                int i = 0;
+                while ((i = is.read(temp)) > 0) {
+                    fos.write(temp, 0, i);
+                }
+                fos.close();
+                is.close();
+                inAppPath = tPath;
+                // modify permission
+                // String command = "chmod777" + " " + inAppPath;
+                // Runtime.getRuntime().exec(command);
+            } catch (IOException e) {
+                Toast.makeText(
+                        mContext,
+                        ResoureFinder.getInstance().getString(mContext,
+                                "error_sdcard_is_not_available"),
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+        // install apk.
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        MimeTypeMap type = MimeTypeMap.getSingleton();
+        String mime = type.getMimeTypeFromExtension("apk");
+        intent.setDataAndType(Uri.parse("file://" + inAppPath), mime);
+        mContext.startActivity(intent);
+    }
 
-	public void setMySpaceInfo(String[] parm) {
-		if (parm.length < 3) {
-			return;
-		}
-		EBrowserWindow curWind = mBrwView.getBrowserWindow();
-		if (null == curWind) {
-			return;
-		}
-		String inForResult = parm[0];
-		String inAnimiId = parm[1];
-		String inInfo = parm[2];
-		curWind.getBrowser().setMySpaceInfo(inForResult, inAnimiId, inInfo);
-	}
+    public void setMySpaceInfo(String[] parm) {
+        if (parm.length < 3) {
+            return;
+        }
+        EBrowserWindow curWind = mBrwView.getBrowserWindow();
+        if (null == curWind) {
+            return;
+        }
+        String inForResult = parm[0];
+        String inAnimiId = parm[1];
+        String inInfo = parm[2];
+        curWind.getBrowser().setMySpaceInfo(inForResult, inAnimiId, inInfo);
+    }
 
-	public void getOpenerInfo(String[] parm) {
-		EBrowserWindow curWind = mBrwView.getBrowserWindow();
-		if (null == curWind) {
-			return;
-		}
-		jsCallback(function_getOpenerInfo, 0, EUExCallback.F_C_TEXT,
+    public void getOpenerInfo(String[] parm) {
+        EBrowserWindow curWind = mBrwView.getBrowserWindow();
+        if (null == curWind) {
+            return;
+        }
+        jsCallback(function_getOpenerInfo, 0, EUExCallback.F_C_TEXT,
                 curWind.getOpener());
-	}
+    }
 
-	public void setPushNotifyCallback(String[] parm) {
-		mBrwView.getBrowserWindow().getEBrowserWidget()
-				.setPushNotify(mBrwView.getWindowName(), parm[0]);
-	}
+    public void setPushNotifyCallback(String[] parm) {
+        mBrwView.getBrowserWindow().getEBrowserWidget()
+                .setPushNotify(mBrwView.getWindowName(), parm[0]);
+    }
 
-	public void checkUpdate(String[] parm) {
-		final WWidgetData widgetData = mBrwView.getCurrentWidget();
-		new Thread("Appcan-uexWidgetCheckUpdate") {
-			public void run() {
-				JSONObject obj = new JSONObject();
-				try {
-					if (widgetData != null) {
-						// if (widgetData.m_appId != null
-						// && widgetData.m_appId.length() > 0) {
-						WDataManager dataManager = new WDataManager(mContext);
-						ReData reData = dataManager.ChekeUpdate(mContext,
-								widgetData.m_updateurl, widgetData.m_appId,
-								widgetData.m_ver);
-						if (reData == null) {
-							obj.put(EUExCallback.F_JK_RESULT,
-									EUExCallback.F_JV_ERROR);
-							jsCallback(function_checkUpdate, 0,
-									EUExCallback.F_C_JSON, obj.toString());
-							return;
-						} else if (!TextUtils.isEmpty(reData.fileUrl)) {
-							obj.put(EUExCallback.F_JK_RESULT,
-									EUExCallback.F_JV_UPDATE);
-							obj.put(EUExCallback.F_JK_NAME, reData.fileName);
-							obj.put(EUExCallback.F_JK_SIZE, reData.fileSize);
-							obj.put(EUExCallback.F_JK_URL, reData.fileUrl);
-							obj.put(EUExCallback.F_JK_VERSION, reData.version);
-						} else {
-							obj.put(EUExCallback.F_JK_RESULT,
-									EUExCallback.F_JV_NO_UPDATE);
-						}
-						jsCallback(function_checkUpdate, 0,
-								EUExCallback.F_C_JSON, obj.toString());
+    public void checkUpdate(String[] parm) {
+        final WWidgetData widgetData = mBrwView.getCurrentWidget();
+        new Thread("Appcan-uexWidgetCheckUpdate") {
+            public void run() {
+                JSONObject obj = new JSONObject();
+                try {
+                    if (widgetData != null) {
+                        // if (widgetData.m_appId != null
+                        // && widgetData.m_appId.length() > 0) {
+                        WDataManager dataManager = new WDataManager(mContext);
+                        ReData reData = dataManager.ChekeUpdate(mContext,
+                                widgetData.m_updateurl, widgetData.m_appId,
+                                widgetData.m_ver);
+                        if (reData == null) {
+                            obj.put(EUExCallback.F_JK_RESULT,
+                                    EUExCallback.F_JV_ERROR);
+                            jsCallback(function_checkUpdate, 0,
+                                    EUExCallback.F_C_JSON, obj.toString());
+                            return;
+                        } else if (!TextUtils.isEmpty(reData.fileUrl)) {
+                            obj.put(EUExCallback.F_JK_RESULT,
+                                    EUExCallback.F_JV_UPDATE);
+                            obj.put(EUExCallback.F_JK_NAME, reData.fileName);
+                            obj.put(EUExCallback.F_JK_SIZE, reData.fileSize);
+                            obj.put(EUExCallback.F_JK_URL, reData.fileUrl);
+                            obj.put(EUExCallback.F_JK_VERSION, reData.version);
+                        } else {
+                            obj.put(EUExCallback.F_JK_RESULT,
+                                    EUExCallback.F_JV_NO_UPDATE);
+                        }
+                        jsCallback(function_checkUpdate, 0,
+                                EUExCallback.F_C_JSON, obj.toString());
 
-						// } else {
-						// obj.put(EUExCallback.F_JK_RESULT,
-						// EUExCallback.F_JV_NO_REGIST);
-						// jsCallback(function_checkUpdate, 0,
-						// EUExCallback.F_C_JSON, obj.toString());
-						// }
-						return;
-					}
-					obj.put(EUExCallback.F_JK_RESULT, EUExCallback.F_JV_ERROR);
-					jsCallback(function_checkUpdate, 0, EUExCallback.F_C_JSON,
-							obj.toString());
-				} catch (Exception e) {
-					try {
-						obj.put(EUExCallback.F_JK_RESULT,
-								EUExCallback.F_JV_ERROR);
-					} catch (JSONException e1) {
-					}
-					jsCallback(function_checkUpdate, 0, EUExCallback.F_C_JSON,
-							obj.toString());
-				}
-			}
-		}.start();
-	}
+                        // } else {
+                        // obj.put(EUExCallback.F_JK_RESULT,
+                        // EUExCallback.F_JV_NO_REGIST);
+                        // jsCallback(function_checkUpdate, 0,
+                        // EUExCallback.F_C_JSON, obj.toString());
+                        // }
+                        return;
+                    }
+                    obj.put(EUExCallback.F_JK_RESULT, EUExCallback.F_JV_ERROR);
+                    jsCallback(function_checkUpdate, 0, EUExCallback.F_C_JSON,
+                            obj.toString());
+                } catch (Exception e) {
+                    try {
+                        obj.put(EUExCallback.F_JK_RESULT,
+                                EUExCallback.F_JV_ERROR);
+                    } catch (JSONException e1) {
+                    }
+                    jsCallback(function_checkUpdate, 0, EUExCallback.F_C_JSON,
+                            obj.toString());
+                }
+            }
+        }.start();
+    }
 
-	public void setPushInfo(String[] parm) {
-		if (parm.length != 2) {
-			parm = new String[] { "", "" };
-		}
-		final String userId = parm[0];
-		final String userNick = parm[1];
-		WidgetOneApplication app = (WidgetOneApplication) ((Activity) mContext)
-				.getApplication();
-		app.setPushInfo(userId, userNick, mContext, mBrwView);
-	}
+    public void setPushInfo(String[] parm) {
+        if (parm.length != 2) {
+            parm = new String[]{"", ""};
+        }
+        final String userId = parm[0];
+        final String userNick = parm[1];
+        WidgetOneApplication app = (WidgetOneApplication) ((Activity) mContext)
+                .getApplication();
+        app.setPushInfo(userId, userNick, mContext, mBrwView);
+    }
 
-	public void setPushState(String[] parm) {
-		if (parm.length != 1) {
-			return;
-		}
-		WidgetOneApplication app = (WidgetOneApplication) ((Activity) mContext)
-				.getApplication();
-		app.setPushState(Integer.parseInt(parm[0]));
+    public void setPushState(String[] parm) {
+        if (parm.length != 1) {
+            return;
+        }
+        WidgetOneApplication app = (WidgetOneApplication) ((Activity) mContext)
+                .getApplication();
+        app.setPushState(Integer.parseInt(parm[0]));
 
-	}
+    }
 
     public void setKeyboardMode(final String[] param) {
         if (param.length <= 0) {
             return;
         }
-        ((Activity)mContext).runOnUiThread(new Runnable() {
+        ((Activity) mContext).runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    JSONObject jsonObject=new JSONObject(param[0]);
-                    int mode=jsonObject.optInt("mode",0);
-                    if (mode==0){
-                        ((Activity)mContext).getWindow().setSoftInputMode(WindowManager.LayoutParams
+                    JSONObject jsonObject = new JSONObject(param[0]);
+                    int mode = jsonObject.optInt("mode", 0);
+                    if (mode == 0) {
+                        ((Activity) mContext).getWindow().setSoftInputMode(WindowManager.LayoutParams
                                 .SOFT_INPUT_ADJUST_RESIZE |
                                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-                    }else{
-                        ((Activity)mContext).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+                    } else {
+                        ((Activity) mContext).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
                     }
                 } catch (JSONException e) {
 
@@ -749,77 +749,81 @@ public class EUExWidget extends EUExBase {
         });
     }
 
-	public void getPushState(String[] parm) {
-		SharedPreferences sp = mContext.getSharedPreferences("saveData",
-				Context.MODE_PRIVATE);
-		String pushMes = sp.getString("pushMes", "0");
-		String localPushMes = sp.getString("localPushMes", pushMes);
-		jsCallback(function_getPushState, 0, EUExCallback.F_C_INT,
+    public void getPushState(String[] parm) {
+        SharedPreferences sp = mContext.getSharedPreferences("saveData",
+                Context.MODE_PRIVATE);
+        String pushMes = sp.getString("pushMes", "0");
+        String localPushMes = sp.getString("localPushMes", pushMes);
+        jsCallback(function_getPushState, 0, EUExCallback.F_C_INT,
                 Integer.parseInt(localPushMes));
-	}
+    }
 
-	public void getPushInfo(String[] parm) {
-		String type = PUSH_MSG_BODY;
-		if (parm.length >= 1) {
-			type = parm[0];
-		}
-		String userInfo = null;
-		try {
-			if (PUSH_MSG_ALL.equals(type)) {
-				// 获取推送消息所有内容
-				userInfo = ((EBrowserActivity) mContext).getIntent()
-						.getStringExtra(BUNDLE_MESSAGE);
-			} else {
-				userInfo = ((EBrowserActivity) mContext).getIntent()
-						.getStringExtra(BUNDLE_DATA);
-			}
-		} catch (Exception e) {
-		}
-		((WidgetOneApplication) mContext.getApplicationContext()).getPushInfo(
-				userInfo, System.currentTimeMillis() + "");
-		jsCallback(function_getPushInfo, 0, EUExCallback.F_C_TEXT, userInfo);
-	}
+    public void getPushInfo(String[] parm) {
+        String type = PUSH_MSG_BODY;
+        if (parm.length >= 1) {
+            type = parm[0];
+        }
+        String userInfo = null;
+        try {
+            if (PUSH_MSG_ALL.equals(type)) {
+                // 获取推送消息所有内容
+                userInfo = ((EBrowserActivity) mContext).getIntent()
+                        .getStringExtra(BUNDLE_MESSAGE);
+            } else {
+                userInfo = ((EBrowserActivity) mContext).getIntent()
+                        .getStringExtra(BUNDLE_DATA);
+            }
+        } catch (Exception e) {
+        }
+        ((WidgetOneApplication) mContext.getApplicationContext()).getPushInfo(
+                userInfo, System.currentTimeMillis() + "");
+        jsCallback(function_getPushInfo, 0, EUExCallback.F_C_TEXT, userInfo);
+    }
 
-	public void share(String inShareTitle, String inSubject, String inContent) {
-		Intent intent = new Intent(Intent.ACTION_SEND);
-		intent.setType(MimeTypeMap.getSingleton().getMimeTypeFromExtension(
-				"txt"));
-		intent.putExtra(Intent.EXTRA_SUBJECT, inSubject);
-		intent.putExtra(Intent.EXTRA_TEXT, inContent);
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		mContext.startActivity(Intent.createChooser(intent, inShareTitle));
-	}
+    public void share(String inShareTitle, String inSubject, String inContent) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType(MimeTypeMap.getSingleton().getMimeTypeFromExtension(
+                "txt"));
+        intent.putExtra(Intent.EXTRA_SUBJECT, inSubject);
+        intent.putExtra(Intent.EXTRA_TEXT, inContent);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        mContext.startActivity(Intent.createChooser(intent, inShareTitle));
+    }
 
-	public void openFile(String path) {
-		if (null == path || path.trim().length() == 0) {
-			return;
-		}
-		Intent in = new Intent(Intent.ACTION_VIEW);
-		MimeTypeMap type = MimeTypeMap.getSingleton();
-		String mime = MimeTypeMap.getFileExtensionFromUrl(path);
-		mime = type.getMimeTypeFromExtension(mime);
-		if (null != mime && mime.length() != 0) {
-			File file = new File(path);
-			Uri ri = Uri.fromFile(file);
-			in.setDataAndType(ri, mime);
-		}
-		if (appExist(in)) {
-			mContext.startActivity(Intent.createChooser(in, "choose one:"));
-		} else {
-			;
-		}
-	}
+    public void moveToBack(String[] params) {
+        ((Activity) mContext).moveTaskToBack(true);
+    }
 
-	private boolean appExist(Intent intent) {
-		List<ResolveInfo> list = mContext.getPackageManager()
-				.queryIntentActivities(intent, 0);
-		if (list.size() > 0) {
-			return true;
-		}
-		return false;
-	}
+    public void openFile(String path) {
+        if (null == path || path.trim().length() == 0) {
+            return;
+        }
+        Intent in = new Intent(Intent.ACTION_VIEW);
+        MimeTypeMap type = MimeTypeMap.getSingleton();
+        String mime = MimeTypeMap.getFileExtensionFromUrl(path);
+        mime = type.getMimeTypeFromExtension(mime);
+        if (null != mime && mime.length() != 0) {
+            File file = new File(path);
+            Uri ri = Uri.fromFile(file);
+            in.setDataAndType(ri, mime);
+        }
+        if (appExist(in)) {
+            mContext.startActivity(Intent.createChooser(in, "choose one:"));
+        } else {
+            ;
+        }
+    }
 
-    public void isAppInstalled(String[] params){
+    private boolean appExist(Intent intent) {
+        List<ResolveInfo> list = mContext.getPackageManager()
+                .queryIntentActivities(intent, 0);
+        if (list.size() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public void isAppInstalled(String[] params) {
         if (params == null || params.length < 1) {
             errorCallback(0, 0, "error params!");
             return;
@@ -833,16 +837,16 @@ public class EUExWidget extends EUExBase {
         mHandler.sendMessage(msg);
     }
 
-    public void isAppInstalledMsg(String[] params){
-        if (params == null || params.length < 1){
-            errorCallback(0, 0 , "error params!");
+    public void isAppInstalledMsg(String[] params) {
+        if (params == null || params.length < 1) {
+            errorCallback(0, 0, "error params!");
             return;
         }
         String json = params[0];
         AppInstalledVO data = DataHelper.gson.fromJson(json, AppInstalledVO.class);
         String packageName = data.getAppData();
-        if (TextUtils.isEmpty(packageName)){
-            errorCallback(0, 0 , "error params!");
+        if (TextUtils.isEmpty(packageName)) {
+            errorCallback(0, 0, "error params!");
             return;
         }
         JSONObject jsonObject = new JSONObject();
@@ -862,24 +866,24 @@ public class EUExWidget extends EUExBase {
         callBackPluginJs(JsConst.CALLBACK_IS_APP_INSTALLED, jsonObject.toString());
     }
 
-    private void callBackPluginJs(String methodName, String jsonData){
+    private void callBackPluginJs(String methodName, String jsonData) {
         String js = SCRIPT_HEADER + "if(" + methodName + "){"
                 + methodName + "('" + jsonData + "');}";
         onCallback(js);
     }
 
-	@Override
-	public boolean clean() {
+    @Override
+    public boolean clean() {
 
-		return true;
-	}
+        return true;
+    }
 
     @Override
     public void onHandleMessage(Message message) {
-        if(message == null){
+        if (message == null) {
             return;
         }
-        Bundle bundle=message.getData();
+        Bundle bundle = message.getData();
         switch (message.what) {
             case MSG_IS_APP_INSTALLED:
                 isAppInstalledMsg(bundle.getStringArray(BUNDLE_DATA));
@@ -887,73 +891,73 @@ public class EUExWidget extends EUExBase {
             default:
                 super.onHandleMessage(message);
         }
-	}
+    }
 
-	class CheckUpdateThread extends Thread {
+    class CheckUpdateThread extends Thread {
 
-		public CheckUpdateThread() {
-			setName("Appcan-uexWidgetCheckUpdate");
-		}
+        public CheckUpdateThread() {
+            setName("Appcan-uexWidgetCheckUpdate");
+        }
 
-		public void shutDown() {
+        public void shutDown() {
 
-		}
+        }
 
-		@Override
-		public void run() {
-			JSONObject obj = new JSONObject();
-			try {
-				WWidgetData widgetData = mBrwView.getCurrentWidget();
-				if (widgetData != null) {
-					// if (widgetData.m_appId != null
-					// && widgetData.m_appId.length() > 0) {
-					WDataManager dataManager = new WDataManager(mContext);
-					ReData reData = dataManager.ChekeUpdate(mContext,
-							widgetData.m_updateurl, widgetData.m_appId,
-							widgetData.m_ver);
-					if (reData == null) {
-						obj.put(EUExCallback.F_JK_RESULT,
-								EUExCallback.F_JV_ERROR);
-						jsCallback(function_checkUpdate, 0,
-								EUExCallback.F_C_JSON, obj.toString());
-						return;
-					} else if (!TextUtils.isEmpty(reData.fileUrl)) {
-						obj.put(EUExCallback.F_JK_RESULT,
-								EUExCallback.F_JV_UPDATE);
-						obj.put(EUExCallback.F_JK_NAME, reData.fileName);
-						obj.put(EUExCallback.F_JK_SIZE, reData.fileSize);
-						obj.put(EUExCallback.F_JK_URL, reData.fileUrl);
-						obj.put(EUExCallback.F_JK_VERSION, reData.version);
-					} else {
-						obj.put(EUExCallback.F_JK_RESULT,
-								EUExCallback.F_JV_NO_UPDATE);
-					}
-					jsCallback(function_checkUpdate, 0, EUExCallback.F_C_JSON,
-							obj.toString());
+        @Override
+        public void run() {
+            JSONObject obj = new JSONObject();
+            try {
+                WWidgetData widgetData = mBrwView.getCurrentWidget();
+                if (widgetData != null) {
+                    // if (widgetData.m_appId != null
+                    // && widgetData.m_appId.length() > 0) {
+                    WDataManager dataManager = new WDataManager(mContext);
+                    ReData reData = dataManager.ChekeUpdate(mContext,
+                            widgetData.m_updateurl, widgetData.m_appId,
+                            widgetData.m_ver);
+                    if (reData == null) {
+                        obj.put(EUExCallback.F_JK_RESULT,
+                                EUExCallback.F_JV_ERROR);
+                        jsCallback(function_checkUpdate, 0,
+                                EUExCallback.F_C_JSON, obj.toString());
+                        return;
+                    } else if (!TextUtils.isEmpty(reData.fileUrl)) {
+                        obj.put(EUExCallback.F_JK_RESULT,
+                                EUExCallback.F_JV_UPDATE);
+                        obj.put(EUExCallback.F_JK_NAME, reData.fileName);
+                        obj.put(EUExCallback.F_JK_SIZE, reData.fileSize);
+                        obj.put(EUExCallback.F_JK_URL, reData.fileUrl);
+                        obj.put(EUExCallback.F_JK_VERSION, reData.version);
+                    } else {
+                        obj.put(EUExCallback.F_JK_RESULT,
+                                EUExCallback.F_JV_NO_UPDATE);
+                    }
+                    jsCallback(function_checkUpdate, 0, EUExCallback.F_C_JSON,
+                            obj.toString());
 
-					// } else {
-					// obj.put(EUExCallback.F_JK_RESULT,
-					// EUExCallback.F_JV_NO_REGIST);
-					// jsCallback(function_checkUpdate, 0,
-					// EUExCallback.F_C_JSON, obj.toString());
-					// }
-					return;
-				}
-				obj.put(EUExCallback.F_JK_RESULT, EUExCallback.F_JV_ERROR);
-				jsCallback(function_checkUpdate, 0, EUExCallback.F_C_JSON,
-						obj.toString());
-			} catch (Exception e) {
-				try {
-					obj.put(EUExCallback.F_JK_RESULT, EUExCallback.F_JV_ERROR);
-				} catch (JSONException e1) {
-				}
-				jsCallback(function_checkUpdate, 0, EUExCallback.F_C_JSON,
-						obj.toString());
-			}
-		}
-	}
+                    // } else {
+                    // obj.put(EUExCallback.F_JK_RESULT,
+                    // EUExCallback.F_JV_NO_REGIST);
+                    // jsCallback(function_checkUpdate, 0,
+                    // EUExCallback.F_C_JSON, obj.toString());
+                    // }
+                    return;
+                }
+                obj.put(EUExCallback.F_JK_RESULT, EUExCallback.F_JV_ERROR);
+                jsCallback(function_checkUpdate, 0, EUExCallback.F_C_JSON,
+                        obj.toString());
+            } catch (Exception e) {
+                try {
+                    obj.put(EUExCallback.F_JK_RESULT, EUExCallback.F_JV_ERROR);
+                } catch (JSONException e1) {
+                }
+                jsCallback(function_checkUpdate, 0, EUExCallback.F_C_JSON,
+                        obj.toString());
+            }
+        }
+    }
 
-    public interface SpaceClickListener{
+    public interface SpaceClickListener {
         public void onSpaceClick();
     }
 

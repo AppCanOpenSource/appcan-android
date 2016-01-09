@@ -38,6 +38,9 @@
     function cbStartApp(info){
         alert("cbStartApp:" + info);
     }
+    function moveToBack(){
+        uexWidget.moveToBack();
+    }
     </script>
 </head>
 
@@ -51,7 +54,7 @@
 
         <input class='btn' type='button' value='startApp' onclick='startApp()'>
 
-
+        <input class='btn' type='button' value='moveToBack' onclick='moveToBack()'>
     </div>
 </div>
 </body>
