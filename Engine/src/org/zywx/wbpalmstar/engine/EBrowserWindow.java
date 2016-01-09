@@ -651,7 +651,10 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         child.setDateType(entity.mDataType);
         child.setQuery(entity.mQuery);
         View parent = (View) child.getParent();
-        removeView(parent);
+        boolean parentHasChanged=parent.getParent()!=this;//父View没有改变不需要remove和add操作
+        if (parentHasChanged){
+            removeView(parent);
+        }
         LayoutParams popParm = new LayoutParams(entity.mWidth, entity.mHeight);
         popParm.gravity = Gravity.NO_GRAVITY;
         popParm.leftMargin = entity.mX;
@@ -661,7 +664,9 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         if (entity.hasExtraInfo) {
             child.setBrwViewBackground(entity.mOpaque, entity.mBgColor, "");
         }
-        addView(parent);
+        if (parentHasChanged) {
+            addView(parent);
+        }
         switch (entity.mDataType) {
             case EBrwViewEntry.WINDOW_DATA_TYPE_URL:
 //			if (entity.checkFlag(EBrwViewEntry.F_FLAG_OBFUSCATION)) {
