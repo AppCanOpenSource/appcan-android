@@ -2587,7 +2587,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         if (mChannelList == null) {
             mChannelList = new ArrayList<HashMap<String, String>>();
         }
-        if (hasChannel(channelId)) {
+        if (hasChannel(channelId, name)) {
             return;
         }
         HashMap<String, String> item = new HashMap<String, String>();
@@ -2600,9 +2600,10 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         mChannelList.add(item);
     }
 
-    private boolean hasChannel(String channelId) {
-        for (HashMap<String, String> item : mChannelList) {
-            if (channelId.equals(item.get(TAG_CHANNEL_ID))) {
+    private boolean hasChannel(String channelId, String name) {
+        for (HashMap<String,String> item:mChannelList) {
+            if (channelId.equals(item.get(TAG_CHANNEL_ID))
+                    && name.equals(item.get(TAG_CHANNEL_WINNAME))) {
                 return true;
             }
         }
