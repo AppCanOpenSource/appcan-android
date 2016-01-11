@@ -82,6 +82,7 @@ public class EUExWidget extends EUExBase {
     private static final String PUSH_MSG_BODY = "0";
     private static final String PUSH_MSG_ALL = "1";
     private static final int MSG_IS_APP_INSTALLED = 0;
+    private static final int MSG_RELOAD_WIDGET_BY_APPID= 1;
 
     public EUExWidget(Context context, EBrowserView inParent) {
         super(context, inParent);
@@ -866,6 +867,35 @@ public class EUExWidget extends EUExBase {
         callBackPluginJs(JsConst.CALLBACK_IS_APP_INSTALLED, jsonObject.toString());
     }
 
+    public void reloadWidgetByAppId(String[] params){
+        if (params.length < 1) {
+            return;
+        }
+        Message msg = mHandler.obtainMessage();
+        msg.what = MSG_RELOAD_WIDGET_BY_APPID;
+        msg.obj = this;
+        Bundle bd = new Bundle();
+        bd.putStringArray(BUNDLE_DATA, params);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
+    }
+
+    private void reloadWidgetByAppIdMsg(String[] params) {
+        if (params == null || params.length < 1){
+            errorCallback(0, 0 , "error params!");
+            return;
+        }
+        String appId = params[0];
+        if (TextUtils.isEmpty(appId)) {
+            Log.e("reloadWidgetByAppId", "appId is empty!!!");
+            return;
+        }
+        EBrowserWindow curWind = mBrwView.getBrowserWindow();
+        if (null == curWind) {
+            return;
+        }
+        curWind.reloadWidgetByAppId(appId);
+    }
     private void callBackPluginJs(String methodName, String jsonData) {
         String js = SCRIPT_HEADER + "if(" + methodName + "){"
                 + methodName + "('" + jsonData + "');}";
@@ -887,6 +917,9 @@ public class EUExWidget extends EUExBase {
         switch (message.what) {
             case MSG_IS_APP_INSTALLED:
                 isAppInstalledMsg(bundle.getStringArray(BUNDLE_DATA));
+                break;
+            case MSG_RELOAD_WIDGET_BY_APPID:
+                reloadWidgetByAppIdMsg(bundle.getStringArray(BUNDLE_DATA));
                 break;
             default:
                 super.onHandleMessage(message);
