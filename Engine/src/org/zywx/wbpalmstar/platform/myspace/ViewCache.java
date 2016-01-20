@@ -25,18 +25,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class ViewCache {
-	public ImageView iconImageView;
-	public ProgressBar downloadProgressBar;
-	public TextView nameTextView;
+    public ImageView iconImageView;
+    public ProgressBar downloadProgressBar;
+    public TextView nameTextView;
 
-	/**
-	 * 清除ViewCache数据状态
-	 */
-	public void clearStatus() {
-		iconImageView.setBackgroundDrawable(null);
-		iconImageView.setImageDrawable(null);
-		downloadProgressBar.setVisibility(View.GONE);
-		downloadProgressBar.setProgress(0);
-		nameTextView.setText("");
-	}
+    /**
+     * 清除ViewCache数据状态
+     */
+    public void clearStatus() {
+        iconImageView.setBackgroundDrawable(null);
+        iconImageView.setImageDrawable(null);
+        downloadProgressBar.setVisibility(View.GONE);
+        downloadProgressBar.setProgress(0);
+        nameTextView.setText("");
+    }
 }
