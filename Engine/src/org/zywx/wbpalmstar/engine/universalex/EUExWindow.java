@@ -93,6 +93,8 @@ public class EUExWindow extends EUExBase {
     public static final String function_cbslipedDownEdge = "uexWindow.slipedDownEdge";//不建议使用
     public static final String function_cbCreatePluginViewContainer = "uexWindow.cbCreatePluginViewContainer";
     public static final String function_cbClosePluginViewContainer = "uexWindow.cbClosePluginViewContainer";
+    public static final String function_cbShowPluginViewContainer = "uexWindow.cbShowPluginViewContainer";
+    public static final String function_cbHidePluginViewContainer = "uexWindow.cbHidePluginViewContainer";
     public static final String function_onPluginContainerPageChange = "uexWindow.onPluginContainerPageChange";
 
     public static final String function_onSlipedUpward = "uexWindow.onSlipedUpward";
@@ -3197,6 +3199,10 @@ public class EUExWindow extends EUExBase {
                     ContainerViewPager pager = (ContainerViewPager) view;
                     if (opid.equals(pager.getContainerVO().getId())) {
                         pager.setVisibility(View.VISIBLE);
+                        String js = SCRIPT_HEADER + "if(" + function_cbShowPluginViewContainer + "){"
+                                + function_cbShowPluginViewContainer + "(" + opid + "," + EUExCallback.F_C_TEXT + ",'"
+                                + "success" + "'" + SCRIPT_TAIL;
+                        onCallback(js);
                         return;
                     }
                 }//end instance
@@ -3238,6 +3244,10 @@ public class EUExWindow extends EUExBase {
                     ContainerViewPager pager = (ContainerViewPager) view;
                     if (opid.equals(pager.getContainerVO().getId())) {
                         pager.setVisibility(View.GONE);
+                        String js = SCRIPT_HEADER + "if(" + function_cbHidePluginViewContainer + "){"
+                                + function_cbHidePluginViewContainer + "(" + opid + "," + EUExCallback.F_C_TEXT + ",'"
+                                + "success" + "'" + SCRIPT_TAIL;
+                        onCallback(js);
                         return;
                     }
                 }//end instance
