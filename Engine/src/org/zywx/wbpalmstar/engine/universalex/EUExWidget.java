@@ -45,6 +45,7 @@ import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.JsConst;
 import org.zywx.wbpalmstar.base.ResoureFinder;
 import org.zywx.wbpalmstar.base.vo.AppInstalledVO;
+import org.zywx.wbpalmstar.base.vo.StartAppVO;
 import org.zywx.wbpalmstar.engine.DataHelper;
 import org.zywx.wbpalmstar.engine.EBrowserActivity;
 import org.zywx.wbpalmstar.engine.EBrowserAnimation;
@@ -227,6 +228,10 @@ public class EUExWidget extends EUExBase {
             if ("0".equals(startMode)) {
                 String pkgName = params[1];
                 String clsName = null;
+                StartAppVO extraVO=null;
+                if (params.length>4) {
+                    extraVO = DataHelper.gson.fromJson(params[4],StartAppVO.class);
+                }
                 if (TextUtils.isEmpty(pkgName)) {
                     Log.e(tag, "startApp has error params!!!");
                     callBackPluginJs(JsConst.CALLBACK_START_APP, "error params");
@@ -246,6 +251,10 @@ public class EUExWidget extends EUExBase {
                 }
                 ComponentName component = new ComponentName(pkgName, clsName);
                 intent = new Intent();
+                if (extraVO!=null&&extraVO.getData()!=null){
+                    Uri contentUrl=Uri.parse(extraVO.getData());
+                    intent.setData(contentUrl);
+                }
                 intent.setComponent(component);
             } else if ("1".equals(startMode)) {
                 String action = params[1];
