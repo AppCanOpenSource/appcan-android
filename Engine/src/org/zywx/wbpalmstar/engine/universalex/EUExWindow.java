@@ -93,6 +93,8 @@ public class EUExWindow extends EUExBase {
     public static final String function_cbslipedDownEdge = "uexWindow.slipedDownEdge";//不建议使用
     public static final String function_cbCreatePluginViewContainer = "uexWindow.cbCreatePluginViewContainer";
     public static final String function_cbClosePluginViewContainer = "uexWindow.cbClosePluginViewContainer";
+    public static final String function_cbShowPluginViewContainer = "uexWindow.cbShowPluginViewContainer";
+    public static final String function_cbHidePluginViewContainer = "uexWindow.cbHidePluginViewContainer";
     public static final String function_onPluginContainerPageChange = "uexWindow.onPluginContainerPageChange";
 
     public static final String function_onSlipedUpward = "uexWindow.onSlipedUpward";
@@ -159,6 +161,8 @@ public class EUExWindow extends EUExBase {
     private static final int MSG_PLUGINVIEW_CONTAINER_CREATE = 52;
     private static final int MSG_PLUGINVIEW_CONTAINER_CLOSE = 53;
     private static final int MSG_PLUGINVIEW_CONTAINER_SET = 54;
+    private static final int MSG_PLUGINVIEW_CONTAINER_SHOW = 55;
+    private static final int MSG_PLUGINVIEW_CONTAINER_HIDE = 56;
     private AlertDialog mAlert;
     private AlertDialog.Builder mConfirm;
     private PromptDialog mPrompt;
@@ -3163,6 +3167,96 @@ public class EUExWindow extends EUExBase {
         }
     }
 
+    public void showPluginViewContainer(String[] parm) {
+        Message msg = mHandler.obtainMessage();
+        msg.what = MSG_PLUGINVIEW_CONTAINER_SHOW;
+        msg.obj = this;
+        Bundle bd = new Bundle();
+        bd.putStringArray(TAG_BUNDLE_PARAM, parm);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
+    }
+
+    /**
+     * 显示隐藏的容器
+     *
+     * @param params
+     */
+    private void showPluginViewContainerMsg(String[] params) {
+        if (params == null || params.length < 1) {
+            errorCallback(0, 0, "error params!");
+            return;
+        }
+        try {
+            JSONObject json = new JSONObject(params[0]);
+            String opid = json.getString("id");
+
+            EBrowserWindow mWindow = mBrwView.getBrowserWindow();
+            int count = mWindow.getChildCount();
+            for (int i = 0; i < count; i++) {
+                View view = mWindow.getChildAt(i);
+                if (view instanceof ContainerViewPager) {
+                    ContainerViewPager pager = (ContainerViewPager) view;
+                    if (opid.equals(pager.getContainerVO().getId())) {
+                        pager.setVisibility(View.VISIBLE);
+                        String js = SCRIPT_HEADER + "if(" + function_cbShowPluginViewContainer + "){"
+                                + function_cbShowPluginViewContainer + "(" + opid + "," + EUExCallback.F_C_TEXT + ",'"
+                                + "success" + "'" + SCRIPT_TAIL;
+                        onCallback(js);
+                        return;
+                    }
+                }//end instance
+            }//end for
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void hidePluginViewContainer(String[] parm) {
+        Message msg = mHandler.obtainMessage();
+        msg.what = MSG_PLUGINVIEW_CONTAINER_HIDE;
+        msg.obj = this;
+        Bundle bd = new Bundle();
+        bd.putStringArray(TAG_BUNDLE_PARAM, parm);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
+    }
+
+    /**
+     * 隐藏显示的容器
+     *
+     * @param params
+     */
+    private void hidePluginViewContainerMsg(String[] params) {
+        if (params == null || params.length < 1) {
+            errorCallback(0, 0, "error params!");
+            return;
+        }
+        try {
+            JSONObject json = new JSONObject(params[0]);
+            String opid = json.getString("id");
+
+            EBrowserWindow mWindow = mBrwView.getBrowserWindow();
+            int count = mWindow.getChildCount();
+            for (int i = 0; i < count; i++) {
+                View view = mWindow.getChildAt(i);
+                if (view instanceof ContainerViewPager) {
+                    ContainerViewPager pager = (ContainerViewPager) view;
+                    if (opid.equals(pager.getContainerVO().getId())) {
+                        pager.setVisibility(View.GONE);
+                        String js = SCRIPT_HEADER + "if(" + function_cbHidePluginViewContainer + "){"
+                                + function_cbHidePluginViewContainer + "(" + opid + "," + EUExCallback.F_C_TEXT + ",'"
+                                + "success" + "'" + SCRIPT_TAIL;
+                        onCallback(js);
+                        return;
+                    }
+                }//end instance
+            }//end for
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void closePluginViewContainer(String[] parm) {
         Message msg = mHandler.obtainMessage();
         msg.what = MSG_PLUGINVIEW_CONTAINER_CLOSE;
@@ -3184,7 +3278,7 @@ public class EUExWindow extends EUExBase {
             return;
         }
         try {
-            JSONObject json = new JSONObject(params[0].toString());
+            JSONObject json = new JSONObject(params[0]);
             String opid = json.getString("id");
 
             EBrowserWindow mWindow = mBrwView.getBrowserWindow();
@@ -3193,7 +3287,7 @@ public class EUExWindow extends EUExBase {
                 View view = mWindow.getChildAt(i);
                 if (view instanceof ContainerViewPager) {
                     ContainerViewPager pager = (ContainerViewPager) view;
-                    if (opid.equals((String) pager.getContainerVO().getId())) {
+                    if (opid.equals(pager.getContainerVO().getId())) {
                         removeViewFromCurrentWindow(pager);
                         ContainerAdapter adapter = (ContainerAdapter) pager.getAdapter();
                         Vector<FrameLayout> views = adapter.getViewList();
@@ -3497,6 +3591,12 @@ public class EUExWindow extends EUExBase {
                 break;
             case MSG_PLUGINVIEW_CONTAINER_SET:
                 setPageInContainerMsg(param);
+                break;
+            case MSG_PLUGINVIEW_CONTAINER_SHOW:
+                showPluginViewContainerMsg(param);
+                break;
+            case MSG_PLUGINVIEW_CONTAINER_HIDE:
+                hidePluginViewContainerMsg(param);
                 break;
             default:
                 break;
