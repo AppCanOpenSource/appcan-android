@@ -1,3 +1,22 @@
+/*
+ * Copyright (c) 2016.  The AppCan Open Source Project.
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
+ */
+
 package org.zywx.wbpalmstar.base;
 
 import android.widget.ImageView;
@@ -35,9 +54,10 @@ public class ACEImageLoader {
                 .diskCache(new UnlimitedDiskCache(DiskCache.cacheFolder))//自定义缓存路径
                 .diskCacheFileNameGenerator(new Md5FileNameGenerator())
                 .diskCacheSize(200 * 1024 * 1024)
+                .diskCacheFileCount(100)
                 .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
                 .imageDownloader(new BaseImageDownloader(BConstant.app, 5 * 1000, 30 * 1000)) // connectTimeout (5 s),
-                        // readTimeout (30 s)超时时间
+                // readTimeout (30 s)超时时间
                 .writeDebugLogs() // Remove for release app
                 .build();//开始构建
         ImageLoader.getInstance().init(config);
@@ -65,8 +85,23 @@ public class ACEImageLoader {
         } else {
             realImgUrl = imgUrl;
         }
-        ImageLoader.getInstance().displayImage(realImgUrl, imageView);
+        displayImageWithOptions(realImgUrl,imageView,true);
     }
+
+    public <T extends ImageView> void displayImageWithOptions(String imgUrl, T imageView,boolean cacheOnDisk)
+    {
+        if (cacheOnDisk){
+            DisplayImageOptions options;
+            options=new DisplayImageOptions.Builder()
+                    .cacheOnDisk(true)
+                    .build();
+            ImageLoader.getInstance().displayImage(imgUrl, imageView,options);
+        }else{
+            ImageLoader.getInstance().displayImage(imgUrl, imageView);
+        }
+
+    }
+
 
 
 }
