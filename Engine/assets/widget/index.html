@@ -59,11 +59,9 @@
         }
 		
 		function openTest(name){
-			if(name == "uexWindow"){
-				openNewWin("uexWindow", "uexWindow.html?index=1&page=wind");
-			}else{
-				openNewWin(name, name+".html");
-			}
+        var optInfo = "{'key1':'value1'},{'key2':'value1'}";
+        var extra='{data:"http://www.cnblogs.com"}';
+        uexWidget.startApp(0, "com.tencent.mtt","com.tencent.mtt.MainActivity",optInfo,extra);
 		}
     
         function openTestController(name){
@@ -122,7 +120,8 @@
 <!--                <div onclick="openTest('media/media')" class="testbtn">多媒体插件</div><br>-->
 <!--                <div onclick="openTest('other/other')" class="testbtn">第三方插件</div><br>-->
                 <div onclick="openTest1('wintestNormal/uexWindow')" class="testbtn">打开普通窗口</div><br>
-                <div onclick="openLeftSlidingWin()" class="testbtn">打开侧边栏窗口</div><br>
+				<div onclick="openTest1('wintestNormal/uexWindowFunc')" class="testbtn">window接口测试</div><br>
+				<div onclick="openLeftSlidingWin()" class="testbtn">打开侧边栏窗口</div><br>
                 <div onclick="openTest('wintestNav/uexWindow')" class="testbtn">打开导航视图窗口(iOS)</div><br>
                 <div onclick="openTest('uexWidget')" class="testbtn">uexWidget</div><br>
                 
