@@ -1,12 +1,90 @@
+project.ext.preDexLibs = !project.hasProperty('disablePreDex')
+println('PREDEX ' + (project.ext.preDexLibs ? 'ENABLED' : 'DISABLED'))
+
+project.plugins.whenPluginAdded { plugin ->
+    if ("com.android.build.gradle.AppPlugin".equals(plugin.class.name)) {
+        project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
+    } else if ("com.android.build.gradle.LibraryPlugin".equals(plugin.class.name)) {
+        project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
+    }
+}
+
+buildscript {
+    repositories {
+      maven {
+            url "/usr/share/gradle/m2repository"
+      }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.5.0'
+    }
+}
+
+
+// Log timings per task.
+class TimingsListener implements TaskExecutionListener, BuildListener {
+    private Clock clock
+    private timings = []
+
+    @Override
+    void beforeExecute(Task task) {
+        clock = new org.gradle.util.Clock()
+    }
+
+    @Override
+    void afterExecute(Task task, TaskState taskState) {
+        def ms = clock.timeInMs
+        timings.add([ms, task.path])
+        task.project.logger.warn "${task.path} took ${ms}ms"
+    }
+
+    @Override
+    void buildFinished(BuildResult result) {
+        println "Task timings:"
+        for (timing in timings) {
+            if (timing[0] >= 50) {
+                printf "%7sms  %s\n", timing
+            }
+        }
+    }
+
+    @Override
+    void buildStarted(Gradle gradle) {}
+
+    @Override
+    void projectsEvaluated(Gradle gradle) {}
+
+    @Override
+    void projectsLoaded(Gradle gradle) {}
+
+    @Override
+    void settingsEvaluated(Settings settings) {}
+}
+
+gradle.addListener new TimingsListener()
+
+
 apply plugin: 'com.android.application'
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+//依赖libs下的所有的aar
+fileTree(dir: 'libs', include: '**/*.aar')
+        .each { File file ->
+    dependencies.add("compile", [name: file.name.lastIndexOf('.').with { it != -1 ? file.name[0..<it] : file.name }, ext: 'aar'])
+}
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
 }
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
@@ -34,5 +112,11 @@ android {
         // by a similar customization.
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
+    }
+    lintOptions {
+          checkReleaseBuilds false
+          // Or, if you prefer, you can continue to check for errors in release builds,
+          // but continue the build even when errors are found:
+          abortOnError false
     }
 }

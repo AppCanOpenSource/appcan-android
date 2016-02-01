@@ -24,7 +24,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-
 public class AbsoluteLayout extends ViewGroup {
     public AbsoluteLayout(Context context) {
         super(context);
@@ -35,13 +34,13 @@ public class AbsoluteLayout extends ViewGroup {
     }
 
     public AbsoluteLayout(Context context, AttributeSet attrs,
-            int defStyle) {
+                          int defStyle) {
         super(context, attrs, defStyle);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-    	int count = getChildCount();
+        int count = getChildCount();
         int maxHeight = 0;
         int maxWidth = 0;
         measureChildren(widthMeasureSpec, heightMeasureSpec);
@@ -103,6 +102,7 @@ public class AbsoluteLayout extends ViewGroup {
     public static class LayoutParams extends ViewGroup.LayoutParams {
         public int x;
         public int y;
+
         public LayoutParams(int width, int height, int x, int y) {
             super(width, height);
             this.x = x;
@@ -118,7 +118,7 @@ public class AbsoluteLayout extends ViewGroup {
                     + sizeToString(width) + ", height=" + sizeToString(height)
                     + " x=" + x + " y=" + y + "}";
         }
-        
+
         protected static String sizeToString(int size) {
             if (size == WRAP_CONTENT) {
                 return "wrap-content";

@@ -22,6 +22,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -32,11 +34,11 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -54,7 +56,12 @@ import org.zywx.wbpalmstar.engine.universalex.EUExWidget.SpaceClickListener;
 import org.zywx.wbpalmstar.engine.universalex.EUExWindow;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 
 public class EBrowserWindow extends SwipeView implements AnimationListener {
 
@@ -644,7 +651,10 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         child.setDateType(entity.mDataType);
         child.setQuery(entity.mQuery);
         View parent = (View) child.getParent();
-        removeView(parent);
+        boolean parentHasChanged=parent.getParent()!=this;//父View没有改变不需要remove和add操作
+        if (parentHasChanged){
+            removeView(parent);
+        }
         LayoutParams popParm = new LayoutParams(entity.mWidth, entity.mHeight);
         popParm.gravity = Gravity.NO_GRAVITY;
         popParm.leftMargin = entity.mX;
@@ -654,7 +664,9 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         if (entity.hasExtraInfo) {
             child.setBrwViewBackground(entity.mOpaque, entity.mBgColor, "");
         }
-        addView(parent);
+        if (parentHasChanged) {
+            addView(parent);
+        }
         switch (entity.mDataType) {
             case EBrwViewEntry.WINDOW_DATA_TYPE_URL:
 //			if (entity.checkFlag(EBrwViewEntry.F_FLAG_OBFUSCATION)) {
@@ -1949,6 +1961,9 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
                 BView.setBounceParms(bunceEnty.type, (JSONObject) bunceEnty.obj1,
                         bunceEnty.arg1);
                 break;
+            case EViewEntry.F_BOUNCE_TASK_TOP_BOUNCE_VIEW_REFRESH:
+                BView.topBounceViewRefresh();
+                break;
         }
     }
 
@@ -2243,6 +2258,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         mPager.setOnPageChangeListener(new MyPageChangedListener(
                 parentBrowerview.getName()));
         mPager.setLayoutParams(pagerParm);
+        mPager.setBackgroundColor(Color.TRANSPARENT);
         parentBrowerview.addView(mPager);
         mMultiPopPager.put(parentBrowerview.getName(), mPager);
         final ArrayList<EBrowserView> list = new ArrayList<EBrowserView>();
@@ -2479,7 +2495,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         }
 
 		/*
-		 * 当页面在滑动的时候会调用此方法，在滑动被停止之前，此方法回一直得到 调用。其中三个参数的含义分别为： arg0
+         * 当页面在滑动的时候会调用此方法，在滑动被停止之前，此方法回一直得到 调用。其中三个参数的含义分别为： arg0
 		 * :当前页面，及你点击滑动的页面 arg1:当前页面偏移的百分比 arg2:当前页面偏移的像素位置
 		 */
 
@@ -2521,9 +2537,12 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
     public void createProgressDialog(String title, String content,
                                      boolean isCancel) {
         if (mGlobalProDialog == null) {
-            mGlobalProDialog = new ProgressDialog(mContext);
+            mGlobalProDialog = new ProgressDialog(mContext,ProgressDialog.THEME_HOLO_DARK);
         }
-        mGlobalProDialog.setTitle(title);
+        mGlobalProDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        if (!TextUtils.isEmpty(title)){
+            mGlobalProDialog.setTitle(title);
+        }
         mGlobalProDialog.setMessage(content);
         mGlobalProDialog.setCancelable(isCancel);
         mGlobalProDialog.show();
@@ -2568,6 +2587,9 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         if (mChannelList == null) {
             mChannelList = new ArrayList<HashMap<String, String>>();
         }
+        if (hasChannel(channelId, name)) {
+            return;
+        }
         HashMap<String, String> item = new HashMap<String, String>();
         item.put(TAG_CHANNEL_ID, channelId);
         item.put(TAG_CHANNEL_FUNNAME, callbackFunction);
@@ -2576,6 +2598,16 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
             item.put(TAG_CHANNEL_WINNAME, name);
         }
         mChannelList.add(item);
+    }
+
+    private boolean hasChannel(String channelId, String name) {
+        for (HashMap<String,String> item:mChannelList) {
+            if (channelId.equals(item.get(TAG_CHANNEL_ID))
+                    && name.equals(item.get(TAG_CHANNEL_WINNAME))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void publishChannelNotification(String channelId, String des) {

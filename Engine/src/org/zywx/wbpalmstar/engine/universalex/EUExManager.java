@@ -18,7 +18,6 @@
 
 package org.zywx.wbpalmstar.engine.universalex;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.webkit.WebView;
@@ -26,7 +25,6 @@ import android.webkit.WebView;
 import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.ELinkedList;
-import org.zywx.wbpalmstar.engine.callback.EUExDispatcherCallback;
 import org.zywx.wbpalmstar.widgetone.WidgetOneApplication;
 
 import java.lang.reflect.Constructor;
@@ -60,26 +58,9 @@ public class EUExManager {
 //		brwView.addJavascriptInterface(window, EUExWindow.tag);
 //		brwView.addJavascriptInterface(widget, EUExWidget.tag);
 //		brwView.addJavascriptInterface(appCenter, EUExAppCenter.tag);
-        brwView.addJavascriptInterface(new EUExDispatcher(new EUExDispatcherCallback() {
-            @Override
-            public void onDispatch(String pluginName, String methodName, String[] params) {
-                ELinkedList<EUExBase> plugins = getThirdPlugins();
-                for (EUExBase plugin : plugins) {
-                    if (plugin.getUexName().equals(pluginName)) {
-                        callMethod(plugin, methodName, params);
-                        return;
-                    }
-                }
-                //调用单实例插件
-                Map<String, ThirdPluginObject> thirdPlugins = getPlugins();
-                ThirdPluginObject thirdPluginObject = thirdPlugins.get(pluginName);
-                if (thirdPluginObject != null && thirdPluginObject.isGlobal &&
-                        thirdPluginObject.pluginObj != null) {
-                    callMethod(thirdPluginObject.pluginObj, methodName, params);
-                }
-                BDebug.e("plugin", pluginName, "not exist...");
-            }
-        }), EUExDispatcher.JS_OBJECT_NAME);
+        brwView.removeJavascriptInterface("searchBoxJavaBridge_");
+        brwView.removeJavascriptInterface("accessibility");
+        brwView.removeJavascriptInterface("accessibilityTraversal");
 //		brwView.addJavascriptInterface(dataAnalysis, EUExDataAnalysis.tag);
         mThirdPlugins.add(widgetOne);
         mThirdPlugins.add(window);
@@ -124,36 +105,32 @@ public class EUExManager {
         }
     }
 
-    private Map<String, ThirdPluginObject> getPlugins() {
+    public Map<String, ThirdPluginObject> getPlugins() {
         WidgetOneApplication app = (WidgetOneApplication) mContext.getApplicationContext();
         ThirdPluginMgr tpm = app.getThirdPlugins();
         return tpm.getPlugins();
     }
 
-    private void callMethod(final EUExBase plugin, final String methodName, final String[] params) {
+    public Object callMethod(final EUExBase plugin, final String methodName, final String[] params) {
         if (plugin.mDestroyed) {
             BDebug.e("plugin", plugin.getUexName(), " has been destroyed");
-            return;
+            return null;
         }
-        ((Activity) mContext).runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Method targetMethod = plugin.getClass().getMethod(methodName,
-                            String[].class);
-                    targetMethod.invoke(plugin, (Object) params);
-                } catch (NoSuchMethodException e) {
-                    BDebug.e(methodName, " NoSuchMethodException");
-                } catch (IllegalAccessException e) {
-                    BDebug.e(plugin.getUexName(), methodName, e.toString());
-                } catch (InvocationTargetException e) {
-                    BDebug.e(plugin.getUexName(),methodName, " InvocationTargetException");
-                    if (BDebug.DEBUG) {
-                        e.printStackTrace();
-                    }
-                }
+        try {
+            Method targetMethod = plugin.getClass().getMethod(methodName,
+                    String[].class);
+            return targetMethod.invoke(plugin, (Object) params);
+        } catch (NoSuchMethodException e) {
+            BDebug.e(methodName, " NoSuchMethodException");
+        } catch (IllegalAccessException e) {
+            BDebug.e(plugin.getUexName(), methodName, e.toString());
+        } catch (InvocationTargetException e) {
+            BDebug.e(plugin.getUexName(),methodName, " InvocationTargetException");
+            if (BDebug.DEBUG) {
+            e.printStackTrace();
             }
-        });
+        }
+        return null;
     }
 
     public void notifyReset() {

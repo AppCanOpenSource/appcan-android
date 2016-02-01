@@ -33,35 +33,35 @@ public class LoadingActivity extends Activity {
 
     public static final String BROADCAST_ACTION = "com.appcan.close";
     private BroadcastReceiver mBroadcastReceiver;
-    Handler mHandler=new Handler() {
+    Handler mHandler = new Handler() {
     };
 
-    private boolean isTemp=false;
+    private boolean isTemp = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-			Intent intent=getIntent();
-			if (intent!=null) {
-			    isTemp = intent.getBooleanExtra("isTemp", false);
-			}
-		} catch (Exception exception) {
-		}
-        FrameLayout rootLayout=new FrameLayout(this);
-        FrameLayout.LayoutParams layoutParams=new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
+            Intent intent = getIntent();
+            if (intent != null) {
+                isTemp = intent.getBooleanExtra("isTemp", false);
+            }
+        } catch (Exception exception) {
+        }
+        FrameLayout rootLayout = new FrameLayout(this);
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
         rootLayout.setLayoutParams(layoutParams);
-        InputStream inputStream=getResources().openRawResource(EUExUtil.getResDrawableID("startup_bg_16_9"));
-		DisplayMetrics dm = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(dm);
-		Bitmap bm = BUtility.createBitmapWithStream(inputStream,
-				dm.widthPixels, dm.heightPixels);
-		if (bm != null) {
-			ImageView imageView = new ImageView(this);
-			imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-			imageView.setImageBitmap(bm);
-			rootLayout.addView(imageView);
-		}
+        InputStream inputStream = getResources().openRawResource(EUExUtil.getResDrawableID("startup_bg_16_9"));
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        Bitmap bm = BUtility.createBitmapWithStream(inputStream,
+                dm.widthPixels, dm.heightPixels);
+        if (bm != null) {
+            ImageView imageView = new ImageView(this);
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+            imageView.setImageBitmap(bm);
+            rootLayout.addView(imageView);
+        }
         setContentView(rootLayout);
 
         mHandler.postDelayed(new Runnable() {
@@ -81,13 +81,13 @@ public class LoadingActivity extends Activity {
                     }
                 }
             }
-        },700);
+        }, 700);
 
         mBroadcastReceiver = new MyBroadcastReceiver();
-              IntentFilter intentFilter = new IntentFilter();
-               intentFilter.addAction(BROADCAST_ACTION);
-		LocalBroadcastManager.getInstance(this).registerReceiver(
-				mBroadcastReceiver, intentFilter);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(BROADCAST_ACTION);
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                mBroadcastReceiver, intentFilter);
         if (EBrowserActivity.develop) {
             TextView worn = new TextView(this);
             worn.setText(EUExUtil.getString("platform_only_test"));
@@ -101,13 +101,12 @@ public class LoadingActivity extends Activity {
             worn.setLayoutParams(wornPa);
             rootLayout.addView(worn);
         }
-		try {
-			getWindow().clearFlags(
-					WindowManager.LayoutParams.class.getField(
-							"FLAG_NEEDS_MENU_KEY").getInt(null));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+        try {
+            getWindow().clearFlags(
+                    WindowManager.LayoutParams.class.getField(
+                            "FLAG_NEEDS_MENU_KEY").getInt(null));
+        } catch (Exception e) {
+        }
     }
 
     @Override
@@ -131,8 +130,8 @@ public class LoadingActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-		LocalBroadcastManager.getInstance(this).unregisterReceiver(
-				mBroadcastReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(
+                mBroadcastReceiver);
     }
 
     private class MyBroadcastReceiver extends BroadcastReceiver {
@@ -140,7 +139,7 @@ public class LoadingActivity extends Activity {
         public void onReceive(Context context, Intent intent) {
             finish();
             overridePendingTransition(EUExUtil.getResAnimID("platform_myspace_fade_in_anim")
-                , EUExUtil.getResAnimID("platform_myspace_fade_out_anim"));
+                    , EUExUtil.getResAnimID("platform_myspace_fade_out_anim"));
         }
     }
 }

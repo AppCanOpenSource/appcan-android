@@ -112,6 +112,10 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
         setACEHardwareAccelerate();
     }
 
+    public EUExManager getEUExManager() {
+        return mUExMgr;
+    }
+
     public void setScrollCallBackContex(EUExWindow callback) {
         this.callback = callback;
     }
@@ -1328,6 +1332,16 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
         bounceEntry.arg1 = guestId;
         mBroWind.addBounceTask(bounceEntry,
                 EViewEntry.F_BOUNCE_TASK_SET_BOUNCE_PARMS);
+    }
+
+    public void topBounceViewRefresh() {
+        if (mDestroyed) {
+            return;
+        }
+        EViewEntry bounceEntry = new EViewEntry();
+        bounceEntry.obj = getParent();
+        mBroWind.addBounceTask(bounceEntry,
+                EViewEntry.F_BOUNCE_TASK_TOP_BOUNCE_VIEW_REFRESH);
     }
 
     public boolean beDestroy() {
