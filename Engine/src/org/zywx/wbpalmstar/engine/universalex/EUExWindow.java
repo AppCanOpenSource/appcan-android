@@ -166,6 +166,7 @@ public class EUExWindow extends EUExBase {
     private static final int MSG_PLUGINVIEW_CONTAINER_SET = 54;
     private static final int MSG_PLUGINVIEW_CONTAINER_SHOW = 55;
     private static final int MSG_PLUGINVIEW_CONTAINER_HIDE = 56;
+    private static final int MSG_FUNCTION_SETAUTOROTATEENABLE= 60;
     private AlertDialog mAlert;
     private AlertDialog.Builder mConfirm;
     private PromptDialog mPrompt;
@@ -383,6 +384,32 @@ public class EUExWindow extends EUExBase {
                 e.printStackTrace();
             }
             activity.changeConfiguration(or);
+        }
+    }
+
+    public void setAutorotateEnable(String[] parm) {
+        if (parm.length < 1) {
+            return;
+        }
+        Message msg = new Message();
+        msg.obj = this;
+        msg.what = MSG_FUNCTION_SETAUTOROTATEENABLE;
+        Bundle bd = new Bundle();
+        bd.putStringArray(TAG_BUNDLE_PARAM, parm);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
+    }
+
+    public void setAutorotateEnableMsg(String[] parm) {
+        int enabled = 0;
+        try {
+            enabled = Integer.parseInt(parm[0]);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (null != mBrwView) {
+            EBrowserActivity activity = (EBrowserActivity) mContext;
+            activity.setAutorotateEnable(enabled);
         }
     }
 
@@ -3544,6 +3571,9 @@ public class EUExWindow extends EUExBase {
                 break;
             case MSG_FUNCTION_SETORIENTATION:
                 if (param != null) setOrientationMsg(param);
+                break;
+            case MSG_FUNCTION_SETAUTOROTATEENABLE:
+                if(param != null) setAutorotateEnableMsg(param);
                 break;
             case MSG_FUNCTION_SETSLIDINGWIN:
                 handleSetSlidingWin(param);
