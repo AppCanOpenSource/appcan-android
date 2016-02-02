@@ -54,6 +54,7 @@ import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.ResoureFinder;
 import org.zywx.wbpalmstar.base.vo.CreateContainerVO;
 import org.zywx.wbpalmstar.base.vo.SetSwipeCloseEnableVO;
+import org.zywx.wbpalmstar.base.vo.ShareInputVO;
 import org.zywx.wbpalmstar.engine.DataHelper;
 import org.zywx.wbpalmstar.engine.EBrowser;
 import org.zywx.wbpalmstar.engine.EBrowserActivity;
@@ -64,6 +65,7 @@ import org.zywx.wbpalmstar.engine.EBrowserWindow;
 import org.zywx.wbpalmstar.engine.EBrwViewEntry;
 import org.zywx.wbpalmstar.engine.EDialogTask;
 import org.zywx.wbpalmstar.engine.ESystemInfo;
+import org.zywx.wbpalmstar.engine.EUtil;
 import org.zywx.wbpalmstar.engine.EViewEntry;
 import org.zywx.wbpalmstar.platform.window.ActionSheetDialog;
 import org.zywx.wbpalmstar.platform.window.ActionSheetDialog.ActionSheetDialogItemClickListener;
@@ -72,6 +74,7 @@ import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 public class EUExWindow extends EUExBase {
@@ -3048,7 +3051,7 @@ public class EUExWindow extends EUExBase {
         }
         String channelId = params[0];
         if (TextUtils.isEmpty(channelId)) {
-            Log.e("publishChannelNotificationMsg", "channelId is empty!!!");
+            BDebug.e("channelId is empty!!!");
             return;
         }
         String des = params[1];
@@ -3412,6 +3415,23 @@ public class EUExWindow extends EUExBase {
             View item = viewList.get(position);
             container.removeView(item);
         }
+    }
+
+
+    public void share(String[] params){
+        String jsonStr=params[0];
+        ShareInputVO inputVO=DataHelper.gson.fromJson(jsonStr,ShareInputVO.class);
+        if (!TextUtils.isEmpty(inputVO.getImgPath())){
+            inputVO.setImgPath(BUtility.makeRealPath(inputVO.getImgPath(),mBrwView));
+        }
+        if (inputVO.getImgPaths()!=null){
+            List<String> realImagePaths=new ArrayList<String>();
+            for (String path:inputVO.getImgPaths()){
+                realImagePaths.add(BUtility.makeRealPath(path,mBrwView));
+            }
+            inputVO.setImgPaths(realImagePaths);
+        }
+        EUtil.share(mContext,inputVO);
     }
 
     @Override

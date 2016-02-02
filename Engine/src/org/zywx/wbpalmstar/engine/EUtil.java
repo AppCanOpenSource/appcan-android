@@ -18,27 +18,7 @@
 
 package org.zywx.wbpalmstar.engine;
 
-import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.util.List;
-
-import org.apache.http.HttpHost;
-import org.apache.http.util.ByteArrayBuffer;
-import org.zywx.wbpalmstar.acedes.ACEDes;
-import org.zywx.wbpalmstar.base.BUtility;
-import org.zywx.wbpalmstar.base.ResoureFinder;
-import org.zywx.wbpalmstar.platform.encryption.PEncryption;
-
-import dalvik.system.DexClassLoader;
-
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -52,9 +32,33 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
+
+import org.apache.http.HttpHost;
+import org.apache.http.util.ByteArrayBuffer;
+import org.zywx.wbpalmstar.acedes.ACEDes;
+import org.zywx.wbpalmstar.base.BUtility;
+import org.zywx.wbpalmstar.base.ResoureFinder;
+import org.zywx.wbpalmstar.base.vo.ShareInputVO;
+import org.zywx.wbpalmstar.platform.encryption.PEncryption;
+
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.util.ArrayList;
+import java.util.List;
+
+import dalvik.system.DexClassLoader;
 
 public class EUtil {
 
@@ -544,4 +548,54 @@ public class EUtil {
         addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, targetIntent);
         context.sendBroadcast(addIntent);
     }
+
+    public static void share(Context context, ShareInputVO inputVO){
+        Intent intent=new Intent();
+        if (inputVO.getImgPaths()!=null&&inputVO.getImgPaths().size()>0){
+            //分享多张图片
+            intent.setAction(Intent.ACTION_SEND_MULTIPLE);
+            ArrayList<Uri> imagePathList = new ArrayList<Uri>();
+            for(String picPath: inputVO.getImgPaths()){
+                File file=new File(picPath);
+                imagePathList.add(Uri.fromFile(file));
+            }
+            intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM,imagePathList);
+        }else{
+            intent.setAction(Intent.ACTION_SEND);
+        }
+         if (!TextUtils.isEmpty(inputVO.getPackageName())&&
+                !TextUtils.isEmpty(inputVO.getClassName())) {
+            intent.setComponent(new ComponentName(inputVO.getPackageName(), inputVO.getClassName()));
+        }
+        if (!TextUtils.isEmpty(inputVO.getTitle())){
+            intent.putExtra(Intent.EXTRA_TITLE,inputVO.getTitle());
+        }
+        if (!TextUtils.isEmpty(inputVO.getText())){
+            intent.putExtra(Intent.EXTRA_TEXT,inputVO.getText());
+        }
+        if (!TextUtils.isEmpty(inputVO.getSubject())){
+            intent.putExtra(Intent.EXTRA_SUBJECT,inputVO.getSubject());
+        }
+        if (!TextUtils.isEmpty(inputVO.getImgPath())||inputVO.getImgPaths()!=null) {
+            intent.setType("image/*");
+        }else{
+            intent.setType("text/plain");
+        }
+        if (inputVO.getType()==0){
+            //微信朋友圈
+            intent.putExtra("Kdescription", inputVO.getText());
+            intent.setComponent(new ComponentName("com.tencent.mm",
+                    "com.tencent.mm.ui.tools.ShareToTimeLineUI"));
+        }
+
+        if (intent.getComponent()!=null){
+            context.startActivity(intent);
+        }else{
+            context.startActivity(Intent.createChooser(intent,"请选择"));
+        }
+
+    }
+
+
+
 }
