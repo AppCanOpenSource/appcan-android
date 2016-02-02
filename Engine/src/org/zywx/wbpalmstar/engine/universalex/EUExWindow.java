@@ -147,7 +147,7 @@ public class EUExWindow extends EUExBase {
     private static final int MSG_FUNCTION_GET_SLIDING_WINDOW_STATE = 50;
     private static final int MSG_SET_IS_SUPPORT_SLIDE_CALLBACK = 51;
 	private AlertDialog.Builder mConfirm;
-    private AlertDialog mAlertDialog;
+    private AlertDialog mAlert;
 	private PromptDialog mPrompt;
 	private ResoureFinder finder;
 
@@ -466,8 +466,8 @@ public class EUExWindow extends EUExBase {
         } catch (Exception e) {
             errorCallback(0, EUExCallback.F_E_UEXWINDOW_CLOSE, "Illegal parameter");
         }
-        if (mAlertDialog!=null){
-            mAlertDialog.dismiss();
+        if (mAlert !=null){
+            mAlert.dismiss();
         }
         curWind.onCloseWindow(animId, duration);
     }
@@ -2600,22 +2600,22 @@ public class EUExWindow extends EUExBase {
 		/*if (!((EBrowserActivity) mContext).isVisable()) {
 			return;
 		}*/
-		if (null != mAlertDialog) {
+		if (null != mAlert) {
 			return;
 		}
 		try {
-            AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
-			alert.setTitle(inTitle);
-			alert.setMessage(inMessage);
-			alert.setCancelable(false);
-			alert.setPositiveButton(inButtonLable, new OnClickListener() {
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+			builder.setTitle(inTitle);
+			builder.setMessage(inMessage);
+			builder.setCancelable(false);
+			builder.setPositiveButton(inButtonLable, new OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
-                    mAlertDialog = null;
+                    mAlert = null;
                 }
             });
-			mAlertDialog=alert.show();
+			mAlert =builder.show();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -2893,9 +2893,17 @@ public class EUExWindow extends EUExBase {
 		return Integer.parseInt(str);
 	}
 
+    private void closeAlert() {
+        if (mAlert != null) {
+            mAlert.dismiss();
+            mAlert = null;
+        }
+    }
+
 	@Override
 	public boolean clean() {
 		closeToast(null);
+        closeAlert();
 		// mBrwView.resetBounceView(0);
 		// mBrwView.resetBounceView(1);
 		destroyProgressDialog(null);
