@@ -229,7 +229,8 @@ public class EUExScript {
                 + "createPluginViewContainer:function(){uexDispatcher.dispatch('uexWindow','createPluginViewContainer',jo(arguments));},"
                 + "showPluginViewContainer:function(){uexDispatcher.dispatch('uexWindow','showPluginViewContainer',jo(arguments));},"
                 + "hidePluginViewContainer:function(){uexDispatcher.dispatch('uexWindow','hidePluginViewContainer',jo(arguments));},"
-                + "getUrlQuery:function(){return uexDispatcher.dispatch('uexWindow','getUrlQuery',jo(arguments))}};"
+                + "getUrlQuery:function(){return uexDispatcher.dispatch('uexWindow','getUrlQuery',jo(arguments));},"
+                + "setAutorotateEnable:function(){return uexDispatcher.dispatch('uexWindow','setAutorotateEnable',jo(arguments))}};"
                 +
 //				// DataAnalysis 
 //				"window.uexDataAnalysis={"

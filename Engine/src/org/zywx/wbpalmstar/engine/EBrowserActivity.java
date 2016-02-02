@@ -33,6 +33,7 @@ import android.os.Process;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.KeyEvent;
+import android.view.Surface;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -532,6 +533,36 @@ public final class EBrowserActivity extends FragmentActivity {
         mBrowserAround.clean();
         mFinish = true;
         Runtime.getRuntime().gc();
+    }
+
+    public final void setAutorotateEnable(int enabled) {
+        int ori = ActivityInfo.SCREEN_ORIENTATION_USER;
+        if (enabled == 1) {
+            ori = getOrientationForRotation();
+        }
+        final int orientation = ori;
+        new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                setRequestedOrientation(orientation);
+                ;
+            }
+        }.sendEmptyMessageDelayed(0, 100);
+    }
+
+    private int getOrientationForRotation() {
+        int ori = ActivityInfo.SCREEN_ORIENTATION_USER;
+        int rotation = this.getWindowManager().getDefaultDisplay().getRotation();
+        if (rotation == Surface.ROTATION_0) {
+            ori = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+        } else if (rotation == Surface.ROTATION_90) {
+            ori = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+        } else if (rotation == Surface.ROTATION_180) {
+            ori = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
+        } else if (rotation == Surface.ROTATION_270) {
+            ori = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
+        }
+        return ori;
     }
 
     public final void changeConfiguration(int orientation) {
