@@ -50,6 +50,7 @@ import org.zywx.wbpalmstar.engine.DataHelper;
 import org.zywx.wbpalmstar.engine.EBrowserActivity;
 import org.zywx.wbpalmstar.engine.EBrowserAnimation;
 import org.zywx.wbpalmstar.engine.EBrowserView;
+import org.zywx.wbpalmstar.engine.EBrowserWidget;
 import org.zywx.wbpalmstar.engine.EBrowserWindow;
 import org.zywx.wbpalmstar.engine.EWgtResultInfo;
 import org.zywx.wbpalmstar.widgetone.WidgetOneApplication;
@@ -903,7 +904,11 @@ public class EUExWidget extends EUExBase {
         if (null == curWind) {
             return;
         }
-        curWind.reloadWidgetByAppId(appId);
+        EBrowserWidget widget = curWind.getWGT(appId);
+        if (null == widget) {
+            return;
+        }
+        widget.reloadWidget();
     }
     private void callBackPluginJs(String methodName, String jsonData) {
         String js = SCRIPT_HEADER + "if(" + methodName + "){"

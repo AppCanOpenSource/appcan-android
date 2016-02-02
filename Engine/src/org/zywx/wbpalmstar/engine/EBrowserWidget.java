@@ -1111,4 +1111,24 @@ public class EBrowserWidget extends AbsoluteLayout {
     public void setSpaceEnable(SpaceClickListener listener) {
         mBrw.setSpaceEnable(listener);
     }
+
+    public void reloadWidget() {
+        //Sliding window
+        EBrowserWindow leftSlidingWin = mEWindowStack
+                .getSlidingWind(EBrowserWindow.rootLeftSlidingWinName);
+        if (leftSlidingWin != null) {
+            leftSlidingWin.reloadWindow();
+        }
+        EBrowserWindow rightSlidingWin = mEWindowStack
+                .getSlidingWind(EBrowserWindow.rootRightSlidingWinName);
+        if (rightSlidingWin != null) {
+            rightSlidingWin.reloadWindow();
+        }
+        // normal window
+        ELinkedList<EBrowserWindow> eBrwWins = mEWindowStack.getAll();
+        for (int i = 0; i < eBrwWins.size(); i++) {
+            EBrowserWindow eBrwWin = eBrwWins.get(i);
+            eBrwWin.reloadWindow();
+        }
+    }
 }
