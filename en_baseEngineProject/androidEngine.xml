@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <info>
-    <version>sdksuit_3.2_151118_01</version>
-	<package>android_Engine_3.2_151118_01</package>
-	<description>1、未传递第三方intent参数问题</description>
+    <version>sdksuit_3.2_160202_01</version>
+	<package>android_Engine_3.2_160202_01</package>
+	<description>1、修复uexWidget.reloadWidgetByAppId()无效问题。</description>
 </info>
