@@ -21,7 +21,9 @@ package org.zywx.wbpalmstar.engine;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
+import android.content.SharedPreferences.Editor;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -54,7 +56,9 @@ import org.zywx.wbpalmstar.engine.universalex.EUExEventListener;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.engine.universalex.ThirdPluginMgr;
 import org.zywx.wbpalmstar.engine.universalex.ThirdPluginObject;
+import org.zywx.wbpalmstar.platform.push.PushDataInfo;
 import org.zywx.wbpalmstar.platform.push.PushRecieveMsgReceiver;
+import org.zywx.wbpalmstar.platform.push.report.PushReportConstants;
 import org.zywx.wbpalmstar.widgetone.WidgetOneApplication;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
@@ -71,6 +75,9 @@ public final class EBrowserActivity extends FragmentActivity {
 
     public static final int F_OAUTH_CODE = 100001;
     public final static int FILECHOOSER_RESULTCODE = 233;
+    public final static String APP_TYPE_NOT_START = "0";
+    public final static String APP_TYPE_START_BACKGROUND = "1";
+    public final static String APP_TYPE_START_FORGROUND= "2";
 
     private EBrowser mBrowser;
     private boolean mKeyDown;
@@ -427,30 +434,64 @@ public final class EBrowserActivity extends FragmentActivity {
         try {
             Intent firstIntent = getIntent();
             int type = intent.getIntExtra("ntype", 0);
-            ;
             switch (type) {
-                case ENotification.F_TYPE_PUSH:
-                    if (null != mBrowser) {
-                        String data = intent.getStringExtra("data");
-                        String pushMessage = intent.getStringExtra("message");
-                        firstIntent.putExtra("data", data);
-                        firstIntent.putExtra("message", pushMessage);
-                        mBrowser.pushNotify();
-                    }
-                    break;
-                case ENotification.F_TYPE_USER:
-
-                    break;
-                case ENotification.F_TYPE_SYS:
-
-                    break;
-                default:
-                    getIntentData(intent);
-                    firstIntent.putExtras(intent);
-                    break;
+            case ENotification.F_TYPE_PUSH:
+                handlePushNotify(intent);
+                break;
+            case ENotification.F_TYPE_USER:
+                break;
+            case ENotification.F_TYPE_SYS:
+                break;
+            default:
+                getIntentData(intent);
+                firstIntent.putExtras(intent);
+                break;
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void handlePushNotify(Intent intent) {
+        if (null != mBrowser) {
+            try {
+                String data = intent.getStringExtra("data");
+                String pushMessage = intent.getStringExtra("message");
+                SharedPreferences sp = getSharedPreferences(
+                        PushReportConstants.PUSH_DATA_SHAREPRE,
+                        Context.MODE_PRIVATE);
+                Editor editor = sp.edit();
+                editor.putString(
+                        PushReportConstants.PUSH_DATA_SHAREPRE_DATA, data);
+                editor.putString(
+                        PushReportConstants.PUSH_DATA_SHAREPRE_MESSAGE,
+                        pushMessage);
+                if (intent.hasExtra(PushReportConstants.PUSH_DATA_INFO_KEY)) {
+                    PushDataInfo dataInfo = (PushDataInfo) intent.getExtras()
+                            .get(PushReportConstants.PUSH_DATA_INFO_KEY);
+                    String taskId = dataInfo.getTaskId();
+                    editor.putString(PushReportConstants.PUSH_DATA_SHAREPRE_TASKID,
+                            taskId);
+                    String tenantId = dataInfo.getTenantId();
+                    editor.putString(PushReportConstants.PUSH_DATA_SHAREPRE_TENANTID,
+                        tenantId);
+                }
+                editor.commit();
+                String appType = "";
+                if (mVisable && isForground) {
+                    //应用在前台
+                    appType = APP_TYPE_START_FORGROUND;
+                } else if (!mVisable && !isForground) {
+                    //应用Home键退到后台再点通知进入
+                    appType = APP_TYPE_START_BACKGROUND;
+                } else if (mVisable && !isForground) {
+                    //应用Back键退出再点通知进入
+                    appType = APP_TYPE_NOT_START;
+                }
+                mBrowser.pushNotify(appType);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -22,4 +22,5 @@ import org.json.JSONObject;
 
 public interface PushDataCallback {
     public void pushData(JSONObject text);
+    public void pushDataInfo(JSONObject data);
 }

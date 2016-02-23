@@ -19,6 +19,7 @@
 package org.zywx.wbpalmstar.engine;
 
 import org.json.JSONObject;
+import org.zywx.wbpalmstar.base.BConstant;
 import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.engine.external.Compat;
 import org.zywx.wbpalmstar.engine.universalex.EUExWidget.SpaceClickListener;
@@ -28,11 +29,13 @@ import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
@@ -141,9 +144,20 @@ public class EBrowserWidgetPool {
         return mWgtStack.get(index);
     }
 
-    public void pushNotify() {
-
-        mWgtStack.peek().pushNotify(null);
+    public void pushNotify(String appType) {
+        SharedPreferences pres = mContext.getSharedPreferences("saveData",
+                Context.MODE_MULTI_PROCESS);
+        String appId = pres.getString(BConstant.F_PUSH_APPID, "");
+        if (TextUtils.isEmpty(appId)) {
+            mWgtStack.peek().pushNotify(appType);
+        } else {
+            EBrowserWidget widget = mWgtStack.get(appId);
+            if (null != widget) {
+                widget.pushNotify(appType);
+            } else {
+                mWgtStack.peek().pushNotify(appType);
+            }
+        }
     }
 
     public void uexOnAuthorize(String id) {
