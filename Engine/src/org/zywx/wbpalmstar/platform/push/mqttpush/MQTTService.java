@@ -12,8 +12,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.zywx.wbpalmstar.platform.push.report.PushReportUtility;
 
+import android.R.integer;
 import android.app.AlarmManager;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -25,6 +25,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
@@ -143,7 +144,7 @@ public class MQTTService implements MqttSimpleCallback {
     // long running, idle connections. Ideally, to keep a connection open
     // you want to use a keep alive value that is less than the period of
     // time after which a network operator will kill an idle connection
-    private short keepAliveSeconds = 20 * 60;
+    private short keepAliveSeconds = 5 * 60;
 
     // This is how the Android client app will identify itself to the
     // message broker.
@@ -295,16 +296,7 @@ public class MQTTService implements MqttSimpleCallback {
             if (isOnline()) {
                 // we think we have an Internet connection, so try to connect
                 // to the message broker
-                if (connectToBroker()) {
-                    // we subscribe to a topic - registering to receive push
-                    // notifications with a particular key
-                    // in a 'real' app, you might want to subscribe to multiple
-                    // topics - I'm just subscribing to one as an example
-                    // note that this topicName could include a wildcard, so
-                    // even just with one subscription, we could receive
-                    // messages for multiple topics
-                    subscribeToTopic(topicName);
-                }
+                new ConnectAsyncTask().execute(new String[] {});
             } else {
                 // we can't do anything now because we don't have a working
                 // data connection
@@ -544,9 +536,7 @@ public class MQTTService implements MqttSimpleCallback {
             broadcastServiceStatus("Connection lost - reconnecting...");
 
             // try to reconnect
-            if (connectToBroker()) {
-                subscribeToTopic(topicName);
-            }
+            new ConnectAsyncTask().execute(new String[] {});
         }
 
         // we're finished - if the phone is switched off, it's okay for the CPU
@@ -701,6 +691,28 @@ public class MQTTService implements MqttSimpleCallback {
         return macSerial;
     }
 
+    private class ConnectAsyncTask extends AsyncTask<String[], integer, Boolean> {
+        @Override
+        protected Boolean doInBackground(String[]... string) {
+            return connectToBroker();
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+            if (result.booleanValue()) {
+                // we subscribe to a topic - registering to receive push
+                // notifications with a particular key
+                // in a 'real' app, you might want to subscribe to multiple
+                // topics - I'm just subscribing to one as an example
+                // note that this topicName could include a wildcard, so
+                // even just with one subscription, we could receive
+                // messages for multiple topics
+                subscribeToTopic(topicName);
+            }
+        }
+    }
+
     /*
      * (Re-)connect to the message broker
      */
@@ -834,9 +846,9 @@ public class MQTTService implements MqttSimpleCallback {
 
         // we can now remove the ongoing notification that warns users that
         // there was a long-running ongoing service running
-        NotificationManager nm = (NotificationManager) _context
-                .getSystemService(Service.NOTIFICATION_SERVICE);
-        nm.cancelAll();
+        // NotificationManager nm = (NotificationManager) _context
+        //         .getSystemService(Service.NOTIFICATION_SERVICE);
+        // nm.cancelAll();
     }
 
     /*
@@ -908,10 +920,10 @@ public class MQTTService implements MqttSimpleCallback {
                 if (isOnline()) {
                     // we have an internet connection - have another try at
                     // connecting
-                    if (connectToBroker()) {
-                        // we subscribe to a topic - registering to receive push
-                        // notifications with a particular key
-                        subscribeToTopic(topicName);
+                    if (!connectionStatus.equals(MQTTConnectionStatus.CONNECTING)
+                            && !connectionStatus.equals(MQTTConnectionStatus.CONNECTED)) {
+                        connectionStatus = MQTTConnectionStatus.CONNECTING;
+                        new ConnectAsyncTask().execute(new String[] {});
                     }
                 }
 
@@ -982,6 +994,7 @@ public class MQTTService implements MqttSimpleCallback {
                 // This is good enough for our needs.
 
                 try {
+                    PushReportUtility.log("PingSender mqttClient.ping()");
                     mqttClient.ping();
                 } catch (MqttException e) {
                     // if something goes wrong, it should result in connectionLost
@@ -996,9 +1009,7 @@ public class MQTTService implements MqttSimpleCallback {
                     }
 
                     // reconnect
-                    if (connectToBroker()) {
-                        subscribeToTopic(topicName);
-                    }
+                    new ConnectAsyncTask().execute(new String[] {});
                 }
 
                 // start the next keep alive period
