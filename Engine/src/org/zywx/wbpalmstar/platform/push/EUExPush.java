@@ -67,7 +67,7 @@ public class EUExPush extends EUExBase {
      */
     public void getPushState(String[] parm) {
         SharedPreferences sp = mContext.getSharedPreferences("saveData",
-                Context.MODE_PRIVATE);
+                Context.MODE_MULTI_PROCESS);
         String pushMes = sp.getString("pushMes", "0");
         String localPushMes = sp.getString("localPushMes", pushMes);
         jsCallback(function_getPushState, 0, EUExCallback.F_C_INT,

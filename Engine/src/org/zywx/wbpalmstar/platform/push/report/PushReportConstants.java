@@ -36,6 +36,9 @@ public interface PushReportConstants {
     public static final String KEY_PUSH_REPORT_SOFTTOKEN = "softToken";
     public static final String KEY_PUSH_REPORT_EVENTTYPE = "eventType";
     public static final String KEY_PUSH_REPORT_OCCUREDAT = "occuredAt";
+    public static final String PUSH_DATA_SHAREPRE = "pushData_sharePre";
+    public static final String PUSH_DATA_SHAREPRE_DATA = "pushData_data";
+    public static final String PUSH_DATA_SHAREPRE_MESSAGE = "pushData_message";
 
     public final static int TYPE_INIT_PUSH = 0;
     public final static int TYPE_PUSH_BINDUSER = 1;

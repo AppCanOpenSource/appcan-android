@@ -572,39 +572,54 @@ public class MQTTService implements MqttSimpleCallback {
 
             JSONObject json;
             try {
+                PushReportUtility.log("publishArrived reData "+reData);
                 String decryptedData = Rc4Encrypt.decry_RC4(reData, mAppId);
+                PushReportUtility.log("publishArrived decryptedData "+decryptedData);
                 json = new JSONObject(decryptedData);
 
-                if (json.has("mdm") && json.getString("mdm") != null) {
-                    Intent intent = new Intent();
-                    intent.setAction(ACTION_MDM);
-                    intent.setPackage(_context.getPackageName());
-                    intent.putExtra("mdmtoken", json.getString("mdm"));
-                    _context.sendBroadcast(intent);
-
-                } else {
-
-                    String status = json.getString("status");
-                    if ("ok".equals(status)) {
-                        String messageList = json.getString("messageList");
-                        JSONArray jsonArray = new JSONArray(messageList);
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            // runningNotification(jsonArray.getJSONObject(i));
-                            if (pushDataCallback != null) {
-                                pushDataCallback.pushData(jsonArray
-                                        .getJSONObject(i));
-                            }
-
+                String turn = json.optString("turn");
+                if ("on".equalsIgnoreCase(turn)) {
+                    JSONObject data = json.getJSONObject("data");
+                    if (data.has("sysMsg")) {
+                        JSONObject sysMsg = data.getJSONObject("sysMsg");
+                        if (sysMsg.has("mdm") && sysMsg.getString("mdm") != null) {
+                            Intent intent = new Intent();
+                            intent.setAction(ACTION_MDM);
+                            intent.setPackage(_context.getPackageName());
+                            intent.putExtra("mdmtoken", sysMsg.getString("mdm"));
+                            _context.sendBroadcast(intent);
                         }
-
+                    } else {
+                        if (pushDataCallback != null) {
+                            pushDataCallback.pushDataInfo(data);
+                        }
+                    }
+                } else {
+                    if (json.has("mdm") && json.getString("mdm") != null) {
+                        Intent intent = new Intent();
+                        intent.setAction(ACTION_MDM);
+                        intent.setPackage(_context.getPackageName());
+                        intent.putExtra("mdmtoken", json.getString("mdm"));
+                        _context.sendBroadcast(intent);
+                    } else {
+                        String status = json.getString("status");
+                        if ("ok".equals(status)) {
+                            String messageList = json.getString("messageList");
+                            JSONArray jsonArray = new JSONArray(messageList);
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                // runningNotification(jsonArray.getJSONObject(i));
+                                if (pushDataCallback != null) {
+                                    pushDataCallback.pushData(jsonArray
+                                            .getJSONObject(i));
+                            }
+                            }
+                        }
                     }
                 }
-
             } catch (Exception e) {
                 PushReportUtility.oe("publishArrived", e);
                 e.printStackTrace();
             }
-
         }
 
         // receiving this message will have kept the connection alive for us, so
