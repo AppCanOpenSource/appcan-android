@@ -656,7 +656,8 @@ public class EUExWidget extends EUExBase {
 
     public void setPushNotifyCallback(String[] parm) {
         mBrwView.getBrowserWindow().getEBrowserWidget()
-                .setPushNotify(mBrwView.getWindowName(), parm[0]);
+                .setPushNotify(mBrwView.getWindowName(), parm[0],
+                mBrwView.getCurrentWidget().m_appId);
     }
 
     public void checkUpdate(String[] parm) {

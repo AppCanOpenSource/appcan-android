@@ -82,7 +82,7 @@ public class EBrowserWidget extends AbsoluteLayout {
         setAlwaysDrawnWithCacheEnabled(false);
         EUtil.viewBaseSetting(this);
         mPres = mContext.getSharedPreferences("saveData",
-                Context.MODE_PRIVATE);
+                Context.MODE_MULTI_PROCESS);
         mPushNotifyWindName = mPres.getString(BConstant.F_PUSH_WIN_NAME, "");
         mPushNotifyFunctionName = mPres.getString(BConstant.F_PUSH_NOTI_FUN_NAME, "");
     }
@@ -302,7 +302,7 @@ public class EBrowserWidget extends AbsoluteLayout {
                 mBrw.hiddenShelter();
                 if (mBrw.isFromPush()) {
                     mBrw.setFromPush(false);
-                    mBrw.pushNotify();
+                    mBrw.pushNotify(EBrowserActivity.APP_TYPE_START_FORGROUND);
                 }
             }
             clearFlag();
@@ -581,10 +581,11 @@ public class EBrowserWidget extends AbsoluteLayout {
         }
     }
 
-    public void setPushNotify(String windName, String function) {
+    public void setPushNotify(String windName, String function, String appId) {
         mPushNotifyWindName = windName;
         mPushNotifyFunctionName = function;
         SharedPreferences.Editor editor = mPres.edit();
+        editor.putString(BConstant.F_PUSH_APPID, appId);
         editor.putString(BConstant.F_PUSH_WIN_NAME, windName);
         editor.putString(BConstant.F_PUSH_NOTI_FUN_NAME, function);
         editor.commit();
@@ -593,7 +594,7 @@ public class EBrowserWidget extends AbsoluteLayout {
     public void pushNotify(String info) {
         EBrowserWindow beNotify = mEWindowStack.get(mPushNotifyWindName);
         if (null != beNotify) {
-            beNotify.pushNotify(mPushNotifyFunctionName);
+            beNotify.pushNotify(mPushNotifyFunctionName, info);
         }
     }
 

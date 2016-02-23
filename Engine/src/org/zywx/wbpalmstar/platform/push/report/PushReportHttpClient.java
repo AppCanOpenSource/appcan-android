@@ -19,6 +19,8 @@
 package org.zywx.wbpalmstar.platform.push.report;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.text.TextUtils;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -30,6 +32,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
@@ -37,7 +40,9 @@ import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 import org.zywx.wbpalmstar.base.BDebug;
+import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.platform.certificates.Http;
 
 import javax.net.ssl.SSLContext;
@@ -185,6 +190,62 @@ public class PushReportHttpClient {
         } catch (Exception e) {
 
             e.printStackTrace();
+        } finally {
+            if (post != null) {
+                post.abort();
+                post = null;
+            }
+            if (httpResponse != null) {
+                httpResponse = null;
+            }
+            if (httpClient != null) {
+                httpClient.getConnectionManager().shutdown();
+                httpClient = null;
+            }
+        }
+        return null;
+    }
+
+    public static String newPushOpenByPostData(String url, Context mCtx, String tenantId, String softToken) {
+        PushReportUtility.log(url);
+        PushReportUtility.log("softToken ==" + softToken);
+        HttpPost post = new HttpPost(url);
+        HttpClient httpClient = getSSLHttpClient(mCtx);
+        HttpResponse httpResponse = null;
+        try {
+            SharedPreferences preferences = mCtx.getSharedPreferences(
+                    "app", Context.MODE_PRIVATE);
+            String appid = preferences.getString("appid", null);
+            if (!TextUtils.isEmpty(tenantId)) {
+                appid = tenantId + ":" + appid;
+            }
+            String appkey = EUExUtil.getString("appkey");
+            PushReportUtility.log("appid ==" + appid + " appkey ==" + appkey);
+            post.addHeader("Accept", "*/*");
+            post.addHeader("Content-Type", "application/json");
+            post.addHeader("x-mas-app-id", appid);
+            post.addHeader(PushReportUtility.KEY_APPVERIFY,
+                    PushReportUtility.getAppVerifyValue(appid, appkey,
+                            System.currentTimeMillis()));
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("count", 1);
+            jsonObject.put("softToken", softToken);
+            StringEntity stringEntity = new StringEntity(jsonObject.toString());
+            post.setEntity(stringEntity);
+
+            // 取得HTTP response
+            httpResponse = httpClient.execute(post);
+            // 若状态码为200 ok
+            int responesCode = httpResponse.getStatusLine().getStatusCode();
+            PushReportUtility.log("responesCode ==" + responesCode);
+            if (responesCode == 200) {
+                // 取出回应字串
+                String res = EntityUtils.toString(httpResponse.getEntity());
+                return res;
+            }
+        } catch (Exception e) {
+            PushReportUtility.oe("newPushOpenByNameValuePair: " + url, e);
         } finally {
             if (post != null) {
                 post.abort();
