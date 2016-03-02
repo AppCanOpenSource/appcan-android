@@ -31,7 +31,7 @@ public class PushBroadCastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (ACTION.equals(intent.getAction())) {
             SharedPreferences sp = context.getSharedPreferences("saveData",
-                    Context.MODE_PRIVATE);
+                    Context.MODE_MULTI_PROCESS);
             String pushMes = sp.getString("pushMes", "0");
             String localPushMes = sp.getString("localPushMes", pushMes);
             if (!TextUtils.isEmpty(pushMes) && "1".equals(pushMes)

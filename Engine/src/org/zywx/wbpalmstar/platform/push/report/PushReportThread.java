@@ -38,6 +38,9 @@ public class PushReportThread extends Thread implements PushReportConstants {
     private int mThreadType;
     private String host_pushReport = null;
     private String host_pushBindUser = null;
+    private String mTaskId = null;
+    private String mTenantId = null;
+    private String mSoftToken = null;
     // private PushReportAgent mPushAgent = null;
     private List mNameValuePairs = null;
     private boolean mIsRun;
@@ -73,6 +76,15 @@ public class PushReportThread extends Thread implements PushReportConstants {
         PushReportThread pushReportThread = new PushReportThread(inActivity,
                 threadType);
         pushReportThread.mNameValuePairs = nameValuePairs;
+        return pushReportThread;
+    }
+
+    public static PushReportThread getNewPushReportOpen(Context inActivity,
+            int threadType, String taskId, String tenantId, String softToken) {
+        PushReportThread pushReportThread = new PushReportThread(inActivity, threadType);
+        pushReportThread.mTaskId = taskId;
+        pushReportThread.mTenantId = tenantId;
+        pushReportThread.mSoftToken = softToken;
         return pushReportThread;
     }
 
@@ -114,6 +126,13 @@ public class PushReportThread extends Thread implements PushReportConstants {
                         }
                         pushReportArrive();
                         break;
+                    case TYPE_NEW_PUSH_REPORT_OPEN:
+                        if (TextUtils.isEmpty(host_pushBindUser)) {
+                            Log.w("PushReportThread", "host_pushBindUser is empty");
+                            break;
+                        }
+                        newPushReportOpen();
+                        break;
                 }
                 mIsRun = false;
             }
@@ -135,7 +154,7 @@ public class PushReportThread extends Thread implements PushReportConstants {
         String localPushMes = "0";// setPushState 可以改变
         String pushMes = "1";
         SharedPreferences sp = m_activity.getSharedPreferences("saveData",
-                Context.MODE_PRIVATE);
+                Context.MODE_MULTI_PROCESS);
         Editor editor = sp.edit();
         if (!PushReportAgent.widgetPush) {
             pushMes = "0";
@@ -166,6 +185,16 @@ public class PushReportThread extends Thread implements PushReportConstants {
                 (host_pushReport + url_push_report), mNameValuePairs,
                 m_activity);
         Log.i("PushReportThread", "pushReportOpen result======" + result);
+    }
+
+    private void newPushReportOpen() {
+        if (!host_pushBindUser.endsWith("/")) {
+            host_pushBindUser = host_pushBindUser + "/";
+        }
+        host_pushBindUser = host_pushBindUser + "4.0/count/" + mTaskId;
+        String result = PushReportHttpClient.newPushOpenByPostData(
+                host_pushBindUser, m_activity, mTenantId, mSoftToken);
+        Log.i("PushReportThread", "newPushReportOpen result======" + result);
     }
 
     private void pushReportArrive() {

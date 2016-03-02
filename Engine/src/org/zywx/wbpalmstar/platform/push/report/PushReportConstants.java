@@ -36,12 +36,32 @@ public interface PushReportConstants {
     public static final String KEY_PUSH_REPORT_SOFTTOKEN = "softToken";
     public static final String KEY_PUSH_REPORT_EVENTTYPE = "eventType";
     public static final String KEY_PUSH_REPORT_OCCUREDAT = "occuredAt";
+    public static final String PUSH_DATA_SHAREPRE = "pushData_sharePre";
+    public static final String PUSH_DATA_SHAREPRE_DATA = "pushData_data";
+    public static final String PUSH_DATA_SHAREPRE_MESSAGE = "pushData_message";
+    public static final String PUSH_DATA_SHAREPRE_TASKID = "pushData_taskId";
+    public static final String PUSH_DATA_SHAREPRE_TENANTID = "pushData_tenantId";
+
+    public static final String PUSH_DATA_INFO_KEY = "pushDataInfo";
+    public static final String PUSH_DATA_JSON_KEY_APPID = "appId";
+    public static final String PUSH_DATA_JSON_KEY_TASKID = "taskId";
+    public static final String PUSH_DATA_JSON_KEY_TITLE = "title";
+    public static final String PUSH_DATA_JSON_KEY_ALERT = "alert";
+    public static final String PUSH_DATA_JSON_KEY_BADGE = "badge";
+    public static final String PUSH_DATA_JSON_KEY_CONTENT_AVAILABLE = "content-available";
+    public static final String PUSH_DATA_JSON_KEY_REMINDTYPE = "remindType";
+    public static final String PUSH_DATA_JSON_KEY_STYLE = "style";
+    public static final String PUSH_DATA_JSON_KEY_ICON = "icon";
+    public static final String PUSH_DATA_JSON_KEY_RGB = "rgb";
+    public static final String PUSH_DATA_JSON_KEY_BEHAVIOR = "behavior";
+    public static final String PUSH_DATA_JSON_KEY_TENANTID = "tenantId";
 
     public final static int TYPE_INIT_PUSH = 0;
     public final static int TYPE_PUSH_BINDUSER = 1;
     public final static int TYPE_PUSH_REPORT_OPEN = 2;
     public final static int TYPE_PUSH_REPORT_ARRIVED = 3;
     public final static int TYPE_PUSH_UNBINDUSER = 4;
+    public final static int TYPE_NEW_PUSH_REPORT_OPEN = 5;
 
     public static final int NETWORK_TYPE_UNKNOWN = 0;
     /**

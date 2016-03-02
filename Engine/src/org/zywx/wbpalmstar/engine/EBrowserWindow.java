@@ -918,11 +918,11 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         }
     }
 
-    protected void pushNotify(String function) {
+    protected void pushNotify(String function, String appType) {
         if (null == mMainView) {
             return;
         }
-        String js = "javascript:" + function + "();";
+        String js = "javascript:" + function + "('" + appType + "');";
         mMainView.loadUrl(js);
     }
 
