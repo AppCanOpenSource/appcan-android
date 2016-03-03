@@ -618,14 +618,17 @@ public final class EBrowserActivity extends FragmentActivity {
     }
 
     public final int intoOrientation(int flag) {
-        /*
-		 * 1,4,5 portrait 2,8,10 landscape 3,9,6,12,15 sensor
-		 */
         int or = ActivityInfo.SCREEN_ORIENTATION_USER;
-        if (flag == 1 || flag == 4 || flag == 5) {
+        if (flag == 1) {// portrait
             or = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-        } else if (flag == 2 || flag == 8 || flag == 10) {
+        } else if (flag == 2) {// landscape
             or = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+        } else if (flag == 4) {// reverse portrait
+            or = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
+        } else if (flag == 8) {// reverse landscape
+            or = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
+        } else if (flag == 15) {// sensor
+            or = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR;
         } else {
             ;
         }
