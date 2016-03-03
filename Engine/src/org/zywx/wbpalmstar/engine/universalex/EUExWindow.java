@@ -3449,12 +3449,12 @@ public class EUExWindow extends EUExBase {
         String jsonStr=params[0];
         ShareInputVO inputVO=DataHelper.gson.fromJson(jsonStr,ShareInputVO.class);
         if (!TextUtils.isEmpty(inputVO.getImgPath())){
-            inputVO.setImgPath(BUtility.makeRealPath(inputVO.getImgPath(),mBrwView));
+            inputVO.setImgPath(BUtility.getRealPathWithCopyRes(mBrwView,inputVO.getImgPath()));
         }
         if (inputVO.getImgPaths()!=null){
             List<String> realImagePaths=new ArrayList<String>();
             for (String path:inputVO.getImgPaths()){
-                realImagePaths.add(BUtility.makeRealPath(path,mBrwView));
+                realImagePaths.add(BUtility.getRealPathWithCopyRes(mBrwView,path));
             }
             inputVO.setImgPaths(realImagePaths);
         }

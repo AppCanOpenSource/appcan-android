@@ -43,10 +43,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.text.BreakIterator;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -707,6 +708,72 @@ public class BUtility {
             }
         }
         return bitmap;
+    }
+
+    /**
+     * 获取真实的路径，同时拷贝res协议文件到sd卡缓存目录
+     * @param mBrwView
+     * @param url AppCan协议路径
+     * @return
+     */
+    public static String getRealPathWithCopyRes(EBrowserView mBrwView,String url){
+        String realPath=makeRealPath(url,mBrwView);
+        if (realPath.startsWith("/") && !realPath.startsWith ("/data")) {
+            return realPath;
+        }
+        return getResLocalPath(mBrwView.getContext(),realPath);
+    }
+
+    /**
+     * 根据res协议获取本地路径（将文件拷贝到sd卡缓存目录）
+     * @param context
+     * @param url Android assets路径，或者开启增量更新时的/data 开头路径
+     * @return
+     */
+    public static String getResLocalPath(Context context,String url){
+        String resPath = url;// 获取的为assets路径
+        InputStream inputStream = null;
+        OutputStream out = null;
+        String tempPath = url;
+        try {
+            if(resPath.startsWith("/data")){
+                inputStream = new FileInputStream(new File(resPath));
+            }else{
+                inputStream = context.getResources().getAssets()
+                        .open(resPath);
+            }
+            File cacheDir=context.getExternalCacheDir();
+            if (cacheDir==null){
+                return null;
+            }
+            String cachePath =cacheDir.getAbsolutePath();
+            tempPath = cachePath + File.separator + resPath;
+            File file = new File(tempPath);
+            if(!file.getParentFile().exists()){
+                file.getParentFile().mkdirs();
+            }
+            if(file.exists()){
+                file.delete();
+            }
+            out = new FileOutputStream(file);
+            int count = 0;
+            byte[] buff = new byte[1024];
+            while ((count = inputStream.read(buff)) != -1) {
+                out.write(buff, 0, count);
+            }
+            out.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if(inputStream != null) inputStream.close();
+                if(out != null) out.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return tempPath;
+
     }
 
     public static String getFileNameWithNoSuffix(String path) {
