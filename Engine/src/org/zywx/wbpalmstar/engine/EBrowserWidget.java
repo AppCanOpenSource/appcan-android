@@ -18,6 +18,9 @@
 
 package org.zywx.wbpalmstar.engine;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -28,7 +31,6 @@ import android.os.Message;
 import android.view.View;
 import android.view.ViewParent;
 import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.webkit.WebView;
@@ -942,38 +944,33 @@ public class EBrowserWidget extends AbsoluteLayout {
                     final EBrowserWindow window = (EBrowserWindow) en.obj;
                     AbsoluteLayout.LayoutParams oldLp = (LayoutParams) window
                             .getLayoutParams();
-                    int oldX = oldLp.x;
-                    int oldY = oldLp.y;
-                    int sx = oldX - en.x;
-                    int sy = oldY - en.y;
-                    if (0 == sx && 0 == sy) {
-                        return;
-                    }
-                    Animation amin = null;
-                    amin = new TranslateAnimation(0, -sx, 0, -sy);
-                    amin.setDuration(en.duration);
-                    amin.setFillEnabled(true);
-                    amin.setFillAfter(true);
-                    amin.setAnimationListener(new AnimationListener() {
+                    ObjectAnimator animatorX=ObjectAnimator.ofFloat(window,"translationX",oldLp.x,en.x);
+                    ObjectAnimator animatorY=ObjectAnimator.ofFloat(window,"translationY",oldLp.y,en.y);
+                    AnimatorSet animatorSet=new AnimatorSet();
+                    animatorSet.playTogether(animatorX,animatorY);
+                    animatorSet.setDuration(en.duration);
+                    animatorSet.addListener(new Animator.AnimatorListener() {
                         @Override
-                        public void onAnimationStart(Animation animation) {
+                        public void onAnimationStart(Animator animation) {
+
                         }
 
                         @Override
-                        public void onAnimationRepeat(Animation animation) {
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            AbsoluteLayout.LayoutParams newLp = new AbsoluteLayout.LayoutParams(
-                                    Compat.FILL, Compat.FILL, en.x, en.y);
-                            window.setLayoutParams(newLp);
-                            window.clearAnimation();
+                        public void onAnimationEnd(Animator animation) {
                             window.onSetWindowFrameFinish();
                         }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
+
+                        }
                     });
-                    window.startAnimation(amin);
-                    invalidate();
+                    animatorSet.start();
                     break;
 //			case F_WIDGET_HANDLER_WINDOW_CLOSE:// close window
 //				closeWindow((EBrowserWindow) msg.obj);
