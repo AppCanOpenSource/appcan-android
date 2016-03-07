@@ -25,7 +25,7 @@ public class ThirdPluginObject {
     public static final String js_object_begin = "window.";
     public static final String js_arg_low = "jo(arguments)";
     public static final String js_staves = ".";
-    public static final String js_function_begin = ":function(){";
+    public static final String js_function_begin = ":function(){return ";
     public static final String js_symbol = "=";
     public static final String js_l_brackets = "(";
     public static final String js_function_end = ");},";
