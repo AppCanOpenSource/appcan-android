@@ -313,6 +313,14 @@ public class EUExWindow extends EUExBase {
         curWind.createWindow(mBrwView, windEntry);
     }
 
+    public int getHeight(String[] params){
+        return mBrwView.getBrowserWindow().getHeight();
+    }
+
+    public int getWidth(String[] params){
+        return mBrwView.getBrowserWindow().getWidth();
+    }
+
     private boolean checkWindPermission(String windName) {
         WWidgetData rootWgt = mBrwView.getRootWidget();
         String[] winds = rootWgt.disableRootWindows;

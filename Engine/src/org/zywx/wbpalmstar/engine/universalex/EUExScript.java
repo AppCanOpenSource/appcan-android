@@ -128,6 +128,8 @@ public class EUExScript {
                 +
                 // Window
                 "window.uexWindow={"
+                + "getHeight:function(){return uexDispatcher.dispatch('uexWindow','getHeight',jo(arguments));},"
+                + "getWidth:function(){return uexDispatcher.dispatch('uexWindow','getWidth',jo(arguments));},"
                 + "forward:function(){uexDispatcher.dispatch('uexWindow','forward',jo(arguments));},"
                 + "back:function(){uexDispatcher.dispatch('uexWindow','back',jo(arguments));},"
                 + "pageBack:function(){uexDispatcher.dispatch('uexWindow','pageBack',jo(arguments));},"
