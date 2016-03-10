@@ -208,6 +208,8 @@ public class EUExScript {
                 + "setPopHardwareEnable:function(){uexDispatcher.dispatch('uexWindow','setPopHardwareEnable',jo(arguments));},"
                 + "setSwipeCloseEnable:function(){uexDispatcher.dispatch('uexWindow','setSwipeCloseEnable',jo(arguments));},"
                 + "share:function(){uexDispatcher.dispatch('uexWindow','share',jo(arguments));},"
+                + "putLocalData:function(){uexDispatcher.dispatch('uexWindow','putLocalData',jo(arguments));},"
+                + "getLocalData:function(){return uexDispatcher.dispatch('uexWindow','getLocalData',jo(arguments));},"
 
 
                 + "setSlidingWindow:function(){uexDispatcher.dispatch('uexWindow','setSlidingWindow',jo(arguments));},"
