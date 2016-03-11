@@ -10,9 +10,15 @@ project.plugins.whenPluginAdded { plugin ->
 }
 
 buildscript {
+
+    def mavenUrl=System.getenv("GRADLE_M2_HOME");
+    if(mavenUrl==null){
+        mavenUrl="/usr/share/gradle/m2repository"
+    }
+
     repositories {
       maven {
-            url "/usr/share/gradle/m2repository"
+            url mavenUrl
       }
     }
     dependencies {

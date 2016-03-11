@@ -128,6 +128,8 @@ public class EUExScript {
                 +
                 // Window
                 "window.uexWindow={"
+                + "getHeight:function(){return uexDispatcher.dispatch('uexWindow','getHeight',jo(arguments));},"
+                + "getWidth:function(){return uexDispatcher.dispatch('uexWindow','getWidth',jo(arguments));},"
                 + "forward:function(){uexDispatcher.dispatch('uexWindow','forward',jo(arguments));},"
                 + "back:function(){uexDispatcher.dispatch('uexWindow','back',jo(arguments));},"
                 + "pageBack:function(){uexDispatcher.dispatch('uexWindow','pageBack',jo(arguments));},"
@@ -205,6 +207,9 @@ public class EUExScript {
                 + "setHardwareEnable:function(){uexDispatcher.dispatch('uexWindow','setHardwareEnable',jo(arguments));},"
                 + "setPopHardwareEnable:function(){uexDispatcher.dispatch('uexWindow','setPopHardwareEnable',jo(arguments));},"
                 + "setSwipeCloseEnable:function(){uexDispatcher.dispatch('uexWindow','setSwipeCloseEnable',jo(arguments));},"
+                + "share:function(){uexDispatcher.dispatch('uexWindow','share',jo(arguments));},"
+                + "putLocalData:function(){uexDispatcher.dispatch('uexWindow','putLocalData',jo(arguments));},"
+                + "getLocalData:function(){return uexDispatcher.dispatch('uexWindow','getLocalData',jo(arguments));},"
 
 
                 + "setSlidingWindow:function(){uexDispatcher.dispatch('uexWindow','setSlidingWindow',jo(arguments));},"
@@ -226,7 +231,10 @@ public class EUExScript {
                 + "setPageInContainer:function(){uexDispatcher.dispatch('uexWindow','setPageInContainer',jo(arguments));},"
                 + "closePluginViewContainer:function(){uexDispatcher.dispatch('uexWindow','closePluginViewContainer',jo(arguments));},"
                 + "createPluginViewContainer:function(){uexDispatcher.dispatch('uexWindow','createPluginViewContainer',jo(arguments));},"
-                + "getUrlQuery:function(){return uexDispatcher.dispatch('uexWindow','getUrlQuery',jo(arguments))}};"
+                + "showPluginViewContainer:function(){uexDispatcher.dispatch('uexWindow','showPluginViewContainer',jo(arguments));},"
+                + "hidePluginViewContainer:function(){uexDispatcher.dispatch('uexWindow','hidePluginViewContainer',jo(arguments));},"
+                + "getUrlQuery:function(){return uexDispatcher.dispatch('uexWindow','getUrlQuery',jo(arguments));},"
+                + "setAutorotateEnable:function(){return uexDispatcher.dispatch('uexWindow','setAutorotateEnable',jo(arguments))}};"
                 +
 //				// DataAnalysis 
 //				"window.uexDataAnalysis={"

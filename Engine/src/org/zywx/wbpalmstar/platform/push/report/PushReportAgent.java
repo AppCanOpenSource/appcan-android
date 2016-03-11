@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.apache.http.NameValuePair;
@@ -156,26 +157,46 @@ public class PushReportAgent implements PushReportConstants {
                                   String eventType, String softToken, Context context) {
         PushReportUtility.log("reportPush===" + pushInfo + " eventType==="
                 + eventType);
-        String msgId = parsePushInfo2MsgId(pushInfo);
-        if (msgId != null) {
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-            nameValuePairs
-                    .add(new BasicNameValuePair(KEY_PUSH_REPORT_MSGID, msgId));
-            nameValuePairs.add(new BasicNameValuePair(KEY_PUSH_REPORT_SOFTTOKEN,
-                    softToken));
-            nameValuePairs.add(new BasicNameValuePair(KEY_PUSH_REPORT_EVENTTYPE,
-                    eventType));
-            nameValuePairs.add(new BasicNameValuePair(KEY_PUSH_REPORT_OCCUREDAT,
-                    occuredAt));
-            if (eventType.equals(PushReportConstants.EVENT_TYPE_OPEN)) {
-                PushReportThread.getPushReportThread(context, sAgent,
-                        TYPE_PUSH_REPORT_OPEN, nameValuePairs).start();
-                Log.i("push", "EVENT_TYPE_OPEN");
-            } else if (eventType.equals(PushReportConstants.EVENT_TYPE_ARRIVED)) {
-                PushReportThread.getPushReportThread(context, sAgent,
-                        TYPE_PUSH_REPORT_ARRIVED, nameValuePairs).start();
-                Log.i("push", "EVENT_TYPE_ARRIVED");
+        SharedPreferences sp = context.getSharedPreferences(
+                PushReportConstants.PUSH_DATA_SHAREPRE, Context.MODE_PRIVATE);
+        String taskId = sp.getString(
+                PushReportConstants.PUSH_DATA_SHAREPRE_TASKID, "");
+        PushReportUtility.log("reportPush===taskId " + taskId);
+        if (TextUtils.isEmpty(taskId)) {
+            String msgId = parsePushInfo2MsgId(pushInfo);
+            if (msgId != null) {
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                nameValuePairs
+                        .add(new BasicNameValuePair(KEY_PUSH_REPORT_MSGID, msgId));
+                nameValuePairs.add(new BasicNameValuePair(KEY_PUSH_REPORT_SOFTTOKEN,
+                        softToken));
+                nameValuePairs.add(new BasicNameValuePair(KEY_PUSH_REPORT_EVENTTYPE,
+                        eventType));
+                nameValuePairs.add(new BasicNameValuePair(KEY_PUSH_REPORT_OCCUREDAT,
+                        occuredAt));
+                if (eventType.equals(PushReportConstants.EVENT_TYPE_OPEN)) {
+                    PushReportThread.getPushReportThread(context, sAgent,
+                            TYPE_PUSH_REPORT_OPEN, nameValuePairs).start();
+                    Log.i("push", "EVENT_TYPE_OPEN");
+                } else if (eventType.equals(PushReportConstants.EVENT_TYPE_ARRIVED)) {
+                    PushReportThread.getPushReportThread(context, sAgent,
+                            TYPE_PUSH_REPORT_ARRIVED, nameValuePairs).start();
+                    Log.i("push", "EVENT_TYPE_ARRIVED");
+                }
             }
+        } else {
+            String tenantId = sp.getString(
+                    PushReportConstants.PUSH_DATA_SHAREPRE_TENANTID, "");
+            PushReportUtility.log("reportPush===tenantId " + tenantId);
+            Editor editor = sp.edit();
+            editor.putString(PushReportConstants.PUSH_DATA_SHAREPRE_DATA, "");
+            editor.putString(PushReportConstants.PUSH_DATA_SHAREPRE_MESSAGE, "");
+            editor.putString(PushReportConstants.PUSH_DATA_SHAREPRE_TASKID, "");
+            editor.putString(PushReportConstants.PUSH_DATA_SHAREPRE_TENANTID, "");
+            editor.commit();
+            PushReportThread.getNewPushReportOpen(context,
+                    TYPE_NEW_PUSH_REPORT_OPEN, taskId, tenantId, softToken).start();
+            Log.i("push", "TYPE_NEW_PUSH_REPORT_OPEN");
         }
     }
 
@@ -204,7 +225,7 @@ public class PushReportAgent implements PushReportConstants {
     public static void setPushState(Context context, int type) {
         PushReportUtility.log("setPushState--" + type);
         SharedPreferences sp = context.getSharedPreferences("saveData",
-                Context.MODE_PRIVATE);
+                Context.MODE_MULTI_PROCESS);
         Editor editor = sp.edit();
         editor.putString("localPushMes", String.valueOf(type));
         editor.commit();
