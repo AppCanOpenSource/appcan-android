@@ -2456,6 +2456,10 @@ public class EUExWindow extends EUExBase {
         mBrwView.notifyBounceEvent(type, status);
     }
 
+    public String getWindowName(String[] params){
+        return mBrwView.getWindowName();
+    }
+
     public void showBounceView(String[] parm) {
         if (parm.length < 3) {
             return;
