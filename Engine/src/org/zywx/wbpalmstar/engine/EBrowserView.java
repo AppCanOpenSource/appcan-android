@@ -490,6 +490,7 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 
     public void setIsMultilPopoverFlippingEnbaled(boolean isEnabled) {
         isMultilPopoverFlippingEnbaled = isEnabled;
+        setMultilPopoverFlippingEnbaled();
     }
 
     private void setMultilPopoverFlippingEnbaled() {
