@@ -520,6 +520,24 @@ public class WDataManager {
 
             if (widgetData != null) {
                 widgetData.m_widgetPath = currentWidget.m_widgetPath;
+                if (widgetData.m_obfuscation == 1) {
+                    String preString = BUtility.F_ASSET_PATH;
+                    String contentPrefix = "content://";
+                    String packg = m_context.getPackageName();
+                    String spPostFix = ".sp/";
+                    if (isUpdateWidget && isCopyAssetsFinish) {
+                        BUtility.g_desPath = contentPrefix + packg + spPostFix
+                                + "android_asset" + m_sboxPath;
+                        widgetData.m_indexUrl = contentPrefix + packg + spPostFix
+                                + "android_asset/" + widgetData.m_indexUrl.substring("file:///".length());
+                    } else {
+                        BUtility.g_desPath = contentPrefix + packg + spPostFix;
+                        widgetData.m_indexUrl = contentPrefix + packg + spPostFix
+                                + "android_asset/" + widgetData.m_indexUrl.substring(preString.length());
+                    }
+                    widgetData.m_obfuscation = 0;
+                    BUtility.isDes = true;
+                }
             }
 
             // }
