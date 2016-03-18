@@ -484,6 +484,17 @@ public class WDataManager {
             widgetData = getWidgetDataByXML(wgtPath, 2);
             // 启动 widgt
             if (widgetData != null) {
+                if (widgetData.m_obfuscation == 1) {
+                    String contentPrefix = "content://";
+                    String packg = m_context.getPackageName();
+                    String spPostFix = ".sp/";
+                    BUtility.g_desPath = contentPrefix + packg + spPostFix
+                            + "android_asset" + m_sboxPath;
+                    widgetData.m_indexUrl = contentPrefix + packg + spPostFix + "android_asset/"
+                            + widgetData.m_indexUrl.substring("file:///".length());
+                    widgetData.m_obfuscation = 0;
+                    BUtility.isDes = true;
+                }
                 return widgetData;
             }
 
@@ -491,6 +502,9 @@ public class WDataManager {
             if (currentWidget.m_wgtType == 0) {
                 wgtPath = F_ROOT_WIDGET_PATH + "plugin/" + appId
                         + "/config.xml";
+                if (isUpdateWidget && isCopyAssetsFinish) {
+                    wgtPath = m_sboxPath + wgtPath;
+                }
             } else if (currentWidget.m_wgtType == 2) {
                 wgtPath = currentWidget.m_widgetPath + "plugin/" + appId
                         + "/config.xml";
@@ -506,6 +520,24 @@ public class WDataManager {
 
             if (widgetData != null) {
                 widgetData.m_widgetPath = currentWidget.m_widgetPath;
+                if (widgetData.m_obfuscation == 1) {
+                    String preString = BUtility.F_ASSET_PATH;
+                    String contentPrefix = "content://";
+                    String packg = m_context.getPackageName();
+                    String spPostFix = ".sp/";
+                    if (isUpdateWidget && isCopyAssetsFinish) {
+                        BUtility.g_desPath = contentPrefix + packg + spPostFix
+                                + "android_asset" + m_sboxPath;
+                        widgetData.m_indexUrl = contentPrefix + packg + spPostFix
+                                + "android_asset/" + widgetData.m_indexUrl.substring("file:///".length());
+                    } else {
+                        BUtility.g_desPath = contentPrefix + packg + spPostFix;
+                        widgetData.m_indexUrl = contentPrefix + packg + spPostFix
+                                + "android_asset/" + widgetData.m_indexUrl.substring(preString.length());
+                    }
+                    widgetData.m_obfuscation = 0;
+                    BUtility.isDes = true;
+                }
             }
 
             // }

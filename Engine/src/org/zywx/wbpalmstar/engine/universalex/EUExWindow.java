@@ -289,11 +289,13 @@ public class EUExWindow extends EUExBase {
         }
         String query = null;
         if (Build.VERSION.SDK_INT >= 11) {
-            if (EBrwViewEntry.isUrl(dataType) && data.startsWith("file")) {
+            if (EBrwViewEntry.isUrl(dataType) && data != null) {
                 int index = data.indexOf("?");
                 if (index > 0) {
                     query = data.substring(index + 1);
-                    data = data.substring(0, index);
+                    if (!data.startsWith("http")) {
+                        data = data.substring(0, index);
+                    }
                 }
             }
         }
@@ -600,11 +602,13 @@ public class EUExWindow extends EUExBase {
         String url = BUtility.makeUrl(mBrwView.getCurrentUrl(), inUrl);
         String query = null;
         if (Build.VERSION.SDK_INT >= 11) {
-            if (url != null && url.startsWith("file")) {
+            if (url != null) {
                 int index = url.indexOf("?");
                 if (index > 0) {
                     query = url.substring(index + 1);
-                    url = url.substring(0, index);
+                    if (!url.startsWith("http")) {
+                        url = url.substring(0, index);
+                    }
                 }
             }
         }
@@ -975,11 +979,13 @@ public class EUExWindow extends EUExBase {
         }
         String query = null;
         if (Build.VERSION.SDK_INT >= 11) {
-            if (EBrwViewEntry.isUrl(dataType) && data.startsWith("file")) {
+            if (EBrwViewEntry.isUrl(dataType) && data != null) {
                 int index = data.indexOf("?");
                 if (index > 0) {
                     query = data.substring(index + 1);
-                    data = data.substring(0, index);
+                    if (!url.startsWith("http")) {
+                        data = data.substring(0, index);
+                    }
                 }
             }
         }
@@ -1155,13 +1161,14 @@ public class EUExWindow extends EUExBase {
         popEntry.hasExtraInfo = hasExtraInfo;
         String query = null;
         if (Build.VERSION.SDK_INT >= 11) {
-            if (url != null && url.trim().length() != 0
-                    && url.startsWith("file")) {
+            if (url != null && url.trim().length() != 0) {
                 int index = url.indexOf("?");
                 if (index > 0) {
                     query = url.substring(index + 1);
-                    url = url.substring(0, index);
-                    popEntry.mUrl = url;
+                    if (!url.startsWith("http")) {
+                        url = url.substring(0, index);
+                        popEntry.mUrl = url;
+                    }
                 }
             }
         }
@@ -1485,13 +1492,14 @@ public class EUExWindow extends EUExBase {
                     String query = null;
                     if (Build.VERSION.SDK_INT >= 11) {
                         if (childUrl[i] != null
-                                && childUrl[i].trim().length() != 0
-                                && childUrl[i].startsWith("file")) {
+                                && childUrl[i].trim().length() != 0) {
                             int index = childUrl[i].indexOf("?");
                             if (index > 0) {
                                 query = childUrl[i].substring(index + 1);
-                                childUrl[i] = childUrl[i].substring(0, index);
-                                popEntry.mUrl = childUrl[i];
+                                if (!childUrl[i].startsWith("http")) {
+                                    childUrl[i] = childUrl[i].substring(0, index);
+                                    popEntry.mUrl = childUrl[i];
+                                }
                             }
                         }
                     }

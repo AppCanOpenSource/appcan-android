@@ -120,7 +120,8 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
             }
             return true;
         }
-        boolean isUrl = url.startsWith("file") || url.startsWith("http");
+        boolean isUrl = url.startsWith("file") || url.startsWith("http")
+                || url.startsWith("content://");
         if (!isUrl) {
             return true;
         }
@@ -137,11 +138,13 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
         }
         int sdkVersion = Build.VERSION.SDK_INT;
         if (sdkVersion >= 11) {
-            if (url.startsWith("file")) {
+            if (url != null) {
                 int index = url.indexOf("?");
                 if (index > 0) {
                     mParms = url.substring(index + 1);
-                    url = url.substring(0, index);
+                    if (!url.startsWith("http")) {
+                        url = url.substring(0, index);
+                    }
                 }
             }
         }
