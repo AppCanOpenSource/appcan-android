@@ -726,11 +726,13 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
             return;
         }
         if (Build.VERSION.SDK_INT >= 11) {
-            if (url.startsWith("file")) {
+            if (url != null) {
                 int index = url.indexOf("?");
                 if (index > 0) {
                     setQuery(url.substring(index + 1));
-                    url = url.substring(0, index);
+                    if (!url.startsWith("http")) {
+                        url = url.substring(0, index);
+                    }
                 }
             }
         }
@@ -768,11 +770,13 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
             }
         } else {
             if (Build.VERSION.SDK_INT >= 11) {
-                if (url.startsWith("file")) {
+                if (url != null) {
                     int index = url.indexOf("?");
                     if (index > 0) {
                         setQuery(url.substring(index + 1));
-                        url = url.substring(0, index);
+                        if (!url.startsWith("http")) {
+                            url = url.substring(0, index);
+                        }
                     }
                 }
             }
