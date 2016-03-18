@@ -491,6 +491,9 @@ public class WDataManager {
             if (currentWidget.m_wgtType == 0) {
                 wgtPath = F_ROOT_WIDGET_PATH + "plugin/" + appId
                         + "/config.xml";
+                if (isUpdateWidget && isCopyAssetsFinish) {
+                    wgtPath = m_sboxPath + wgtPath;
+                }
             } else if (currentWidget.m_wgtType == 2) {
                 wgtPath = currentWidget.m_widgetPath + "plugin/" + appId
                         + "/config.xml";
