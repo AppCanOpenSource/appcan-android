@@ -18,6 +18,9 @@
 
 package org.zywx.wbpalmstar.engine;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -28,7 +31,6 @@ import android.os.Message;
 import android.view.View;
 import android.view.ViewParent;
 import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.webkit.WebView;
@@ -82,7 +84,7 @@ public class EBrowserWidget extends AbsoluteLayout {
         setAlwaysDrawnWithCacheEnabled(false);
         EUtil.viewBaseSetting(this);
         mPres = mContext.getSharedPreferences("saveData",
-                Context.MODE_PRIVATE);
+                Context.MODE_MULTI_PROCESS);
         mPushNotifyWindName = mPres.getString(BConstant.F_PUSH_WIN_NAME, "");
         mPushNotifyFunctionName = mPres.getString(BConstant.F_PUSH_NOTI_FUN_NAME, "");
     }
@@ -302,7 +304,7 @@ public class EBrowserWidget extends AbsoluteLayout {
                 mBrw.hiddenShelter();
                 if (mBrw.isFromPush()) {
                     mBrw.setFromPush(false);
-                    mBrw.pushNotify();
+                    mBrw.pushNotify(EBrowserActivity.APP_TYPE_START_FORGROUND);
                 }
             }
             clearFlag();
@@ -581,10 +583,11 @@ public class EBrowserWidget extends AbsoluteLayout {
         }
     }
 
-    public void setPushNotify(String windName, String function) {
+    public void setPushNotify(String windName, String function, String appId) {
         mPushNotifyWindName = windName;
         mPushNotifyFunctionName = function;
         SharedPreferences.Editor editor = mPres.edit();
+        editor.putString(BConstant.F_PUSH_APPID, appId);
         editor.putString(BConstant.F_PUSH_WIN_NAME, windName);
         editor.putString(BConstant.F_PUSH_NOTI_FUN_NAME, function);
         editor.commit();
@@ -593,7 +596,7 @@ public class EBrowserWidget extends AbsoluteLayout {
     public void pushNotify(String info) {
         EBrowserWindow beNotify = mEWindowStack.get(mPushNotifyWindName);
         if (null != beNotify) {
-            beNotify.pushNotify(mPushNotifyFunctionName);
+            beNotify.pushNotify(mPushNotifyFunctionName, info);
         }
     }
 
@@ -941,38 +944,33 @@ public class EBrowserWidget extends AbsoluteLayout {
                     final EBrowserWindow window = (EBrowserWindow) en.obj;
                     AbsoluteLayout.LayoutParams oldLp = (LayoutParams) window
                             .getLayoutParams();
-                    int oldX = oldLp.x;
-                    int oldY = oldLp.y;
-                    int sx = oldX - en.x;
-                    int sy = oldY - en.y;
-                    if (0 == sx && 0 == sy) {
-                        return;
-                    }
-                    Animation amin = null;
-                    amin = new TranslateAnimation(0, -sx, 0, -sy);
-                    amin.setDuration(en.duration);
-                    amin.setFillEnabled(true);
-                    amin.setFillAfter(true);
-                    amin.setAnimationListener(new AnimationListener() {
+                    ObjectAnimator animatorX=ObjectAnimator.ofFloat(window,"translationX",oldLp.x,en.x);
+                    ObjectAnimator animatorY=ObjectAnimator.ofFloat(window,"translationY",oldLp.y,en.y);
+                    AnimatorSet animatorSet=new AnimatorSet();
+                    animatorSet.playTogether(animatorX,animatorY);
+                    animatorSet.setDuration(en.duration);
+                    animatorSet.addListener(new Animator.AnimatorListener() {
                         @Override
-                        public void onAnimationStart(Animation animation) {
+                        public void onAnimationStart(Animator animation) {
+
                         }
 
                         @Override
-                        public void onAnimationRepeat(Animation animation) {
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            AbsoluteLayout.LayoutParams newLp = new AbsoluteLayout.LayoutParams(
-                                    Compat.FILL, Compat.FILL, en.x, en.y);
-                            window.setLayoutParams(newLp);
-                            window.clearAnimation();
+                        public void onAnimationEnd(Animator animation) {
                             window.onSetWindowFrameFinish();
                         }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
+
+                        }
                     });
-                    window.startAnimation(amin);
-                    invalidate();
+                    animatorSet.start();
                     break;
 //			case F_WIDGET_HANDLER_WINDOW_CLOSE:// close window
 //				closeWindow((EBrowserWindow) msg.obj);
@@ -1110,5 +1108,25 @@ public class EBrowserWidget extends AbsoluteLayout {
 
     public void setSpaceEnable(SpaceClickListener listener) {
         mBrw.setSpaceEnable(listener);
+    }
+
+    public void reloadWidget() {
+        //Sliding window
+        EBrowserWindow leftSlidingWin = mEWindowStack
+                .getSlidingWind(EBrowserWindow.rootLeftSlidingWinName);
+        if (leftSlidingWin != null) {
+            leftSlidingWin.reloadWindow();
+        }
+        EBrowserWindow rightSlidingWin = mEWindowStack
+                .getSlidingWind(EBrowserWindow.rootRightSlidingWinName);
+        if (rightSlidingWin != null) {
+            rightSlidingWin.reloadWindow();
+        }
+        // normal window
+        ELinkedList<EBrowserWindow> eBrwWins = mEWindowStack.getAll();
+        for (int i = 0; i < eBrwWins.size(); i++) {
+            EBrowserWindow eBrwWin = eBrwWins.get(i);
+            eBrwWin.reloadWindow();
+        }
     }
 }

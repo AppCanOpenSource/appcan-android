@@ -45,12 +45,15 @@ import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.JsConst;
 import org.zywx.wbpalmstar.base.ResoureFinder;
 import org.zywx.wbpalmstar.base.vo.AppInstalledVO;
+import org.zywx.wbpalmstar.base.vo.StartAppVO;
 import org.zywx.wbpalmstar.engine.DataHelper;
 import org.zywx.wbpalmstar.engine.EBrowserActivity;
 import org.zywx.wbpalmstar.engine.EBrowserAnimation;
 import org.zywx.wbpalmstar.engine.EBrowserView;
+import org.zywx.wbpalmstar.engine.EBrowserWidget;
 import org.zywx.wbpalmstar.engine.EBrowserWindow;
 import org.zywx.wbpalmstar.engine.EWgtResultInfo;
+import org.zywx.wbpalmstar.platform.push.report.PushReportConstants;
 import org.zywx.wbpalmstar.widgetone.WidgetOneApplication;
 import org.zywx.wbpalmstar.widgetone.dataservice.ReData;
 import org.zywx.wbpalmstar.widgetone.dataservice.WDataManager;
@@ -227,6 +230,10 @@ public class EUExWidget extends EUExBase {
             if ("0".equals(startMode)) {
                 String pkgName = params[1];
                 String clsName = null;
+                StartAppVO extraVO=null;
+                if (params.length>4) {
+                    extraVO = DataHelper.gson.fromJson(params[4],StartAppVO.class);
+                }
                 if (TextUtils.isEmpty(pkgName)) {
                     Log.e(tag, "startApp has error params!!!");
                     callBackPluginJs(JsConst.CALLBACK_START_APP, "error params");
@@ -246,6 +253,10 @@ public class EUExWidget extends EUExBase {
                 }
                 ComponentName component = new ComponentName(pkgName, clsName);
                 intent = new Intent();
+                if (extraVO!=null&&extraVO.getData()!=null){
+                    Uri contentUrl=Uri.parse(extraVO.getData());
+                    intent.setData(contentUrl);
+                }
                 intent.setComponent(component);
             } else if ("1".equals(startMode)) {
                 String action = params[1];
@@ -645,7 +656,8 @@ public class EUExWidget extends EUExBase {
 
     public void setPushNotifyCallback(String[] parm) {
         mBrwView.getBrowserWindow().getEBrowserWidget()
-                .setPushNotify(mBrwView.getWindowName(), parm[0]);
+                .setPushNotify(mBrwView.getWindowName(), parm[0],
+                mBrwView.getCurrentWidget().m_appId);
     }
 
     public void checkUpdate(String[] parm) {
@@ -752,7 +764,7 @@ public class EUExWidget extends EUExBase {
 
     public void getPushState(String[] parm) {
         SharedPreferences sp = mContext.getSharedPreferences("saveData",
-                Context.MODE_PRIVATE);
+                Context.MODE_MULTI_PROCESS);
         String pushMes = sp.getString("pushMes", "0");
         String localPushMes = sp.getString("localPushMes", pushMes);
         jsCallback(function_getPushState, 0, EUExCallback.F_C_INT,
@@ -764,21 +776,22 @@ public class EUExWidget extends EUExBase {
         if (parm.length >= 1) {
             type = parm[0];
         }
+        SharedPreferences sp = mContext.getSharedPreferences(
+                PushReportConstants.PUSH_DATA_SHAREPRE, Context.MODE_PRIVATE);
         String userInfo = null;
-        try {
-            if (PUSH_MSG_ALL.equals(type)) {
-                // 获取推送消息所有内容
-                userInfo = ((EBrowserActivity) mContext).getIntent()
-                        .getStringExtra(BUNDLE_MESSAGE);
-            } else {
-                userInfo = ((EBrowserActivity) mContext).getIntent()
-                        .getStringExtra(BUNDLE_DATA);
-            }
-        } catch (Exception e) {
+        if (PUSH_MSG_ALL.equals(type)) {
+            // 获取推送消息所有内容
+            userInfo = sp.getString(
+                    PushReportConstants.PUSH_DATA_SHAREPRE_MESSAGE, "");
+        } else {
+            userInfo = sp.getString(
+                    PushReportConstants.PUSH_DATA_SHAREPRE_DATA, "");
         }
-        ((WidgetOneApplication) mContext.getApplicationContext()).getPushInfo(
-                userInfo, System.currentTimeMillis() + "");
-        jsCallback(function_getPushInfo, 0, EUExCallback.F_C_TEXT, userInfo);
+        if (!TextUtils.isEmpty(userInfo)) {
+            ((WidgetOneApplication) mContext.getApplicationContext()).getPushInfo(
+                    userInfo, System.currentTimeMillis() + "");
+            jsCallback(function_getPushInfo, 0, EUExCallback.F_C_TEXT, userInfo);
+        }
     }
 
     public void share(String inShareTitle, String inSubject, String inContent) {
@@ -894,7 +907,11 @@ public class EUExWidget extends EUExBase {
         if (null == curWind) {
             return;
         }
-        curWind.reloadWidgetByAppId(appId);
+        EBrowserWidget widget = curWind.getWGT(appId);
+        if (null == widget) {
+            return;
+        }
+        widget.reloadWidget();
     }
     private void callBackPluginJs(String methodName, String jsonData) {
         String js = SCRIPT_HEADER + "if(" + methodName + "){"

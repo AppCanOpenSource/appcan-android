@@ -202,17 +202,29 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
     }
 
     public void addViewToCurrentWindow(View child) {
-        Message msg = mWindLoop.obtainMessage();
-        msg.what = F_WHANDLER_ADD_VIEW;
-        msg.obj = child;
-        mWindLoop.sendMessage(msg);
+        //Message msg = mWindLoop.obtainMessage();
+        //msg.what = F_WHANDLER_ADD_VIEW;
+        //msg.obj = child;
+        //mWindLoop.sendMessage(msg);
+        child.setTag(EViewEntry.F_PLUGIN_VIEW_TAG);
+        Animation anim = child.getAnimation();
+        addView(child);
+        if (null != anim) {
+            anim.start();
+        }
+        bringChildToFront(child);
     }
 
     public void removeViewFromCurrentWindow(View child) {
-        Message msg = mWindLoop.obtainMessage();
-        msg.what = F_WHANDLER_REMOVE_VIEW;
-        msg.obj = child;
-        mWindLoop.sendMessage(msg);
+        //Message msg = mWindLoop.obtainMessage();
+        //msg.what = F_WHANDLER_REMOVE_VIEW;
+        //msg.obj = child;
+        //mWindLoop.sendMessage(msg);
+        Animation removeAnim = child.getAnimation();
+        if (null != removeAnim) {
+            removeAnim.start();
+        }
+        removeView(child);
     }
 
 
@@ -906,11 +918,11 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         }
     }
 
-    protected void pushNotify(String function) {
+    protected void pushNotify(String function, String appType) {
         if (null == mMainView) {
             return;
         }
-        String js = "javascript:" + function + "();";
+        String js = "javascript:" + function + "('" + appType + "');";
         mMainView.loadUrl(js);
     }
 
@@ -2667,41 +2679,6 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         }
     }
 
-    public void reloadWidgetByAppId(String appId) {
-        EBrowserWidget eBrwWidget = mBroWidget.getWidgetStack().get(appId);
-        // normal window
-        ELinkedList<EBrowserWindow> eBrwWins = eBrwWidget.getWindowStack()
-                .getAll();
-        for (int i = 0; i < eBrwWins.size(); i++) {
-            EBrowserWindow eBrwWin = eBrwWins.get(i);
-            List<HashMap<String, String>> list = eBrwWin.mChannelList;
-            if (list == null || list.size() == 0) {
-                continue;
-            }
-            eBrwWin.mMainView.reload();
-
-            // popover window
-            Collection<EBrowserView> eBrwViews = eBrwWin.mPopTable.values();
-            for (EBrowserView entry : eBrwViews) {
-                entry.reload();
-            }
-
-            // multiPopover window
-            if (eBrwWin.mMultiPopTable != null
-                    && eBrwWin.mMultiPopTable.size() > 0) {
-                for (Map.Entry<String, ArrayList<EBrowserView>> entry : eBrwWin.mMultiPopTable
-                        .entrySet()) {
-                    ArrayList<EBrowserView> temp = entry.getValue();
-                    if (null != temp && temp.size() > 0) {
-                        for (int j = 0; j < temp.size(); j++) {
-                            temp.get(j).reload();
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     private void setCallback(final EBrowserView brwView, List<HashMap<String, String>> list, String channelId, String data, String type) {
         String js;
         for (int i = 0; i < list.size(); i++) {
@@ -2834,4 +2811,23 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         }
     }
 
+    public void reloadWindow() {
+        mMainView.reload();
+        // popover
+        Collection<EBrowserView> eBrwViews = mPopTable.values();
+        for (EBrowserView entry : eBrwViews) {
+            entry.reload();
+        }
+        // multiPopover
+        if (mMultiPopTable != null && mMultiPopTable.size() > 0) {
+            for (Map.Entry<String, ArrayList<EBrowserView>> entry : mMultiPopTable.entrySet()) {
+                ArrayList<EBrowserView> temp = entry.getValue();
+                if (null != temp && temp.size() > 0) {
+                    for (int j = 0; j < temp.size(); j++) {
+                        temp.get(j).reload();
+                    }
+                }
+            }
+        }
+    }
 }

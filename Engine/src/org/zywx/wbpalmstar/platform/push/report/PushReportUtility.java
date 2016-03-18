@@ -52,6 +52,7 @@ import android.util.Log;
 
 public class PushReportUtility {
     private static boolean isLog = true;
+    public final static String KEY_APPVERIFY = "appverify";
 
     public static String getLocalIpAddress() {
         try {
@@ -489,5 +490,44 @@ public class PushReportUtility {
 
         return serial;
 
+    }
+
+    /**
+     * 添加验证头
+     * 
+     * @param appid
+     * @param appkey
+     * @param timeStamp
+     *            当前时间戳
+     * @return
+     */
+    public static String getAppVerifyValue(String appid, String appkey, long timeStamp) {
+        String value = null;
+        String md5 = getMD5Code(appid + ":" + appkey + ":" + timeStamp);
+        value = "md5=" + md5 + ";ts=" + timeStamp;
+        return value;
+    }
+
+    public static String getMD5Code(String value) {
+        if (value == null) {
+            value = "";
+        }
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.reset();
+            md.update(value.getBytes());
+            byte[] md5Bytes = md.digest();
+            StringBuffer hexValue = new StringBuffer();
+            for (int i = 0; i < md5Bytes.length; i++) {
+                int val = ((int) md5Bytes[i]) & 0xff;
+                if (val < 16)
+                    hexValue.append("0");
+                hexValue.append(Integer.toHexString(val));
+            }
+            return hexValue.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

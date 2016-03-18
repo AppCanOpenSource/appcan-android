@@ -127,11 +127,11 @@ public class EBrowser {
         mBrwWindPol.notifyHiddenShelter();
     }
 
-    protected void pushNotify() {
+    protected void pushNotify(String appType) {
         if (null == mBrwWindPol) {
             return;
         }
-        mBrwWindPol.pushNotify();
+        mBrwWindPol.pushNotify(appType);
     }
 
     public void uexOnAuthorize(String id) {

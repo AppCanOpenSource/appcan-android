@@ -9,7 +9,7 @@ dependencies {
 
 android {
     compileSdkVersion 22
-    buildToolsVersion '23.0.0'
+    buildToolsVersion '23.0.2'
     packagingOptions {
         exclude 'META-INF/MANIFEST.MF'
         exclude 'META-INF/LICENSE.txt'

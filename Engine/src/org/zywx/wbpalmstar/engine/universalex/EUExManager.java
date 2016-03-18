@@ -77,10 +77,9 @@ public class EUExManager {
             EUExBase objectIntance = null;
             try {
 
-                if (scriptObj.isGlobal == true && scriptObj.pluginObj != null) {
+                if (scriptObj.isGlobal && scriptObj.pluginObj != null) {
 
                     objectIntance = scriptObj.pluginObj;
-                    objectIntance.mBrwView = brwView;
 
                 } else {
                     Constructor<?> init = scriptObj.jobject;
@@ -95,7 +94,7 @@ public class EUExManager {
                 objectIntance.setUexName(uName);
 //				brwView.addJavascriptInterface(objectIntance, uexName);
 
-                if (scriptObj.isGlobal == true) {
+                if (scriptObj.isGlobal) {
                     scriptObj.pluginObj = objectIntance;
                 } else {
                     mThirdPlugins.add(objectIntance);
