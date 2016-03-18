@@ -100,7 +100,7 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 
     public static boolean sHardwareAccelerate = true;//配置全部WebView是否硬件加速,默认开启，config.xml 配置关闭
 
-    protected EBrowserView(Context context, int inType, EBrowserWindow inParent) {
+    public EBrowserView(Context context, int inType, EBrowserWindow inParent) {
         super(context);
         mMyCountId = EBrowser.assignCountID();
         mBroWind = inParent;
@@ -120,7 +120,7 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
         this.callback = callback;
     }
 
-    protected void init() {
+    public void init() {
         setInitialScale(100);
         setVerticalScrollbarOverlay(true);
         setHorizontalScrollbarOverlay(true);
@@ -581,14 +581,18 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
         if (!checkType(EBrwViewEntry.VIEW_TYPE_MAIN)) {
             return;
         }
-        mBroWind.onPageStarted(view, url);
+        if (mBroWind!=null) {
+            mBroWind.onPageStarted(view, url);
+        }
     }
 
     protected void onPageFinished(EBrowserView view, String url) {
         if (mDestroyed) {
             return;
         }
-        mBroWind.onPageFinished(view, url);
+        if (mBroWind!=null){
+            mBroWind.onPageFinished(view, url);
+        }
         if (mBrowserViewChangeListener != null) {
             mBrowserViewChangeListener.onPageFinish();
         }

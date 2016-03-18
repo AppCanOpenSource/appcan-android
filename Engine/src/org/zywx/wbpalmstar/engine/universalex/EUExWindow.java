@@ -52,6 +52,7 @@ import org.json.JSONObject;
 import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.ResoureFinder;
+import org.zywx.wbpalmstar.base.util.SpManager;
 import org.zywx.wbpalmstar.base.vo.CreateContainerVO;
 import org.zywx.wbpalmstar.base.vo.SetSwipeCloseEnableVO;
 import org.zywx.wbpalmstar.base.vo.ShareInputVO;
@@ -311,6 +312,14 @@ public class EUExWindow extends EUExBase {
         windEntry.mHardware = hardware;
         windEntry.hasExtraInfo = hasExtraInfo;
         curWind.createWindow(mBrwView, windEntry);
+    }
+
+    public int getHeight(String[] params){
+        return mBrwView.getBrowserWindow().getHeight();
+    }
+
+    public int getWidth(String[] params){
+        return mBrwView.getBrowserWindow().getWidth();
     }
 
     private boolean checkWindPermission(String windName) {
@@ -2363,6 +2372,14 @@ public class EUExWindow extends EUExBase {
         mBrwView.getBrowserWindow().windowGoBack(animId, duration);
     }
 
+    public void putLocalData(String[] params) {
+        SpManager.getInstance().putString(params[0],params[1]);
+    }
+
+    public String getLocalData(String[] params) {
+        return SpManager.getInstance().getString(params[0], "");
+    }
+
     public void windowForward(String[] parm) {
         Message msg = new Message();
         msg.obj = this;
@@ -2437,6 +2454,10 @@ public class EUExWindow extends EUExBase {
             return;
         }
         mBrwView.notifyBounceEvent(type, status);
+    }
+
+    public String getWindowName(String[] params){
+        return mBrwView.getWindowName();
     }
 
     public void showBounceView(String[] parm) {

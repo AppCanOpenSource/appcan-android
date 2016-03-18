@@ -18,6 +18,7 @@
 
 package org.zywx.wbpalmstar.base;
 
+import android.content.Context;
 import android.os.Environment;
 import android.os.StatFs;
 
@@ -240,6 +241,55 @@ public class FileHelper {
             return 327680;// 32K
         }
         return 4096;// 4K
+    }
+
+    public static String loadAssetTextAsString(Context context, String name) {
+        BufferedReader in = null;
+        try {
+            StringBuilder buf = new StringBuilder();
+            InputStream is = context.getAssets().open(name);
+            in = new BufferedReader(new InputStreamReader(is));
+
+            String str;
+            boolean isFirst = true;
+            while ( (str = in.readLine()) != null ) {
+                if (isFirst)
+                    isFirst = false;
+                else
+                    buf.append('\n');
+                buf.append(str);
+            }
+            return buf.toString();
+        } catch (IOException e) {
+            BDebug.e("Error opening asset " + name);
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    BDebug.e("Error closing asset " + name);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public static String readFile(String fileName) throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader(fileName));
+        try {
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+
+            while (line != null) {
+                sb.append(line);
+                sb.append("\n");
+                line = br.readLine();
+            }
+            return sb.toString();
+        } finally {
+            br.close();
+        }
     }
 
 }
