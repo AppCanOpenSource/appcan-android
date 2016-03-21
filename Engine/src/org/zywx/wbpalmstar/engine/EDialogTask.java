@@ -32,6 +32,7 @@ public class EDialogTask {
     public String[] buttonLables;
     public int type;
     public EUExWindow mUexWind;
+    public String hint;
 
     public EDialogTask() {
 
@@ -54,7 +55,7 @@ public class EDialogTask {
                 mUexWind.private_confirm(title, msg, buttonLables);
                 break;
             case F_TYPE_PROMPT:
-                mUexWind.private_prompt(title, msg, defaultValue, buttonLables);
+                mUexWind.private_prompt(title, msg, defaultValue, buttonLables,hint);
                 break;
         }
         mUexWind = null;
