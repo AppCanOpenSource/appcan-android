@@ -86,7 +86,8 @@ public class PromptDialog extends AlertDialog {
         }
         if (!TextUtils.isEmpty(defalutValue)) {
             dialog.setInputText(defalutValue);
-        }else if (!TextUtils.isEmpty(hint)){
+        }
+        if (!TextUtils.isEmpty(hint)){
             dialog.setHint(hint);
         }
         if (confirmLabel != null) {
