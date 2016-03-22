@@ -18,15 +18,16 @@
 
 package org.zywx.wbpalmstar.platform.window;
 
-import org.zywx.wbpalmstar.base.ResoureFinder;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.IBinder;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import org.zywx.wbpalmstar.base.ResoureFinder;
 
 public class PromptDialog extends AlertDialog {
 
@@ -57,6 +58,10 @@ public class PromptDialog extends AlertDialog {
         }
     }
 
+    public void setHint(String hint){
+        etInput.setHint(hint);
+    }
+
     public void setInputDesc(String desc) {
         if (desc != null && desc.length() > 0) {
             tvDesc.setText(desc);
@@ -69,6 +74,7 @@ public class PromptDialog extends AlertDialog {
     }
 
     public static PromptDialog show(Context context, String title, String desc, String defalutValue,
+                                    String hint,
                                     String confirmLabel, OnClickListener confirmListener, String cancelLabel, OnClickListener cancelListener) {
         final PromptDialog dialog = new PromptDialog(context);
         dialog.setCancelable(false);
@@ -78,8 +84,11 @@ public class PromptDialog extends AlertDialog {
         if (desc != null) {
             dialog.setInputDesc(desc);
         }
-        if (defalutValue != null) {
+        if (!TextUtils.isEmpty(defalutValue)) {
             dialog.setInputText(defalutValue);
+        }
+        if (!TextUtils.isEmpty(hint)){
+            dialog.setHint(hint);
         }
         if (confirmLabel != null) {
             dialog.setButton(confirmLabel, confirmListener);

@@ -2595,6 +2595,9 @@ public class EUExWindow extends EUExBase {
         task.msg = inMessage;
         task.defaultValue = inDefaultValue;
         task.buttonLables = inButtonLables;
+        if (parm.length>4) {
+            task.hint =parm[4];
+        }
         task.mUexWind = this;
         curWind.addDialogTask(task);
     }
@@ -2777,7 +2780,8 @@ public class EUExWindow extends EUExBase {
         }
     }
 
-    public void private_prompt(String inTitle, String inMessage, String inDefaultValue, String[] inButtonLables) {
+    public void private_prompt(String inTitle, String inMessage, String inDefaultValue, String[] inButtonLables,
+                               String hint) {
 		/*if (!((EBrowserActivity) mContext).isVisable()) {
 			return;
 		}*/
@@ -2786,7 +2790,8 @@ public class EUExWindow extends EUExBase {
         }
         if (inButtonLables != null && inButtonLables.length == 2) {
             final JSONObject jsonObject = new JSONObject();
-            mPrompt = PromptDialog.show(mContext, inTitle, inMessage, inDefaultValue, inButtonLables[0], new OnClickListener() {
+            mPrompt = PromptDialog.show(mContext, inTitle, inMessage, inDefaultValue,hint, inButtonLables[0], new
+                    OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     try {
