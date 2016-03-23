@@ -877,7 +877,6 @@ public class EUExWindow extends EUExBase {
             }
 
             if ("1".equals(animationId)) {
-                String bg = jsonObject.optString("bg");
                 //仿QQ侧边栏动画
                 activity.globalSlidingMenu.setBehindCanvasTransformer(new SlidingMenu.CanvasTransformer() {
                     @Override
@@ -893,9 +892,6 @@ public class EUExWindow extends EUExBase {
                         canvas.scale(scale, scale, canvas.getWidth() / 2, canvas.getHeight() / 2);
                     }
                 });
-                if (!TextUtils.isEmpty(bg)) {
-                    setViewBackground(activity.globalSlidingMenu, bg, mBrwView.getCurrentWidget().m_indexUrl);
-                }
                 activity.globalSlidingMenu.setFadeEnabled(false);
             } else {
                 activity.globalSlidingMenu.setShadowWidthRes(EUExUtil.getResDimenID("shadow_width"));
@@ -905,6 +901,11 @@ public class EUExWindow extends EUExBase {
                     activity.globalSlidingMenu.setShadowDrawable(EUExUtil.getResDrawableID("shadow"));
                 }
                 activity.globalSlidingMenu.setFadeDegree(0.35f);
+            }
+
+            String bg = jsonObject.optString("bg");
+            if (!TextUtils.isEmpty(bg)) {
+                setViewBackground(activity.globalSlidingMenu, bg, mBrwView.getCurrentWidget().m_indexUrl);
             }
 
             if (leftJsonObj != null && rightJsonObj != null) {
