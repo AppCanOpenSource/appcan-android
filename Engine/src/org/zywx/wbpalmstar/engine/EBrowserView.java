@@ -127,6 +127,10 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
         setLayoutAnimation(null);
         setAnimation(null);
         setNetworkAvailable(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            int debug = mBroWind.getWidget().m_appdebug;
+            setWebContentsDebuggingEnabled(debug == 1 ? true : false);
+        }
         if (Build.VERSION.SDK_INT <= 7) {
             if (mBaSetting == null) {
                 mBaSetting = new EBrowserSetting(this);

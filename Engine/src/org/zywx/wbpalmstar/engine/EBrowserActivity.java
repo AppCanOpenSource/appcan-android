@@ -402,6 +402,7 @@ public final class EBrowserActivity extends FragmentActivity {
         EUtil.loge("App onDestroy");
         super.onDestroy();
         reflectionPluginMethod("onActivityDestroy");
+        Process.killProcess(Process.myPid());
     }
 
     @Override
@@ -558,7 +559,6 @@ public final class EBrowserActivity extends FragmentActivity {
         mBrowserAround.removeViewImmediate();
         clean();
         finish();
-        Process.killProcess(Process.myPid());
     }
 
     private final void clean() {
