@@ -89,6 +89,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
     private int mflag;
     private int mWindPoType;
     private EBrowser mBrw;
+    private EBounceView mBounceView;
     private EBrowserView mTopView;
     private EBrowserView mMainView;
     private EBrowserView mBottomView;
@@ -152,13 +153,13 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
                     EBrwViewEntry.VIEW_TYPE_MAIN, this);
             mMainView.setVisibility(VISIBLE);
             mMainView.setName("main");
-            EBounceView bounceView = new EBounceView(mContext);
-            EUtil.viewBaseSetting(bounceView);
-            bounceView.setId(VIEW_MID);
+            mBounceView = new EBounceView(mContext);
+            EUtil.viewBaseSetting(mBounceView);
+            mBounceView.setId(VIEW_MID);
             LayoutParams bParm = new LayoutParams(Compat.FILL, Compat.FILL);
-            bounceView.setLayoutParams(bParm);
-            bounceView.addView(mMainView);
-            addView(bounceView);
+            mBounceView.setLayoutParams(bParm);
+            mBounceView.addView(mMainView);
+            addView(mBounceView);
         }
         mMainView.init();
         if (null == inEntry) {
@@ -166,8 +167,13 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
             mMainView.setRelativeUrl("index.html");
 
             if (!TextUtils.isEmpty(mBroWidget.getWidget().m_opaque)) {
-                mMainView.setBrwViewBackground(mBroWidget.getWidget().getOpaque(),
-                        mBroWidget.getWidget().m_bgColor, mBroWidget.getWidget().m_indexUrl);
+                /**wanglei del 20151124*/
+//                mMainView.setBrwViewBackground(mBroWidget.getWidget().getOpaque(),
+//                        mBroWidget.getWidget().m_bgColor, mBroWidget.getWidget().m_indexUrl);
+
+                /**wanglei add 20151124*/
+                mBounceView.setBounceViewBackground(mBroWidget.getWidget().getOpaque(),
+                        mBroWidget.getWidget().m_bgColor, mBroWidget.getWidget().m_indexUrl, mMainView);
             }
 
         } else {
@@ -182,8 +188,12 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
                 }
             }
             if (inEntry.hasExtraInfo) {
-                mMainView.setBrwViewBackground(inEntry.mOpaque,
-                        inEntry.mBgColor, inEntry.mData);
+                /**wanglei del 20151124*/
+//                mMainView.setBrwViewBackground(inEntry.mOpaque,
+//                        inEntry.mBgColor, inEntry.mData);
+                /**wanglei add 20151124*/
+                mBounceView.setBounceViewBackground(inEntry.mOpaque,
+                        inEntry.mBgColor, inEntry.mData, mMainView);
             }
         }
     }
@@ -595,7 +605,10 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         EBrwViewEntry entity = entitys.get(0);
         View parent = (View) mainPop.getParent();
         if (entity.hasExtraInfo) {
-            mainPop.setBrwViewBackground(entity.mOpaque, entity.mBgColor, "");
+            /**wanglei del 20151124*/
+//            mainPop.setBrwViewBackground(entity.mOpaque, entity.mBgColor, "");
+            /**wanglei add 20151124*/
+            ((EBounceView) parent).setBounceViewBackground(entity.mOpaque, entity.mBgColor, "", mMainView);
         }
         removeView(parent);
         LayoutParams popParm = new LayoutParams(entity.mWidth, entity.mHeight);
@@ -620,14 +633,26 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         popParm.leftMargin = entity.mX;
         parent.setLayoutParams(popParm);
         addView(parent);
+        /**wanglei add 20151124*/
+        if (entitys.size() > 0) {
+            EBrwViewEntry entityTemp = entitys.get(0);
+            EBrowserView childTemp = childs.get(0);
+            if(entityTemp.hasExtraInfo){   
+                ((EBounceView) childTemp.getParent()).setBounceViewBackground(
+                        entityTemp.mOpaque, entityTemp.mBgColor, "", childTemp);
+            }
+        }
         for (int i = 0; i < entitys.size(); i++) {
             EBrwViewEntry entityTemp = entitys.get(0);
             EBrowserView childTemp = childs.get(0);
             childTemp.setDateType(entityTemp.mDataType);
             childTemp.setQuery(entityTemp.mQuery);
-            if (entityTemp.hasExtraInfo) {
-                childTemp.setBrwViewBackground(entityTemp.mOpaque, entityTemp.mBgColor, "");
-            }
+            /**wanglei add 20151124*/
+            childTemp.setBackgroundColor(Color.TRANSPARENT);
+            /**wanglei del 20151124*/
+//            if (entityTemp.hasExtraInfo) {
+//                childTemp.setBrwViewBackground(entityTemp.mOpaque, entityTemp.mBgColor, "");
+//            }
             switch (entityTemp.mDataType) {
                 case EBrwViewEntry.WINDOW_DATA_TYPE_URL:
 //				if (entityTemp.checkFlag(EBrwViewEntry.F_FLAG_OBFUSCATION)) {
@@ -674,11 +699,15 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         popParm.bottomMargin = entity.mBottom;
         parent.setLayoutParams(popParm);
         if (entity.hasExtraInfo) {
-            child.setBrwViewBackground(entity.mOpaque, entity.mBgColor, "");
+            /**wanglei del 20151124*/
+//            child.setBrwViewBackground(entity.mOpaque, entity.mBgColor, "");
+            /**wanglei add 20151124*/
+            ((EBounceView) child.getParent()).setBounceViewBackground(
+                    entity.mOpaque, entity.mBgColor, "", child);
         }
-        if (parentHasChanged) {
-            addView(parent);
-        }
+        /**wanglei add 20151124*/
+        child.setBackgroundColor(Color.TRANSPARENT);
+        addView(parent);
         switch (entity.mDataType) {
             case EBrwViewEntry.WINDOW_DATA_TYPE_URL:
 //			if (entity.checkFlag(EBrwViewEntry.F_FLAG_OBFUSCATION)) {
@@ -1573,6 +1602,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         mPopTable = null;
         mMultiPopTable = null;
         mAddView = null;
+        mBounceView = null;
         mBroWidget = null;
         mObHistroy = null;
         mName = null;
@@ -1778,8 +1808,13 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
             }
         }
         if (entity.hasExtraInfo) {
-            eView.setBrwViewBackground(entity.mOpaque, entity.mBgColor, "");
+            /** wanglei del 20151124*/
+//            eView.setBrwViewBackground(entity.mOpaque, entity.mBgColor, "");
+            /** wanglei add 20151124*/
+            bounceView.setBounceViewBackground(entity.mOpaque, entity.mBgColor, "", eView);
         }
+        /** wanglei add 20151124*/
+        eView.setBackgroundColor(Color.TRANSPARENT);
         if (entity.checkFlag(EBrwViewEntry.F_FLAG_OAUTH)) {
             eView.setOAuth(true);
         }
@@ -2231,7 +2266,11 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         bounceView.addView(parentBrowerview);
         addView(bounceView);
         if (mainEntry.hasExtraInfo) {
-            parentBrowerview.setBrwViewBackground(mainEntry.mOpaque, mainEntry.mBgColor, "");
+            /** wanglei del 20151124*/
+//            parentBrowerview.setBrwViewBackground(mainEntry.mOpaque, mainEntry.mBgColor, "");
+            /** wanglei add 20151124*/
+            bounceView.setBounceViewBackground(
+                    mainEntry.mOpaque, mainEntry.mBgColor, "", parentBrowerview);
         } else {
             if (mainEntry.checkFlag(EBrwViewEntry.F_FLAG_OPAQUE)) {
                 parentBrowerview.setOpaque(true);
@@ -2254,7 +2293,10 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
             bounceViewChild.setLayoutParams(new LayoutParams(
                     LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
             if (entity.hasExtraInfo) {
-                childView.setBrwViewBackground(entity.mOpaque, entity.mBgColor, "");
+                /** wanglei del 20151124*/
+//                childView.setBrwViewBackground(entity.mOpaque, entity.mBgColor, "");
+                /** wanglei add 20151124*/
+                bounceViewChild.setBounceViewBackground(entity.mOpaque, entity.mBgColor, "", childView);
             }
             bounceViewChild.addView(childView);
             viewList.add(bounceViewChild);

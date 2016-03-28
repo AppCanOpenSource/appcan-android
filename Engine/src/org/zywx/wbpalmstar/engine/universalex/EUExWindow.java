@@ -213,7 +213,8 @@ public class EUExWindow extends EUExBase {
         String inFlag = parm[6];
         String animDuration = null;
         boolean opaque = false;
-        String bgColor = null;
+        /**赋初值，避免不传bgColor崩溃*/
+        String bgColor = "#00000000";
         boolean hasExtraInfo = false;
         int hardware = -1;
         if (parm.length > 7) {
@@ -1058,7 +1059,8 @@ public class EUExWindow extends EUExBase {
             marginBottom = parm[10];
         }
         boolean opaque = false;
-        String bgColor = null;
+        /**赋初值，避免不传bgColor崩溃*/
+        String bgColor = "#00000000";
         boolean hasExtraInfo = false;
         int hardware = -1;
         if (parm.length > 11) {
@@ -1350,7 +1352,8 @@ public class EUExWindow extends EUExBase {
         String inIndexSelect = parm[9];
 
         boolean opaque = false;
-        String bgColor = null;
+        /**赋初值，避免不传bgColor崩溃*/
+        String bgColor = "#00000000";
         boolean hasExtraInfo = false;
         if (parm.length > 10) {
             String jsonData = parm[10];
@@ -1444,7 +1447,8 @@ public class EUExWindow extends EUExBase {
                 EBrwViewEntry popEntry = new EBrwViewEntry(
                         EBrwViewEntry.VIEW_TYPE_POP);
                 boolean opaque1 = false;
-                String bgColor1 = null;
+                /**赋初值，避免不传bgColor崩溃*/
+                String bgColor1 = "#00000000";
                 boolean hasExtraInfo1 = false;
                 if (jsonContent.getJSONObject(i).has(EBrwViewEntry.TAG_EXTRAINFO)) {
                     try {
