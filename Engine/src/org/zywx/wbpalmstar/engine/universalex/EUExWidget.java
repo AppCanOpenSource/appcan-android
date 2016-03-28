@@ -363,10 +363,12 @@ public class EUExWidget extends EUExBase {
     }
 
     private Intent setIntentExtras(Intent intent, String extraJson) {
-        String[] list = extraJson.split(",");
-        for (int i = 0; i < list.length; i++) {
-            try {
-                JSONObject json = new JSONObject(list[i]);
+        String arrayString = "[" + extraJson + "]";
+        try {
+            JSONArray array = new JSONArray(arrayString);
+            int length = array.length();
+            for (int i = 0; i < length; i++) {
+                JSONObject json = array.getJSONObject(i);
                 Iterator<?> keys = json.keys();
                 while (keys.hasNext()) {
                     String key = (String) keys.next();
@@ -375,9 +377,9 @@ public class EUExWidget extends EUExBase {
                         intent.putExtra(key, value);
                     }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return intent;
     }
