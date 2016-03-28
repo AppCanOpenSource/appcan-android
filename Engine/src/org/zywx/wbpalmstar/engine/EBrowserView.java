@@ -20,11 +20,8 @@ package org.zywx.wbpalmstar.engine;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -42,7 +39,6 @@ import org.json.JSONObject;
 import org.zywx.wbpalmstar.acedes.ACEDes;
 import org.zywx.wbpalmstar.acedes.EXWebViewClient;
 import org.zywx.wbpalmstar.base.BDebug;
-import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.engine.EBrowserHistory.EHistoryEntry;
 import org.zywx.wbpalmstar.engine.universalex.EUExCallback;
 import org.zywx.wbpalmstar.engine.universalex.EUExManager;
@@ -1030,32 +1026,33 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
         }
     }
 
-    public void setBrwViewBackground(boolean flag, String bgColor, String baseUrl) {
-        if (flag) {
-            if (bgColor.startsWith("#") || bgColor.startsWith("rgb")) {
-                int color = BUtility.parseColor(bgColor);
-                setBackgroundColor(color);
-            } else {
-                String path = BUtility.makeRealPath(BUtility.makeUrl(getCurrentUrl(baseUrl), bgColor),
-                        getCurrentWidget().m_widgetPath, getCurrentWidget().m_wgtType);
-                Bitmap bitmap = BUtility.getLocalImg(mContext, path);
-                Drawable d = null;
-                if (bitmap != null) {
-                    d = new BitmapDrawable(mContext.getResources(), bitmap);
-                }
-                int version = Build.VERSION.SDK_INT;
-                if (version < 16) {
-                    setBackgroundDrawable(d);
-                    setBackgroundColor(Color.argb(0, 0, 0, 0));
-                } else {
-                    setBackground(d);
-                    setBackgroundColor(Color.argb(0, 0, 0, 0));
-                }
-            }
-        } else {
-            setBackgroundColor(Color.TRANSPARENT);
-        }
-    }
+    /**wanglei del 20151124*/
+//    public void setBrwViewBackground(boolean flag, String bgColor, String baseUrl) {
+//        if (flag) {
+//            if(bgColor.startsWith("#") || bgColor.startsWith("rgb")){
+//                int color = BUtility.parseColor(bgColor);
+//                setBackgroundColor(color);
+//            }else{
+//                String path = BUtility.makeRealPath(BUtility.makeUrl(getCurrentUrl(baseUrl),bgColor),
+//                        getCurrentWidget().m_widgetPath, getCurrentWidget().m_wgtType);
+//                Bitmap bitmap = BUtility.getLocalImg(mContext, path);
+//                Drawable d = null;
+//                if(bitmap != null){
+//                    d = new BitmapDrawable(mContext.getResources(), bitmap);
+//                }
+//                int version = Build.VERSION.SDK_INT;
+//                if(version < 16){
+//                    setBackgroundDrawable(d);
+//                    setBackgroundColor(Color.argb(0, 0, 0, 0));
+//                }else{
+//                    setBackground(d);
+//                    setBackgroundColor(Color.argb(0, 0, 0, 0));
+//                }
+//            }
+//        } else {
+//            setBackgroundColor(Color.TRANSPARENT);
+//        }
+//    }
 
     public void setWebApp(boolean flag) {
         mWebApp = flag;

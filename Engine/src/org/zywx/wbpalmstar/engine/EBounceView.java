@@ -24,6 +24,10 @@ import org.zywx.wbpalmstar.engine.external.Compat;
 import org.zywx.wbpalmstar.engine.universalex.EUExScript;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -637,6 +641,49 @@ public class EBounceView extends LinearLayout {
                 }
                 break;
         }
+    }
+
+    /**
+     * @param flag
+     * @param bgColor
+     * @param baseUrl
+     * @param mEBrowserView
+     * @author wanglei 
+     * @createAt 20151124
+     * @ps 与原EBrowserView的setBrwViewBackground类似，原方法只设置EBrowserView的背景
+     *     当网页设置弹动效果后，上下滑动到边缘后，会露出EBrowserView下面的网页，故应给EBrowserView
+     *     父对象EBounceView设置背景, EBrowserView背景设成透明。
+     */
+    public void setBounceViewBackground(boolean flag, String bgColor, String baseUrl,
+            EBrowserView mEBrowserView) {
+        if (flag) {
+            if(bgColor.startsWith("#") || bgColor.startsWith("rgb")){
+                int color = BUtility.parseColor(bgColor);
+                setBackgroundColor(color);
+            }else{
+                String path = BUtility.makeRealPath(BUtility.makeUrl(mEBrowserView.getCurrentUrl(baseUrl),bgColor),
+                        mEBrowserView.getCurrentWidget().m_widgetPath, mEBrowserView.getCurrentWidget().m_wgtType);
+                Bitmap bitmap = BUtility.getLocalImg(mContext, path);
+                Drawable d = null;
+                if(bitmap != null){
+                    d = new BitmapDrawable(mContext.getResources(), bitmap);
+                }
+                int version = Build.VERSION.SDK_INT;
+                if(version < 16){
+                    setBackgroundDrawable(d);
+                    setBackgroundColor(Color.argb(0, 0, 0, 0));
+                }else{
+                    setBackground(d);
+                    setBackgroundColor(Color.argb(0, 0, 0, 0));
+                }
+            }
+        } else {
+            setBackgroundColor(Color.TRANSPARENT);
+        }
+    }
+
+    public void setIsSupportSwipeCallback(boolean isSupport) {
+        isSupportSwipeCallback = isSupport;
     }
 
 }
