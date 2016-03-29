@@ -705,28 +705,9 @@ public class WDataManager {
                         return false;
                     }
                     FileInputStream input = new FileInputStream(file);
-                    XmlPullParser parser = Xml.newPullParser();
-                    parser.setInput(input, "utf-8");
-                    int tokenType = 0;
-                    boolean needContinue = true;
-                    String m_verString = null;
-                    do {
-                        tokenType = parser.next();
-                        switch (tokenType) {
-                            case XmlPullParser.START_TAG:
-                                String localName = (parser.getName()).toLowerCase();
-                                if ("widget".equals(localName)) {
-                                    //得到增量更新包的版本号
-                                    m_verString = parser.getAttributeValue(null, "version");
-                                    needContinue = false;
-                                }
-                                break;
-                            case XmlPullParser.END_DOCUMENT:
-                                needContinue = false;
-                                break;
-                        }
-                    } while (needContinue);
-
+                    //得到增量更新包config.xml文件中的版本号
+                    String m_verString = BUtility.parserXmlLabel(input,
+                            "config", "widget", "version");
                     //比较增量更新包和当前APK的版本号大小
                     String dbVerString = m_preferences.getString("dbVer", null);
                     if (m_verString != null && dbVerString != null) {
@@ -801,6 +782,7 @@ public class WDataManager {
                         PackageManager.GET_CONFIGURATIONS);
                 ver = pinfo.versionName;
                 dbVer = m_preferences.getString("dbVer", null);
+                BDebug.i("getWidgetData", ver, dbVer, isCopyAssetsFinish);
                 if (dbVer == null || !ver.equals(dbVer) || !isCopyAssetsFinish) {
                     Editor editor = m_preferences.edit();
                     editor.putString("dbVer", ver);
@@ -813,11 +795,13 @@ public class WDataManager {
                     }
                     //如果有增量更新包，且其版本号大于当前APK的版本号，则进行同步拷贝操作，防止再次弹出增量更新提示框，否则，才进行异步拷贝操作
                     if (isHasUpdateZip(m_sboxPath + "widget/")) {
+                        BDebug.i("getWidgetData", "isHasUpdateZip CopyAssets");
                         CopyAssets("widget", m_sboxPath + "widget/");
                         isCopyAssetsFinish = true;
                         editor.putBoolean(m_copyAssetsFinish, true);
                         editor.commit();
                     } else {
+                        BDebug.i("getWidgetData", "copyAssetsThread");
                         copyAssetsThread("widget", m_sboxPath + "widget/");
                     }
                 }
