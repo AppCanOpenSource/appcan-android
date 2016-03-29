@@ -91,7 +91,7 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
     private boolean mIsNeedScroll = false;
     private boolean isMultilPopoverFlippingEnbaled = false;
     private boolean isSupportSlideCallback = false;//is need callback,set by API interface.
-
+    private int mThreshold = 5;
     private OnEBrowserViewChangeListener mBrowserViewChangeListener;
 
     public static boolean sHardwareAccelerate = true;//配置全部WebView是否硬件加速,默认开启，config.xml 配置关闭
@@ -1451,7 +1451,10 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
             if (versionA <= 18) {
                 nowScale = getScale();
             }
-            if ((int) (getContentHeight() * nowScale) == (getHeight() + getScrollY())) {
+            float contentHeight = getContentHeight() * nowScale;
+            boolean isSlipedDownEdge = t != oldt && t > 0
+                    && contentHeight <= t + getHeight() + mThreshold;
+            if (isSlipedDownEdge) {
                 callback.jsCallback(EUExWindow.function_cbslipedDownEdge, 0,
                         EUExCallback.F_C_INT, 0);
 
