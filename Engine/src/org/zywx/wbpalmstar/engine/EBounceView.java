@@ -474,7 +474,7 @@ public class EBounceView extends LinearLayout {
         }
         int h1 = (int) (mBrwView.getContentHeight() * nowScale);
         int h2 = mBrwView.getScrollY() + mBrwView.getHeight();
-        if (Math.abs(h1 - h2) <= 5) {
+        if (mBrwView.getScrollY() > 0 && h1 <= h2 + 5) {
             return true;
         } else {
             return false;
