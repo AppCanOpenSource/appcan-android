@@ -39,6 +39,7 @@ import org.zywx.wbpalmstar.base.zip.ZipEntry;
 import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.ESystemInfo;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
+import org.zywx.wbpalmstar.platform.certificates.Http;
 import org.zywx.wbpalmstar.platform.encryption.PEncryption;
 import org.zywx.wbpalmstar.platform.myspace.CommonUtility;
 
@@ -937,7 +938,11 @@ public class WDataManager {
             if (appstatuss == null || appstatuss.length == 0) {
                 return false;
             }
-
+            if (appstatuss.length > 14) {
+                if ("1".equals(appstatuss[14])) {
+                    Http.setCheckTrustCert(true);
+                }
+            }
             if ("1".equals(appstatuss[9])) {
                 return true;
             }
