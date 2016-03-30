@@ -76,7 +76,7 @@ public class WidgetOneApplication extends Application {
         CookieManager.getInstance().setAcceptCookie(true);
         CookieManager.getInstance().removeSessionCookie();
         CookieManager.getInstance().removeExpiredCookie();
-        mCrashReport = new ECrashHandler();
+        mCrashReport = ECrashHandler.getInstance(this);
         cachePath = getCacheDir().getAbsolutePath();
         copyLib();
         copyJar();

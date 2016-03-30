@@ -18,6 +18,8 @@
 
 package org.zywx.wbpalmstar.widgetone;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Environment;
 
 import java.io.*;
@@ -30,10 +32,22 @@ public class ECrashHandler implements UncaughtExceptionHandler {
 
     private Thread.UncaughtExceptionHandler mDefaultHandler;
     private DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+    private static Context mContext;
+    private static ECrashHandler eCrashHandler;
+    public static String m_ECrashHandler_SharedPre = "crash";
+    public static String m_ECrashHandler_Key = "saveCrashInfo2File";
 
-    public ECrashHandler() {
+    private ECrashHandler(Context context) {
+        mContext = context;
         mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(this);
+    }
+
+    public static ECrashHandler getInstance(Context context) {
+        if (null == eCrashHandler) {
+            eCrashHandler = new ECrashHandler(context);
+        }
+        return eCrashHandler;
     }
 
     @Override
@@ -74,6 +88,9 @@ public class ECrashHandler implements UncaughtExceptionHandler {
             if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
                 String ePath = Environment.getExternalStorageDirectory().getAbsolutePath();
                 String path = ePath + "/widgetone/log/crash/";
+                SharedPreferences sp = mContext.getSharedPreferences(
+                        m_ECrashHandler_SharedPre, Context.MODE_PRIVATE);
+                sp.edit().putString(m_ECrashHandler_Key, path + fileName).commit();
                 File dir = new File(path);
                 if (!dir.exists()) {
                     dir.mkdirs();
