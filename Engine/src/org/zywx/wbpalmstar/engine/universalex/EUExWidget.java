@@ -231,6 +231,8 @@ public class EUExWidget extends EUExBase {
         String startMode = params[0];
         Intent intent = null;
         String extraJson = null;
+        // 是否通过NEW_TASK启动第三方Activity的开关_by_waka
+        boolean switchNewTask = true;// 默认为使用NEW_TASk启动
         if (!TextUtils.isEmpty(startMode)) {
             if ("0".equals(startMode)) {
                 String pkgName = params[1];
@@ -262,6 +264,10 @@ public class EUExWidget extends EUExBase {
                     Uri contentUrl=Uri.parse(extraVO.getData());
                     intent.setData(contentUrl);
                 }
+                // 如果isNewTask.equals("0") by waka
+                if (extraVO != null && "0".equals(extraVO.getIsNewTask())) {
+                    switchNewTask = false;// NEW_TASK开关置为false
+                }
                 intent.setComponent(component);
             } else if ("1".equals(startMode)) {
                 String action = params[1];
@@ -291,7 +297,10 @@ public class EUExWidget extends EUExBase {
             }
         }
         try {
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            // 如果NEW_TASK开关打开
+            if (switchNewTask) {
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);// 添加NEW_TASK_FLAG
+            }
             startActivity(intent);
         } catch (ActivityNotFoundException e) {
             callBackPluginJs(JsConst.CALLBACK_START_APP, e.getMessage());
