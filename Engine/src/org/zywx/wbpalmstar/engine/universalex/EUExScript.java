@@ -121,6 +121,7 @@ public class EUExScript {
                 + "delPushInfo:function(){uexDispatcher.dispatch('uexWidget','delPushInfo',jo(arguments));},"
                 + "isAppInstalled:function(){uexDispatcher.dispatch('uexWidget','isAppInstalled',jo(arguments));},"
                 + "getPushInfo:function(){uexDispatcher.dispatch('uexWidget','getPushInfo',jo(arguments));},"
+                + "getMBaaSHost:function(){uexDispatcher.dispatch('uexWidget','getMBaaSHost',jo(arguments));},"
                 + "reloadWidgetByAppId:function(){uexDispatcher.dispatch('uexWidget','reloadWidgetByAppId',jo(arguments));},"
                 + "closeLoading:function(){uexDispatcher.dispatch('uexWidget','closeLoading',jo(arguments));},"
                 + "moveToBack:function(){uexDispatcher.dispatch('uexWidget','moveToBack',jo(arguments));},"

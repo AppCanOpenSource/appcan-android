@@ -81,6 +81,7 @@ public class EUExWidget extends EUExBase {
     public static final String function_getPushState = "uexWidget.cbGetPushState";
     public static final String function_onSpaceClick = "uexWidget.onSpaceClick";
     public static final String function_loadApp = "uexWidget.cbLoadApp";
+    public static final String function_getMBaaSHost = "uexWidget.cbGetMBaaSHost";
     private static final String BUNDLE_DATA = "data";
     private static final String BUNDLE_MESSAGE = "message";
     private static final String PUSH_MSG_BODY = "0";
@@ -766,6 +767,11 @@ public class EUExWidget extends EUExBase {
                 }
             }
         });
+    }
+
+    public void getMBaaSHost(String[] parm) {
+        String mbaas_host = ResoureFinder.getInstance().getString(mContext, "mbaas_host");
+        jsCallback(function_getMBaaSHost, 0, EUExCallback.F_C_TEXT, mbaas_host);
     }
 
     public void getPushState(String[] parm) {
