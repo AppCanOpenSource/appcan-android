@@ -91,6 +91,7 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
     private boolean mIsNeedScroll = false;
     private boolean isMultilPopoverFlippingEnbaled = false;
     private boolean isSupportSlideCallback = false;//is need callback,set by API interface.
+    private boolean disturbLongPressGesture = false;
     private int mThreshold = 5;
     private OnEBrowserViewChangeListener mBrowserViewChangeListener;
 
@@ -103,7 +104,7 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
         mContext = context;
         mType = inType;
         initPrivateVoid();
-//		setOnLongClickListener(this);
+        setOnLongClickListener(this);
         setDownloadListener(this);
         setACEHardwareAccelerate();
     }
@@ -544,8 +545,11 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
 
     @Override
     public boolean onLongClick(View v) {
+        return disturbLongPressGesture;
+    }
 
-        return true;
+    public void setDisturbLongPressGesture(boolean disturbLongPress) {
+        disturbLongPressGesture = disturbLongPress;
     }
 
     @SuppressLint("NewApi")
@@ -1376,6 +1380,7 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
         mWebApp = false;
         mSupportZoom = false;
         isSupportSlideCallback = false;
+        disturbLongPressGesture = false;
         eClearHistory();
         resumeCore();
         mUExMgr.notifyReset();

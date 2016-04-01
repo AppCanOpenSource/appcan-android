@@ -167,6 +167,7 @@ public class EUExWindow extends EUExBase {
     private static final int MSG_PLUGINVIEW_CONTAINER_SET = 54;
     private static final int MSG_PLUGINVIEW_CONTAINER_SHOW = 55;
     private static final int MSG_PLUGINVIEW_CONTAINER_HIDE = 56;
+    private static final int MSG_DISTURB_LONG_PRESS_GESTURE = 59;
     private static final int MSG_FUNCTION_SETAUTOROTATEENABLE= 60;
     private AlertDialog mAlert;
     private AlertDialog.Builder mConfirm;
@@ -327,7 +328,7 @@ public class EUExWindow extends EUExBase {
 
     private boolean checkWindPermission(String windName) {
         WWidgetData rootWgt = mBrwView.getRootWidget();
-        String[] winds = rootWgt.disableRootWindows;
+        ArrayList<String> winds = rootWgt.disableRootWindowsList;
         if (null == windName || windName.trim().length() == 0 || null == winds) {
             return true;
         }
@@ -341,7 +342,7 @@ public class EUExWindow extends EUExBase {
 
     private boolean checkWindPopPermission(String windPopName) {
         WWidgetData rootWgt = mBrwView.getRootWidget();
-        String[] winds = rootWgt.disableSonWindows;
+        ArrayList<String>  winds = rootWgt.disableSonWindowsList;
         if (null == windPopName || windPopName.trim().length() == 0
                 || null == winds) {
             return true;
@@ -3164,6 +3165,24 @@ public class EUExWindow extends EUExBase {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+    public void disturbLongPressGesture(String[] params) {
+        if (params == null || params.length < 1) {
+            errorCallback(0, 0, "error params!");
+            return;
+        }
+        Message msg = new Message();
+        msg.obj = this;
+        msg.what = MSG_DISTURB_LONG_PRESS_GESTURE;
+        Bundle bd = new Bundle();
+        bd.putStringArray(TAG_BUNDLE_PARAM, params);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
+    }
+
+    private void disturbLongPressGestureMsg(String[] params) {
+        int disturb = Integer.parseInt(params[0]);
+        mBrwView.setDisturbLongPressGesture(disturb == 0 ? false : true);
     }
 
     public void createPluginViewContainer(String[] parm) {
@@ -3671,6 +3690,9 @@ public class EUExWindow extends EUExBase {
                 break;
             case MSG_SET_IS_SUPPORT_SLIDE_CALLBACK:
                 setIsSupportSlideCallbackMsg(param);
+                break;
+            case MSG_DISTURB_LONG_PRESS_GESTURE:
+                disturbLongPressGestureMsg(param);
                 break;
             case MSG_PLUGINVIEW_CONTAINER_CREATE:
                 createPluginViewContainerMsg(param);
