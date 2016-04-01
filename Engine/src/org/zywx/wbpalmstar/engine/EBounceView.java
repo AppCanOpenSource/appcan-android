@@ -57,6 +57,7 @@ public class EBounceView extends LinearLayout {
     private boolean mTopNotify;
     private boolean mBottomNotify;
     private boolean mTopAutoRefresh = false;
+    private boolean isSupportSwipeCallback = false;//is need callback,set by API interface.
     private int mTopState;
     private int mBottomState;
     private int mTopBund;
@@ -218,16 +219,18 @@ public class EBounceView extends LinearLayout {
     }
 
     private boolean onTracker(int velocityX, int velocityY) {
-        final int absY = (velocityY < 0) ? -velocityY : velocityY;
-        final int absX = (velocityX < 0) ? -velocityX : velocityX;
         boolean trigger = false;
-        int rate = ESystemInfo.getIntence().mSwipeRate;
-        if ((velocityX > rate) && (absX > absY)) {
-            mBrwView.loadUrl(EUExScript.F_UEX_SCRIPT_SWIPE_RIGHT);
-            trigger = true;
-        } else if ((velocityX < -rate) && (absX > absY)) {
-            mBrwView.loadUrl(EUExScript.F_UEX_SCRIPT_SWIPE_LEFT);
-            trigger = true;
+        if (isSupportSwipeCallback) {
+            final int absY = (velocityY < 0) ? -velocityY : velocityY;
+            final int absX = (velocityX < 0) ? -velocityX : velocityX;
+            int rate = ESystemInfo.getIntence().mSwipeRate;
+            if ((velocityX > rate) && (absX > absY)) {
+                mBrwView.loadUrl(EUExScript.F_UEX_SCRIPT_SWIPE_RIGHT);
+                trigger = true;
+            } else if ((velocityX < -rate) && (absX > absY)) {
+                mBrwView.loadUrl(EUExScript.F_UEX_SCRIPT_SWIPE_LEFT);
+                trigger = true;
+            }
         }
         return trigger;
     }

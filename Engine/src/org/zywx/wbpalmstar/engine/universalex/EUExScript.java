@@ -229,6 +229,7 @@ public class EUExScript {
                 + "refresh:function(){uexDispatcher.dispatch('uexWindow','refresh',jo(arguments));},"
                 + "reload:function(){uexDispatcher.dispatch('uexWindow','reload',jo(arguments));},"
                 + "setIsSupportSlideCallback:function(){uexDispatcher.dispatch('uexWindow','setIsSupportSlideCallback',jo(arguments));},"
+                + "setIsSupportSwipeCallback:function(){uexDispatcher.dispatch('uexWindow','setIsSupportSwipeCallback',jo(arguments));},"
                 + "disturbLongPressGesture:function(){uexDispatcher.dispatch('uexWindow','disturbLongPressGesture',jo(arguments));},"
                 + "setPageInContainer:function(){uexDispatcher.dispatch('uexWindow','setPageInContainer',jo(arguments));},"
                 + "closePluginViewContainer:function(){uexDispatcher.dispatch('uexWindow','closePluginViewContainer',jo(arguments));},"
