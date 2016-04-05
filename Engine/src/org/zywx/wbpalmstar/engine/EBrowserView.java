@@ -42,6 +42,7 @@ import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.engine.EBrowserHistory.EHistoryEntry;
 import org.zywx.wbpalmstar.engine.universalex.EUExCallback;
 import org.zywx.wbpalmstar.engine.universalex.EUExManager;
+import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.engine.universalex.EUExWindow;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
@@ -153,16 +154,39 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
     private void setACEHardwareAccelerate() {
         if (!sHardwareAccelerate) {
             setLayerType(LAYER_TYPE_SOFTWARE, null);
+        } else {
+            closeHardwareForSpecificString();
         }
     }
 
     @Override
     protected void onAttachedToWindow() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && !isHardwareAccelerated()) {
-            setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-            BDebug.i("setLayerType", "LAYER_TYPE_SOFTWARE");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            if (!isHardwareAccelerated()) {
+                setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+                BDebug.i("setLayerType","LAYER_TYPE_SOFTWARE");
+            } else {
+                closeHardwareForSpecificString();
+            }
         }
         super.onAttachedToWindow();
+    }
+
+    private void closeHardwareForSpecificString() {
+        String[] strs = EUExUtil.getStringArray("platform_close_hardware");
+        if (strs != null) {
+            for (int i = 0; i < strs.length; i++) {
+                String str = strs[i].trim();
+                // 手机型号、Android系统定制商、硬件制造商
+                if (Build.MODEL.trim().equals(str)
+                        || Build.BRAND.trim().equals(str)
+                        || Build.MANUFACTURER.trim().equals(str)) {
+                    setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+                    BDebug.i("setLayerType", "LAYER_TYPE_SOFTWARE");
+                    break;
+                }
+            }
+        }
     }
 
     @Override
