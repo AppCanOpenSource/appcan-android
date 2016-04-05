@@ -166,6 +166,7 @@ public class EUExScript {
                 + "postGlobalNotification:function(){uexDispatcher.dispatch('uexWindow','postGlobalNotification',jo(arguments));},"
                 + "subscribeChannelNotification:function(){uexDispatcher.dispatch('uexWindow','subscribeChannelNotification',jo(arguments));},"
                 + "publishChannelNotification:function(){uexDispatcher.dispatch('uexWindow','publishChannelNotification',jo(arguments));},"
+                + "publishChannelNotificationForJson:function(){uexDispatcher.dispatch('uexWindow','publishChannelNotificationForJson',jo(arguments));},"
                 + "closeAboveWndByName:function(){uexDispatcher.dispatch('uexWindow','closeAboveWndByName',jo(arguments));},"
                 + "setMultilPopoverFlippingEnbaled:function(){uexDispatcher.dispatch('uexWindow','setMultilPopoverFlippingEnbaled',jo(arguments));},"
 
