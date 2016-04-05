@@ -2857,6 +2857,15 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         }
     }
 
+    public void onSlidingWindowStateChanged(int position) {
+        if (null == mMainView) {
+            return;
+        }
+        String js = "javascript:if(uexWindow.onSlidingWindowStateChanged){uexWindow.onSlidingWindowStateChanged("
+                + position + ");}";
+        mMainView.loadUrl(js);
+    }
+
     public void reloadWindow() {
         mMainView.reload();
         // popover

@@ -585,4 +585,12 @@ public class EBrowserWidgetPool {
         mWidPoolLoop.sendMessage(msg);
     }
 
+    public void onSlidingWindowStateChanged(int position) {
+        if (null != mWgtStack) {
+            EBrowserWidget eBrWidget = mWgtStack.peek();
+            if (null != eBrWidget) {
+                eBrWidget.onSlidingWindowStateChanged(position);
+            }
+        }
+    }
 }
