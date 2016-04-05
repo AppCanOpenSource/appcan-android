@@ -153,6 +153,16 @@ public class EUExUtil {
         int id = getResStringID(resName);
         return resources.getString(id);
     }
+    public static String[] getStringArray(String resArrayName) {
+        try {
+            int id = getResArrayID(resArrayName);
+            String[] arry = resources.getStringArray(id);
+            return arry;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public static String getCertificatePsw(Context context, String appid) {
 

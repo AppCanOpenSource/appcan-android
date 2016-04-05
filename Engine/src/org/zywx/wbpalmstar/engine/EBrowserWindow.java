@@ -2665,7 +2665,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         return false;
     }
 
-    public void publishChannelNotification(String channelId, String des) {
+    public void publishChannelNotification(String channelId, String des, boolean isJson) {
         EWidgetStack eWidgetStack = mBroWidget.getWidgetStack();
         for (int w = 0; w < eWidgetStack.length(); w++) {
             EWindowStack windowStack = eWidgetStack.get(w).getWindowStack();
@@ -2677,7 +2677,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
                 List<HashMap<String, String>> list = leftSlidingWin.mChannelList;
                 if (list != null && list.size() != 0) {
                     setCallback(leftSlidingWin.mMainView, list, channelId, des,
-                            WIN_TYPE_MAIN);
+                            isJson, WIN_TYPE_MAIN);
                 }
             }
             EBrowserWindow rightSlidingWin = windowStack
@@ -2686,7 +2686,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
                 List<HashMap<String, String>> list = rightSlidingWin.mChannelList;
                 if (list != null && list.size() != 0) {
                     setCallback(rightSlidingWin.mMainView, list, channelId, des,
-                            WIN_TYPE_MAIN);
+                            isJson, WIN_TYPE_MAIN);
                 }
             }
 
@@ -2698,12 +2698,12 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
                 if (list == null || list.size() == 0) {
                     continue;
                 }
-                setCallback(eBrwWin.mMainView, list, channelId, des, WIN_TYPE_MAIN);
+                setCallback(eBrwWin.mMainView, list, channelId, des, isJson, WIN_TYPE_MAIN);
 
                 //popover window
                 Collection<EBrowserView> eBrwViews = eBrwWin.mPopTable.values();
                 for (EBrowserView entry : eBrwViews) {
-                    setCallback(entry, list, channelId, des, WIN_TYPE_POP);
+                    setCallback(entry, list, channelId, des, isJson, WIN_TYPE_POP);
                 }
 
                 //multiPopover window
@@ -2713,7 +2713,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
                         ArrayList<EBrowserView> temp = entry.getValue();
                         if (null != temp && temp.size() > 0) {
                             for (int j = 0; j < temp.size(); j++) {
-                                setCallback(temp.get(j), list, channelId, des, WIN_TYPE_POP);
+                                setCallback(temp.get(j), list, channelId, des, isJson, WIN_TYPE_POP);
                             }
                         }
                     }
@@ -2722,13 +2722,16 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         }
     }
 
-    private void setCallback(final EBrowserView brwView, List<HashMap<String, String>> list, String channelId, String data, String type) {
+    private void setCallback(final EBrowserView brwView, List<HashMap<String, String>> list, String channelId, String data, boolean isJson, String type) {
         String js;
         for (int i = 0; i < list.size(); i++) {
             final HashMap<String, String> entry = list.get(i);
             if (channelId.equals(entry.get(TAG_CHANNEL_ID)) && type.equals(entry.get(TAG_CHANNEL_TYPE))) {
                 js = CALLBACK_PUBLISH_GLOBAL_NOTI + entry.get(TAG_CHANNEL_FUNNAME) + "('"
                         + data + "')";
+                if (isJson) {
+                    js = CALLBACK_PUBLISH_GLOBAL_NOTI + entry.get(TAG_CHANNEL_FUNNAME) + "(" + data + ")";
+                }
                 if (type.equals(WIN_TYPE_POP) && brwView.getName().equals(entry.get(TAG_CHANNEL_WINNAME))) {
                     brwView.addUriTask(js);
                 } else if (type.equals(WIN_TYPE_MAIN)) {
@@ -2852,6 +2855,15 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
                 eBrwView.addUriTask(js);
             }
         }
+    }
+
+    public void onSlidingWindowStateChanged(int position) {
+        if (null == mMainView) {
+            return;
+        }
+        String js = "javascript:if(uexWindow.onSlidingWindowStateChanged){uexWindow.onSlidingWindowStateChanged("
+                + position + ");}";
+        mMainView.loadUrl(js);
     }
 
     public void reloadWindow() {

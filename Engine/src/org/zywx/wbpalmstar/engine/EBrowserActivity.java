@@ -923,4 +923,10 @@ public final class EBrowserActivity extends FragmentActivity {
             }
         }
     }
+
+    public void onSlidingWindowStateChanged(int position) {
+        if (null != mBrowser) {
+            mBrowser.onSlidingWindowStateChanged(position);
+        }
+    }
 }

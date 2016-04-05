@@ -168,6 +168,7 @@ public class EUExWindow extends EUExBase {
     private static final int MSG_PLUGINVIEW_CONTAINER_SET = 54;
     private static final int MSG_PLUGINVIEW_CONTAINER_SHOW = 55;
     private static final int MSG_PLUGINVIEW_CONTAINER_HIDE = 56;
+    private static final int MSG_PUBLISH_CHANNEL_NOTIFICATION_FOR_JSON = 57;
     private static final int MSG_SET_IS_SUPPORT_SWIPE_CALLBACK = 58;
     private static final int MSG_DISTURB_LONG_PRESS_GESTURE = 59;
     private static final int MSG_FUNCTION_SETAUTOROTATEENABLE= 60;
@@ -3128,7 +3129,38 @@ public class EUExWindow extends EUExBase {
         if (null == curWind) {
             return;
         }
-        curWind.publishChannelNotification(channelId, des);
+        curWind.publishChannelNotification(channelId, des, false);
+    }
+
+    public void publishChannelNotificationForJson(String[] params) {
+        if (params == null || params.length < 2) {
+            errorCallback(0, 0, "error params!");
+            return;
+        }
+        Message msg = new Message();
+        msg.obj = this;
+        msg.what = MSG_PUBLISH_CHANNEL_NOTIFICATION_FOR_JSON;
+        Bundle bd = new Bundle();
+        bd.putStringArray(TAG_BUNDLE_PARAM, params);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
+    }
+
+    public void publishChannelNotificationForJsonMsg(String[] params) {
+        if (params.length < 2) {
+            return;
+        }
+        String channelId = params[0];
+        if (TextUtils.isEmpty(channelId)) {
+            BDebug.e("channelId is empty!!!");
+            return;
+        }
+        String des = params[1];
+        EBrowserWindow curWind = mBrwView.getBrowserWindow();
+        if (null == curWind) {
+            return;
+        }
+        curWind.publishChannelNotification(channelId, des, true);
     }
 
     public void setMultilPopoverFlippingEnbaled(String[] params) {
@@ -3718,6 +3750,9 @@ public class EUExWindow extends EUExBase {
                 break;
             case MSG_PUBLISH_CHANNEL_NOTIFICATION:
                 publishChannelNotificationMsg(param);
+                break;
+            case MSG_PUBLISH_CHANNEL_NOTIFICATION_FOR_JSON:
+                publishChannelNotificationForJsonMsg(param);
                 break;
             case MSG_SET_IS_SUPPORT_SLIDE_CALLBACK:
                 setIsSupportSlideCallbackMsg(param);
