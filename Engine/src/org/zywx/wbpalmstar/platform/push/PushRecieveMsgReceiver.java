@@ -75,6 +75,8 @@ public class PushRecieveMsgReceiver extends BroadcastReceiver {
     }
 
     private void newPushNotification(Context context, Intent intent) {
+        PushReportUtility.log("newPushNotification->isForground = "
+                + EBrowserActivity.isForground);
         Bundle bundle = intent.getExtras();
         PushDataInfo dataInfo = (PushDataInfo) bundle
                 .get(PushReportConstants.PUSH_DATA_INFO_KEY);

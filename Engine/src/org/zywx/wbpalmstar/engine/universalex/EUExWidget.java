@@ -81,6 +81,7 @@ public class EUExWidget extends EUExBase {
     public static final String function_getPushState = "uexWidget.cbGetPushState";
     public static final String function_onSpaceClick = "uexWidget.onSpaceClick";
     public static final String function_loadApp = "uexWidget.cbLoadApp";
+    public static final String function_getMBaaSHost = "uexWidget.cbGetMBaaSHost";
     private static final String BUNDLE_DATA = "data";
     private static final String BUNDLE_MESSAGE = "message";
     private static final String PUSH_MSG_BODY = "0";
@@ -230,6 +231,8 @@ public class EUExWidget extends EUExBase {
         String startMode = params[0];
         Intent intent = null;
         String extraJson = null;
+        // 是否通过NEW_TASK启动第三方Activity的开关_by_waka
+        boolean switchNewTask = true;// 默认为使用NEW_TASk启动
         if (!TextUtils.isEmpty(startMode)) {
             if ("0".equals(startMode)) {
                 String pkgName = params[1];
@@ -261,6 +264,10 @@ public class EUExWidget extends EUExBase {
                     Uri contentUrl=Uri.parse(extraVO.getData());
                     intent.setData(contentUrl);
                 }
+                // 如果isNewTask.equals("0") by waka
+                if (extraVO != null && "0".equals(extraVO.getIsNewTask())) {
+                    switchNewTask = false;// NEW_TASK开关置为false
+                }
                 intent.setComponent(component);
             } else if ("1".equals(startMode)) {
                 String action = params[1];
@@ -290,7 +297,10 @@ public class EUExWidget extends EUExBase {
             }
         }
         try {
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            // 如果NEW_TASK开关打开
+            if (switchNewTask) {
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);// 添加NEW_TASK_FLAG
+            }
             startActivity(intent);
         } catch (ActivityNotFoundException e) {
             callBackPluginJs(JsConst.CALLBACK_START_APP, e.getMessage());
@@ -766,6 +776,11 @@ public class EUExWidget extends EUExBase {
                 }
             }
         });
+    }
+
+    public void getMBaaSHost(String[] parm) {
+        String mbaas_host = ResoureFinder.getInstance().getString(mContext, "mbaas_host");
+        jsCallback(function_getMBaaSHost, 0, EUExCallback.F_C_TEXT, mbaas_host);
     }
 
     public void getPushState(String[] parm) {

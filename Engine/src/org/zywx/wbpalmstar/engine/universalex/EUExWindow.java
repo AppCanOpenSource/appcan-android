@@ -57,6 +57,7 @@ import org.zywx.wbpalmstar.base.vo.CreateContainerVO;
 import org.zywx.wbpalmstar.base.vo.SetSwipeCloseEnableVO;
 import org.zywx.wbpalmstar.base.vo.ShareInputVO;
 import org.zywx.wbpalmstar.engine.DataHelper;
+import org.zywx.wbpalmstar.engine.EBounceView;
 import org.zywx.wbpalmstar.engine.EBrowser;
 import org.zywx.wbpalmstar.engine.EBrowserActivity;
 import org.zywx.wbpalmstar.engine.EBrowserAnimation;
@@ -167,6 +168,8 @@ public class EUExWindow extends EUExBase {
     private static final int MSG_PLUGINVIEW_CONTAINER_SET = 54;
     private static final int MSG_PLUGINVIEW_CONTAINER_SHOW = 55;
     private static final int MSG_PLUGINVIEW_CONTAINER_HIDE = 56;
+    private static final int MSG_SET_IS_SUPPORT_SWIPE_CALLBACK = 58;
+    private static final int MSG_DISTURB_LONG_PRESS_GESTURE = 59;
     private static final int MSG_FUNCTION_SETAUTOROTATEENABLE= 60;
     private AlertDialog mAlert;
     private AlertDialog.Builder mConfirm;
@@ -327,7 +330,7 @@ public class EUExWindow extends EUExBase {
 
     private boolean checkWindPermission(String windName) {
         WWidgetData rootWgt = mBrwView.getRootWidget();
-        String[] winds = rootWgt.disableRootWindows;
+        ArrayList<String> winds = rootWgt.disableRootWindowsList;
         if (null == windName || windName.trim().length() == 0 || null == winds) {
             return true;
         }
@@ -341,7 +344,7 @@ public class EUExWindow extends EUExBase {
 
     private boolean checkWindPopPermission(String windPopName) {
         WWidgetData rootWgt = mBrwView.getRootWidget();
-        String[] winds = rootWgt.disableSonWindows;
+        ArrayList<String>  winds = rootWgt.disableSonWindowsList;
         if (null == windPopName || windPopName.trim().length() == 0
                 || null == winds) {
             return true;
@@ -3166,6 +3169,53 @@ public class EUExWindow extends EUExBase {
         }
     }
 
+    public void setIsSupportSwipeCallback(String[] params) {
+        if (params == null || params.length < 1) {
+            errorCallback(0, 0, "error params!");
+            return;
+        }
+        Message msg = new Message();
+        msg.obj = this;
+        msg.what = MSG_SET_IS_SUPPORT_SWIPE_CALLBACK;
+        Bundle bd = new Bundle();
+        bd.putStringArray(TAG_BUNDLE_PARAM, params);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
+    }
+
+    private void setIsSupportSwipeCallbackMsg(String[] params) {
+        String json = params[0];
+        try {
+            JSONObject jsonObject = new JSONObject(json);
+            boolean isSupport = Boolean.valueOf(jsonObject.getString("isSupport"));
+            View bv = (View) mBrwView.getParent();
+            if (bv != null && bv instanceof EBounceView) {
+                ((EBounceView) bv).setIsSupportSwipeCallback(isSupport);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void disturbLongPressGesture(String[] params) {
+        if (params == null || params.length < 1) {
+            errorCallback(0, 0, "error params!");
+            return;
+        }
+        Message msg = new Message();
+        msg.obj = this;
+        msg.what = MSG_DISTURB_LONG_PRESS_GESTURE;
+        Bundle bd = new Bundle();
+        bd.putStringArray(TAG_BUNDLE_PARAM, params);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
+    }
+
+    private void disturbLongPressGestureMsg(String[] params) {
+        int disturb = Integer.parseInt(params[0]);
+        mBrwView.setDisturbLongPressGesture(disturb == 0 ? false : true);
+    }
+
     public void createPluginViewContainer(String[] parm) {
         Message msg = mHandler.obtainMessage();
         msg.what = MSG_PLUGINVIEW_CONTAINER_CREATE;
@@ -3671,6 +3721,12 @@ public class EUExWindow extends EUExBase {
                 break;
             case MSG_SET_IS_SUPPORT_SLIDE_CALLBACK:
                 setIsSupportSlideCallbackMsg(param);
+                break;
+            case MSG_SET_IS_SUPPORT_SWIPE_CALLBACK:
+                setIsSupportSwipeCallbackMsg(param);
+                break;
+            case MSG_DISTURB_LONG_PRESS_GESTURE:
+                disturbLongPressGestureMsg(param);
                 break;
             case MSG_PLUGINVIEW_CONTAINER_CREATE:
                 createPluginViewContainerMsg(param);
