@@ -95,7 +95,7 @@ public class WidgetOneApplication extends Application {
         for (Map.Entry<String, ThirdPluginObject> entry : pluginSet) {
             try {
                 String javaName = entry.getValue().jclass;
-                Class c = Class.forName(javaName);
+                Class c = Class.forName(javaName, true, getClassLoader());
                 Method m = c.getMethod(method, new Class[]{Context.class});
                 if (null != m) {
                     m.invoke(c, new Object[]{this});
