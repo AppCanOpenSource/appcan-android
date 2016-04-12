@@ -1,4 +1,0 @@
-appcan-android
-==============
-
-appcan-android

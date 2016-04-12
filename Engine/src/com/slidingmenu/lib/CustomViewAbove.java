@@ -3,6 +3,8 @@ package com.slidingmenu.lib;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.zywx.wbpalmstar.engine.EBrowserActivity;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -154,10 +156,10 @@ public class CustomViewAbove extends ViewGroup {
 
     public CustomViewAbove(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initCustomViewAbove();
+        initCustomViewAbove(context);
     }
 
-    void initCustomViewAbove() {
+    void initCustomViewAbove(final Context mContext) {
         setWillNotDraw(false);
         setDescendantFocusability(FOCUS_AFTER_DESCENDANTS);
         setFocusable(true);
@@ -170,6 +172,10 @@ public class CustomViewAbove extends ViewGroup {
         setInternalPageChangeListener(new SimpleOnPageChangeListener() {
             public void onPageSelected(int position) {
                 if (mViewBehind != null) {
+                    EBrowserActivity activity = (EBrowserActivity) mContext;
+                    if (null != activity) {
+                        activity.onSlidingWindowStateChanged(position);
+                    }
                     switch (position) {
                         case 0:
                         case 2:

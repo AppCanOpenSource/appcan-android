@@ -29,6 +29,7 @@ public class StartAppVO implements Serializable {
     private static final long serialVersionUID = -644923159386862574L;
 
     private String data;
+    private String isNewTask;// 是否通过NEW_TASK启动第三方Activity的开关
 
     public String getData() {
         return data;
@@ -36,5 +37,13 @@ public class StartAppVO implements Serializable {
 
     public void setData(String data) {
         this.data = data;
+    }
+
+    public String getIsNewTask() {
+        return isNewTask;
+    }
+
+    public void setIsNewTask(String isNewTask) {
+        this.isNewTask = isNewTask;
     }
 }

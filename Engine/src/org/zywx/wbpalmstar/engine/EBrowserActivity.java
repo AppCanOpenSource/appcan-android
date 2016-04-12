@@ -183,7 +183,7 @@ public final class EBrowserActivity extends FragmentActivity {
         for (Map.Entry<String, ThirdPluginObject> entry : pluginSet) {
             try {
                 String javaName = entry.getValue().jclass;
-                Class c = Class.forName(javaName);
+                Class c = Class.forName(javaName, true, getClassLoader());
                 Method m = c.getMethod(method, new Class[]{Context.class});
                 if (null != m) {
                     m.invoke(c, new Object[]{this});
@@ -402,6 +402,7 @@ public final class EBrowserActivity extends FragmentActivity {
         EUtil.loge("App onDestroy");
         super.onDestroy();
         reflectionPluginMethod("onActivityDestroy");
+        Process.killProcess(Process.myPid());
     }
 
     @Override
@@ -558,7 +559,6 @@ public final class EBrowserActivity extends FragmentActivity {
         mBrowserAround.removeViewImmediate();
         clean();
         finish();
-        Process.killProcess(Process.myPid());
     }
 
     private final void clean() {
@@ -921,6 +921,12 @@ public final class EBrowserActivity extends FragmentActivity {
                 mBrowser.onLoadAppData(OtherAppData);
                 OtherAppData = null;
             }
+        }
+    }
+
+    public void onSlidingWindowStateChanged(int position) {
+        if (null != mBrowser) {
+            mBrowser.onSlidingWindowStateChanged(position);
         }
     }
 }

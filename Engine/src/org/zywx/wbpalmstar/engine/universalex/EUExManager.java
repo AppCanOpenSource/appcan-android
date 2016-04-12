@@ -58,9 +58,11 @@ public class EUExManager {
 //		brwView.addJavascriptInterface(window, EUExWindow.tag);
 //		brwView.addJavascriptInterface(widget, EUExWidget.tag);
 //		brwView.addJavascriptInterface(appCenter, EUExAppCenter.tag);
-        brwView.removeJavascriptInterface("searchBoxJavaBridge_");
-        brwView.removeJavascriptInterface("accessibility");
-        brwView.removeJavascriptInterface("accessibilityTraversal");
+        if (Build.VERSION.SDK_INT >= 11) {
+            brwView.removeJavascriptInterface("searchBoxJavaBridge_");
+            brwView.removeJavascriptInterface("accessibility");
+            brwView.removeJavascriptInterface("accessibilityTraversal");
+        }
 //		brwView.addJavascriptInterface(dataAnalysis, EUExDataAnalysis.tag);
         mThirdPlugins.add(widgetOne);
         mThirdPlugins.add(window);

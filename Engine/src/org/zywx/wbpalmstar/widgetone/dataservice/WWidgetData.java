@@ -18,6 +18,8 @@
 
 package org.zywx.wbpalmstar.widgetone.dataservice;
 
+import java.util.ArrayList;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -90,13 +92,24 @@ public class WWidgetData implements Parcelable {
     public int m_widgetAdStatus;
     // 是否是webApp(0-不是; 1-是)
     public int m_webapp = 0;
-
-    // 被禁用的插件
+    /**
+     * 被禁用的插件
+     * @deprecated
+     */
     public String[] disablePlugins;
-    // 被禁用的窗口
+    public ArrayList<String> disablePluginsList = new ArrayList<String>();
+    /**
+     * 被禁用的窗口
+     * @deprecated
+     */
     public String[] disableRootWindows;
-    // 被禁用的子窗口
+    public ArrayList<String> disableRootWindowsList = new ArrayList<String>();
+    /**
+     * 被禁用的子窗口
+     * @deprecated
+     */
     public String[] disableSonWindows;
+    public ArrayList<String> disableSonWindowsList = new ArrayList<String>();
 
     public String m_appkey;
 
@@ -137,13 +150,16 @@ public class WWidgetData implements Parcelable {
             widget.m_webapp = source.readInt();
             widget.m_opaque = source.readString();
             widget.m_bgColor = source.readString();
-            if (widget.disablePlugins != null)
-                source.readStringArray(widget.disablePlugins);
-            if (widget.disableRootWindows != null)
-                source.readStringArray(widget.disableRootWindows);
-            if (widget.disableSonWindows != null)
-                source.readStringArray(widget.disableSonWindows);
             widget.m_appkey = source.readString();
+            if (widget.disablePluginsList != null) {
+                source.readStringList(widget.disablePluginsList);
+            }
+            if (widget.disableRootWindowsList != null) {
+                source.readStringList(widget.disableRootWindowsList);
+            }
+            if (widget.disableSonWindowsList != null) {
+                source.readStringList(widget.disableSonWindowsList);
+            }
             return widget;
         }
 
@@ -199,8 +215,6 @@ public class WWidgetData implements Parcelable {
         parcel.writeString(m_widgetPath);
         parcel.writeString(m_indexUrl);
         parcel.writeInt(m_obfuscation);
-        parcel.writeString(m_opaque);
-        parcel.writeString(m_bgColor);
         parcel.writeString(m_logServerIp);
         parcel.writeInt(m_wgtType);
         parcel.writeString(m_updateurl);
@@ -208,10 +222,12 @@ public class WWidgetData implements Parcelable {
         parcel.writeInt(m_orientation);
         parcel.writeInt(m_widgetAdStatus);
         parcel.writeInt(m_webapp);
-        parcel.writeStringArray(disablePlugins);
-        parcel.writeStringArray(disableRootWindows);
-        parcel.writeStringArray(disableSonWindows);
+        parcel.writeString(m_opaque);
+        parcel.writeString(m_bgColor);
         parcel.writeString(m_appkey);
+        parcel.writeStringList(disablePluginsList);
+        parcel.writeStringList(disableRootWindowsList);
+        parcel.writeStringList(disableSonWindowsList);
     }
 
     @Override

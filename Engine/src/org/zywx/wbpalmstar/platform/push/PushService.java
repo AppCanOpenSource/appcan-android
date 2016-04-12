@@ -165,8 +165,14 @@ public class PushService extends Service implements PushDataCallback {
                 pushGetData = new MQTTService(this, url_push, this, softToken);
                 ((MQTTService) pushGetData).init();
             } else {
-                ((MQTTService) pushGetData).onDestroy();
-                ((MQTTService) pushGetData).init();
+                /**推送连接时，若已连接，由原来的断开重连，改为发送心跳，若心跳失败，会重连 。
+                 * wanglei 20160314 modify*/
+                Context ctx = getApplicationContext();
+                Intent mQttPingIntent = new Intent(MQTTService.MQTT_PING_ACTION);
+                mQttPingIntent.setPackage(ctx.getPackageName());
+                ctx.sendBroadcast(mQttPingIntent);
+//                ((MQTTService) pushGetData).onDestroy();
+//                ((MQTTService) pushGetData).init();
             }
 
         } catch (Exception e) {

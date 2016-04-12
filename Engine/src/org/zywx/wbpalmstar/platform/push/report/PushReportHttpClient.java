@@ -220,6 +220,7 @@ public class PushReportHttpClient {
                 appid = tenantId + ":" + appid;
             }
             String appkey = EUExUtil.getString("appkey");
+            appkey = PushReportUtility.decodeStr(appkey);
             PushReportUtility.log("appid ==" + appid + " appkey ==" + appkey);
             post.addHeader("Accept", "*/*");
             post.addHeader("Content-Type", "application/json");

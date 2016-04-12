@@ -47,6 +47,7 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.NotificationCompat.Builder;
 import android.text.TextUtils;
 import android.webkit.CookieManager;
 import android.widget.RemoteViews;
@@ -75,6 +76,8 @@ public class PushRecieveMsgReceiver extends BroadcastReceiver {
     }
 
     private void newPushNotification(Context context, Intent intent) {
+        PushReportUtility.log("newPushNotification->isForground = "
+                + EBrowserActivity.isForground);
         Bundle bundle = intent.getExtras();
         PushDataInfo dataInfo = (PushDataInfo) bundle
                 .get(PushReportConstants.PUSH_DATA_INFO_KEY);
@@ -96,7 +99,7 @@ public class PushRecieveMsgReceiver extends BroadcastReceiver {
         String title = dataInfo.getTitle();
         String body = dataInfo.getAlert();
         String message = dataInfo.getPushDataString();
-        Notification.Builder builder = new Notification.Builder(context);
+        Builder builder = new Builder(context);
         builder.setAutoCancel(true);
         builder.setContentTitle(title); // 通知标题
         builder.setContentText(body); // 通知内容

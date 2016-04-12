@@ -76,7 +76,7 @@ public class WidgetOneApplication extends Application {
         CookieManager.getInstance().setAcceptCookie(true);
         CookieManager.getInstance().removeSessionCookie();
         CookieManager.getInstance().removeExpiredCookie();
-        mCrashReport = new ECrashHandler();
+        mCrashReport = ECrashHandler.getInstance(this);
         cachePath = getCacheDir().getAbsolutePath();
         copyLib();
         copyJar();
@@ -95,7 +95,7 @@ public class WidgetOneApplication extends Application {
         for (Map.Entry<String, ThirdPluginObject> entry : pluginSet) {
             try {
                 String javaName = entry.getValue().jclass;
-                Class c = Class.forName(javaName);
+                Class c = Class.forName(javaName, true, getClassLoader());
                 Method m = c.getMethod(method, new Class[]{Context.class});
                 if (null != m) {
                     m.invoke(c, new Object[]{this});
