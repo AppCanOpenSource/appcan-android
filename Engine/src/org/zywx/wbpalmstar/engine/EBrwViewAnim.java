@@ -298,6 +298,7 @@ public class EBrwViewAnim {
             animatorSet.setStartDelay(delay);
         }
         animatorSet.setInterpolator(inter);
+        animatorSet.setTarget(target);
         animatorSet.start();
     }
 
