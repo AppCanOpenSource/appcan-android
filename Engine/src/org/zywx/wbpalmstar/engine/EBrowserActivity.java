@@ -49,6 +49,7 @@ import com.slidingmenu.lib.SlidingMenu;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.zywx.wbpalmstar.acedes.ACEDes;
+import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.engine.external.Compat;
 import org.zywx.wbpalmstar.engine.universalex.EUExBase;
 import org.zywx.wbpalmstar.engine.universalex.EUExCallback;
@@ -847,6 +848,23 @@ public final class EBrowserActivity extends FragmentActivity {
                     }
                 }
                 loadByOtherApp();
+            }
+
+            //url打开APP参数处理
+            if (in.getData()!=null){
+                if (OtherAppData==null){
+                    OtherAppData = new JSONObject();
+                }
+                Set<String> keys=in.getData().getQueryParameterNames();
+                if (keys!=null){
+                    for (String key:keys){
+                        try {
+                            OtherAppData.put(key,in.getData().getQueryParameter(key));
+                        } catch (JSONException e) {
+                            BDebug.e(e.toString());
+                        }
+                    }
+                }
             }
         }
     }

@@ -18,11 +18,16 @@
             android:name="org.zywx.wbpalmstar.engine.EBrowserActivity"
             android:alwaysRetainTaskState="true"
             android:configChanges="keyboardHidden|orientation"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/browser_main_theme"
-            android:exported="true"
-            android:windowSoftInputMode="stateHidden|adjustResize" >
+            android:windowSoftInputMode="stateHidden|adjustPan" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="appcanscheme"/>
+            </intent-filter>
         </activity>
         <activity android:name="org.zywx.wbpalmstar.engine.TempActivity"
             android:launchMode="standard"
