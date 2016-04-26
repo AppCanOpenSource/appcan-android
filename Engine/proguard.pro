@@ -295,6 +295,7 @@
     public void setIsSupportSlideCallback(java.lang.String[]);
     public void setHardwareEnable(java.lang.String[]);
     public void setPopHardwareEnable(java.lang.String[]);
+    public void setPageInContainer(java.lang.String[]);
     public void createPluginViewContainer(java.lang.String[]);
     public void closePluginViewContainer(java.lang.String[]);
     public void showPluginViewContainer(java.lang.String[]);
