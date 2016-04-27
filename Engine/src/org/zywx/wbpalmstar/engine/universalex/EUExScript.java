@@ -160,6 +160,7 @@ public class EUExScript {
                 + "openPopover:function(){uexDispatcher.dispatch('uexWindow','openPopover',jo(arguments));},"
                 + "openMultiPopover:function(){uexDispatcher.dispatch('uexWindow','openMultiPopover',jo(arguments))},"
                 + "closeMultiPopover:function(){uexDispatcher.dispatch('uexWindow','closeMultiPopover',jo(arguments))},"
+                + "openPresentWindow:function(){uexDispatcher.dispatch('uexWindow','openPresentWindow',jo(arguments))},"
                 + "setSelectedPopOverInMultiWindow:function(){uexDispatcher.dispatch('uexWindow','setSelectedPopOverInMultiWindow',jo(arguments))},"
                 + "createProgressDialog:function(){ uexDispatcher.dispatch('uexWindow','createProgressDialog',jo(arguments))},"
                 + "destroyProgressDialog:function(){ uexDispatcher.dispatch('uexWindow','destroyProgressDialog',jo(arguments))},"

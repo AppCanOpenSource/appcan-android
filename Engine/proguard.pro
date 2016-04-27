@@ -289,6 +289,7 @@
     public void setMultilPopoverFlippingEnbaled(java.lang.String[]);
     public void createProgressDialog(java.lang.String[]);
     public void destroyProgressDialog(java.lang.String[]);
+    public void openPresentWindow(java.lang.String[]);
     public void setSlidingWindowEnabled(java.lang.String[]);
     public void getSlidingWindowState(java.lang.String[]);
     public void dispatch(java.lang.String,java.lang.String,java.lang.String[]);
