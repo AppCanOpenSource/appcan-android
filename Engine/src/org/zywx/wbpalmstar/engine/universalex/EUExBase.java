@@ -697,8 +697,10 @@ public abstract class EUExBase {
         if (null == curWind) {
             return;
         }
-        curWind.evaluateScript(mBrwView, inWindowName, type, SCRIPT_HEADER
-                + inScript);
+        if (inScript == null || !inScript.startsWith(SCRIPT_HEADER)) {
+            inScript+=SCRIPT_HEADER+inScript;
+        }
+        curWind.evaluateScript(mBrwView, inWindowName, type, inScript);
     }
 
     /**

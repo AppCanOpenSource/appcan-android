@@ -321,6 +321,19 @@ public class EUExWindow extends EUExBase {
         curWind.createWindow(mBrwView, windEntry);
     }
 
+    public void openPresentWindow(String[] params){
+        if (params.length < 7) {
+            return;
+        }
+        Message msg = new Message();
+        msg.obj = this;
+        msg.what = MSG_FUNCTION_OPEN;
+        Bundle bd = new Bundle();
+        bd.putStringArray(TAG_BUNDLE_PARAM, params);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
+    }
+
     public int getHeight(String[] params){
         return mBrwView.getBrowserWindow().getHeight();
     }
