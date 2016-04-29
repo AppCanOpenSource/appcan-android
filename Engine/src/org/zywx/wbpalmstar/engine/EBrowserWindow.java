@@ -707,7 +707,9 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         }
         /**wanglei add 20151124*/
         child.setBackgroundColor(Color.TRANSPARENT);
-        addView(parent);
+        if (parentHasChanged) {
+            addView(parent);
+        }
         switch (entity.mDataType) {
             case EBrwViewEntry.WINDOW_DATA_TYPE_URL:
 //			if (entity.checkFlag(EBrwViewEntry.F_FLAG_OBFUSCATION)) {
