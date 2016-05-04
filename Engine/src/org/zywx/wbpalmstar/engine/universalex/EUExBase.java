@@ -184,6 +184,35 @@ public abstract class EUExBase {
     }
 
     /**
+     * 异步回调到JS
+     * @param callbackId 回调ID，该值由插件接口被调用时传入
+     * @param hasNext 是否有下一次回调。没有传false ，有传true
+     * @param args 参数可以是任何对象，直接回调对象可使用DataHelper.gson.toJsonTree()方法
+     */
+    public void callbackToJs(int callbackId,boolean hasNext,Object... args){
+        if (null != mBrwView) {
+
+            int flag=hasNext?1:0;
+            StringBuilder sb=new StringBuilder("javascript:uexCallback.callback(");
+            sb.append(callbackId).append(",").append(flag);
+            for (Object obj:args){
+                sb.append(",");
+                boolean isStrArg = obj instanceof String;
+                if (isStrArg) {
+                    sb.append("\"");
+                }
+                sb.append(String.valueOf(obj));
+                if (isStrArg) {
+                    sb.append("\"");
+                }
+             }
+            sb.append(");");
+            BDebug.i(sb.toString());
+            mBrwView.loadUrl(sb.toString());
+        }
+    }
+
+    /**
      * 运行一个Activity,并要求被运行的Activity在finish时有返回值.<br>
      * 你的plugin中,如果需要运行另一个Activity,并且需要此Activity返回数据时,必须要通过此接口调用,
      * 返回的数据将通过onActivityResult函数回调,可在onActivityResult函数中做相关处理.
