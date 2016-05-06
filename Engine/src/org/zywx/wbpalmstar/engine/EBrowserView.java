@@ -519,10 +519,10 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
     }
 
     private void setMultilPopoverFlippingEnbaled() {
-        EBounceView parentBounceView = (EBounceView) this.getParent();
-        if (parentBounceView instanceof EBounceView) {
+        View parentBounceView = (View) this.getParent();
+        if (parentBounceView != null && parentBounceView instanceof EBounceView) {
             ViewParent parentViewPager = parentBounceView.getParent();
-            if (parentViewPager instanceof ViewPager) {
+            if (parentViewPager != null && parentViewPager instanceof ViewPager) {
                 parentViewPager.requestDisallowInterceptTouchEvent(isMultilPopoverFlippingEnbaled);
             }
         }

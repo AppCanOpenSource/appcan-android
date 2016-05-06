@@ -309,7 +309,7 @@ public class MQTTService implements MqttSimpleCallback {
             if (isOnline()) {
                 // we think we have an Internet connection, so try to connect
                 // to the message broker
-                new ConnectAsyncTask().execute(new String[] {});
+                connectToBrokerThread();
             } else {
                 // we can't do anything now because we don't have a working
                 // data connection
@@ -517,7 +517,7 @@ public class MQTTService implements MqttSimpleCallback {
         PowerManager pm = (PowerManager) _context
                 .getSystemService(Service.POWER_SERVICE);
         WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MQTT");
-        wl.acquire();
+        acquireWakelock(wl, "connectionLost acquire");
 
         //
         // have we lost our data connection?
@@ -554,12 +554,12 @@ public class MQTTService implements MqttSimpleCallback {
             broadcastServiceStatus("Connection lost - reconnecting...");
 
             // try to reconnect
-            new ConnectAsyncTask().execute(new String[] {});
+            connectToBrokerThread();
         }
 
         // we're finished - if the phone is switched off, it's okay for the CPU
         // to sleep now
-        wl.release();
+        releaseWakelock(wl, "connectionLost release");
     }
 
     /*
@@ -575,7 +575,7 @@ public class MQTTService implements MqttSimpleCallback {
         PowerManager pm = (PowerManager) _context
                 .getSystemService(Service.POWER_SERVICE);
         WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MQTT");
-        wl.acquire();
+        acquireWakelock(wl, "publishArrived acquire");
         //
         // I'm assuming that all messages I receive are being sent as strings
         // this is not an MQTT thing - just me making as assumption about what
@@ -646,7 +646,7 @@ public class MQTTService implements MqttSimpleCallback {
 
         // we're finished - if the phone is switched off, it's okay for the CPU
         // to sleep now
-        wl.release();
+        releaseWakelock(wl, "publishArrived release");
     }
 
     /************************************************************************/
@@ -724,26 +724,22 @@ public class MQTTService implements MqttSimpleCallback {
         return macSerial;
     }
 
-    private class ConnectAsyncTask extends AsyncTask<String[], integer, Boolean> {
-        @Override
-        protected Boolean doInBackground(String[]... string) {
-            return connectToBroker();
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            super.onPostExecute(result);
-            if (result.booleanValue()) {
-                // we subscribe to a topic - registering to receive push
-                // notifications with a particular key
-                // in a 'real' app, you might want to subscribe to multiple
-                // topics - I'm just subscribing to one as an example
-                // note that this topicName could include a wildcard, so
-                // even just with one subscription, we could receive
-                // messages for multiple topics
-                subscribeToTopic(topicName);
+    private void connectToBrokerThread() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (connectToBroker()) {
+                    // we subscribe to a topic - registering to receive push
+                    // notifications with a particular key
+                    // in a 'real' app, you might want to subscribe to multiple
+                    // topics - I'm just subscribing to one as an example
+                    // note that this topicName could include a wildcard, so
+                    // even just with one subscription, we could receive
+                    // messages for multiple topics
+                    subscribeToTopic(topicName);
+                }
             }
-        }
+        }).start();
     }
 
     /*
@@ -903,7 +899,7 @@ public class MQTTService implements MqttSimpleCallback {
                         .getSystemService(Service.POWER_SERVICE);
                 WakeLock wl = pm
                         .newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MQTT");
-                wl.acquire();
+                acquireWakelock(wl, "BackgroundDataChange acquire");
 
                 ConnectivityManager cm = (ConnectivityManager) _context
                         .getSystemService(Service.CONNECTIVITY_SERVICE);
@@ -926,7 +922,7 @@ public class MQTTService implements MqttSimpleCallback {
                 // we're finished - if the phone is switched off, it's okay for the
                 // CPU
                 // to sleep now
-                wl.release();
+                releaseWakelock(wl, "BackgroundDataChange release");
             }
         }
     }
@@ -948,7 +944,7 @@ public class MQTTService implements MqttSimpleCallback {
                         .getSystemService(Service.POWER_SERVICE);
                 WakeLock wl = pm
                         .newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MQTT");
-                wl.acquire();
+                acquireWakelock(wl, "NetworkConnection acquire");
 
                 if (isOnline()) {
                     // we have an internet connection - have another try at
@@ -956,7 +952,7 @@ public class MQTTService implements MqttSimpleCallback {
                     if (!connectionStatus.equals(MQTTConnectionStatus.CONNECTING)
                             && !connectionStatus.equals(MQTTConnectionStatus.CONNECTED)) {
                         connectionStatus = MQTTConnectionStatus.CONNECTING;
-                        new ConnectAsyncTask().execute(new String[] {});
+                        connectToBrokerThread();
                     }
                     /**网络状态发生变化，tcp连接仍然存在*/
                     else if(connectionStatus.equals(MQTTConnectionStatus.CONNECTED))
@@ -970,8 +966,24 @@ public class MQTTService implements MqttSimpleCallback {
                 // we're finished - if the phone is switched off, it's okay for the
                 // CPU
                 // to sleep now
-                wl.release();
+                releaseWakelock(wl, "NetworkConnection release");
             }
+        }
+    }
+
+    private void acquireWakelock(WakeLock wl, String tag) {
+        try {
+            wl.acquire();
+        } catch (Exception e) {
+            PushReportUtility.oe(tag, e);
+        }
+    }
+
+    private void releaseWakelock(WakeLock wl, String tag) {
+        try {
+            wl.release();
+        } catch (Exception e) {
+            PushReportUtility.oe(tag, e);
         }
     }
 
@@ -1053,7 +1065,7 @@ public class MQTTService implements MqttSimpleCallback {
                     keepAliveSeconds = mHeartKeepAliveMgr
                             .calcHeartFailed(keepAliveSeconds);
                     // reconnect
-                    new ConnectAsyncTask().execute(new String[] {});
+                    connectToBrokerThread();
                 }
 
                 // start the next keep alive period

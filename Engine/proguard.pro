@@ -1,3 +1,5 @@
+-keepattributes SourceFile,LineNumberTable
+
 -optimizationpasses 5
 -dontusemixedcaseclassnames
 -dontskipnonpubliclibraryclasses
@@ -25,9 +27,9 @@
 -keep public class org.zywx.wbpalmstar.platform.mam.SlidePaneLayout
 -keep public class org.zywx.wbpalmstar.platform.mam.WheelView
 
--dontwarn android.support.v4.**  
--keep class android.support.v4.** { *; }  
--keep public class * extends android.support.v4.**  
+-dontwarn android.support.v4.**
+-keep class android.support.v4.** { *; }
+-keep public class * extends android.support.v4.**
 -keep public class * extends android.app.Fragment
 -keep public class * extends android.support.v4.app.FragmentActivity
 
@@ -177,9 +179,9 @@
     <methods>;
 }
 
--keep class com.baidu.mapapi.** {*;} 
--keep class com.baidu.mobads.** {*;} 
--keep class com.baidu.location.** {*;} 
+-keep class com.baidu.mapapi.** {*;}
+-keep class com.baidu.mobads.** {*;}
+-keep class com.baidu.location.** {*;}
 -keep class org.zywx.wbpalmstar.acedes.** {*;}
 
 #-libraryjars libs/BaiduLBS_Android.jar
@@ -253,11 +255,11 @@
     public void setReportKey(java.lang.String[]);
     public void windowBack(java.lang.String[]);
     public void windowForward(java.lang.String[]);
-    public void setBounce(java.lang.String[]);    
-    public void notifyBounceEvent(java.lang.String[]);    
-    public void showBounceView(java.lang.String[]);    
-    public void resetBounceView(java.lang.String[]);    
-    public void setBounceParams(java.lang.String[]);    
+    public void setBounce(java.lang.String[]);
+    public void notifyBounceEvent(java.lang.String[]);
+    public void showBounceView(java.lang.String[]);
+    public void resetBounceView(java.lang.String[]);
+    public void setBounceParams(java.lang.String[]);
     public void hiddenBounceView(java.lang.String[]);
     public void alert(java.lang.String[]);
     public void confirm(java.lang.String[]);
@@ -266,6 +268,7 @@
     public void closeToast(java.lang.String[]);
     public int getState(java.lang.String[]);
     public java.lang.String getUrlQuery(java.lang.String[]);
+    public java.lang.String getWindowName(java.lang.String[]);
     public void actionSheet(java.lang.String[]);
     public void statusBarNotification(java.lang.String[]);
     public void setWindowFrame(java.lang.String[]);
@@ -286,11 +289,30 @@
     public void setMultilPopoverFlippingEnbaled(java.lang.String[]);
     public void createProgressDialog(java.lang.String[]);
     public void destroyProgressDialog(java.lang.String[]);
+    public void openPresentWindow(java.lang.String[]);
     public void setSlidingWindowEnabled(java.lang.String[]);
     public void getSlidingWindowState(java.lang.String[]);
     public void dispatch(java.lang.String,java.lang.String,java.lang.String[]);
     public void setIsSupportSlideCallback(java.lang.String[]);
-
+    public void setHardwareEnable(java.lang.String[]);
+    public void setPopHardwareEnable(java.lang.String[]);
+    public void setPageInContainer(java.lang.String[]);
+    public void createPluginViewContainer(java.lang.String[]);
+    public void closePluginViewContainer(java.lang.String[]);
+    public void showPluginViewContainer(java.lang.String[]);
+    public void hidePluginViewContainer(java.lang.String[]);
+    public void share(java.lang.String[]);
+    public void setAutorotateEnable(java.lang.String[]);
+    public int getHeight(java.lang.String[]);
+    public int getWidth(java.lang.String[]);
+    public void putLocalData(java.lang.String[]);
+    public java.lang.String getLocalData(java.lang.String[]);
+    public void disturbLongPressGesture(java.lang.String[]);
+    public void setIsSupportSwipeCallback(java.lang.String[]);
+    public void publishChannelNotificationForJson(java.lang.String[]);
+    public void getMBaaSHost(java.lang.String[]);
+    public void topBounceViewRefresh(java.lang.String[]);
+    public void setAutorotateEnable(java.lang.String[]);
     public void getId(java.lang.String[]);
     public void getWidgetNumber(java.lang.String[]);
     public void getWidgetInfo(java.lang.String[]);
@@ -300,6 +322,7 @@
     public void cleanCache(java.lang.String[]);
     public void exit(java.lang.String[]);
     public void getMainWidgetId(java.lang.String[]);
+
     public void startWidget(java.lang.String[]);
     public void startWidgetWithPath(java.lang.String[]);
     public void finishWidget(java.lang.String[]);
@@ -322,6 +345,10 @@
     public void setKeyboardMode(java.lang.String[]);
     public void reload(java.lang.String[]);
     public void reloadWidgetByAppId(java.lang.String[]);
+    public void closeLoading(java.lang.String[]);
+    public void moveToBack(java.lang.String[]);
+    public void setSwipeCloseEnable(java.lang.String[]);
+
     public void setEvent(java.lang.String[]);
     public void beginEvent(java.lang.String[]);
     public void endEvent(java.lang.String[]);

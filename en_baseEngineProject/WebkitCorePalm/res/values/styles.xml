@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-	<style name="browser_main_theme" parent="@android:style/Theme.NoTitleBar">
+	<style name="browser_main_theme" parent="@android:style/Theme.DeviceDefault.Light">
         <item name="android:scrollbarThumbHorizontal">@drawable/engine_scroller_thumb_hor</item>
         <item name="android:scrollbarThumbVertical">@drawable/engine_scroller_thumb_ver</item>
         <item name="android:windowBackground">@color/transparent</item>
