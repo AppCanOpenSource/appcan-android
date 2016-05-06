@@ -77,9 +77,12 @@ public class EUExScript {
                 "        }"+
                 "aTypes[aTypes.length] = type;" +
                 "}" +
-                "var result = prompt(" + JS_APPCAN_ONJSPARSE_HEADER +
-                "JSON.stringify({uexName:uexName,method:method,args:args,types:aTypes}));" +
-                "return result;" +
+                "var result =JSON.parse(prompt(" + JS_APPCAN_ONJSPARSE_HEADER +
+                "JSON.stringify({uexName:uexName,method:method,args:args,types:aTypes})));" +
+                " if (result.code != 200) {" +
+                "   console.log( \"method call error, code:\" + result.code + \", message: \" + result.result  );" +
+                "}"+
+                "return result.result;" +
                 "};"
                 +
                 "window.uexDispatcher={};" +

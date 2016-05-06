@@ -22,7 +22,9 @@ import android.content.Context;
 import android.os.Build;
 import android.webkit.WebView;
 
+import org.json.JSONObject;
 import org.zywx.wbpalmstar.base.BDebug;
+import org.zywx.wbpalmstar.engine.DataHelper;
 import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.ELinkedList;
 import org.zywx.wbpalmstar.widgetone.WidgetOneApplication;
@@ -30,11 +32,12 @@ import org.zywx.wbpalmstar.widgetone.WidgetOneApplication;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
 public class EUExManager {
-
+    private final static String RETURN_RESULT_FORMAT = "{\"code\": %d, \"result\": %s}";
     private Context mContext;
     private ELinkedList<EUExBase> mThirdPlugins;
 
@@ -112,7 +115,7 @@ public class EUExManager {
         return tpm.getPlugins();
     }
 
-    public Object callMethod(final EUExBase plugin, final String methodName, final String[] params) {
+    public String callMethod(final EUExBase plugin, final String methodName, final String[] params) {
         if (plugin.mDestroyed) {
             BDebug.e("plugin", plugin.getUexName(), " has been destroyed");
             return null;
@@ -120,18 +123,40 @@ public class EUExManager {
         try {
             Method targetMethod = plugin.getClass().getMethod(methodName,
                     String[].class);
-            return targetMethod.invoke(plugin, (Object) params);
+            return getReturn(200,targetMethod.invoke(plugin, (Object) params));
         } catch (NoSuchMethodException e) {
             BDebug.e(methodName, " NoSuchMethodException");
+            return getReturn(201,"NoSuchMethodException:"+e.getMessage());
         } catch (IllegalAccessException e) {
             BDebug.e(plugin.getUexName(), methodName, e.toString());
+            return getReturn(202,"IllegalAccessException:"+e.getMessage());
         } catch (InvocationTargetException e) {
             BDebug.e(plugin.getUexName(),methodName, " InvocationTargetException");
             if (BDebug.DEBUG) {
-            e.printStackTrace();
+                e.printStackTrace();
             }
+            return getReturn(203,"InvocationTargetException:"+e.getMessage());
         }
-        return null;
+    }
+
+    public static String getReturn (int stateCode, Object result) {
+        String insertRes;
+        if (result == null) {
+            insertRes = "null";
+        } else if (result instanceof String) {
+            result = ((String) result).replace("\"", "\\\"");
+            insertRes = "\"" + result + "\"";
+        } else if (!(result instanceof Integer)
+                && !(result instanceof Long)
+                && !(result instanceof Boolean)
+                && !(result instanceof Float)
+                && !(result instanceof Double)
+                && !(result instanceof JSONObject)) {    // 非数字或者非字符串的构造对象类型都要序列化后再拼接
+            insertRes = DataHelper.gson.toJson(result);
+        } else {  //数字直接转化
+            insertRes = String.valueOf(result);
+        }
+        return String.format(Locale.getDefault(),RETURN_RESULT_FORMAT, stateCode, insertRes);
     }
 
     public void notifyReset() {
