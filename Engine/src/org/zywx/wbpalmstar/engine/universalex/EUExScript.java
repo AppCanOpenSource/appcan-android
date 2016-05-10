@@ -48,8 +48,20 @@ public class EUExScript {
         //   给message加上"AppCan_onJsParse:"前缀，并把uexName、method、args等内容传过去；
         // 3、在WebChromeClient的onJsPrompt()回调中判断message是否包含"AppCan_onJsParse:"前缀，如果包含，则获取message中的uexName、method、args等内容；
         // 4、执行EUExDispatcher的dispatch()函数
-        F_UEX_DISPATCHER_SCRIPT = "javascript:"
-                + "function fo(){" +
+        F_UEX_DISPATCHER_SCRIPT = "javascript:"+
+                "  var uexCallback = {" +
+                "    queue: []," +
+                "    callback: function() {" +
+                "      var params = Array.prototype.slice.call(arguments, 0);" +
+                "      var id = params.shift();" +
+                "      var permanent = params.shift();" +
+                "      this.queue[id].apply(this, params);" +
+                "      if (!permanent) {" +
+                 "        delete this.queue[id];" +
+                 "     }" +
+                "    }" +
+                "  };"+
+                "function fo(){" +
                 "var args_all = Array.prototype.slice.call(arguments, 0);" +
                 "var uexName = args_all[0];" +
                 "var method = args_all[1];" +
@@ -58,11 +70,19 @@ public class EUExScript {
                 "for (var i = 0;i < args.length;i++) {" +
                 "var arg = args[i];" +
                 "var type = typeof arg;" +
+                "if (type == \"function\") {" +
+                "          var callbackID = uexCallback.queue.length;" +
+                "          uexCallback.queue[callbackID] = arg;" +
+                "          args[i] = callbackID" +
+                "        }"+
                 "aTypes[aTypes.length] = type;" +
                 "}" +
-                "var result = prompt(" + JS_APPCAN_ONJSPARSE_HEADER +
-                "JSON.stringify({uexName:uexName,method:method,args:args,types:aTypes}));" +
-                "return result;" +
+                "var result =JSON.parse(prompt(" + JS_APPCAN_ONJSPARSE_HEADER +
+                "JSON.stringify({uexName:uexName,method:method,args:args,types:aTypes})));" +
+                " if (result.code != 200) {" +
+                "   console.log( \"method call error, code:\" + result.code + \", message: \" + result.result  );" +
+                "}"+
+                "return result.result;" +
                 "};"
                 +
                 "window.uexDispatcher={};" +

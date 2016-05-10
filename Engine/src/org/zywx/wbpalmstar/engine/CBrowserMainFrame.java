@@ -19,9 +19,6 @@
 package org.zywx.wbpalmstar.engine;
 
 
-import java.util.Map;
-
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -38,13 +35,13 @@ import android.widget.EditText;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.zywx.wbpalmstar.base.BDebug;
-import org.zywx.wbpalmstar.engine.callback.EUExDispatcherCallback;
 import org.zywx.wbpalmstar.engine.universalex.EUExBase;
-import org.zywx.wbpalmstar.engine.universalex.EUExDispatcher;
 import org.zywx.wbpalmstar.engine.universalex.EUExManager;
 import org.zywx.wbpalmstar.engine.universalex.EUExScript;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.engine.universalex.ThirdPluginObject;
+
+import java.util.Map;
 
 public class CBrowserMainFrame extends WebChromeClient {
 
@@ -181,45 +178,39 @@ public class CBrowserMainFrame extends WebChromeClient {
             EBrowserView browserView = (EBrowserView) view;
             final EUExManager uexManager = browserView.getEUExManager();
             if (uexManager != null) {
-                EUExDispatcher uexDispatcher = new EUExDispatcher(
-                        new EUExDispatcherCallback() {
-                            @Override
-                            public Object onDispatch(String pluginName,
-                                    String methodName, String[] params) {
-                                ELinkedList<EUExBase> plugins = uexManager
-                                        .getThirdPlugins();
-                                for (EUExBase plugin : plugins) {
-                                    if (plugin.getUexName().equals(pluginName)) {
-                                        Object object = uexManager.callMethod(plugin,
-                                                methodName, params);
-                                        if (null != object) {
-                                            result.confirm(object.toString());
-                                        }
-                                        return object;
-                                    }
-                                }
-                                // 调用单实例插件
-                                Map<String, ThirdPluginObject> thirdPlugins = uexManager
-                                        .getPlugins();
-                                ThirdPluginObject thirdPluginObject = thirdPlugins
-                                        .get(pluginName);
-                                if (thirdPluginObject != null
-                                        && thirdPluginObject.isGlobal
-                                        && thirdPluginObject.pluginObj != null) {
-                                    Object object = uexManager.callMethod(
-                                            thirdPluginObject.pluginObj,
-                                            methodName, params);
-                                    if (null != object) {
-                                        result.confirm(object.toString());
-                                    }
-                                    return object;
-                                }
-                                BDebug.e("plugin", pluginName, "not exist...");
-                                return null;
-                            }
-                        });
-                uexDispatcher.dispatch(uexName, method, args);
                 BDebug.i("appCanJsParse", "dispatch parseStr " + parseStr);
+
+                ELinkedList<EUExBase> plugins = uexManager
+                        .getThirdPlugins();
+                for (EUExBase plugin : plugins) {
+                    if (plugin.getUexName().equals(uexName)) {
+                        String resultStr = uexManager.callMethod(plugin,
+                                method, args);
+                        if (null != resultStr) {
+                            result.confirm(resultStr);
+                        }
+                        return;
+                    }
+                }
+                // 调用单实例插件
+                Map<String, ThirdPluginObject> thirdPlugins = uexManager
+                        .getPlugins();
+                ThirdPluginObject thirdPluginObject = thirdPlugins
+                        .get(uexName);
+                if (thirdPluginObject != null
+                        && thirdPluginObject.isGlobal
+                        && thirdPluginObject.pluginObj != null) {
+                    String resultStr = uexManager.callMethod(
+                            thirdPluginObject.pluginObj,
+                            method, args);
+                    if (null != resultStr) {
+                        result.confirm(resultStr);
+                    }
+                    return;
+                }
+                BDebug.e("plugin", uexName, "not exist...");
+                result.confirm(EUExManager.getReturn(204, "plugin " + uexName + " not exist..."));
+
             }
         } catch (Exception e) {
             e.printStackTrace();
