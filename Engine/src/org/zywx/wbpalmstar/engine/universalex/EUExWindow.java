@@ -23,6 +23,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -172,6 +174,7 @@ public class EUExWindow extends EUExBase {
     private static final int MSG_SET_IS_SUPPORT_SWIPE_CALLBACK = 58;
     private static final int MSG_DISTURB_LONG_PRESS_GESTURE = 59;
     private static final int MSG_FUNCTION_SETAUTOROTATEENABLE= 60;
+    private static final int MSG_FUNCTION_SETLOADINGIMAGEPATH= 61;
     private AlertDialog mAlert;
     private AlertDialog.Builder mConfirm;
     private PromptDialog mPrompt;
@@ -439,6 +442,37 @@ public class EUExWindow extends EUExBase {
         if (null != mBrwView) {
             EBrowserActivity activity = (EBrowserActivity) mContext;
             activity.setAutorotateEnable(enabled);
+        }
+    }
+
+    public void setLoadingImagePath(String[] parm) {
+        if (parm.length < 1) {
+            return;
+        }
+        Message msg = new Message();
+        msg.obj = this;
+        msg.what = MSG_FUNCTION_SETLOADINGIMAGEPATH;
+        Bundle bd = new Bundle();
+        bd.putStringArray(TAG_BUNDLE_PARAM, parm);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
+    }
+
+    public void setLoadingImagePathMsg(String[] parm) {
+        String json = parm[0];
+        try {
+            JSONObject jsonObject = new JSONObject(json);
+            String path = jsonObject.optString(BUtility.m_loadingImagePath);
+            path = BUtility.makeRealPath(path, mBrwView);
+            long time = jsonObject.optLong(BUtility.m_loadingImageTime);
+            SharedPreferences sp = mContext.getSharedPreferences(
+                    BUtility.m_loadingImageSp, Context.MODE_PRIVATE);
+            Editor editor = sp.edit();
+            editor.putString(BUtility.m_loadingImagePath, path);
+            editor.putLong(BUtility.m_loadingImageTime, time);
+            editor.commit();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
@@ -3705,6 +3739,9 @@ public class EUExWindow extends EUExBase {
                 break;
             case MSG_FUNCTION_SETORIENTATION:
                 if (param != null) setOrientationMsg(param);
+                break;
+            case MSG_FUNCTION_SETLOADINGIMAGEPATH:
+                if(param != null) setLoadingImagePathMsg(param);
                 break;
             case MSG_FUNCTION_SETAUTOROTATEENABLE:
                 if(param != null) setAutorotateEnableMsg(param);
