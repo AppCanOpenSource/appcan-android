@@ -10,7 +10,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.WindowManager;
@@ -21,8 +20,6 @@ import android.widget.TextView;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.engine.external.Compat;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
-
-import java.io.InputStream;
 
 
 /**
@@ -124,7 +121,7 @@ public class TempActivity extends Activity {
                     BUtility.m_loadingImageSp, Context.MODE_PRIVATE);
             long lodingTime = sp.getLong(BUtility.m_loadingImageTime, 0);
             long time = System.currentTimeMillis() - showTime;
-            // ÈôÇ°¶ËÍ¬Ê±µ÷ÓÃÁËuexWidget.closeLoading()¡¢uexWindow.setLoadingImagePath()£¬ÔòÆô¶¯Í¼ÏÔÊ¾Ê±¼äÒÔ×î³¤µÄÎª×¼£»
+            //è‹¥å‰ç«¯åŒæ—¶è°ƒç”¨äº†uexWidget.closeLoading()ã€uexWindow.setLoadingImagePath()ï¼Œåˆ™å¯åŠ¨å›¾æ˜¾ç¤ºæ—¶é—´ä»¥æœ€é•¿çš„ä¸ºå‡†ï¼›
             if (lodingTime > time) {
                 mHandler.postDelayed(new Runnable() {
                     @Override

@@ -164,7 +164,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         mMainView.init();
         if (null == inEntry) {
             setName("root");
-            mMainView.setRelativeUrl("index.html");
+            mMainView.setRelativeUrl(mBroWidget.getWidget().m_indexUrl);
 
             if (!TextUtils.isEmpty(mBroWidget.getWidget().m_opaque)) {
                 /**wanglei del 20151124*/

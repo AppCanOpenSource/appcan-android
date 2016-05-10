@@ -887,7 +887,7 @@ public class WDataManager {
         widgetData.m_logServerIp = assetsData.m_logServerIp;
         widgetData.m_obfuscation = assetsData.m_obfuscation;
         widgetData.m_opaque = assetsData.m_opaque;
-
+        widgetData.mErrorPath=assetsData.mErrorPath;
         if (isUpdateWidget && isCopyAssetsFinish) {
             String matchAssetPath = BUtility.F_ASSET_PATH + "widget/";
             if (widgetData.m_indexUrl.startsWith(matchAssetPath)) {
@@ -1430,6 +1430,9 @@ public class WDataManager {
                             if ("false".equals(text)) {
                                 EBrowserView.sHardwareAccelerate = false;
                             }
+                        }else if ("error".equals(localName)){
+                            widgetData.mErrorPath = parser.getAttributeValue(null,
+                                    "src");
                         }
                         break;
                     case XmlPullParser.END_DOCUMENT:
