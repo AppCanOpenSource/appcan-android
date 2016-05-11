@@ -1,0 +1,30 @@
+ <!DOCTYPE html>
+<html
+	class="ui-mobile landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+  
+  <head>
+    <title>
+    </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-apple.css">
+    <script src="js/zy_anim.js"></script>
+    <script src="js/zy_control.js"></script>
+
+    <script>
+	window.onload=function()
+	{
+		document.body.children[0].style.position="absolute";
+	}
+	function onfocus_test()
+	{
+		uexWindow.didShowKeyboard = 1;
+	}
+	function onchange_test()
+	{
+		//alert("onchange");
+	}
+    </script>
+  </head>
+<body class="ui-mobile-viewport">  

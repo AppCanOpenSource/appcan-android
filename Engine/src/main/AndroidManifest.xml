@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.zywx.wbpalmstar.widgetone.uex"
+    android:installLocation="internalOnly"
+    android:versionCode="321"
+    android:versionName="6.1.2" >
+
+    <application
+        android:name="org.zywx.wbpalmstar.widgetone.WidgetOneApplication"
+        android:allowBackup="false"
+        android:allowClearUserData="false"
+        android:hardwareAccelerated="true"
+        android:debuggable="true"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:vmSafeMode="true">
+        <activity
+            android:name="org.zywx.wbpalmstar.engine.EBrowserActivity"
+            android:alwaysRetainTaskState="true"
+            android:configChanges="keyboardHidden|orientation"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/browser_main_theme"
+            android:windowSoftInputMode="stateHidden|adjustPan" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="appcanscheme"/>
+            </intent-filter>
+        </activity>
+        <activity android:name="org.zywx.wbpalmstar.engine.TempActivity"
+            android:launchMode="standard"
+            android:screenOrientation="portrait"
+            android:theme="@style/browser_loading_theme"/>
+        <activity android:name="org.zywx.wbpalmstar.engine.LoadingActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:theme="@style/browser_loading_theme"
+            android:screenOrientation="portrait"
+            android:launchMode="standard"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.zywx.wbpalmstar.wbpalm.V8PalmActivity"
+            android:configChanges="orientation"
+            android:process=":game"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+
+        <service
+            android:name="org.zywx.wbpalmstar.platform.memoryControl.KeepForeService"
+            android:enabled="true"
+            android:exported="false"
+            android:process="com.android.acore" >
+            <intent-filter>
+                <action android:name="appcan.intent.action.largeHeap" />
+            </intent-filter>
+        </service>
+
+        <!-- push -->
+        <service
+            android:name="org.zywx.wbpalmstar.platform.push.PushService"
+            android:process=":push"
+            android:exported="false"
+            android:enabled="true" />
+
+        <receiver
+            android:name="org.zywx.wbpalmstar.platform.push.PushBroadCastReceiver" android:process=":push">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name="org.zywx.wbpalmstar.platform.push.PushRecieveMsgReceiver" android:exported="false">
+            <intent-filter>
+                <action android:name="org.zywx.push.receive" />
+            </intent-filter>
+        </receiver>
+        
+        <provider android:name="org.zywx.wbpalmstar.base.ACEContentProvider"
+          android:authorities="org.zywx.wbpalmstar.widgetone.uex.sp" android:exported="false"/>
+    </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FIND_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:resizeable="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
+
+</manifest>

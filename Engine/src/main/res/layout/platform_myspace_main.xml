@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <RelativeLayout
+        android:id="@+id/platform_myspace_top_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="46dip"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/platform_myspace_top_bg_shape" >
+
+        <Button
+            android:id="@+id/platform_myspace_top_btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="12dip"
+            android:background="@drawable/platform_myspace_top_btn_back_selector"
+            android:gravity="center"
+            android:text="@string/back"
+            android:textColor="#333333" />
+
+        <TextView
+            style="@style/Style_platform_myspace_title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/platform_myspace_app_center"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/platform_myspace_top_btn_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="12dip"
+            android:background="@drawable/platform_myspace_top_btn_settings_selector" />
+    </RelativeLayout>
+
+    <org.zywx.wbpalmstar.platform.myspace.RefreshableView
+        android:id="@+id/platform_myspace_refreshable_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/platform_myspace_top_layout"
+        android:background="#f1f5f8"
+        android:focusable="true"
+        android:orientation="vertical" >
+
+        <ScrollView
+            android:id="@+id/platform_myspace_scroll_view"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="#f1f5f8"
+            android:focusable="true" >
+
+            <LinearLayout
+                android:id="@+id/platform_myspace_main_content"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="visible" >
+
+                <TextView
+                    android:id="@+id/platform_myspace_tv_recommend_apps"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dip"
+                    android:layout_marginLeft="20dip"
+                    android:layout_marginTop="10dip"
+                    android:text="@string/platform_myspace_recommend_apps"
+                    android:textColor="#333333"
+                    android:textSize="16sp" />
+
+                <org.zywx.wbpalmstar.platform.myspace.DisScrollGridView
+                    android:id="@+id/platform_myspace_gv_recommend_apps"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dip"
+                    android:layout_marginRight="6dip"
+                    android:background="@drawable/platform_myspace_grid_bg"
+                    android:cacheColorHint="@android:color/transparent"
+                    android:columnWidth="70dip"
+                    android:horizontalSpacing="4dip"
+                    android:listSelector="@color/transparent"
+                    android:numColumns="4"
+                    android:padding="6dip"
+                    android:stretchMode="spacingWidth"
+                    android:verticalSpacing="4dip" />
+
+                <TextView
+                    android:id="@+id/platform_myspace_tv_my_apps"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dip"
+                    android:layout_marginLeft="18dip"
+                    android:layout_marginTop="10dip"
+                    android:text="@string/platform_myspace_my_apps"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+                <org.zywx.wbpalmstar.platform.myspace.DisScrollGridView
+                    android:id="@+id/platform_myspace_gv_my_apps"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dip"
+                    android:layout_marginLeft="6dip"
+                    android:layout_marginRight="6dip"
+                    android:background="@drawable/platform_myspace_grid_bg"
+                    android:cacheColorHint="@android:color/transparent"
+                    android:columnWidth="70dip"
+                    android:horizontalSpacing="4dip"
+                    android:listSelector="@android:color/transparent"
+                    android:minHeight="40dip"
+                    android:numColumns="4"
+                    android:padding="6dip"
+                    android:stretchMode="spacingWidth"
+                    android:verticalSpacing="4dip" />
+            </LinearLayout>
+        </ScrollView>
+    </org.zywx.wbpalmstar.platform.myspace.RefreshableView>
+
+</RelativeLayout>
