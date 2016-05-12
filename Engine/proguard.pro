@@ -32,7 +32,7 @@
 -keep public class * extends android.support.v4.**
 -keep public class * extends android.app.Fragment
 -keep public class * extends android.support.v4.app.FragmentActivity
-
+-keep public class * extends org.xwalk.core.XWalkView
 -dontwarn org.chromium.**
 -dontwarn javax.annotation.**
 

@@ -92,6 +92,16 @@ dependencies {
     compile files('libs/wmqtt.jar')
 }
 
+
+/**--------------------------------------以下为导出jar部分--------------------------------------------**/
+
+ext {
+    // 内核版本，默认为webview
+    kernel = "crosswalk"
+}
+
+println "kernel is " + kernel
+
 //排除buildConfig,这里的路径应该设置与包名一致
 def buildConfigPath = "org/zywx/wbpalmstar/widgetone/uex/"
 
@@ -101,11 +111,14 @@ task clearJar(type: Delete) {
     delete 'build/outputs/jar/'+jarBaseName
 }
 
-task makeJar(type:Jar, dependsOn: ['compileReleaseJavaWithJavac']) {
+String kernelName=kernel
+def javacTaskName="compile"+kernelName.charAt(0).toUpperCase()+ kernelName.substring(1)+"ReleaseJavaWithJavac"
+
+task makeJar(type:Jar, dependsOn: [javacTaskName]) {
     //指定生成的jar名
     baseName jarBaseName
     //从哪里打包class文件
-    from('build/intermediates/classes/release/')
+    from('build/intermediates/classes/'+kernel+'/release/')
     //打包到jar后的目录结构
     into('')
     destinationDir = file('build/outputs/jar')
@@ -123,6 +136,9 @@ def androidJarDir = androidSDKDir.toString() + '/platforms/' + "${android.compil
 task proguardEngineJar(type: ProGuardTask, dependsOn: ['makeJar']) {
     injars('build/outputs/jar/AppCanEngine_un_proguard.jar')
     outjars('build/outputs/jar/AppCanEngine.jar')
-    libraryjars(androidJarDir)//支持aar
+    libraryjars(androidJarDir)
+    if(kernel=='crosswalk'){
+        libraryjars('libs/crosswalk-19.49.514.0.aar')
+    }
     configuration 'proguard.pro'
 }
