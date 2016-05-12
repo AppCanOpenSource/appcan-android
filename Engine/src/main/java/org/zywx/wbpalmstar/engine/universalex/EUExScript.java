@@ -118,6 +118,8 @@ public class EUExScript {
                 + "getWidgetInfo:function(){uexDispatcher.dispatch('uexWidgetOne','getWidgetInfo',jo(arguments));},"
                 + "getCurrentWidgetInfo:function(){uexDispatcher.dispatch('uexWidgetOne','getCurrentWidgetInfo',jo(arguments));},"
                 + "cleanCache:function(){uexDispatcher.dispatch('uexWidgetOne','cleanCache',jo(arguments));},"
+                + "getEngineVersion:function(){return uexDispatcher.dispatch('uexWidgetOne','getEngineVersion',jo(arguments));},"
+                + "getEngineVersionCode:function(){return uexDispatcher.dispatch('uexWidgetOne','getEngineVersionCode',jo(arguments));},"
                 + "getMainWidgetId:function(){uexDispatcher.dispatch('uexWidgetOne','getMainWidgetId',jo(arguments));}};"
                 +
                 // Widget
