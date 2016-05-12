@@ -128,4 +128,10 @@ android {
     dexOptions {
         javaMaxHeapSize "2048M"
     }
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 14 //
+//        multiDexEnabled true
+    }
 }
