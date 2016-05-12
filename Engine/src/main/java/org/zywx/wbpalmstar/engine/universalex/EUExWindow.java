@@ -625,12 +625,7 @@ public class EUExWindow extends EUExBase {
         if (null == curWind) {
             return;
         }
-        float nowScale = 1.0f;
-        int versionA = Build.VERSION.SDK_INT;
-
-        if (versionA <= 18) {
-            nowScale = mBrwView.getScale();
-        }
+        float nowScale =mBrwView.getScaleWrap();
         float sc = nowScale;
         String inType = parm[0];
         String inDataType = parm[1];
@@ -1082,13 +1077,7 @@ public class EUExWindow extends EUExBase {
         if (null == curWind) {
             return;
         }
-        float nowScale = 1.0f;
-
-        int versionA = Build.VERSION.SDK_INT;
-
-        if (versionA <= 18) {
-            nowScale = mBrwView.getScale();
-        }
+        float nowScale =mBrwView.getScaleWrap();
         float sc = nowScale;
         String inPopName = parm[0];
         String windPopName = curWind.getName() + inPopName;
@@ -1308,14 +1297,7 @@ public class EUExWindow extends EUExBase {
         if (null == curWind) {
             return;
         }
-
-        float nowScale = 1.0f;
-
-        int versionA = Build.VERSION.SDK_INT;
-
-        if (versionA <= 18) {
-            nowScale = mBrwView.getScale();
-        }
+        float nowScale =mBrwView.getScaleWrap();
         float sc = nowScale;
         String inPopName = parm[0];
         String inX = parm[1];
@@ -1380,15 +1362,7 @@ public class EUExWindow extends EUExBase {
         ArrayList<EBrwViewEntry> popEntrys = new ArrayList<EBrwViewEntry>();
 
         EBrwViewEntry mainPopEntry = new EBrwViewEntry(EBrwViewEntry.VIEW_TYPE_POP);
-
-        float nowScale = 1.0f;
-
-        int versionA = Build.VERSION.SDK_INT;
-
-        if (versionA <= 18) {
-            nowScale = mBrwView.getScale();
-        }
-        float sc = nowScale;
+        float nowScale =mBrwView.getScaleWrap();
         String inContent = parm[0];
         String inMultiPopName = parm[1];
 
@@ -1451,16 +1425,16 @@ public class EUExWindow extends EUExBase {
                 dType = Integer.valueOf(inDataType);
             }
             if (null != inX && inX.length() != 0) {
-                x = (int) (Integer.valueOf(inX) * sc);
+                x = (int) (Integer.valueOf(inX) * nowScale);
             }
             if (null != inY && inY.length() != 0) {
-                y = (int) (Integer.valueOf(inY) * sc);
+                y = (int) (Integer.valueOf(inY) * nowScale);
             }
             if (null != inWidth && inWidth.length() != 0) {
-                w = (int) (Integer.valueOf(inWidth) * sc);
+                w = (int) (Integer.valueOf(inWidth) * nowScale);
             }
             if (null != inHeight && inHeight.length() != 0) {
-                h = (int) (Integer.valueOf(inHeight) * sc);
+                h = (int) (Integer.valueOf(inHeight) * nowScale);
             }
             if (null != inFontSize && inFontSize.length() != 0) {
                 fonts = Integer.valueOf(inFontSize);
@@ -1644,12 +1618,7 @@ public class EUExWindow extends EUExBase {
         if (null == curWind) {
             return;
         }
-        float nowScale = 1.0f;
-        int versionA = Build.VERSION.SDK_INT;
-        if (versionA <= 18) {
-            nowScale = mBrwView.getScale();
-        }
-        float sc = nowScale;
+        float nowScale =mBrwView.getScaleWrap();
         String inPopName = parm[0];
         String inX = parm[1];
         String inY = parm[2];
@@ -1658,16 +1627,16 @@ public class EUExWindow extends EUExBase {
         int x = 0, y = 0, w = -1, h = -1;
         try {
             if (null != inX && inX.length() != 0) {
-                x = (int) (Integer.valueOf(inX) * sc);
+                x = (int) (Integer.valueOf(inX) * nowScale);
             }
             if (null != inY && inY.length() != 0) {
-                y = (int) (Integer.valueOf(inY) * sc);
+                y = (int) (Integer.valueOf(inY) * nowScale);
             }
             if (null != inWidth && inWidth.length() != 0) {
-                w = (int) (Integer.valueOf(inWidth) * sc);
+                w = (int) (Integer.valueOf(inWidth) * nowScale);
             }
             if (null != inHeight && inHeight.length() != 0) {
-                h = (int) (Integer.valueOf(inHeight) * sc);
+                h = (int) (Integer.valueOf(inHeight) * nowScale);
             }
         } catch (Exception e) {
             errorCallback(0, EUExCallback.F_E_UEXWINDOW_EVAL, "Illegal parameter");
@@ -2056,17 +2025,10 @@ public class EUExWindow extends EUExBase {
         } catch (Exception e) {
             ;
         }
-        float nowScale = 1.0f;
 
-        int versionA = Build.VERSION.SDK_INT;
-
-        if (versionA <= 18) {
-            nowScale = mBrwView.getScale();
-        }
-
-        float sc = nowScale;
-        tx = tx * sc;
-        ty = ty * sc;
+        float nowScale =mBrwView.getScaleWrap();
+        tx = tx * nowScale;
+        ty = ty * nowScale;
         mBrwView.makeTranslation(tx, ty, tz);
     }
 

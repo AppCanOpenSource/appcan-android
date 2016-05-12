@@ -29,7 +29,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
@@ -204,9 +203,7 @@ public class EUExWidget extends EUExBase {
             e.printStackTrace();
         }
         widgetData.m_appdebug = debug;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            mBrwView.setWebContentsDebuggingEnabled(debug == 1 ? true : false);
-        }
+        mBrwView.setRemoteDebug(debug == 1);
     }
 
     public void delPushInfo(String[] params) {

@@ -28,6 +28,7 @@ import org.xwalk.core.XWalkPreferences;
 import org.xwalk.core.XWalkView;
 import org.zywx.wbpalmstar.acedes.EXWebViewClient;
 import org.zywx.wbpalmstar.engine.EBrowserBaseSetting;
+import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.ESystemInfo;
 
 import java.lang.reflect.Method;
@@ -62,7 +63,7 @@ public class ACEWebView extends XWalkView {
 		XWalkPreferences.setValue(XWalkPreferences.ANIMATABLE_XWALK_VIEW,true);//设置TextureView为默认的渲染方式,
 	}
 	
-	protected void init(boolean webApp) {
+	protected void init(EBrowserView eBrowserView, boolean webApp) {
 		setBackgroundColor(0);
 		setAlpha(0.99f);
 		setDrawingCacheBackgroundColor(Color.TRANSPARENT);
@@ -102,11 +103,6 @@ public class ACEWebView extends XWalkView {
 	}
 
 	public void setSupportZoom() {
-
-	}
-
-	public void onDownloadStart(String url, String userAgent,
-			String contentDisposition, String mimetype, long contentLength) {
 
 	}
 
@@ -238,5 +234,13 @@ public class ACEWebView extends XWalkView {
 	public boolean isHardwareAccelerated() {
 		return true;
 	}
+
+	public void setRemoteDebug(boolean debug) {
+        XWalkPreferences.setValue(XWalkPreferences.REMOTE_DEBUGGING, debug);
+	}
+
+    public float getScaleWrap() {
+        return getScale();
+    }
 
 }

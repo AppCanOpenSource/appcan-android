@@ -461,7 +461,7 @@ public class EBounceView extends LinearLayout {
     }
 
     private boolean topCanBounce() {
-        boolean b1 = mBrwView.getScrollY() == 0;
+        boolean b1 = mBrwView.getScrollYWrap() == 0;
         if (b1) {
             return true;
         } else {
@@ -470,13 +470,9 @@ public class EBounceView extends LinearLayout {
     }
 
     private boolean bottomCanBounce() {
-        float nowScale = 1.0f;
-        int versionA = Build.VERSION.SDK_INT;
-        if (versionA <= 18) {
-            nowScale = mBrwView.getScale();
-        }
+        float nowScale= mBrwView.getScaleWrap();
         int h1 = (int) (mBrwView.getContentHeight() * nowScale);
-        int h2 = mBrwView.getScrollY() + mBrwView.getHeight();
+        int h2 = mBrwView.getScrollYWrap() + mBrwView.getHeight();
         if (h1 <= h2 + 5) {
             return true;
         } else {
@@ -651,14 +647,14 @@ public class EBounceView extends LinearLayout {
      * @param bgColor
      * @param baseUrl
      * @param mEBrowserView
-     * @author wanglei 
+     * @author wanglei
      * @createAt 20151124
      * @ps 与原EBrowserView的setBrwViewBackground类似，原方法只设置EBrowserView的背景
      *     当网页设置弹动效果后，上下滑动到边缘后，会露出EBrowserView下面的网页，故应给EBrowserView
      *     父对象EBounceView设置背景, EBrowserView背景设成透明。
      */
     public void setBounceViewBackground(boolean flag, String bgColor, String baseUrl,
-            EBrowserView mEBrowserView) {
+                                        EBrowserView mEBrowserView) {
         if (flag) {
             if(bgColor.startsWith("#") || bgColor.startsWith("rgb")){
                 int color = BUtility.parseColor(bgColor);

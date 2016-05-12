@@ -307,6 +307,7 @@ public class CBrowserMainFrame extends XWalkUIClient {
                                 method, args);
                         if (null != object) {
                             result.confirmWithResult(object.toString());
+                            return;
                         }
                     }
                 }
@@ -323,6 +324,7 @@ public class CBrowserMainFrame extends XWalkUIClient {
                             method, args);
                     if (null != object) {
                         result.confirmWithResult(object.toString());
+                        return;
                     }
                 }
                 BDebug.e("plugin", uexName, "not exist...");
