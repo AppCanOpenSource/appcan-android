@@ -202,6 +202,10 @@
 
 ##---------------End: proguard configuration for Gson  ----------
 
+-keepclassmembers class * {
+    @org.zywx.wbpalmstar.base.util.AppCanAPI *;
+}
+
 -keepclassmembers public class * {
     public void open(java.lang.String[]);
     public void close(java.lang.String[]);
