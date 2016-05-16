@@ -620,9 +620,9 @@ public final class EBrowserActivity extends FragmentActivity {
 
     public final int intoOrientation(int flag) {
         int or = ActivityInfo.SCREEN_ORIENTATION_USER;
-        if (flag == 1) {// portrait
+        if (flag == 1||flag==5) {// portrait
             or = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-        } else if (flag == 2) {// landscape
+        } else if (flag == 2||flag==10) {// landscape
             or = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
         } else if (flag == 4) {// reverse portrait
             or = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
