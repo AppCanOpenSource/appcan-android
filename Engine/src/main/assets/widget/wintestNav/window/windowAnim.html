@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="../../css/index.css">
+<title>Window动画</title>
+<script type="text/javascript">
+	
+
+	function openn(arg){
+		var url = "anim.html";
+		uexWindow.open('dd', '0', url, arg, '', '', '0');
+	}
+
+	window.uexOnload = function(type){
+		if(type == 0){
+			uexWidgetOne.cbError = function(opCode, errorCode, errorInfo){
+				alert("errorCode:" + errorCode + "\n"+"errorInfo:" + errorInfo);
+			}
+		}
+	}
+
+</script>
+</head>
+
+<body>
+	<div class="tit">Window动画</div>
+	<div class="conbor">
+		<div class="consj">
+			<span>1.LeftToRight</span>
+			<input class="btn" type="button" value="开始" onclick=openn('1')><br><br>
+			
+			<span>2.RightToLeft</span>
+			<input class="btn" type="button" value="开始" onclick=openn('2')><br><br>
+			
+			<span>3.UpToDown</span>
+			<input class="btn" type="button" value="开始" onclick=openn('3')><br><br>
+			
+			<span>4.DownToUp</span>
+			<input class="btn" type="button" value="开始" onclick=openn('4')><br><br>
+			
+			<span>5.FadeOutFadeIn</span>
+			<input class="btn" type="button" value="开始" onclick=openn('5')><br><br>
+
+			<span>6.LeftFlip</span>(android暂不支持)
+			<input class="btn" type="button" value="开始" onclick=openn('6')><br><br>
+			<br><br>
+
+			<span>7.RigthFlip</span>(android暂不支持)
+			<input class="btn" type="button" value="开始" onclick=openn('7')><br><br>
+
+			<span>8.Ripple</span>(android暂不支持)
+			<input class="btn" type="button" value="开始" onclick=openn('8')><br><br>
+
+
+			<span>9.LeftToRightMoveIn</span>
+			<input class="btn" type="button" value="开始" onclick=openn('9')><br><br>
+
+
+			<span>10.RightToLeftMoveIn</span>
+			<input class="btn" type="button" value="开始" onclick=openn('10')><br><br>
+			
+			<span>11.TopToBottomMoveIn</span>
+			<input class="btn" type="button" value="开始" onclick=openn('11')><br><br>
+			
+			
+			<span>12.BottomToTopMoveIn</span>
+			<input class="btn" type="button" value="开始" onclick=openn('12')><br><br>
+			
+			
+			<p class="tit">以下为close专用</p>
+			<span>13.LeftToRightReveal(对应LeftToRightMoveIn)</span>
+			<br><br>
+
+			<span>14.RightToLeftReveal(对应RightToLeftMoveIn)</span>
+			<br><br>
+			
+			<span>15.TopToBottomReveal(对应TopToBottomMoveIn)</span>
+			<br><br>
+			
+			<span>16.BottomToTopReveal(对应BottomToTopMoveIn)</span>
+			<br><br>
+			
+			
+			<input class="btn" type="button" value="返回" onclick="uexWindow.back();"><br><br>
+		</div>
+	</div>
+</body>
+</html>

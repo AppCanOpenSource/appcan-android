@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />	<link rel="stylesheet" type="text/css" href="css/vancl_bf.css" />
+	<script type="text/javascript">
+		
+		window.uexOnload = function(slibing_type){
+			switch (slibing_type) {
+			case 0://main
+				//uexWindow.openSlibing("1", "0", "nav.html", "", "", "75");
+				//uexWindow.openSlibing("2", "0", "bar.html", "", "", "75");
+				uexWindow.preOpenStart();
+				uexWindow.openPopover("p1", "0", "../popAnimition.html", "", 250, 0, 320, 460, "5", "");
+				//uexWindow.openPopover("p2", "0", "../uexCamera.html", "", 200, 0, 100, 100, "5", "");
+				//uexWindow.openPopover("p3", "0", "../uexCall.html", "", 0, 200, 100, 100, "5", "");
+				//uexWindow.openPopover("p4", "0", "../uexWindow.html", "", 200, 200, 100, 100, "5", "");
+				uexWindow.preOpenFinish();
+				break;
+			case 1://top
+				uexWindow.showSlibing("1");
+				break;
+			case 2://bottom
+				uexWindow.showSlibing("2");
+				break;
+			}
+		}
+		
+		function op(){
+			uexWindow.open('dvv', '0', 'index.html', '11', '', '', '0');
+		}
+	</script>
+	<style>
+	a, .btc{
+		font-size:1.5em;
+		color:#fff;
+		background:-webkit-gradient(linear, left top, left bottom, from(#a2a2a2), to(#010101), color-stop(0.5, #585858), color-stop(0.5, #2c2c2c));
+		 border:1px solid #000; 
+		 -webkit-border-radius:5px;
+		 text-align:center;
+	}
+	div{
+		text-align: center;
+	}
+
+	</style>
+</head>
+<body>
+<div class="vancl">
+<br>
+  <a href="javascript:void(0);" onclick="uexWindow.close('-1')">关闭当前window</a><br><br>
+  <input class="btc" type="button" value="返回" onclick="uexWindow.back();"><br><br>
+</body>
+</html>

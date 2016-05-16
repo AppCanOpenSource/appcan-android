@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<widget widgetId="" appId="12336365" version="00.00.0000" viewmode="" width="320" height="480" sreensize="4.3">
+<name>input_test2</name>
+<description>discuz1</description>
+<author email=""> </author>
+<icon src="icon.png" />
+<license href=""></license>
+<content src="index.html" encoding="utf-8" ></content>
+<update href="" period="1"/>
+<access network="true" localfs="true" remote_scripts="false"/>
+<logserverip>192.168.1.151</logserverip>
+</widget>

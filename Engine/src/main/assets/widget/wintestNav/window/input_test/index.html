@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html
+	class="ui-mobile landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+<head>
+<title></title>
+<meta charset="utf-8">
+<meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" href="css/ui-base.css">
+<link rel="stylesheet" href="css/ui-apple.css">
+<script src="js/zy_anim.js"></script>
+<script src="js/zy_control.js"></script>
+
+<script>
+zy_fix("header","footer",null,null);
+</script>
+</head>
+<body class="ui-mobile-viewport">
+
+	<div class="ui-header ui-bar-iphone ui-bar-glass ui-header-fixed" id="header">
+		<h1 class="ui-title dis_msg_title" id="msgs_title">Input_test</h1> 
+	</div>
+	
+    
+	<div id="login_page" class="ui-page ui-body-d  dis-body-bg ui-page-active">
+	<div data-role="button" class=" ui-corner-all ui-btn  ui-btn-b   ui-shadow" onclick="quit_wdg();"> <span class="ui-btn-inner ui-corner-all"> <span class="ui-btn-text">退出应用</span> </span></div> 
+<div data-role="button" class=" ui-corner-all ui-btn  ui-btn-b   ui-shadow" onclick="quit_wdg();"> <span class="ui-btn-inner ui-corner-all"> <span class="ui-btn-text">退出应用</span> </span></div> 
+<div data-role="button" class=" ui-corner-all ui-btn  ui-btn-b   ui-shadow" onclick="quit_wdg();"> <span class="ui-btn-inner ui-corner-all"> <span class="ui-btn-text">退出应用</span> </span></div> 
+<input type="text" class="ui-input-text ui-body-null ui-corner-all ui-shadow-inset ui-btn-d" />
+			
+	</div>
+	<input class="btc" type="button" value="返回" onclick="uexWindow.back();"><br><br>
+	<div class="ui-footer ui-bar-iphone ui-footer-fixed ui-bar-glass" id="footer">
+		<div class="ui-has-label">
+			<input name="msg_input" id="msg_input" type="text" value="" onclick="onfocus_test();" onchange="onchange_test();"
+				class="ui-input-text ui-body-null ui-corner-all ui-shadow-inset ui-btn-d" />
+		</div>
+	</div>
+</body>
+<script>
+function onfocus_test()
+{
+	alert("onfocus");
+}
+function onchange_test()
+{
+	alert("onchange");
+}
+function quit_wdg(){
+	alert('退出应用！');
+	uexWidget.finishWidget('exit app');
+}
+</script>
+</html>

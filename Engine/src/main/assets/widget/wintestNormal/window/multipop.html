@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" /><script type="text/javascript">
+	function change(){
+		var x = document.getElementById("xx").value;
+		var y = document.getElementById("yy").value;
+		var w = document.getElementById("ww").value;
+		var h = document.getElementById("hh").value;
+		uexWindow.setMultiPopoverFrame("multipop", x, y, w, h);
+	}
+	function evas(){
+		var value = document.getElementById("tit").innerHTML;
+		if(value == "这是MultiPopOver"){
+			document.getElementById("tit").innerHTML = "MultiPopOver被更改了";
+		}else{
+			document.getElementById("tit").innerHTML = "这是MultiPopOver";
+		}
+	}
+</script>
+<style>
+	body{
+		background:#27A73F;
+	}
+	a, .btc{
+		font-size:1.5em;
+		color:#fff;
+		background:-webkit-gradient(linear, left top, left bottom, from(#a2a2a2), to(#010101), color-stop(0.5, #585858), color-stop(0.5, #2c2c2c));
+		 border:1px solid #000; 
+		 -webkit-border-radius:5px;
+		 text-align:center;
+	}
+	div{
+		text-align: center;
+	}
+	</style>
+</head>
+<body>
+  <br><br>
+  <a href="http://wap.baidu.com">转到百度</a>
+  <div style="color:#ff00ff;font-size:2.5em;" id="tit">这是MultiPopOver</div><br><br>
+  <span>1.更改MultiPopOver大小和位置</span><br>
+  x：<input class="textbox" id="xx" type="text" value="0"><br>
+  y：<input class="textbox" id="yy" type="text" value="0"><br>
+  width：<input class="textbox" id="ww" type="text" value="600"><br>
+  height：<input class="textbox" id="hh" type="text" value="600"><br>
+  <a  href="javascript:void(0);" onclick=change()>更改</a><br><br> 
+  <span>2.指定Multipopover执行js脚本</span><br>
+  <span>表现效果为当前MultiPopOver的“这是MultiPopOver”字段被更改</span><br>
+  <a  href="javascript:void(0);" onclick="uexWindow.evaluateMultiPopoverScript('', 'multipop', 'p2', 'evas()')">执行</a><br><br>
+</body>
+</html>
