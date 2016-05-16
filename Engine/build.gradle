@@ -22,9 +22,6 @@ android {
         exclude 'META-INF/NOTICE.txt'
     }
     sourceSets {
-        main {
-            jniLibs.srcDirs = ['libs']
-        }
 
         // Move the tests to tests/java, tests/res, etc...
         instrumentTest.setRoot('tests')
