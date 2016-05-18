@@ -1,0 +1,288 @@
+body,p,div,ul,ol,li,dl,dt,dd,span,var,em,a,img,strong,table,td,tr,h2,h3,h4,h5,input{font-family: Arial, Helvetica, sans-serif;margin:0;padding:0;font-family:微软雅黑;-webkit-tap-highlight-color:rgba(0,0,0,0);}
+a img{border:none;}
+ul,ol{list-style-type:none;}
+.clear{height:0;clear:both;}
+a{text-decoration:none;}
+var,em{font-style:normal;font-weight:noraml;}
+
+body{width:100%;height:100%;background:url(../images/bj.png) 0 0 repeat;margin:0;padding:0;}
+.fk,.vancl,img{margin:0;padding:0;}
+/*字体*/
+@media screen and (min-width:769px) {
+body,p,div,ul,ol,li,dl,dt,dd,span,var,em,a,img,strong,table,td,tr,h2,h3,h4,h5,input{font-size:40px;}
+.van_top{top:0px;font-size:1em;}
+.foot_a a span{font-size:0.5em;}
+.foot_a a{width:75px;display:block;margin:3px 0 0 0;height:63px;-webkit-box-pack:center;-webkit-box-align:center;}
+.foot_a a:hover,.foot_a a:active{background:url(../images/nav_a.png) 0 0 no-repeat;}
+.foot_a a span{float:left;height:22px;line-height:22px;width:75px;text-align:center;color:#a0a0a0;}
+.foot_a a:hover span,.foot_a a:active span{color:#fff;}
+.vancl_logo img{width:75px;height:63px;margin:3px 0 0 0;}
+.show_img img{width:600px;height:502px;}
+.van_tq p,.van_tq_center span,.van_con_nav a,.spp,.spp span,.confire,.edit,.sp_r p{font-size:22px;}
+.sp_r p.fz,.sp_r p.fz span{font-size:22px;}
+.van_con_nav a{padding:3% 6%;}
+.van_content{position:absolute;top:65px;bottom:0;}
+.tg_d_kk p,.tg_d_kk p var{font-size:22px;}
+.tg_p span,.tg_p em,.tg_p var{font-size:18px;}
+.back{background:url(../images/back.png) 0 0 no-repeat;width:73px;height:48px;font-size:20px;display:block;padding:0 0 0 15px;line-height:46px;text-align:center;color:#fff;position:absolute;top:10px;left:15px;}
+.back:hover,.back:active{background:url(../images/back.png) 0 -48px no-repeat;}
+.city_list li a input{width:34px;height:34px;}
+.city_list li a em{background:url(../images/del.png) 0 0 no-repeat;width:38px;height:38px;display:block;float:left;}
+.enter{background:url(../images/enter.png) 0 0 no-repeat;width:35px;height:35px;float:right;margin:0 15px 0;}
+.jt_a{background:url(../images/jt.png) 0 -83px no-repeat;width:24px;height:27px;display:block;}
+.jt_a:hover,.jt_a:active{background:url(../images/jt.png) 0 -56px no-repeat;}
+.jt_a_left{background:url(../images/jt.png) 0 -28px no-repeat;width:24px;height:28px;display:block;}
+.jt_a_left:hover,.jt_a_left:active{background:url(../images/jt.png) 0 0 no-repeat;}
+.confire{position:absolute;top:10px;right:10px;-webkit-border-radius:10px;padding:1% 3%;}
+.edit{position:absolute;top:10px;left:10px;-webkit-border-radius:10px;}
+.mblArrow {width: 10px;height: 10px;}
+.sj .sj_sp span,.sj .sj_sp var{font-size:14px;}
+.ware_bottom span,.ware_bottom var,.ware_bottom em{font-size:14px;}
+.foot_a a em.sy{width:46px;height:34px;display:block;background:url(../images/sy_icon.png) 0 0 no-repeat;}
+.foot_a a:hover em.sy,.foot_a a:active em.sy{display:block;background:url(../images/sy_a.png) 0 0 no-repeat;}
+.foot_a a em.sp{width:46px;height:34px;display:block;background:url(../images/sp_icon.png) 0 0 no-repeat;}
+.foot_a a:hover em.sp,.foot_a a:active em.sp{display:block;background:url(../images/sp_a.png) 0 0 no-repeat;}
+.foot_a a em.tq{width:46px;height:34px;display:block;background:url(../images/tq_icon.png) 0 0 no-repeat;}
+.foot_a a:hover em.tq,.foot_a a:active em.tq{display:block;background:url(../images/tq_a.png) 0 0 no-repeat;}
+.foot_a a em.sz{width:46px;height:34px;display:block;background:url(../images/sz_icon.png) 0 0 no-repeat;}
+.foot_a a:hover em.sz,.foot_a a:active em.sz{display:block;background:url(../images/sz_a.png) 0 0 no-repeat;}
+.van_ft{border:1px dashed #a1a0a0;}
+}
+@media screen and (min-width:480px) and (max-width:768px) {
+body,p,div,ul,ol,li,dl,dt,dd,span,var,em,a,img,strong,table,td,tr,h2,h3,h4,h5,input{font-size:25px;}
+.van_top{top:0px;font-size:1.5em;margin:0;}
+.foot_a a span{font-size:0.8em;}
+.foot_a a{width:75px;margin:3px 0 0 0;display:block;height:63px;-webkit-box-pack:center;-webkit-box-align:center;}
+.foot_a a:hover,.foot_a a:active{background:url(../images/nav_a.png) 0 0 no-repeat;}
+.foot_a a span{float:left;height:22px;line-height:22px;width:75px;text-align:center;color:#a0a0a0;}
+.foot_a a:hover span,.foot_a a:active span{color:#fff;}
+.vancl_logo img{width:75px;height:63px;margin:3px 0 0 0;}
+.show_img img{width:400px;height:502px;}
+.van_tq p,.van_tq_center span,.van_con_nav a,.spp,.spp span,.confire,.edit,.sp_r p{font-size:20px;}
+.sp_r p.fz,.sp_r p.fz span{font-size:20px;}
+.van_con_nav a{padding:3% 5%;}
+.van_content{position:absolute;top:64px;bottom:70px;}
+.ware_xq{width:120px;}
+.xq_z p,.sj p,.sj p span,.sj p var{font-size:16px;}
+.tg_d_kk p,.tg_d_kk p var{font-size:22px;}
+.tg_p span,.tg_p em,.tg_p var{font-size:18px;}
+.back{background:url(../images/back.png) 0 0 no-repeat;width:73px;height:48px;font-size:20px;display:block;padding:0 0 0 15px;line-height:46px;text-align:center;color:#fff;position:absolute;top:8px;left:15px;}
+.back:hover,.back:active{background:url(../images/back.png) 0 -48px no-repeat;}
+.city_list li a input{width:34px;height:34px;}
+.city_list li a em{background:url(../images/del.png) 0 0 no-repeat;width:38px;height:38px;display:block;float:left;}
+.enter{background:url(../images/enter.png) 0 0 no-repeat;width:35px;height:35px;float:right;margin:0 15px 0;}
+.jt_a{background:url(../images/jt.png) 0 -83px no-repeat;width:24px;height:27px;display:block;}
+.jt_a:hover,.jt_a:active{background:url(../images/jt.png) 0 -56px no-repeat;}
+.jt_a_left{background:url(../images/jt.png) 0 -28px no-repeat;width:24px;height:28px;display:block;}
+.jt_a_left:hover,.jt_a_left:active{background:url(../images/jt.png) 0 0 no-repeat;}
+.confire{position:absolute;top:8px;right:10px;-webkit-border-radius:10px;padding:1% 3%;}
+.edit{position:absolute;top:8px;left:10px;-webkit-border-radius:10px;}
+.mblArrow {width: 10px;height: 10px;}
+.sj .sj_sp span,.sj .sj_sp var{font-size:14px;}
+.ware_bottom span,.ware_bottom var,.ware_bottom em{font-size:14px;}
+.foot_a a em.sy{width:46px;height:34px;display:block;background:url(../images/sy_icon.png) 0 0 no-repeat;}
+.foot_a a:hover em.sy,.foot_a a:active em.sy{display:block;background:url(../images/sy_a.png) 0 0 no-repeat;}
+.foot_a a em.sp{width:46px;height:34px;display:block;background:url(../images/sp_icon.png) 0 0 no-repeat;}
+.foot_a a:hover em.sp,.foot_a a:active em.sp{display:block;background:url(../images/sp_a.png) 0 0 no-repeat;}
+.foot_a a em.tq{width:46px;height:34px;display:block;background:url(../images/tq_icon.png) 0 0 no-repeat;}
+.foot_a a:hover em.tq,.foot_a a:active em.tq{display:block;background:url(../images/tq_a.png) 0 0 no-repeat;}
+.foot_a a em.sz{width:46px;height:34px;display:block;background:url(../images/sz_icon.png) 0 0 no-repeat;}
+.foot_a a:hover em.sz,.foot_a a:active em.sz{display:block;background:url(../images/sz_a.png) 0 0 no-repeat;}
+.van_ft{border:1px dashed #a1a0a0;}
+}
+@media screen and (min-width:320px) and (max-width:480px){
+body,p,div,ul,ol,li,dl,dt,dd,span,var,em,a,img,strong,table,td,tr,h2,h3,h4,h5,input{font-size:18px;}
+.van_top{top:0px;font-size:2em;}
+.foot_a a span{font-size:1em;}
+.foot_a a{width:75px;padding:3px 0 0 0;display:block;height:60px;-webkit-box-pack:center;-webkit-box-align:center;}
+.foot_a a:hover,.foot_a a:active{background:url(../images/nav_a.png) 0 0 no-repeat;}
+.foot_a a span{float:left;height:22px;line-height:22px;width:75px;text-align:center;color:#a0a0a0;}
+.foot_a a:hover span,.foot_a a:active span{color:#fff;}
+.vancl_logo img{width:75px;height:63px;}
+.show_img img{width:230x;height:300px;}
+.van_tq p,.van_tq_center span,.van_con_nav a,.spp,.spp span,.sp_r p{font-size:1.1em;}
+.sp_r p.fz,.sp_r p.fz span{font-size:20px;}
+.confire,.edit{font-size:20px;}
+.van_tq_center img{width:85px;height:70px;}
+.van_con_nav a{padding:2% 4%;}
+.van_content{position:absolute;top:53px;bottom:70px;}
+.ware_xq{width:120px;}
+.xq_z p,.sj p,.sj p span,.sj p var{font-size:16px;}
+.tg_d_kk p,.tg_d_kk p var{font-size:18px;}
+.tg_p span,.tg_p em,.tg_p var{font-size:18px;}
+.back{background:url(../images/back.png) 0 0 no-repeat;width:73px;height:48px;font-size:20px;display:block;padding:0 0 0 15px;line-height:46px;text-align:center;color:#fff;position:absolute;top:4px;left:10px;}
+.back:hover,.back:active{background:url(../images/back.png) 0 -48px no-repeat;}
+.city_list li a input{width:34px;height:34px;}
+.city_list li a em{background:url(../images/del.png) 0 0 no-repeat;width:38px;height:38px;display:block;float:left;}
+.enter{background:url(../images/enter.png) 0 0 no-repeat;width:35px;height:35px;float:right;margin:0 15px 0;}
+.jt_a{background:url(../images/jt.png) 0 -83px no-repeat;width:24px;height:27px;display:block;}
+.jt_a:hover,.jt_a:active{background:url(../images/jt.png) 0 -56px no-repeat;}
+.jt_a_left{background:url(../images/jt.png) 0 -28px no-repeat;width:24px;height:28px;display:block;}
+.jt_a_left:hover,.jt_a_left:active{background:url(../images/jt.png) 0 0 no-repeat;}
+.confire{position:absolute;top:3px;right:10px;-webkit-border-radius:10px;padding:2% 4%;display:block;}
+.edit{position:absolute;top:5px;left:10px;-webkit-border-radius:10px;}
+.mblArrow {width: 10px;height: 10px;}
+.sj .sj_sp span,.sj .sj_sp var{font-size:14px;}
+.ware_bottom span,.ware_bottom var,.ware_bottom em{font-size:14px;}
+.foot_a a em.sy{width:46px;height:34px;display:block;background:url(../images/sy_icon.png) 0 0 no-repeat;}
+.foot_a a:hover em.sy,.foot_a a:active em.sy{display:block;background:url(../images/sy_a.png) 0 0 no-repeat;}
+.foot_a a em.sp{width:46px;height:34px;display:block;background:url(../images/sp_icon.png) 0 0 no-repeat;}
+.foot_a a:hover em.sp,.foot_a a:active em.sp{display:block;background:url(../images/sp_a.png) 0 0 no-repeat;}
+.foot_a a em.tq{width:46px;height:34px;display:block;background:url(../images/tq_icon.png) 0 0 no-repeat;}
+.foot_a a:hover em.tq,.foot_a a:active em.tq{display:block;background:url(../images/tq_a.png) 0 0 no-repeat;}
+.foot_a a em.sz{width:46px;height:34px;display:block;background:url(../images/sz_icon.png) 0 0 no-repeat;}
+.foot_a a:hover em.sz,.foot_a a:active em.sz{display:block;background:url(../images/sz_a.png) 0 0 no-repeat;}
+.van_ft{border:1px dashed #a1a0a0;}
+}
+@media screen and (min-width:240px) and (max-width:320px) {
+body,p,div,ul,ol,li,dl,dt,dd,span,var,em,a,img,strong,table,td,tr,h2,h3,h4,h5,input{font-size:14px;}
+.van_top{top:0px;font-size:1.8em;}
+.foot_a a span{font-size:1.1em;}
+.foot_a a{width:32px;padding:0 9px 0 9px;display:block;height:45px;-webkit-box-pack:center;-webkit-box-align:center;}
+.foot_a a:hover,.foot_a a:active{background:url(../images/nav_a_320.png) 0 0 no-repeat;}
+.foot_a a span{float:left;height:23px;line-height:23px;width:32px;text-align:center;color:#a0a0a0;}
+.foot_a a:hover span,.foot_a a:active span{color:#fff;}
+.vancl_logo img{width:50px;height:45px;}
+.show_img img{width:278px;height:380px;}
+.app_img img{width:150px;height:150px;}
+.van_tq p,.van_tq_center span,.van_con_nav a,.spp,.spp span{font-size:1.1em;}
+.van_tq_center img{width:70px;height:55px;}
+.sp_r p.fz,.sp_r p.fz span,.sp_r p{font-size:16px;}
+.van_con_nav a{padding:2% 3%;}
+.van_content{position:absolute;top:37px;bottom:50px;}
+.xq_z p,.sj p,.sj p span,.sj p var{font-size:16px;}
+.ware_k_a a img{width:80px;height:35px;}
+.tg_d_kk p,.tg_d_kk p var{font-size:1.2em;}
+.tg_p span,.tg_p em,.tg_p var{font-size:1.2em;}
+.back{background:url(../images/back_240.png) 0 0 no-repeat;width:41px;height:25px;font-size:14px;display:block;padding:0 0 0 5px;line-height:25px;text-align:center;color:#fff;position:absolute;top:4px;left:10px;}
+.back:hover,.back:active{background:url(../images/back_240.png) 0 -25px no-repeat;}
+.confire,.edit{font-size:0.6em;}
+.city_list li a input{width:34px;height:34px;}
+.city_list li a span{font-size:1.5em;}
+.city_list li a em{background:url(../images/del.png) 0 0 no-repeat;width:38px;height:38px;display:block;float:left;}
+.enter{background:url(../images/enter_240.png) 0 0 no-repeat;width:19px;height:19px;float:right;margin:0 15px 0;}
+.jt_a{background:url(../images/jt_240.png) 0 -45px no-repeat;width:13px;height:15px;display:block;}
+.jt_a:hover,.jt_a:active{background:url(../images/jt_240.png) 0 -30px no-repeat;}
+.jt_a_left{background:url(../images/jt_240.png) 0 -15px no-repeat;width:13px;height:15px;display:block;}
+.jt_a_left:hover,.jt_a_left:active{background:url(../images/jt_240.png) 0 0 no-repeat;}
+.confire{position:absolute;top:4px;right:10px;-webkit-border-radius:10px;padding:1% 3%;}
+.edit{position:absolute;top:4px;left:10px;-webkit-border-radius:10px;}
+.mblArrow {width:8px;height:8px;}
+.sj .sj_sp span,.sj .sj_sp var{font-size:14px;}
+.ware_bottom span,.ware_bottom var,.ware_bottom em{font-size:14px;}
+.foot_a a em{margin:2px 0 0 0;}
+.foot_a a em.sy{width:32px;height:20px;display:block;background:url(../images/sy_icon_240.png) 0 0 no-repeat;}
+.foot_a a:hover em.sy,.foot_a a:active em.sy{display:block;background:url(../images/sy_a_240.png) 0 0 no-repeat;}
+.foot_a a em.sp{width:32px;height:20px;display:block;background:url(../images/sp_icon_240.png) 0 0 no-repeat;}
+.foot_a a:hover em.sp,.foot_a a:active em.sp{display:block;background:url(../images/sp_a_240.png) 0 0 no-repeat;}
+.foot_a a em.tq{width:32px;height:20px;display:block;background:url(../images/tq_icon_240.png) 0 0 no-repeat;}
+.foot_a a:hover em.tq,.foot_a a:active em.tq{display:block;background:url(../images/tq_a_240.png) 0 0 no-repeat;}
+.foot_a a em.sz{width:32px;height:20px;display:block;background:url(../images/sz_icon_240.png) 0 0 no-repeat;}
+.foot_a a:hover em.sz,.foot_a a:active em.sz{display:block;background:url(../images/sz_a_240.png) 0 0 no-repeat;}
+.van_ft{border:1px dashed #a1a0a0;}
+}
+@media screen  and (min-width:0) and (max-width:240px) {
+body,p,div,ul,ol,li,dl,dt,dd,span,var,em,a,img,strong,table,td,tr,h2,h3,h4,h5,input{font-size:12px;}
+.van_top{top:0px;font-size:1.5em;}
+.foot_a a span{font-size:1em;}
+.foot_a a{width:32px;padding:0 7px 0 6px;display:block;height:45px;margin:2px 0 0 0;-webkit-box-pack:center;-webkit-box-align:center;}
+.foot_a a:hover,.foot_a a:active{background:url(../images/nav_a_240.png) 0 0 no-repeat;}
+.foot_a a span{float:left;height:20px;line-height:20px;width:32px;text-align:center;color:#a0a0a0;}
+.foot_a a:hover span,.foot_a a:active span{color:#fff;}
+.vancl_logo img{width:45px;height:40px;margin:2px 0 0 0;}
+.show_img img{width:180x;height:200px;}
+.van_tq_center img{width:65px;height:50px;}
+.van_tq p,.van_tq_center span,.van_con_nav a,.spp,.spp span,.sp_r p{font-size:1.2em;}
+.van_con_nav a{padding:2% 3%;}
+.van_content{position:absolute;top:33px;bottom:0;}
+.ware_k_a a img{width:80px;height:35px;}
+.app_img img{width:150px;height:150px;}
+.tg_d_kk p,.tg_d_kk p var{font-size:1.2em;}
+.tg_p span,.tg_p em,.tg_p var{font-size:1.2em;}
+.xq_img img{width:150px;height:150px;}
+.back{background:url(../images/back_240.png) 0 0 no-repeat;width:41px;height:25px;font-size:14px;display:block;padding:0 0 0 5px;line-height:25px;text-align:center;color:#fff;position:absolute;top:5px;left:10px;}
+.back:hover,.back:active{background:url(../images/back_240.png) 0 -25px no-repeat;}
+.confire,.edit{font-size:14px;}
+.city_list li a input{width:24px;height:24px;}
+.city_list li a span{font-size:16px;}
+.city_list li a em{background:url(../images/del_240.png) 0 0 no-repeat;width:21px;height:21px;display:block;float:left;}
+.enter{background:url(../images/enter_240.png) 0 0 no-repeat;width:19px;height:19px;float:right;margin:0 15px 0;}
+.jt_a{background:url(../images/jt_240.png) 0 -45px no-repeat;width:13px;height:15px;display:block;}
+.jt_a:hover,.jt_a:active{background:url(../images/jt_240.png) 0 -30px no-repeat;}
+.jt_a_left{background:url(../images/jt_240.png) 0 -15px no-repeat;width:13px;height:15px;display:block;}
+.jt_a_left:hover,.jt_a_left:active{background:url(../images/jt_240.png) 0 0 no-repeat;}
+.confire{position:absolute;top:5px;right:5px;-webkit-border-radius:8px;padding:1% 3%;}.edit{position:absolute;top:3px;left:5px;}
+.mblArrow {width:5px;height:5px;}
+.sj .sj_sp span,.sj .sj_sp var{font-size:12px;}
+.ware_bottom span,.ware_bottom var,.ware_bottom em{font-size:12px;}.ware_bottom{padding:3px;}
+.ware_bottom span{display:block;width:100px;}
+.foot_a a em.sy{width:32px;height:20px;display:block;background:url(../images/sy_icon_240.png) 0 0 no-repeat;}
+.foot_a a:hover em.sy,.foot_a a:active em.sy{display:block;background:url(../images/sy_a_240.png) 0 0 no-repeat;}
+.foot_a a em.sp{width:32px;height:20px;display:block;background:url(../images/sp_icon_240.png) 0 0 no-repeat;}
+.foot_a a:hover em.sp,.foot_a a:active em.sp{display:block;background:url(../images/sp_a_240.png) 0 0 no-repeat;}
+.foot_a a em.tq{width:32px;height:20px;display:block;background:url(../images/tq_icon_240.png) 0 0 no-repeat;}
+.foot_a a:hover em.tq,.foot_a a:active em.tq{display:block;background:url(../images/tq_a_240.png) 0 0 no-repeat;}
+.foot_a a em.sz{width:32px;height:20px;display:block;background:url(../images/sz_icon_240.png) 0 0 no-repeat;}
+.foot_a a:hover em.sz,.foot_a a:active em.sz{display:block;background:url(../images/sz_a_240.png) 0 0 no-repeat;}
+.van_ft{border:1px dashed #a1a0a0;}
+}
+/*首页*/
+.fk{width:100%;height:100%;display:block;}
+.fk img{width:100%;height:100%;}
+.vancl{width:100%;height:100%;position:relative;margin:0;padding:0;}
+.van_top{top:0px;width:100%;text-align:center;
+background: -webkit-gradient(linear, left top, left bottom, from(#c97979), to(#a61818), color-stop(0.5, #b43b3b), color-stop(0.5, #a31818));
+color:#fff;text-shadow:1px 1px 5px #812a25;top:0;left:0;
+}
+.van_foot{bottom:0;left:0;width:100%;background: -webkit-gradient(linear, left top, left bottom, from(#a2a2a2), to(#010101), color-stop(0.5, #585858), color-stop(0.5, #2c2c2c));}
+.vancl_logo{width:20%;float:left;background: -webkit-gradient(linear, left top, left bottom, from(#a2a2a2), to(#010101), color-stop(0.5, #585858), color-stop(0.5, #2c2c2c));}
+
+.foot_a{width:100%;bottom:0px;margin:0px;background: -webkit-gradient(linear, left top, left bottom, from(#a2a2a2), to(#010101), color-stop(0.5, #585858), color-stop(0.5, #2c2c2c));}
+.foot_a tr td{-webkit-box-pack:center;-webkit-box-align:center;width:20%;background: -webkit-gradient(linear, left top, left bottom, from(#010101), to(#f2f2f2), color-stop(0.5, #f2f2f2), color-stop(0.5, #f2f2f2));}
+/*.foot_a a img{display:block;float:left;margin:3px 0 0 0;}*/
+
+
+.van_content{margin:5% 0 0 0;width:100%;}
+.van_show{margin:5%;width:90%;display:block;text-align:center;-webkit-box-shadow:1px 3px 10px #e6e6e6;}
+.show_img{border:1px solid #c0c0c0;padding:2%;position:relative;display:block;}
+
+.dz{width:48px;height:47px;display:block;background:url(../images/dz.png) 0 0 no-repeat;position:absolute;top:-18px;left:40%;}
+.sb{width:73px;height:75px;display:block;background:url(../images/sb.png) 0 0 no-repeat;position:absolute;bottom:-20px;left:-20px;}
+.van_tq{margin:1% 5%;width:90%;-webkit-box-sizing:border-box;display:block;position:relative;-webkit-box-shadow:1px 3px 10px #e6e6e6;border:1px solid #b1b1b1;-webkit-border-radius:10px;float:left;padding:10px;}
+.van_tq_left{width:33%;float:left;text-align:center;}
+.van_tq_center{width:33%;float:left;text-align:center;position:relative;}
+.van_tq_right{width:33%;float:left;text-align:center;}
+.van_tq_center span{text-align:center;display:block;position:absolute;bottom:5px;left:35%;color:#343434;}
+.van_tq p{color:#343434;}
+
+.van_tq_jt_right{position:absolute;right:1%;top:40%;}
+
+.van_tq_jt_left{position:absolute;left:1%;top:40%;}
+
+/*商品列表*/
+.van_con_nav{width:100%;padding:1% 2.5%;-webkit-box-sizing:border-box;display:-webkit-box;
+background:-webkit-gradient(linear, 0% 0, 0% 100%, from(#e4e4e4), to(#b5b7b4));box-shadow:0 1px 3px #737373 inset;border-top:1px solid #4d4d4d;}
+.van_con_nav div{-webkit-box-flex:1;text-align:center;padding:1% 0 0 0;}
+.van_con_nav a{/*float:left;*/display:block;color:#1c1b1b;
+}
+.van_con_nav a:hover,.van_con_nav a.nav_a{background:-webkit-gradient(linear, left top, left bottom, from(#fbde8f), to(#fad778), color-stop(0.5, #fccd4f), color-stop(0.5, #f8b501));
+-webkit-border-radius:10px;border:1px solid #dea303;}
+.wares{border:1px solid #b8b8b8;background:#fff;}
+.ware_xq{margin:0 0 0 5px;}
+.ware_top{padding:5px 5px 10px;}
+.ware_img,.ware_xq{float:left;}
+
+.sj p var,.ware_bottom var{color:#f90404;}
+.ware_bottom{border-top:1px dashed #afacac;line-height:30px;}
+.ware_bottom span{margin:0 10px;}
+.ware_k_a{margin:5px;}
+
+.van_ware_list{width:98%;margin:0 1%;}
+.wares{float:left;width:45.5%;margin:1% 2%;}
+.w_top_t{float:left;width:100%;}
+.ware_img{width:74px;}
+
+
+
+
+

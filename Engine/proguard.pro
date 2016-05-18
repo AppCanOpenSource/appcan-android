@@ -32,7 +32,7 @@
 -keep public class * extends android.support.v4.**
 -keep public class * extends android.app.Fragment
 -keep public class * extends android.support.v4.app.FragmentActivity
-
+-keep public class * extends org.xwalk.core.XWalkView
 -dontwarn org.chromium.**
 -dontwarn javax.annotation.**
 
@@ -201,6 +201,10 @@
 # Application classes that will be serialized/deserialized over Gson
 
 ##---------------End: proguard configuration for Gson  ----------
+
+-keepclassmembers class * {
+    @org.zywx.wbpalmstar.base.util.AppCanAPI *;
+}
 
 -keepclassmembers public class * {
     public void open(java.lang.String[]);

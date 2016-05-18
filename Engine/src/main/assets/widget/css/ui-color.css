@@ -1,0 +1,449 @@
+.c-m1
+{
+	background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,0.6) ), color-stop(50%, rgba(255,255,255,0.2) ),color-stop(51%, rgba(255, 255, 255, 0) ), to(rgba(255, 255, 255, 0) ));
+	background-image: -webkit-linear-gradient(top, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 51%, rgba(255,255,255,0) 100%);
+	background-image: linear-gradient(top, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 51%, rgba(255,255,255,0) 100%) ; 	
+}
+.c-m2
+{
+	background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,0.4)),to(rgba(255, 255, 255, 0)));
+	background-image: -webkit-linear-gradient(top, rgba(255,255,255,0.4) 0%,  rgba(255,255,255,0) 100%);
+	background-image: linear-gradient(top, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%) ; 	
+}
+.c-m3
+{
+	background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,0.4) ), color-stop(50%, rgba(255,255,255,0) ), to(rgba(255, 255, 255, 0.4) ));
+	background-image: -webkit-linear-gradient(top, rgba(255,255,255,0.4) 0%,rgba(255,255,255,0) 50%,  rgba(255,255,255,0.4) 100%);
+	background-image: linear-gradient(top, rgba(255,255,255,0.4) 0%,rgba(255,255,255,0) 50%,  rgba(255,255,255,0.4) 100%);
+}
+.c-m4
+{
+	background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,0) ), color-stop(50%, rgba(255,255,255,0.4) ), to(rgba(255, 255, 255, 0) ));
+	background-image: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(255,255,255,0.4) 50%,  rgba(255,255,255,0) 100%);
+	background-image: linear-gradient(top, rgba(255,255,255,0) 0%,rgba(255,255,255,0.4) 50%,  rgba(255,255,255,0) 100%);
+}
+.c-m5
+{
+	background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,0.4) ), color-stop(8%, rgba(255,255,255,0.2) ),color-stop(9%, rgba(255, 255, 255, 0.1)), to(rgba(255, 255, 255, 0)));
+	background-image: -webkit-linear-gradient(top, rgba(255,255,255,0.4) 0%,rgba(255,255,255,0.2) 8%,rgba(255,255,255,0.1) 9%,  rgba(255,255,255,0) 100%);
+	background-image: linear-gradient(top, rgba(255,255,255,0.4) 0%,rgba(255,255,255,0.2) 8%,rgba(255,255,255,0.1) 9%,  rgba(255,255,255,0) 100%);
+}
+
+.c-m6
+{
+	background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0.35) ), to(rgba(0, 0, 0, 0)));
+	background-image: -webkit-linear-gradient(top, rgba(0,0,0,0.35) 0%,  rgba(0,0,0,0) 100%);
+	background-image: linear-gradient(top, rgba(0,0,0,0.35) 0%,  rgba(0,0,0,0) 100%);
+}
+.c-m7
+{
+	background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0) ), to(rgba(0, 0, 0, 0.2)));
+	background-image: -webkit-linear-gradient(top, rgba(0,0,0,0) 0%,  rgba(0,0,0,0.2) 100%);
+	background-image: linear-gradient(top, rgba(0,0,0,0) 0%,  rgba(0,0,0,0.2) 100%);
+}
+.c-m8
+{
+	background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0.2) ), color-stop(50%, rgba(0,0,0,0)), to(rgba(0, 0, 0, 0.2)));
+	background-image: -webkit-linear-gradient(top, rgba(0,0,0,0.2) 0%,rgba(0,0,0,0) 50%,rgba(0,0,0,0.2) 100%);
+	background-image: linear-gradient(top, rgba(0,0,0,0.2) 0%,rgba(20,0,0,0) 50%,rgba(0,0,0,0.2) 100%);
+}
+.c-m9
+{
+	background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0) ), color-stop(50%, rgba(0,0,0,0.2) ), to(rgba(0, 0, 0, 0)));	
+	background-image: -webkit-linear-gradient(top, rgba(0,0,0,0) 0%,rgba(0,0,0,0.2) 50%,rgba(0,0,0,0) 100%);
+	background-image: linear-gradient(top, rgba(0,0,0,0) 0%,rgba(20,0,0,0.2) 50%,rgba(0,0,0,0) 100%);
+}
+.c-m10
+{
+	background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0) ), color-stop(91%, rgba(0,0,0,0.1) ),color-stop(92%, rgba(0, 0, 0, 0.2)), to(rgba(0, 0, 0, 0.4)));
+	background-image: -webkit-linear-gradient(top, rgba(0,0,0,0) 0%,rgba(0,0,0,0.1) 91%,rgba(0,0,0,0.2) 92%,rgba(0,0,0,.4) 100%);
+	background-image: linear-gradient(top, rgba(0,0,0,0) 0%,rgba(20,0,0,0.1) 91%,rgba(0,0,0,0.2) 92%,rgba(0,0,0,0.4) 100%);
+}
+.c-m11
+{
+background-image: -webkit-linear-gradient(0deg, rgba(255, 255, 255, .2) 50%, transparent 50%, transparent);
+background-image: linear-gradient(0deg, rgba(255, 255, 255, .2) 50%, transparent 50%, transparent);
+-webkit-background-size: 0.44em 100%;
+background-size: 0.44em 100%
+}
+.c-m12
+{
+	background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,0.2) ), color-stop(49%, rgba(255,255,255,0.1) ),color-stop(50%, rgba(255, 255, 255, 0) ), to(rgba(255, 255, 255, 0) ));
+	background-image: -webkit-linear-gradient(top, rgba(255,255,255,0.2) 0%,rgba(255,255,255,0.1) 49%,rgba(255,255,255,0) 50%,   rgba(255,255,255,0) 100%);
+	background-image: linear-gradient(top, rgba(255,255,255,0.2) 0%,rgba(255,255,255,0.1) 49%,rgba(255,255,255,0) 50%,   rgba(255,255,255,0) 100%);
+}
+.c-nav{
+	background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,0.4)),to(rgba(255, 255, 255, 0)));
+	background-image: -webkit-linear-gradient(top, rgba(255,255,255,0.2) 0%,  rgba(255,255,255,0) 100%);
+	background-image: linear-gradient(top, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%) ;
+}
+.c-bla
+{
+	background-color:#000;
+}
+.c-red
+{
+	background-color:#EB0000;
+}
+
+.c-blu
+{
+	background-color:#486A9A;
+}
+.c-blu1
+{
+	background-color:#4A8DDB;
+}
+.c-blu2
+{
+	background-color:#05B0DE;
+}
+.c-blu3{
+	background-color:#159dd1;
+}
+.c-wh
+{
+	background-color:#FFF;
+}
+
+.c-gra
+{
+	background-color:#E6E6E6;
+}
+.c-org
+{
+	background-color:#ED7D00;
+}
+.c-pink
+{
+	
+	background-color:#dc5f65;
+}
+.c-org1
+{
+	background-color:#F6EDDC;
+}
+.c-yellow{
+	background-color:#FEEDCB;
+}
+.c-lanse{
+	background-color:#00b9e7;
+}
+.c-chengse{
+	background-color:#dc855f;
+}
+.c-qianlv{
+	background-color:#b7dc5f;
+}
+.c-zongse1{
+	background-color:#b8b9b9;
+}
+.c-heise1{
+	background-color:#323232;
+}
+.c-l_hongse{
+	background-color:#dc655f;
+}
+.c-l_hongse1{
+	background-color:#d93131;
+}
+.c-l_hongse2{
+	background-color:#dc6e5f;
+}
+.c-l_huise{
+	background-color:#d5d6d6;
+}
+.c-l_lanse{
+	background-color:#5fa0dc;
+}
+.c-l_huangse{
+	background-color:#edf0f3;
+}
+.c-l_huangse1{
+	background-color:#e4e4e4;
+}
+
+.c-hui11{
+	background-color:#bcbec1;
+}
+.t-wh
+{
+	color:white;
+}
+
+.t-bla
+{
+	color:black;
+}
+
+.t-gra{
+	color:#727070;
+}
+
+.t-blu
+{
+	color:#385487;
+}
+.t-yel
+{
+	color:#FFF6C4;	
+}
+.t-hei{
+	color:#474239;
+}
+.t-hei1{
+	color:#121212;
+}
+.t-hong{
+	color:#ce0b0b;
+}
+.t-hui1{
+	color:#B2A58D;
+}
+.t-hui2{
+	color:#8C826F;
+}
+.t-hui3{
+	color:#b6b6b6;
+}
+.t-hui4{
+	color:#4a4a4a;
+}
+.t-hui5{
+	color:#7c7c7c;
+}
+.t-hui6{
+	color:#a1a1a1;
+}
+.t-hui7{
+	color:#6d6d6d;
+}
+.t-hui8{
+	color:#d2d2d2;
+}
+.t-hui9{
+	color:#878787;
+}
+.t-hui10{
+	color:#6a6969;
+}
+.t-hui11{
+	color:#474848;
+}
+.t-hui12{
+	color:#868686;
+}
+.t-hui13{
+	color:#989897;
+}
+.t-hui14{
+	color:#e2e1e1;
+}
+.t-lan0{
+	color:#4a5e7f;
+}
+.t-org
+{
+	color:#E69329;
+}
+.t-red1{color:#ce0b0b;}
+
+.t-qian{
+	color:#969595;
+}
+.t-qian1{
+	color:#4a4a4a;
+}
+.t-chi{
+	color:#605e5e;
+}
+.t-lansezi{
+	color:#0072e7;
+}
+.t-chengsezi{
+	color:#e77800;
+}
+.t-lvse0{
+	color:#468e07;
+}
+.b-bla
+{
+	border-color:black
+}
+.b-wh
+{
+	border-color:white
+}
+.b-gra
+{
+	border-color:#c9c9c9;
+}
+.b-blu
+{
+	border-color:#112E87;
+}
+.b-org
+{
+	border-color:#ED7D00;
+}
+.b_l_hong{
+	border-color:#b3524d;
+}
+.b-l_hong1{
+	border-color:#c02c2c;
+}
+.b-l_hong2{
+	border-color:#c56356;
+}
+.b-l_huise{
+	border-color:#b9bfc0;
+}
+.b-l_lanse{
+	border-color:#538ec4;
+}
+.b-l_huise{
+	border-color:#e9e9e9;
+}
+.b-l_huise1{
+	border:1px solid #ecebeb;
+}
+.b-l_huise2{
+	border:1px solid #d1d1d1;
+}
+.b-l_huise3{
+	border-bottom:1px solid #d1d1d1;
+}
+.b-l_1{
+	border:1px solid #c56941;
+}
+.c-lan{
+	background-color:#00b9e7;
+}
+.l_touming{
+	
+	background-color: #00b9e7;
+	opacity: 0.6;
+	min-height: 1.5em;
+	z-index: 0;
+	line-height:1.5em;
+	padding-left:0.9em;
+	margin-top:0.7em;
+	/*color:#000;*/
+}
+.l_huangse_tou{
+	/*background-color:#e5e5e6;*/
+	width:17em; 
+	min-height: 1.5em;
+	margin:0.8em;
+	opacity: 0.7;
+	padding:0.4em 0.5em;
+	line-height:1.3em;
+	/*border:1px solid #c5c5c7;*/
+}
+.m_col{
+	border-color:#0390b3;
+}
+.m_col1{
+	background-color:#e9e8e8;
+}
+.m_lg_bt{
+	color:#006780;
+}
+.m_fc{
+	color:#00a7d1;
+}
+.m_c{
+	background-image: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,0.5) 100%);
+    background-image: linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,0.5) 100%);
+}
+.m_blu{
+	color:#00b9e7;
+}
+.m_hui{
+	color:#959797;
+}
+.m_red{
+	background-color:#dc6b5f;
+}
+.m_b_red{
+	border-color:#de5125;
+}
+.m_y{
+	background-color:#dc945f;
+}
+.m_b_y{
+	border-color:#de8525;
+}
+.m_sblu{
+	background-color:#478da5;
+}
+.m_sbd{
+	border-color:#1c8ba6;
+}
+.b_yel{
+	border:1px solid #c56941;
+}
+.b_blu{
+	border:1px solid #9bbb50;
+}
+.l_touming1{
+	  
+	background-color: #00b9e7;
+	opacity: 0.3;
+	min-height: 1.5em;
+	z-index: 0;
+	width: 20em;
+	line-height:1.5em;
+	padding-left:0.9em;
+	color:#868686;
+}
+.t-h{
+	color:#333333;
+}
+.t-h1{
+	color:#464646;
+}
+.t-h2{
+	color:#9a9b9b;
+}
+.t-h3{
+	color:#585858;
+}
+.t-h4{
+	color:#4a4a4a;
+}
+.h-h5{
+	color:#969595;
+}
+.h-h6{
+	color:#bbbaba;
+}
+.t-h7{
+	color:#737373;
+}
+.t-h8{
+	color:#636262;
+}
+.t-dian{
+	color:#00b9e7;
+}
+.t-dian1{
+	color:#424242;
+}
+.m_blu2{
+	color:#0072e7;
+}
+.c-lun-blu{
+	background-color: #DAF2FC;
+}
+.btn-hov{
+	border-color: #A5A5A5 !important;
+	background-color: #A5A5A5;
+	color: #FFF;
+}
+.back-hover{
+	background-image: url(images/back-hov.png) !important;
+}
+.p-con-gra{
+	color:#868686;
+}

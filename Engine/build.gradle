@@ -13,10 +13,6 @@ import proguard.gradle.ProGuardTask
 
 apply plugin: 'com.android.application'
 
-dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
-}
-
 android {
     compileSdkVersion 22
     buildToolsVersion '23.0.2'
@@ -26,16 +22,6 @@ android {
         exclude 'META-INF/NOTICE.txt'
     }
     sourceSets {
-        main {
-            manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src']
-            resources.srcDirs = ['src']
-            aidl.srcDirs = ['src']
-            renderscript.srcDirs = ['src']
-            res.srcDirs = ['res']
-            assets.srcDirs = ['assets']
-            jniLibs.srcDirs = ['libs']
-        }
 
         // Move the tests to tests/java, tests/res, etc...
         instrumentTest.setRoot('tests')
@@ -56,9 +42,17 @@ android {
         applicationId 'org.zywx.wbpalmstar.widgetone.uex'
         minSdkVersion 14
         targetSdkVersion 19 //
-    //    multiDexEnabled true
+        //    multiDexEnabled true
     }
     productFlavors {
+        crosswalk {
+//            sourceSets.main.java.srcDirs = ['src/crosswalk/java','src/main/java']
+        }
+        webview {
+//            sourceSets.main.java.srcDirs = ['src/main/java','src/webview/java']
+        }
+        x5 {
+        }
     }
     buildTypes {
         debug {
@@ -75,6 +69,36 @@ android {
     }
 }
 
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    crosswalkCompile(name: 'crosswalk-19.49.514.0', ext: 'aar')
+    crosswalkCompile fileTree(dir: 'crosswalk/libs', include: '*.jar')
+    webviewCompile files('libs/libacedes-v1.jar')
+    compile files('libs/aceimageloader.jar')
+    compile files('libs/android-support-v4.jar')
+    compile files('libs/commons-io-2.4.jar')
+    compile files('libs/gson-2.2.4.jar')
+    compile files('libs/httpmime-4.1.3.jar')
+    webviewCompile files('libs/libacedes-v1.jar')
+    crosswalkCompile files('libs/libacedes_for_crosswalk.jar')
+    compile files('libs/wmqtt.jar')
+}
+
+
+/**--------------------------------------以下为导出jar部分--------------------------------------------**/
+
+ext {
+    // 内核版本，默认为webview
+    kernel = "crosswalk"
+}
+
+println "kernel is " + kernel
+
 //排除buildConfig,这里的路径应该设置与包名一致
 def buildConfigPath = "org/zywx/wbpalmstar/widgetone/uex/"
 
@@ -84,11 +108,14 @@ task clearJar(type: Delete) {
     delete 'build/outputs/jar/'+jarBaseName
 }
 
-task makeJar(type:Jar, dependsOn: ['compileReleaseJavaWithJavac']) {
+String kernelName=kernel
+def javacTaskName="compile"+kernelName.charAt(0).toUpperCase()+ kernelName.substring(1)+"ReleaseJavaWithJavac"
+
+task makeJar(type:Jar, dependsOn: [javacTaskName]) {
     //指定生成的jar名
     baseName jarBaseName
     //从哪里打包class文件
-    from('build/intermediates/classes/release/')
+    from('build/intermediates/classes/'+kernel+'/release/')
     //打包到jar后的目录结构
     into('')
     destinationDir = file('build/outputs/jar')
@@ -106,6 +133,9 @@ def androidJarDir = androidSDKDir.toString() + '/platforms/' + "${android.compil
 task proguardEngineJar(type: ProGuardTask, dependsOn: ['makeJar']) {
     injars('build/outputs/jar/AppCanEngine_un_proguard.jar')
     outjars('build/outputs/jar/AppCanEngine.jar')
-    libraryjars(androidJarDir)//支持aar
+    libraryjars(androidJarDir)
+    if(kernel=='crosswalk'){
+        libraryjars('libs/crosswalk-19.49.514.0.aar')
+    }
     configuration 'proguard.pro'
 }
