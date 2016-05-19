@@ -121,6 +121,12 @@
     <methods>;
 }
 
+
+-keep class org.zywx.wbpalmstar.engine.webview.ACEWebView {
+    <fields>;
+    <methods>;
+}
+
 -keep class org.zywx.wbpalmstar.engine.EUtil {
     <fields>;
     <methods>;
@@ -203,6 +209,12 @@
 
 -keepclassmembers class * {
     @org.zywx.wbpalmstar.base.util.AppCanAPI *;
+}
+
+-keep,allowobfuscation @interface android.support.annotation.Keep
+-keep @android.support.annotation.Keep class *
+-keepclassmembers class * {
+    @android.support.annotation.Keep *;
 }
 
 -keepclassmembers public class * {

@@ -25,6 +25,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.support.annotation.Keep;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Xml;
@@ -57,6 +58,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipException;
 
+@Keep
 public class WDataManager {
     private static Context m_context;
     // private static WDataBaseAdapter1 m_mdba = null;
@@ -80,7 +82,10 @@ public class WDataManager {
     // private static String m_spaceWidgetVer = "spaceWidgetVer";
     private static String m_spaceWidgetDBId = "spaceWidgetDBId";
     // private String m_widgetlistPath = "/widgetone/widgetapp";
+
+    @Keep
     public static WWidgetData m_rootWgt = null;
+
     // public static String m_wgtPath =null;
     public static String m_wgtsPath = null;
     public static String m_sboxPath = null;
