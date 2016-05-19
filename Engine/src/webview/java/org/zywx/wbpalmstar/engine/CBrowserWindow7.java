@@ -337,8 +337,7 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
     @Override
     public void onReceivedSslError(WebView view, SslErrorHandler handler,
                                    SslError error) {
-
-        handler.proceed();
+        super.onReceivedSslError(view,handler,error);
     }
 
     @Override

@@ -255,7 +255,7 @@ public class CBrowserWindow extends EXWebViewClient {
 
     @Override
     public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-        handler.proceed();
+        super.onReceivedSslError(view,handler,error);
     }
 
 	/*
