@@ -462,7 +462,7 @@ public class EUExWindow extends EUExBase {
         try {
             JSONObject jsonObject = new JSONObject(json);
             String path = jsonObject.optString(BUtility.m_loadingImagePath);
-            path = BUtility.makeRealPath(path, mBrwView);
+            path = BUtility.getRealPathWithCopyRes(mBrwView,path);
             long time = jsonObject.optLong(BUtility.m_loadingImageTime);
             SharedPreferences sp = mContext.getSharedPreferences(
                     BUtility.m_loadingImageSp, Context.MODE_PRIVATE);
@@ -3738,6 +3738,9 @@ public class EUExWindow extends EUExBase {
                 break;
             case MSG_FUNCTION_SETORIENTATION:
                 if (param != null) setOrientationMsg(param);
+                break;
+            case MSG_FUNCTION_SETLOADINGIMAGEPATH:
+                if(param != null) setLoadingImagePathMsg(param);
                 break;
             case MSG_FUNCTION_SETAUTOROTATEENABLE:
                 if(param != null) setAutorotateEnableMsg(param);
