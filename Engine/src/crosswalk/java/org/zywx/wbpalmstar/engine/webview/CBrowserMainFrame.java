@@ -21,15 +21,10 @@ import org.zywx.wbpalmstar.base.WebViewSdkCompat;
 import org.zywx.wbpalmstar.engine.EBrowserActivity;
 import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.EBrowserWindow;
-import org.zywx.wbpalmstar.engine.ELinkedList;
 import org.zywx.wbpalmstar.engine.ESystemInfo;
-import org.zywx.wbpalmstar.engine.universalex.EUExBase;
 import org.zywx.wbpalmstar.engine.universalex.EUExManager;
 import org.zywx.wbpalmstar.engine.universalex.EUExScript;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
-import org.zywx.wbpalmstar.engine.universalex.ThirdPluginObject;
-
-import java.util.Map;
 
 public class CBrowserMainFrame extends XWalkUIClient {
     protected String mParms;
@@ -297,35 +292,7 @@ public class CBrowserMainFrame extends XWalkUIClient {
             final EUExManager uexManager = browserView.getEUExManager();
             if (uexManager != null) {
                 BDebug.i("appCanJsParse", "dispatch parseStr " + parseStr);
-                ELinkedList<EUExBase> plugins = uexManager
-                        .getThirdPlugins();
-                for (EUExBase plugin : plugins) {
-                    if (plugin.getUexName().equals(uexName)) {
-                        Object object = uexManager.callMethod(plugin,
-                                method, args);
-                        if (null != object) {
-                            result.confirmWithResult(object.toString());
-                            return;
-                        }
-                    }
-                }
-                // 调用单实例插件
-                Map<String, ThirdPluginObject> thirdPlugins = uexManager
-                        .getPlugins();
-                ThirdPluginObject thirdPluginObject = thirdPlugins
-                        .get(uexName);
-                if (thirdPluginObject != null
-                        && thirdPluginObject.isGlobal
-                        && thirdPluginObject.pluginObj != null) {
-                    Object object = uexManager.callMethod(
-                            thirdPluginObject.pluginObj,
-                            method, args);
-                    if (null != object) {
-                        result.confirmWithResult(object.toString());
-                        return;
-                    }
-                }
-                BDebug.e("plugin", uexName, "not exist...");
+                result.confirmWithResult(uexManager.disPatchMethod(uexName,method,args));
             }
         } catch (Exception e) {
             e.printStackTrace();

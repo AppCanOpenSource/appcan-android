@@ -37,13 +37,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.WebViewSdkCompat;
-import org.zywx.wbpalmstar.engine.universalex.EUExBase;
 import org.zywx.wbpalmstar.engine.universalex.EUExManager;
 import org.zywx.wbpalmstar.engine.universalex.EUExScript;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
-import org.zywx.wbpalmstar.engine.universalex.ThirdPluginObject;
-
-import java.util.Map;
 
 public class CBrowserMainFrame extends WebChromeClient {
 
@@ -181,37 +177,7 @@ public class CBrowserMainFrame extends WebChromeClient {
             final EUExManager uexManager = browserView.getEUExManager();
             if (uexManager != null) {
                 BDebug.i("appCanJsParse", "dispatch parseStr " + parseStr);
-
-                ELinkedList<EUExBase> plugins = uexManager
-                        .getThirdPlugins();
-                for (EUExBase plugin : plugins) {
-                    if (plugin.getUexName().equals(uexName)) {
-                        String resultStr = uexManager.callMethod(plugin,
-                                method, args);
-                        if (null != resultStr) {
-                            result.confirm(resultStr);
-                        }
-                        return;
-                    }
-                }
-                // 调用单实例插件
-                Map<String, ThirdPluginObject> thirdPlugins = uexManager
-                        .getPlugins();
-                ThirdPluginObject thirdPluginObject = thirdPlugins
-                        .get(uexName);
-                if (thirdPluginObject != null
-                        && thirdPluginObject.isGlobal
-                        && thirdPluginObject.pluginObj != null) {
-                    String resultStr = uexManager.callMethod(
-                            thirdPluginObject.pluginObj,
-                            method, args);
-                    if (null != resultStr) {
-                        result.confirm(resultStr);
-                    }
-                    return;
-                }
-                BDebug.e("plugin", uexName, "not exist...");
-                result.confirm(EUExManager.getReturn(204, "plugin " + uexName + " not exist..."));
+                result.confirm(uexManager.disPatchMethod(uexName,method,args));
             }
         } catch (Exception e) {
             e.printStackTrace();
