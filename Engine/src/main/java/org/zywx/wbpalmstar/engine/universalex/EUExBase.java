@@ -30,12 +30,11 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import org.zywx.wbpalmstar.base.BDebug;
+import org.zywx.wbpalmstar.base.WebViewSdkCompat;
 import org.zywx.wbpalmstar.base.view.BaseFragment;
 import org.zywx.wbpalmstar.engine.EBrowserActivity;
 import org.zywx.wbpalmstar.engine.EBrowserAnimation;
@@ -630,7 +629,7 @@ public abstract class EUExBase {
      */
     public final String getCookie(String inUrl) {
 
-        return CookieManager.getInstance().getCookie(inUrl);
+        return WebViewSdkCompat.getCookie(inUrl);
     }
 
     /**
@@ -649,8 +648,7 @@ public abstract class EUExBase {
          * String host = i.getHost(); cookie = cookie + "; Domain=" + host +
          * ";"; }catch (Exception e) { ; } }
          **/
-        CookieManager.getInstance().setCookie(inUrl, cookie);
-        CookieSyncManager.getInstance().sync();
+        WebViewSdkCompat.setCookie(inUrl,cookie);
     }
 
     /**

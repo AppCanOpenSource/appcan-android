@@ -22,9 +22,9 @@ import android.content.Context;
 import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
-import android.webkit.WebSettings.ZoomDensity;
 
 import org.zywx.wbpalmstar.base.BDebug;
+import org.zywx.wbpalmstar.base.WebViewSdkCompat;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -50,7 +50,7 @@ public class ESystemInfo {
     public int mDefaultFontSize;
     public int mDefaultBounceHeight;
     public int mDefaultNatvieFontSize;
-    public ZoomDensity mDefaultzoom;
+    public WebViewSdkCompat.ZoomDensityCompat mDefaultzoom;
     public boolean mScaled;
     public boolean mFinished;
     public int mSwipeRate = 1000;
@@ -88,21 +88,21 @@ public class ESystemInfo {
             case DisplayMetrics.DENSITY_LOW: {
                 mDefaultFontSize = 14;
                 mDefaultNatvieFontSize = 10;
-                mDefaultzoom = ZoomDensity.CLOSE;
+                mDefaultzoom = WebViewSdkCompat.ZoomDensityCompat.CLOSE;
                 mDefaultBounceHeight = 40;
             }
             break;
             case DisplayMetrics.DENSITY_MEDIUM: {
                 mDefaultFontSize = 16;
                 mDefaultNatvieFontSize = 13;
-                mDefaultzoom = ZoomDensity.MEDIUM;
+                mDefaultzoom = WebViewSdkCompat.ZoomDensityCompat.MEDIUM;
                 mDefaultBounceHeight = 50;
             }
             break;
             case DisplayMetrics.DENSITY_HIGH: {
                 mDefaultFontSize = 24;
                 mDefaultNatvieFontSize = 16;
-                mDefaultzoom = ZoomDensity.FAR;
+                mDefaultzoom = WebViewSdkCompat.ZoomDensityCompat.FAR;
                 mDefaultBounceHeight = 60;
             }
             break;
@@ -110,7 +110,7 @@ public class ESystemInfo {
             {
                 mDefaultFontSize = 32;
                 mDefaultNatvieFontSize = 16;
-                mDefaultzoom = ZoomDensity.FAR;
+                mDefaultzoom = WebViewSdkCompat.ZoomDensityCompat.FAR;
                 mDefaultBounceHeight = 70;
             }
             break;
@@ -118,7 +118,7 @@ public class ESystemInfo {
             {
                 mDefaultFontSize = 32;
                 mDefaultNatvieFontSize = 16;
-                mDefaultzoom = ZoomDensity.FAR;
+                mDefaultzoom = WebViewSdkCompat.ZoomDensityCompat.FAR;
                 mDefaultBounceHeight = 76;
             }
             break;
@@ -126,21 +126,21 @@ public class ESystemInfo {
             {
                 mDefaultFontSize = 48;
                 mDefaultNatvieFontSize = 17;
-                mDefaultzoom = ZoomDensity.FAR;
+                mDefaultzoom = WebViewSdkCompat.ZoomDensityCompat.FAR;
                 mDefaultBounceHeight = 112;
             }
             break;
             case 640: {
                 mDefaultFontSize = 64;
                 mDefaultNatvieFontSize = 17;
-                mDefaultzoom = ZoomDensity.FAR;
+                mDefaultzoom = WebViewSdkCompat.ZoomDensityCompat.FAR;
                 mDefaultBounceHeight = 150;
             }
             break;
             default: {
                 mDefaultFontSize = 48;
                 mDefaultNatvieFontSize = 17;
-                mDefaultzoom = ZoomDensity.FAR;
+                mDefaultzoom = WebViewSdkCompat.ZoomDensityCompat.FAR;
                 mDefaultBounceHeight = 105;
 
                 if (mDensity > 3) { //适配更高密度设备

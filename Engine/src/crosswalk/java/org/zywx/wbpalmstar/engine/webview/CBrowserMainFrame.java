@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Message;
 import android.view.KeyEvent;
-import android.webkit.CookieSyncManager;
 import android.webkit.ValueCallback;
 import android.widget.EditText;
 
@@ -18,6 +17,7 @@ import org.xwalk.core.XWalkJavascriptResult;
 import org.xwalk.core.XWalkUIClient;
 import org.xwalk.core.XWalkView;
 import org.zywx.wbpalmstar.base.BDebug;
+import org.zywx.wbpalmstar.base.WebViewSdkCompat;
 import org.zywx.wbpalmstar.engine.EBrowserActivity;
 import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.EBrowserWindow;
@@ -174,8 +174,6 @@ public class CBrowserMainFrame extends XWalkUIClient {
                 target.loadUrl(weinreString);
             }
 
-            CookieSyncManager.getInstance().sync();
-
             BDebug.i(url, "   loaded");
         }
 
@@ -209,7 +207,7 @@ public class CBrowserMainFrame extends XWalkUIClient {
     @Override
     public void openFileChooser(XWalkView view, ValueCallback<Uri> uploadFile,
                                 String acceptType, String capture) {
-        ((EBrowserActivity) view.getContext()).setmUploadMessage(uploadFile);
+        ((EBrowserActivity) view.getContext()).setmUploadMessage(getCompatCallback(uploadFile));
         Intent i = new Intent(Intent.ACTION_GET_CONTENT);
         i.addCategory(Intent.CATEGORY_OPENABLE);
         i.setType("*/*");
@@ -333,4 +331,14 @@ public class CBrowserMainFrame extends XWalkUIClient {
             e.printStackTrace();
         }
     }
+
+    public WebViewSdkCompat.ValueCallback<Uri> getCompatCallback(final ValueCallback<Uri> uploadMsg){
+        return new WebViewSdkCompat.ValueCallback<Uri>() {
+            @Override
+            public void onReceiveValue(Uri uri) {
+                uploadMsg.onReceiveValue(uri);
+            }
+        };
+    }
+
 }

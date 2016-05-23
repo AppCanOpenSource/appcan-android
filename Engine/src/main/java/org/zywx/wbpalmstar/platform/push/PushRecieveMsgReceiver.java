@@ -18,23 +18,6 @@
 
 package org.zywx.wbpalmstar.platform.push;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.reflect.Field;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-
-import org.apache.http.cookie.SM;
-import org.json.JSONObject;
-import org.zywx.wbpalmstar.base.BUtility;
-import org.zywx.wbpalmstar.engine.EBrowserActivity;
-import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
-import org.zywx.wbpalmstar.platform.push.report.PushReportConstants;
-import org.zywx.wbpalmstar.platform.push.report.PushReportUtility;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -49,8 +32,25 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.text.TextUtils;
-import android.webkit.CookieManager;
 import android.widget.RemoteViews;
+
+import org.apache.http.cookie.SM;
+import org.json.JSONObject;
+import org.zywx.wbpalmstar.base.BUtility;
+import org.zywx.wbpalmstar.base.WebViewSdkCompat;
+import org.zywx.wbpalmstar.engine.EBrowserActivity;
+import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
+import org.zywx.wbpalmstar.platform.push.report.PushReportConstants;
+import org.zywx.wbpalmstar.platform.push.report.PushReportUtility;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.reflect.Field;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.SimpleDateFormat;
 
 public class PushRecieveMsgReceiver extends BroadcastReceiver {
 
@@ -227,7 +227,7 @@ public class PushRecieveMsgReceiver extends BroadcastReceiver {
             URL uRL = new URL(iconUrl);
             HttpURLConnection connection = (HttpURLConnection) uRL
                     .openConnection();
-            String cookie = CookieManager.getInstance().getCookie(iconUrl);
+            String cookie = WebViewSdkCompat.getCookie(iconUrl);
             if (null != cookie) {
                 connection.setRequestProperty(SM.COOKIE, cookie);
             }

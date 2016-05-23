@@ -25,12 +25,13 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.net.Uri;
-import android.webkit.JsPromptResult;
-import android.webkit.JsResult;
-import android.webkit.ValueCallback;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
 import android.widget.EditText;
+
+import com.tencent.smtt.export.external.interfaces.JsPromptResult;
+import com.tencent.smtt.export.external.interfaces.JsResult;
+import com.tencent.smtt.sdk.ValueCallback;
+import com.tencent.smtt.sdk.WebChromeClient;
+import com.tencent.smtt.sdk.WebView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -211,7 +212,6 @@ public class CBrowserMainFrame extends WebChromeClient {
                 }
                 BDebug.e("plugin", uexName, "not exist...");
                 result.confirm(EUExManager.getReturn(204, "plugin " + uexName + " not exist..."));
-
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -247,7 +247,6 @@ public class CBrowserMainFrame extends WebChromeClient {
         ((EBrowserActivity) mContext).startActivityForResult(Intent.createChooser(i, "File Chooser"),
                 EBrowserActivity.FILECHOOSER_RESULTCODE);
     }
-
 
     public WebViewSdkCompat.ValueCallback<Uri> getCompatCallback(final ValueCallback<Uri> uploadMsg){
         return new WebViewSdkCompat.ValueCallback<Uri>() {

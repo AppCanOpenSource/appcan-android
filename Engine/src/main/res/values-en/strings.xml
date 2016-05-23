@@ -2,7 +2,7 @@
 <resources>
 
     <!-- common use通用字符串 -->
-    <string name="app_name">appcantemplate</string>
+    <string name="app_name">Engine</string>
     <string name="back">Back</string>
     <string name="confirm">Ok</string>
     <string name="cancel">Cancel</string>

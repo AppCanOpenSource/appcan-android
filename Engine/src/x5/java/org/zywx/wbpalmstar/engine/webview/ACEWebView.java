@@ -19,11 +19,17 @@
 package org.zywx.wbpalmstar.engine.webview;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.os.Build;
-import android.webkit.DownloadListener;
-import android.webkit.WebView;
+import android.view.View;
+
+import com.tencent.smtt.sdk.DownloadListener;
+import com.tencent.smtt.sdk.QbSdk;
+import com.tencent.smtt.sdk.WebView;
 
 import org.zywx.wbpalmstar.acedes.EXWebViewClient;
+import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.engine.CBrowserMainFrame;
 import org.zywx.wbpalmstar.engine.CBrowserMainFrame7;
 import org.zywx.wbpalmstar.engine.CBrowserWindow;
@@ -32,6 +38,7 @@ import org.zywx.wbpalmstar.engine.EBrowserBaseSetting;
 import org.zywx.wbpalmstar.engine.EBrowserSetting;
 import org.zywx.wbpalmstar.engine.EBrowserSetting7;
 import org.zywx.wbpalmstar.engine.EBrowserView;
+import org.zywx.wbpalmstar.widgetone.dataservice.WDataManager;
 
 
 /**
@@ -46,6 +53,39 @@ public class ACEWebView extends WebView implements DownloadListener {
 		super(context);
         this.mContext=context;
 	}
+
+    @Override
+    protected boolean drawChild(Canvas canvas, View child, long drawingTime) {
+        	//Debug使用，用于在debug时在页面呈现内核类型和版本
+                	boolean ret = super.drawChild(canvas, child, drawingTime);
+            if (WDataManager.sRootWgt==null){
+                return ret;
+            }
+        	int debug = WDataManager.sRootWgt.m_appdebug;
+        	if (debug == 1&& BDebug.DEBUG) {
+            		canvas.save();
+            		Paint paint = new Paint();
+            		paint.setColor(0x7fff0000);
+            		paint.setTextSize(24.f);
+            		paint.setAntiAlias(true);
+            		if (getX5WebViewExtension() != null) {
+                			canvas.drawText(this.getContext().getPackageName() + "-pid:"
+                        					+ android.os.Process.myPid(), 10, 50, paint);
+                			canvas.drawText(
+                        					"X5  Core:" + QbSdk.getTbsVersion(this.getContext()),
+                        					10, 100, paint);
+                		} else {
+                			canvas.drawText(this.getContext().getPackageName() + "-pid:"
+                        					+ android.os.Process.myPid(), 10, 50, paint);
+                			canvas.drawText("Sys Core", 10, 100, paint);
+                		}
+            		canvas.drawText(Build.MANUFACTURER, 10, 150, paint);
+            		canvas.drawText(Build.MODEL, 10, 200, paint);
+            		canvas.restore();
+            	}
+        	return ret;
+        }
+
 
     public void init(EBrowserView eBrowserView,boolean webApp) {
         if (Build.VERSION.SDK_INT <= 7) {
@@ -97,7 +137,6 @@ public class ACEWebView extends WebView implements DownloadListener {
                 contentDisposition, mimetype, contentLength);
     }
 
-
     @Override
     public void destroy() {
         mBaSetting=null;
@@ -112,11 +151,11 @@ public class ACEWebView extends WebView implements DownloadListener {
         return 1.0f;
     }
 
-    public int getScrollYWrap() {
-        return getScrollY();
+    public int getHeightWrap(){
+        return getView().getHeight();
     }
 
-    public int getHeightWrap() {
-        return getHeight();
+    public int getScrollYWrap() {
+        return getView().getScrollY();
     }
 }

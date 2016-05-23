@@ -35,13 +35,11 @@ android {
     }
     productFlavors {
         crosswalk {
-//            sourceSets.main.java.srcDirs = ['src/crosswalk/java','src/main/java']
         }
         system {
-//            sourceSets.main.java.srcDirs = ['src/main/java','src/webview/java']
         }
-//        tbs {
-//        }
+        x5 {
+        }
     }
     buildTypes {
         debug {
@@ -76,4 +74,5 @@ dependencies {
     systemCompile files('src/libs/libacedes-v1.jar')
     crosswalkCompile files('src/libs/libacedes_for_crosswalk.jar')
     compile files('libs/wmqtt.jar')
+    x5Compile fileTree(dir: 'src/x5/libs', include: '*.jar')
 }

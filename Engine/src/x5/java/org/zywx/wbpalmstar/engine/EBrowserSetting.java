@@ -19,10 +19,9 @@
 package org.zywx.wbpalmstar.engine;
 
 import android.os.Build;
-import android.webkit.WebSettings;
-import android.webkit.WebSettings.RenderPriority;
 
-import org.zywx.wbpalmstar.base.BConstant;
+import com.tencent.smtt.sdk.WebSettings;
+import com.tencent.smtt.sdk.WebSettings.RenderPriority;
 
 import java.lang.reflect.Method;
 
@@ -54,7 +53,6 @@ public class EBrowserSetting implements EBrowserBaseSetting {
         mWebSetting = inView.getSettings();
         mBrwView = inView;
         USERAGENT_NEW = mWebSetting.getUserAgentString() + USERAGENT_APPCAN;
-        BConstant.USERAGENT_NEW=mWebSetting.getUserAgentString() + USERAGENT_APPCAN;
     }
 
     public void initBaseSetting(boolean webApp) {

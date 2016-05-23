@@ -131,8 +131,8 @@ public class MySpaceView extends RelativeLayout implements OnClickListener, OnIt
         lastUpdateRecmdDay = sp.getInt(USER_SP_LAST_UPDATE_RECMD_APPS_TIME, 0);
         currentLoginInfo = getLoginInfo();
         newLoginInfo = new LoginInfo();
-        mainAppId = WDataManager.m_rootWgt.m_appId;
-        if (WDataManager.m_rootWgt.getSpaceMoreAppStatus() == WWidgetData.F_MYSPACEMOREAPP_OPEN) {
+        mainAppId = WDataManager.sRootWgt.m_appId;
+        if (WDataManager.sRootWgt.getSpaceMoreAppStatus() == WWidgetData.F_MYSPACEMOREAPP_OPEN) {
             canSeeMoreWidget = true;
         }
         // mainAppId = "11007818";10030629 10007743

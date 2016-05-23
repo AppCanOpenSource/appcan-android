@@ -27,7 +27,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.webkit.CookieManager;
 import android.webkit.MimeTypeMap;
 import android.webkit.URLUtil;
 import android.widget.Toast;
@@ -35,6 +34,7 @@ import android.widget.Toast;
 import org.apache.http.cookie.SM;
 import org.apache.http.protocol.HTTP;
 import org.zywx.wbpalmstar.base.BConstant;
+import org.zywx.wbpalmstar.base.WebViewSdkCompat;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 
 import java.io.File;
@@ -269,6 +269,6 @@ public class EDownloadDialog extends ProgressDialog implements Runnable {
 
     private final String getCookie(String inUrl) {
 
-        return CookieManager.getInstance().getCookie(inUrl);
+        return WebViewSdkCompat.getCookie(inUrl);
     }
 }
