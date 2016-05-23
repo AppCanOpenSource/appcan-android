@@ -19,13 +19,14 @@
 package org.zywx.wbpalmstar.platform.memoryControl;
 
 
-import org.zywx.wbpalmstar.base.BDebug;
-
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+
+import org.zywx.wbpalmstar.base.BDebug;
+import org.zywx.wbpalmstar.engine.ENotification;
 
 public class KeepForeService extends Service {
 
@@ -59,10 +60,9 @@ public class KeepForeService extends Service {
     private Notification makeNotify() {
         Intent notyIntent = new Intent(this, KeepForeService.class);
         PendingIntent contentIntent = PendingIntent.getService(this, nid, notyIntent, PendingIntent.FLAG_ONE_SHOT);
-        Notification notification = new Notification();
+        Notification notification = ENotification.buildNotification(this,contentIntent,"","",0);
         notification.defaults = 0;
         notification.flags = Notification.FLAG_FOREGROUND_SERVICE;
-        notification.setLatestEventInfo(this, "", "", contentIntent);
         return notification;
     }
 
