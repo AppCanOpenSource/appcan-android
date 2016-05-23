@@ -33,8 +33,6 @@ import com.tencent.smtt.sdk.ValueCallback;
 import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebView;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.WebViewSdkCompat;
 import org.zywx.wbpalmstar.engine.universalex.EUExManager;
@@ -157,27 +155,11 @@ public class CBrowserMainFrame extends WebChromeClient {
             if (!(view instanceof EBrowserView)) {
                 return;
             }
-            JSONObject json = new JSONObject(parseStr);
-            String uexName = json.optString("uexName");
-            String method = json.optString("method");
-            JSONArray jsonArray = json.getJSONArray("args");
-            JSONArray typesArray = json.getJSONArray("types");
-            int length = jsonArray.length();
-            String[] args = new String[length];
-            for (int i = 0; i < length; i++) {
-                String type = typesArray.getString(i);
-                String arg = jsonArray.getString(i);
-                if ("undefined".equals(type) && "null".equals(arg)) {
-                    args[i] = null;
-                } else {
-                    args[i] = arg;
-                }
-            }
             EBrowserView browserView = (EBrowserView) view;
             final EUExManager uexManager = browserView.getEUExManager();
             if (uexManager != null) {
                 BDebug.i("appCanJsParse", "dispatch parseStr " + parseStr);
-                result.confirm(uexManager.disPatchMethod(uexName,method,args));
+                result.confirm(uexManager.disPatchMethod(parseStr));
             }
         } catch (Exception e) {
             e.printStackTrace();

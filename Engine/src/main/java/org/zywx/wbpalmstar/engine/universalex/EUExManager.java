@@ -21,6 +21,8 @@ package org.zywx.wbpalmstar.engine.universalex;
 import android.content.Context;
 import android.os.Build;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.engine.DataHelper;
@@ -106,13 +108,28 @@ public class EUExManager {
     }
 
     /**
-     * 根据插件名找到对应的插件调用插件
-     * @param pluginName 插件名
-     * @param methodName 方法名
-     * @param params 参数
+     * 解析String 根据插件名找到对应的插件调用插件
      * @return  返回结果，json格式
      */
-    public String disPatchMethod(String pluginName,String methodName,String[] params){
+    public String disPatchMethod(String parseStr) throws JSONException {
+
+        JSONObject json = new JSONObject(parseStr);
+        String pluginName = json.optString("uexName");
+        String methodName = json.optString("method");
+        JSONArray jsonArray = json.getJSONArray("args");
+        JSONArray typesArray = json.getJSONArray("types");
+        int length = jsonArray.length();
+        String[] params = new String[length];
+        for (int i = 0; i < length; i++) {
+            String type = typesArray.getString(i);
+            String arg = jsonArray.getString(i);
+            if ("undefined".equals(type) && "null".equals(arg)) {
+                params[i] = null;
+            } else {
+                params[i] = arg;
+            }
+        }
+
         ELinkedList<EUExBase> plugins = getThirdPlugins();
         for (EUExBase plugin : plugins) {
             if (plugin.getUexName().equals(pluginName)) {
