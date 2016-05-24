@@ -54,8 +54,6 @@ public class EUExManager {
         window.setUexName(EUExWindow.tag);
         EUExWidget widget = new EUExWidget(mContext, brwView);
         widget.setUexName(EUExWidget.tag);
-        EUExAppCenter appCenter = new EUExAppCenter(mContext, brwView);
-        appCenter.setUexName(EUExAppCenter.tag);
         if (Build.VERSION.SDK_INT >= 11) {
             brwView.removeJavascriptInterface("searchBoxJavaBridge_");
             brwView.removeJavascriptInterface("accessibility");
@@ -64,7 +62,6 @@ public class EUExManager {
         mThirdPlugins.add(widgetOne);
         mThirdPlugins.add(window);
         mThirdPlugins.add(widget);
-        mThirdPlugins.add(appCenter);
         // third-party plugin
         Map<String, ThirdPluginObject> thirdPlugins = getPlugins();
 //		String symbol = "_";
