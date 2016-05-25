@@ -52,16 +52,6 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
 
-        <service
-            android:name="org.zywx.wbpalmstar.platform.memoryControl.KeepForeService"
-            android:enabled="true"
-            android:exported="false"
-            android:process="com.android.acore" >
-            <intent-filter>
-                <action android:name="appcan.intent.action.largeHeap" />
-            </intent-filter>
-        </service>
-
         <!-- push -->
         <service
             android:name="org.zywx.wbpalmstar.platform.push.PushService"
