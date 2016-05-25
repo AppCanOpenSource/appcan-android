@@ -34,7 +34,6 @@ import android.support.v4.app.NotificationCompat.Builder;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
 
-import org.apache.http.cookie.SM;
 import org.json.JSONObject;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.WebViewSdkCompat;
@@ -230,7 +229,7 @@ public class PushRecieveMsgReceiver extends BroadcastReceiver {
                     .openConnection();
             String cookie = WebViewSdkCompat.getCookie(iconUrl);
             if (null != cookie) {
-                connection.setRequestProperty(SM.COOKIE, cookie);
+                connection.setRequestProperty("Cookie", cookie);
             }
             connection.connect();
             if (200 == connection.getResponseCode()) {

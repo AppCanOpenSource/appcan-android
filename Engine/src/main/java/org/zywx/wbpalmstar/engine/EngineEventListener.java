@@ -20,7 +20,7 @@ package org.zywx.wbpalmstar.engine;
 
 import android.content.Context;
 
-import org.apache.http.NameValuePair;
+import org.zywx.wbpalmstar.base.vo.NameValuePairVO;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
 import java.util.List;
@@ -134,12 +134,12 @@ public interface EngineEventListener {
     /**
      * widget插件中的setPushInfo接口
      */
-    public void setPushInfo(Context context, List<NameValuePair> nameValuePairs);
+    public void setPushInfo(Context context, List<NameValuePairVO> nameValuePairs);
 
     /**
      * widget插件中的delPushInfo接口
      */
-    public void delPushInfo(Context context, List<NameValuePair> nameValuePairs);
+    public void delPushInfo(Context context, List<NameValuePairVO> nameValuePairs);
 
     /**
      * widget插件中的setPushState接口

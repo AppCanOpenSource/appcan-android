@@ -31,8 +31,6 @@ import android.webkit.MimeTypeMap;
 import android.webkit.URLUtil;
 import android.widget.Toast;
 
-import org.apache.http.cookie.SM;
-import org.apache.http.protocol.HTTP;
 import org.zywx.wbpalmstar.base.BConstant;
 import org.zywx.wbpalmstar.base.WebViewSdkCompat;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
@@ -154,11 +152,11 @@ public class EDownloadDialog extends ProgressDialog implements Runnable {
             mConnection.setRequestProperty("Accept-Encoding", "gzip, deflate");
             String cookie = getCookie(url);
             if (null != cookie) {
-                mConnection.setRequestProperty(SM.COOKIE, cookie);
+                mConnection.setRequestProperty("Cookie", cookie);
             }
             mConnection.setUseCaches(false);
             mConnection.setRequestProperty("Connection", "Keep-Alive");
-            mConnection.setRequestProperty("Charset", HTTP.UTF_8);
+            mConnection.setRequestProperty("Charset", "UTF-8");
             mConnection.setRequestProperty("User-Agent", BConstant.USERAGENT_NEW);
             mConnection.setReadTimeout(1000 * 30);
             mConnection.setConnectTimeout(1000 * 30);
