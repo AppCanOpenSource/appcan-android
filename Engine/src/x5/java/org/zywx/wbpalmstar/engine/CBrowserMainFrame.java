@@ -158,8 +158,7 @@ public class CBrowserMainFrame extends WebChromeClient {
             EBrowserView browserView = (EBrowserView) view;
             final EUExManager uexManager = browserView.getEUExManager();
             if (uexManager != null) {
-                BDebug.i("appCanJsParse", "dispatch parseStr " + parseStr);
-                result.confirm(uexManager.disPatchMethod(parseStr));
+                result.confirm(uexManager.dispatch(parseStr));
             }
         } catch (Exception e) {
             e.printStackTrace();

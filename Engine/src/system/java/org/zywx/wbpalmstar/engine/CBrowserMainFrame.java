@@ -32,7 +32,6 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.EditText;
 
-import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.WebViewSdkCompat;
 import org.zywx.wbpalmstar.engine.universalex.EUExManager;
 import org.zywx.wbpalmstar.engine.universalex.EUExScript;
@@ -157,8 +156,7 @@ public class CBrowserMainFrame extends WebChromeClient {
             EBrowserView browserView = (EBrowserView) view;
             final EUExManager uexManager = browserView.getEUExManager();
             if (uexManager != null) {
-                BDebug.i("appCanJsParse", "dispatch parseStr " + parseStr);
-                result.confirm(uexManager.disPatchMethod(parseStr));
+                 result.confirm(uexManager.dispatch(parseStr));
             }
         } catch (Exception e) {
             e.printStackTrace();

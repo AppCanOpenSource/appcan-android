@@ -273,8 +273,7 @@ public class CBrowserMainFrame extends XWalkUIClient {
             EBrowserView browserView = (EBrowserView) view;
             final EUExManager uexManager = browserView.getEUExManager();
             if (uexManager != null) {
-                BDebug.i("appCanJsParse", "dispatch parseStr " + parseStr);
-                result.confirmWithResult(uexManager.disPatchMethod(parseStr));
+                result.confirmWithResult(uexManager.dispatch(parseStr));
             }
         } catch (Exception e) {
             if (BDebug.DEBUG) {

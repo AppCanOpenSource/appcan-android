@@ -108,8 +108,8 @@ public class EUExManager {
      * 解析String 根据插件名找到对应的插件调用插件
      * @return  返回结果，json格式
      */
-    public String disPatchMethod(String parseStr) throws JSONException {
-
+    public String dispatch(String parseStr) throws JSONException {
+        BDebug.json( parseStr);
         JSONObject json = new JSONObject(parseStr);
         String pluginName = json.optString("uexName");
         String methodName = json.optString("method");
