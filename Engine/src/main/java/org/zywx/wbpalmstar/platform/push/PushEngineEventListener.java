@@ -21,7 +21,7 @@ package org.zywx.wbpalmstar.platform.push;
 import android.content.Context;
 import android.util.Log;
 
-import org.apache.http.NameValuePair;
+import org.zywx.wbpalmstar.base.vo.NameValuePairVO;
 import org.zywx.wbpalmstar.engine.EngineEventListener;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.platform.push.report.PushReportAgent;
@@ -131,7 +131,7 @@ public class PushEngineEventListener implements EngineEventListener {
     }
 
     @Override
-    public void delPushInfo(Context context, List<NameValuePair> nameValuePairs) {
+    public void delPushInfo(Context context, List<NameValuePairVO> nameValuePairs) {
         Log.i("push", "delPushInfo");
         PushReportAgent.delPushInfo(context, nameValuePairs);
     }

@@ -18,23 +18,6 @@
 
 package org.zywx.wbpalmstar.platform.push;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.reflect.Field;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-
-import org.apache.http.cookie.SM;
-import org.json.JSONObject;
-import org.zywx.wbpalmstar.base.BUtility;
-import org.zywx.wbpalmstar.engine.EBrowserActivity;
-import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
-import org.zywx.wbpalmstar.platform.push.report.PushReportConstants;
-import org.zywx.wbpalmstar.platform.push.report.PushReportUtility;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -49,8 +32,25 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.text.TextUtils;
-import android.webkit.CookieManager;
 import android.widget.RemoteViews;
+
+import org.json.JSONObject;
+import org.zywx.wbpalmstar.base.BUtility;
+import org.zywx.wbpalmstar.base.WebViewSdkCompat;
+import org.zywx.wbpalmstar.engine.EBrowserActivity;
+import org.zywx.wbpalmstar.engine.ENotification;
+import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
+import org.zywx.wbpalmstar.platform.push.report.PushReportConstants;
+import org.zywx.wbpalmstar.platform.push.report.PushReportUtility;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.reflect.Field;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.SimpleDateFormat;
 
 public class PushRecieveMsgReceiver extends BroadcastReceiver {
 
@@ -227,9 +227,9 @@ public class PushRecieveMsgReceiver extends BroadcastReceiver {
             URL uRL = new URL(iconUrl);
             HttpURLConnection connection = (HttpURLConnection) uRL
                     .openConnection();
-            String cookie = CookieManager.getInstance().getCookie(iconUrl);
+            String cookie = WebViewSdkCompat.getCookie(iconUrl);
             if (null != cookie) {
-                connection.setRequestProperty(SM.COOKIE, cookie);
+                connection.setRequestProperty("Cookie", cookie);
             }
             connection.connect();
             if (200 == connection.getResponseCode()) {
@@ -267,7 +267,7 @@ public class PushRecieveMsgReceiver extends BroadcastReceiver {
                 ((EBrowserActivity) mContext).handleIntent(intent);
             }
         }else{
-            CharSequence tickerText = intent.getStringExtra("title"); // 状态栏显示的通知文本提示
+            String tickerText = intent.getStringExtra("title"); // 状态栏显示的通知文本提示
             Resources res = context.getResources();
             int icon = res.getIdentifier("icon", "drawable", intent.getPackage());
             long when = System.currentTimeMillis(); // 通知产生的时间，会在通知信息里显示
@@ -296,10 +296,19 @@ public class PushRecieveMsgReceiver extends BroadcastReceiver {
             String ns = Context.NOTIFICATION_SERVICE;
             NotificationManager mNotificationManager = (NotificationManager) context
                     .getSystemService(ns);
-            Notification notification = new Notification(icon, tickerText,
-                    when);
+
+            PendingIntent contentIntent = PendingIntent.getActivity(
+                    context,
+                    notificationNB, notificationIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+            Notification notification = ENotification.buildNotification(context,contentIntent,notifyTitle,tickerText,
+                    icon);
+            notification.when=when;
             notification.flags = Notification.FLAG_AUTO_CANCEL;
             notification.defaults |= Notification.DEFAULT_SOUND;
+            // 把Notification传递给NotificationManager
+            mNotificationManager.notify(notificationNB, notification);
+            notificationNB++;
             if (Build.VERSION.SDK_INT >= 16) {
                 try {
                     Field priorityField = Notification.class
@@ -310,15 +319,7 @@ public class PushRecieveMsgReceiver extends BroadcastReceiver {
                     PushReportUtility.oe("onReceive", e);
                 }
             }
-            PendingIntent contentIntent = PendingIntent.getActivity(
-                    context,
-                    notificationNB, notificationIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT);
-            notification.setLatestEventInfo(context, contentTitle, tickerText,
-                    contentIntent);
-            // 把Notification传递给NotificationManager
-            mNotificationManager.notify(notificationNB, notification);
-            notificationNB++;
+
         }
     }
 

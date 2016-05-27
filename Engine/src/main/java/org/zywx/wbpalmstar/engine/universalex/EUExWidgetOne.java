@@ -172,9 +172,9 @@ public class EUExWidgetOne extends EUExBase {
     }
 
     public void getMainWidgetId(String[] parm) {
-        if (WDataManager.m_rootWgt != null) {
+        if (WDataManager.sRootWgt != null) {
             jsCallback(function_getMainWidgetId, 0, EUExCallback.F_C_TEXT,
-                    WDataManager.m_rootWgt.m_appId);
+                    WDataManager.sRootWgt.m_appId);
         } else {
             jsCallback(function_getMainWidgetId, 0, EUExCallback.F_C_TEXT, -1);
         }

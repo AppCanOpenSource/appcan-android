@@ -21,9 +21,6 @@ package org.zywx.wbpalmstar.engine;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.PermissionGroupInfo;
-import android.content.pm.PermissionInfo;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
@@ -37,9 +34,6 @@ import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 
-import org.apache.http.HttpHost;
-import org.apache.http.util.ByteArrayBuffer;
-import org.zywx.wbpalmstar.acedes.ACEDes;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.ResoureFinder;
 import org.zywx.wbpalmstar.base.vo.ShareInputVO;
@@ -50,13 +44,11 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.ArrayList;
-import java.util.List;
 
 import dalvik.system.DexClassLoader;
 
@@ -103,32 +95,6 @@ public class EUtil {
                 Log.d("backup", "key = " + key + " , value = " + value);
             }
         }
-    }
-
-    public static void testDecode(Context ctx) {
-        String url = "up.html";
-        AssetManager asset = ctx.getAssets();
-        InputStream pinput = null;
-        ByteArrayBuffer buffer = new ByteArrayBuffer(1024 * 8);
-        try {
-            pinput = asset.open(url);
-            int lenth = 0;
-            while (lenth != -1) {
-                byte[] buf = new byte[2048];
-                lenth = pinput.read(buf, 0, buf.length);
-                if (lenth != -1) {
-                    buffer.append(buf, 0, lenth);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        byte[] bt = buffer.toByteArray();
-        long begin = System.currentTimeMillis();
-        String dec = ACEDes.htmlDecode(bt, "up");
-        long end = System.currentTimeMillis();
-        Log.e("ldx", "use time: " + (end - begin));
-        Log.e("ldx", dec);
     }
 
     public static void viewBaseSetting(View target) {
@@ -189,29 +155,6 @@ public class EUtil {
             }
         }
         return suc;
-    }
-
-    public static void printAllPermission(Context context) {
-        if (!debug) {
-            return;
-        }
-        PackageManager pm = context.getPackageManager();
-        CharSequence csPermissionGroupLabel;
-        CharSequence csPermissionLabel;
-        List<PermissionGroupInfo> lstGroups = pm.getAllPermissionGroups(PackageManager.GET_PERMISSIONS);
-        for (PermissionGroupInfo pgi : lstGroups) {
-            csPermissionGroupLabel = pgi.loadLabel(pm);
-            Log.d("ldx", "PermissionGroup: " + pgi.name + "  [" + csPermissionGroupLabel.toString() + "]");
-            try {
-                List<PermissionInfo> lstPermissions = pm.queryPermissionsByGroup(pgi.name, 0);
-                for (PermissionInfo pi : lstPermissions) {
-                    csPermissionLabel = pi.loadLabel(pm);
-                    Log.d("ldx", "     PermissionChild" + pi.name + "  [" + csPermissionLabel.toString() + "]");
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
     }
 
     public static String execRootCmd(String cmd) {
@@ -372,26 +315,6 @@ public class EUtil {
                         proxyPort = 80;
                     }
                     proxy = new java.net.Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyStr, proxyPort));
-                }
-                mCursor.close();
-            }
-        }
-        return proxy;
-    }
-
-    public static HttpHost checkAndroidProxy(Context context) {
-        HttpHost proxy = null;
-        if (!wifiEnable(context)) {// 获取当前正在使用的APN接入点
-            Uri uri = Uri.parse("content://telephony/carriers/preferapn");
-            Cursor mCursor = context.getContentResolver().query(uri, null, null, null, null);
-            if (mCursor != null && mCursor.moveToFirst()) {
-                String proxyStr = mCursor.getString(mCursor.getColumnIndex("proxy"));
-                int proxyPort = mCursor.getInt(mCursor.getColumnIndex("port"));
-                if (proxyStr != null && proxyStr.trim().length() > 0) {
-                    if (0 == proxyPort) {
-                        proxyPort = 80;
-                    }
-                    proxy = new HttpHost(proxyStr, proxyPort);
                 }
                 mCursor.close();
             }

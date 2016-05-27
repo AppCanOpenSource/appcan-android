@@ -11,7 +11,6 @@
 -libraryjars libs/wmqtt.jar
 -libraryjars libs/httpmime-4.1.3.jar
 -libraryjars libs/android-support-v4.jar
--libraryjars libs/libacedes-v1.jar
 -libraryjars libs/commons-io-2.4.jar
 -libraryjars libs/aceimageloader.jar
 -libraryjars libs/gson-2.2.4.jar
@@ -122,6 +121,12 @@
     <methods>;
 }
 
+
+-keep class org.zywx.wbpalmstar.engine.webview.ACEWebView {
+    <fields>;
+    <methods>;
+}
+
 -keep class org.zywx.wbpalmstar.engine.EUtil {
     <fields>;
     <methods>;
@@ -204,6 +209,12 @@
 
 -keepclassmembers class * {
     @org.zywx.wbpalmstar.base.util.AppCanAPI *;
+}
+
+-keep,allowobfuscation @interface android.support.annotation.Keep
+-keep @android.support.annotation.Keep class *
+-keepclassmembers class * {
+    @android.support.annotation.Keep *;
 }
 
 -keepclassmembers public class * {

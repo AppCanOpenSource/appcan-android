@@ -18,26 +18,6 @@
 
 package org.zywx.wbpalmstar.platform.myspace;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.zip.ZipException;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.zywx.wbpalmstar.base.BDebug;
-import org.zywx.wbpalmstar.base.BUtility;
-import org.zywx.wbpalmstar.base.zip.CnZipInputStream;
-import org.zywx.wbpalmstar.base.zip.ZipEntry;
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -52,10 +32,24 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.FileObserver;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
+
+import org.zywx.wbpalmstar.base.BDebug;
+import org.zywx.wbpalmstar.base.BUtility;
+import org.zywx.wbpalmstar.base.zip.CnZipInputStream;
+import org.zywx.wbpalmstar.base.zip.ZipEntry;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.zip.ZipException;
 
 public class CommonUtility {
 
@@ -88,53 +82,6 @@ public class CommonUtility {
             }
         }
         return isAvailable;
-    }
-
-    public static byte[] downloadImage(String url) {
-        if (url == null || url.length() == 0) {
-            return null;
-        }
-        byte[] data = null;
-        int resCode = -1;
-        InputStream is = null;
-        ByteArrayOutputStream baos = null;
-        try {
-            HttpGet httpGet = new HttpGet(url);
-            HttpClient httpClient = new DefaultHttpClient();
-            HttpResponse response = httpClient.execute(httpGet);
-            resCode = response.getStatusLine().getStatusCode();
-            if (resCode == HttpURLConnection.HTTP_OK) {
-                baos = new ByteArrayOutputStream(4096);
-                is = response.getEntity().getContent();
-                byte[] buffer = new byte[4096];
-                int actulSize = 0;
-                while ((actulSize = is.read(buffer)) != -1) {
-                    baos.write(buffer, 0, actulSize);
-                }
-                data = baos.toByteArray();
-            }
-        } catch (IOException e) {
-            BDebug.e(TAG, e.getMessage());
-            e.printStackTrace();
-        } catch (OutOfMemoryError error) {
-            BDebug.e(TAG, "OutOfMemoryError:" + error.getMessage());
-        } finally {
-            try {
-                if (is != null) {
-                    is.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (baos != null) {
-                try {
-                    baos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return data;
     }
 
     public static byte[] requestData(String url) {

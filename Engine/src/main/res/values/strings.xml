@@ -2,7 +2,7 @@
 <resources>
 
     <!-- common use通用字符串 -->
-    <string name="app_name">appcantemplate</string>
+    <string name="app_name">Engine</string>
     <string name="back">返回</string>
     <string name="confirm">确定</string>
     <string name="cancel">取消</string>
@@ -37,7 +37,7 @@
     <string name="browser_init_error">程序不完整</string>
     <!-- 3000.1.02.000.00.00.9999.000 -->
 	<!-- Analytics config -->
-    <string name="appkey" translatable="false">38c2a32f-999b-2cf3-3971-71bb074b2f27</string>
+    <string name="appkey" translatable="false">5af4f945-c60b-2757-f4c1-9287ab47a341</string>
     <string name="appstatus" translatable="false">6E4E99740100CFB7447DAB9CCC55DD75F7D658</string>
     <string name="push" translatable="false">true</string>
     <string name="certificate_psw" translatable="false"/>

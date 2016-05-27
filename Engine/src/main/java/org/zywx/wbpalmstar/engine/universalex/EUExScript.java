@@ -264,26 +264,6 @@ public class EUExScript {
                 + "getUrlQuery:function(){return uexDispatcher.dispatch('uexWindow','getUrlQuery',jo(arguments));},"
                 + "setAutorotateEnable:function(){return uexDispatcher.dispatch('uexWindow','setAutorotateEnable',jo(arguments))}};"
                 +
-//				// DataAnalysis 
-//				"window.uexDataAnalysis={"
-//				+ "setEvent:function(){if(uexDataAnalysis_.termination()){return;}uexDataAnalysis_.setEvent(jo(arguments));},"
-//				+ "beginEvent:function(){if(uexDataAnalysis_.termination()){return;}uexDataAnalysis_.beginEvent(jo(arguments));},"
-//				+ "updateParams:function(){if(uexDataAnalysis_.termination()){return;}uexDataAnalysis_.updateParams(jo(arguments));},"
-//				+ "getAuthorizeID:function(){uexDataAnalysis_.getAuthorizeID(jo(arguments));},"
-//				+ "getDisablePlugins:function(){uexDataAnalysis_.getDisablePlugins(jo(arguments));},"
-//				+ "getDisableWindows:function(){uexDataAnalysis_.getDisableWindows(jo(arguments));},"
-//				+ "refreshGetAuthorizeID:function(){uexDataAnalysis_.refreshGetAuthorizeID(jo(arguments));},"
-//				+ "setErrorReport:function(){uexDataAnalysis_.setErrorReport(jo(arguments));},"
-//				+ "getUserInfo:function(){uexDataAnalysis_.getUserInfo(jo(arguments));},"
-//				+ "endEvent:function(){if(uexDataAnalysis_.termination()){return;}uexDataAnalysis_.endEvent(jo(arguments));}};"
-//				+
-                // AppCenter
-                "window.uexAppCenter={"
-                + "appCenterLoginResult:function(){uexDispatcher.dispatch('uexAppCenter','appCenterLoginResult',jo(arguments));},"
-                + "downloadApp:function(){uexDispatcher.dispatch('uexAppCenter','downloadApp',jo(arguments));},"
-                + "loginOut:function(){uexDispatcher.dispatch('uexAppCenter','loginOut',jo(arguments));},"
-                + "getSessionKey:function(){uexDispatcher.dispatch('uexAppCenter','getSessionKey',jo(arguments));}};"
-                +
                 F_UEX_SECURE;
 
 
