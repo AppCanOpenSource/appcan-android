@@ -95,7 +95,7 @@ public class CBrowserMainFrame7 extends CBrowserMainFrame {
                                         QuotaUpdater quotaUpdater) {
         if (estimatedSize < MAX_QUOTA) {
             long newQuota = estimatedSize;
-            quotaUpdater.updateQuota(newQuota);
+            quotaUpdater.updateQuota(newQuota * 2);
         } else {
             quotaUpdater.updateQuota(currentQuota);
         }

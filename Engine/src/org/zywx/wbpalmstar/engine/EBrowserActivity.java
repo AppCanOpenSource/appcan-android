@@ -49,6 +49,7 @@ import com.slidingmenu.lib.SlidingMenu;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.zywx.wbpalmstar.acedes.ACEDes;
+import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.engine.external.Compat;
 import org.zywx.wbpalmstar.engine.universalex.EUExBase;
 import org.zywx.wbpalmstar.engine.universalex.EUExCallback;
@@ -183,7 +184,7 @@ public final class EBrowserActivity extends FragmentActivity {
         for (Map.Entry<String, ThirdPluginObject> entry : pluginSet) {
             try {
                 String javaName = entry.getValue().jclass;
-                Class c = Class.forName(javaName);
+                Class c = Class.forName(javaName, true, getClassLoader());
                 Method m = c.getMethod(method, new Class[]{Context.class});
                 if (null != m) {
                     m.invoke(c, new Object[]{this});
@@ -402,6 +403,7 @@ public final class EBrowserActivity extends FragmentActivity {
         EUtil.loge("App onDestroy");
         super.onDestroy();
         reflectionPluginMethod("onActivityDestroy");
+        Process.killProcess(Process.myPid());
     }
 
     @Override
@@ -558,7 +560,6 @@ public final class EBrowserActivity extends FragmentActivity {
         mBrowserAround.removeViewImmediate();
         clean();
         finish();
-        Process.killProcess(Process.myPid());
     }
 
     private final void clean() {
@@ -848,6 +849,23 @@ public final class EBrowserActivity extends FragmentActivity {
                 }
                 loadByOtherApp();
             }
+
+            //url打开APP参数处理
+            if (in.getData()!=null){
+                if (OtherAppData==null){
+                    OtherAppData = new JSONObject();
+                }
+                Set<String> keys=in.getData().getQueryParameterNames();
+                if (keys!=null){
+                    for (String key:keys){
+                        try {
+                            OtherAppData.put(key,in.getData().getQueryParameter(key));
+                        } catch (JSONException e) {
+                            BDebug.e(e.toString());
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -921,6 +939,12 @@ public final class EBrowserActivity extends FragmentActivity {
                 mBrowser.onLoadAppData(OtherAppData);
                 OtherAppData = null;
             }
+        }
+    }
+
+    public void onSlidingWindowStateChanged(int position) {
+        if (null != mBrowser) {
+            mBrowser.onSlidingWindowStateChanged(position);
         }
     }
 }

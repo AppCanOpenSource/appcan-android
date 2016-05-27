@@ -1110,6 +1110,13 @@ public class EBrowserWidget extends AbsoluteLayout {
         mBrw.setSpaceEnable(listener);
     }
 
+    public void onSlidingWindowStateChanged(int position) {
+        EBrowserWindow root = mEWindowStack.get("root");
+        if (null != root) {
+            root.onSlidingWindowStateChanged(position);
+        }
+    }
+
     public void reloadWidget() {
         //Sliding window
         EBrowserWindow leftSlidingWin = mEWindowStack

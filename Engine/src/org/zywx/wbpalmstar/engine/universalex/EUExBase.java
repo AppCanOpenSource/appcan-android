@@ -404,6 +404,28 @@ public abstract class EUExBase {
     public final void addViewToWebView(View child,
                                        android.widget.AbsoluteLayout.LayoutParams params,
                                        String id) {
+        float nowScale = 1.0f;
+        int versionA = Build.VERSION.SDK_INT;
+
+        if (versionA <= 18) {
+            nowScale = mBrwView.getScale();
+        }
+        float sc = nowScale;
+        int x = (int) (params.x * sc);
+        int y = (int) (params.y * sc);
+        int w = params.width;
+        int h = params.height;
+        if (w > 0) {
+            w = (int) (params.width * sc);
+        }
+        if (h > 0) {
+            h = (int) (params.height * sc);
+        }
+        params.x = x;
+        params.y = y;
+        params.width = w;
+        params.height = h;
+
         if (mBrwView == null) {
             return;
         }
@@ -675,8 +697,10 @@ public abstract class EUExBase {
         if (null == curWind) {
             return;
         }
-        curWind.evaluateScript(mBrwView, inWindowName, type, SCRIPT_HEADER
-                + inScript);
+        if (inScript == null || !inScript.startsWith(SCRIPT_HEADER)) {
+            inScript+=SCRIPT_HEADER+inScript;
+        }
+        curWind.evaluateScript(mBrwView, inWindowName, type, inScript);
     }
 
     /**

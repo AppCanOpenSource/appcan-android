@@ -547,4 +547,10 @@ public class EBrowser {
     public void setSpaceEnable(SpaceClickListener listener) {
         mBrwWindPol.setSpaceEnable(listener);
     }
+
+    public void onSlidingWindowStateChanged(int position) {
+        if (null != mBrwWindPol) {
+            mBrwWindPol.onSlidingWindowStateChanged(position);
+        }
+    }
 }

@@ -41,10 +41,12 @@ public class ACEContentProvider extends ContentProvider {
             }
 
             String sdCardPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+            String sboxPath = getContext().getFilesDir().getAbsolutePath();
             boolean isLocalPath = false;
             //开启增量或者是内置sd卡路径
             if ((WDataManager.isUpdateWidget && WDataManager.isCopyAssetsFinish) ||
-                    (!TextUtils.isEmpty(sdCardPath) && path.startsWith(sdCardPath.substring(1)))) {
+                    (!TextUtils.isEmpty(sdCardPath) && path.startsWith(sdCardPath.substring(1)))
+                    || (!TextUtils.isEmpty(sboxPath) && path.startsWith(sboxPath.substring(1)))) {
                 isLocalPath = true;
             } else {
                 //外置sd卡路径
