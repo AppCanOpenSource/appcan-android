@@ -107,8 +107,13 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
     }
 
     private void setRemoteDebug(){
-        int debug=mBroWind.getWidget().m_appdebug;
-        super.setRemoteDebug(debug==1||BDebug.DEBUG);
+        if (mBroWind != null) {
+            WWidgetData widgetData = mBroWind.getWidget();
+            if (widgetData != null) {
+                int debug = widgetData.m_appdebug;
+                super.setRemoteDebug(debug == 1 || BDebug.DEBUG);
+            }
+        }
     }
 
     public EUExManager getEUExManager() {
