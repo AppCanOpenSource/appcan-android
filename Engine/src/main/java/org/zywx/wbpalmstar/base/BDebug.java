@@ -54,9 +54,13 @@ public class BDebug {
         }
     }
 
+    /**
+     * 不想显示log 行号等信息，调用该接口
+     * @param msg
+     */
     public static void log(String msg) {
         if (DEBUG) {
-            System.out.println(msg);
+            Log.i(TAG,msg);
         }
     }
 
