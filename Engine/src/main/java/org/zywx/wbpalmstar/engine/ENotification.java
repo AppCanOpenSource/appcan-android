@@ -24,6 +24,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 
 public class ENotification {
 
@@ -64,10 +65,10 @@ public class ENotification {
         notyIntent.putExtra("ntype", F_TYPE_USER);
         notyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent contentIntent = PendingIntent.getActivity(mContext, mId, notyIntent, PendingIntent.FLAG_ONE_SHOT);
-        Notification notification = new Notification(EResources.icon, title, System.currentTimeMillis());
+
+        Notification notification =buildNotification(mContext,contentIntent,title,msg,EResources.icon);
         notification.defaults = Notification.DEFAULT_SOUND;
         notification.flags = Notification.FLAG_AUTO_CANCEL;
-        notification.setLatestEventInfo(mContext, title, msg, contentIntent);
         mNotifyMgr.notify(mId, notification);
         mId++;
     }
@@ -76,4 +77,20 @@ public class ENotification {
         mNotifyMgr.cancel(nid);
     }
 
+    public static Notification buildNotification(Context context, PendingIntent pendingIntent, String title, String
+            text, int iconId) {
+        Notification.Builder builder = new Notification.Builder(context)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setContentIntent(pendingIntent);
+        if (iconId != 0) {
+            builder.setSmallIcon(iconId);
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            return builder.build();
+        } else {
+            return builder.getNotification();
+        }
+    }
 }

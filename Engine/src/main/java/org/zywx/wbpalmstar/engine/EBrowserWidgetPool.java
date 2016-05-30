@@ -18,15 +18,6 @@
 
 package org.zywx.wbpalmstar.engine;
 
-import org.json.JSONObject;
-import org.zywx.wbpalmstar.base.BConstant;
-import org.zywx.wbpalmstar.base.BDebug;
-import org.zywx.wbpalmstar.engine.external.Compat;
-import org.zywx.wbpalmstar.engine.universalex.EUExWidget.SpaceClickListener;
-import org.zywx.wbpalmstar.platform.myspace.MySpaceView;
-import org.zywx.wbpalmstar.widgetone.WidgetOneApplication;
-import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -42,6 +33,14 @@ import android.view.animation.Animation.AnimationListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 
+import org.json.JSONObject;
+import org.zywx.wbpalmstar.base.BConstant;
+import org.zywx.wbpalmstar.base.BDebug;
+import org.zywx.wbpalmstar.engine.external.Compat;
+import org.zywx.wbpalmstar.engine.universalex.EUExWidget.SpaceClickListener;
+import org.zywx.wbpalmstar.widgetone.WidgetOneApplication;
+import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
+
 public class EBrowserWidgetPool {
 
     private EBrowser mBrw;
@@ -52,7 +51,6 @@ public class EBrowserWidgetPool {
     private EWgtResultInfo mSpaceWidgetResu;
     private EWidgetStack mWgtStack;
     private WWidgetData mRootWidget;
-    private MySpaceView mAppCenter;
     private EBrowserWidget mRootBrowserWidget;
 
     public EBrowserWidgetPool(EBrowser inBrw, FrameLayout window,
@@ -187,25 +185,14 @@ public class EBrowserWidgetPool {
     }
 
     public void goMySpace() {
-        if (null == mAppCenter) {
-            mAppCenter = new MySpaceView(mBrw, mContext);
-        }
-        mWgtStack.peek().goMySpace(mAppCenter);
-        hiddenHover(false);
+        BDebug.e("---------goMySpace has been moved-----------");
     }
 
     public void exitMySpace() {
-        if (null != mAppCenter) {
-            if (mWgtStack.peek().exitMySpace(mAppCenter)) {
-                showHover(false);
-            }
-        }
+
     }
 
     public boolean isSpaceShown() {
-        if (null != mAppCenter) {
-            return mAppCenter.isShown();
-        }
         return false;
     }
 
@@ -248,9 +235,6 @@ public class EBrowserWidgetPool {
     }
 
     public void showWidget() {
-        if (null != mAppCenter && mAppCenter.isShown()) {
-            mAppCenter.notifyWidgetLoadFinish();
-        }
         final EBrowserWidget showWidget = mWgtStack.peek();
         final EBrowserWidget hiddenWidget = mWgtStack.prev();
         int animiId = 0;
@@ -288,10 +272,6 @@ public class EBrowserWidgetPool {
     }
 
     public void goBack() {
-        if (null != mAppCenter && mAppCenter.isShown()) {
-            exitMySpace();
-            return;
-        }
         if (!mWgtStack.peek().goBack()) {
             closeWidget("", null, false);
         }
@@ -369,14 +349,7 @@ public class EBrowserWidgetPool {
                 inWidget.notifyVisibilityChanged(0);
                 if (inWidget
                         .checkWidgetType(EBrowserWidget.F_WIDGET_POOL_TYPE_ROOT)) {
-                    if (null == mAppCenter
-                            || (null != mAppCenter && !mAppCenter.isShown())) {
                         showHover(false);
-                    } else {
-                        mAppCenter.notifyBackToAppCenter();
-                        hiddenHover(false);
-                        return;
-                    }
                 }
                 String callback = null;
                 if (null != reInfo) {
@@ -451,10 +424,6 @@ public class EBrowserWidgetPool {
 
     public EBrowserView getEBrowserView() {
         return mWgtStack.peek().getEBrowserView();
-    }
-
-    public MySpaceView getAppCentView() {
-        return mAppCenter;
     }
 
     static final int F_WIDGET_POOL_LOOP_START_WIDGET = 0;

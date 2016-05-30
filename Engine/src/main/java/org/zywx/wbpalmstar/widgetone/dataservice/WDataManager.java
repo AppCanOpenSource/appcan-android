@@ -25,6 +25,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.support.annotation.Keep;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Xml;
@@ -57,6 +58,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipException;
 
+@Keep
 public class WDataManager {
     private static Context m_context;
     // private static WDataBaseAdapter1 m_mdba = null;
@@ -80,7 +82,10 @@ public class WDataManager {
     // private static String m_spaceWidgetVer = "spaceWidgetVer";
     private static String m_spaceWidgetDBId = "spaceWidgetDBId";
     // private String m_widgetlistPath = "/widgetone/widgetapp";
-    public static WWidgetData m_rootWgt = null;
+
+    @Keep
+    public static WWidgetData sRootWgt = null;
+
     // public static String m_wgtPath =null;
     public static String m_wgtsPath = null;
     public static String m_sboxPath = null;
@@ -114,7 +119,7 @@ public class WDataManager {
         wgt.m_orientation = 1;
         wgt.m_description = "8";
         wgt.m_wgtType = 1;
-        wgt.m_widgetPath = m_rootWgt.m_widgetPath + wgt.m_appId + "/";
+        wgt.m_widgetPath = sRootWgt.m_widgetPath + wgt.m_appId + "/";
         return wgt;
     }
 
@@ -129,7 +134,7 @@ public class WDataManager {
         wgt.m_orientation = 1;
         wgt.m_description = "8";
         wgt.m_wgtType = 1;
-        wgt.m_widgetPath = m_rootWgt.m_widgetPath + wgt.m_appId + "/";
+        wgt.m_widgetPath = sRootWgt.m_widgetPath + wgt.m_appId + "/";
         return wgt;
     }
 
@@ -245,7 +250,7 @@ public class WDataManager {
     // if (reData != null && widgetData.m_wgtType == 0) {
     // int spaceStatus = reData.mySpaceMoreApp | reData.mySpaceStatus;
     // if (widgetData.m_spaceStatus != spaceStatus) {
-    // m_rootWgt.m_spaceStatus = spaceStatus;
+    // sRootWgt.m_spaceStatus = spaceStatus;
     //
     // String upSql = "UPDATE " + WDBAdapter.F_WIDGET_TABLE_NAME
     // + " SET " + WDBAdapter.F_COLUMN_SHOWSPACE + " = "
@@ -514,7 +519,7 @@ public class WDataManager {
             }
             widgetData = getWidgetDataByXML(wgtPath, 3);
             if (widgetData == null && !ESystemInfo.getIntence().mIsDevelop) {
-                wgtPath = m_rootWgt.getWidgetPath() + BUtility.F_APP_MYSPACE
+                wgtPath = sRootWgt.getWidgetPath() + BUtility.F_APP_MYSPACE
                         + "plugin/" + appId + "/config.xml";
                 widgetData = getWidgetDataByXML(wgtPath, 3);
             }
@@ -916,9 +921,9 @@ public class WDataManager {
             widgetData.m_obfuscation = 0;
             BUtility.isDes = true;
         }
-        m_rootWgt = widgetData;
+        sRootWgt = widgetData;
         if (m_wgtsPath == null) {
-            File file = new File(m_rootWgt.m_widgetPath);
+            File file = new File(sRootWgt.m_widgetPath);
 
             m_wgtsPath = file.getParentFile().getParentFile().getAbsolutePath()
                     + "/widgets/";
@@ -1081,7 +1086,7 @@ public class WDataManager {
 
     public WWidgetData getSpaceWidgetData() {
         WWidgetData widgetData = null;
-        if (m_rootWgt == null) {
+        if (sRootWgt == null) {
             return null;
         }
         long widgetDBId = m_preferences.getLong(m_spaceWidgetDBId, -1);
@@ -1090,7 +1095,7 @@ public class WDataManager {
                     widgetDBId, 1);
         }
         StringBuffer Path = new StringBuffer();
-        Path.append(m_rootWgt.getWidgetPath());
+        Path.append(sRootWgt.getWidgetPath());
         Path.append(BUtility.F_APP_MYSPACE);
         Path.append("config.xml");
         WWidgetData xmlWidgetData = getWidgetDataByXML(Path.toString(), 1);
@@ -1136,7 +1141,7 @@ public class WDataManager {
         db.open();
         db.deleteByAppID(WDBAdapter.F_WIDGET_TABLE_NAME, appId);
         db.close();
-        String rootWgtPath = m_rootWgt.getWidgetPath();
+        String rootWgtPath = sRootWgt.getWidgetPath();
         String wgtPath = null;
         if (F_SPACE_APPID.equals(appId)) {
             File rootFile = new File(rootWgtPath);
@@ -1460,7 +1465,7 @@ public class WDataManager {
     }
 
     public void unZipSpace() {
-        if (m_rootWgt == null) {
+        if (sRootWgt == null) {
             return;
         }
 
@@ -1469,7 +1474,7 @@ public class WDataManager {
                 try {
                     if (!ESystemInfo.getIntence().mIsDevelop) {
 
-                        String spacePath = m_rootWgt.getWidgetPath()
+                        String spacePath = sRootWgt.getWidgetPath()
                                 + BUtility.F_APP_MYSPACE;
                         File test = new File(spacePath + "config.xml");
                         if (test.exists()) {

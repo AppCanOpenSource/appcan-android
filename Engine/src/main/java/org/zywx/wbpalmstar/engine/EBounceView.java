@@ -293,7 +293,7 @@ public class EBounceView extends LinearLayout {
                 mTailView.setArrowVisibility(VISIBLE);
                 mTailView.setProgressBarVisibility(GONE);
                 mTailView.showReleaseToReloadText();
-                mTailView.rotateArrowImage(EBounceViewHeader.F_ROTATE_UP);
+                mTailView.rotateArrowImage(EBounceViewHeader.F_ROTATE_DOWN);
             }
             if (mBottomLoading) {
                 mBottomLoading = false;
@@ -304,7 +304,7 @@ public class EBounceView extends LinearLayout {
                 mTailView.setArrowVisibility(VISIBLE);
                 mTailView.setProgressBarVisibility(GONE);
                 mTailView.showPullToReloadText();
-                mTailView.rotateArrowImage(EBounceViewHeader.F_ROTATE_DOWN);
+                mTailView.rotateArrowImage(EBounceViewHeader.F_ROTATE_UP);
             }
             mBottomState = F_VIEW_STATE_DRAG;
         }
@@ -447,7 +447,7 @@ public class EBounceView extends LinearLayout {
                     mTailView.setArrowVisibility(VISIBLE);
                     mTailView.setProgressBarVisibility(GONE);
                     mTailView.showPullToReloadText();
-                    mTailView.rotateArrowImage(EBounceViewHeader.F_ROTATE_DOWN);
+                    mTailView.rotateArrowImage(EBounceViewHeader.F_ROTATE_UP);
                 }
                 backToBottom();
                 break;
@@ -472,7 +472,7 @@ public class EBounceView extends LinearLayout {
     private boolean bottomCanBounce() {
         float nowScale= mBrwView.getScaleWrap();
         int h1 = (int) (mBrwView.getContentHeight() * nowScale);
-        int h2 = mBrwView.getScrollYWrap() + mBrwView.getHeight();
+        int h2 = mBrwView.getScrollYWrap() + mBrwView.getHeightWrap();
         if (h1 <= h2 + 5) {
             return true;
         } else {

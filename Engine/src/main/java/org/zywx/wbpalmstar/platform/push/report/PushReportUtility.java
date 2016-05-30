@@ -18,134 +18,32 @@
 
 package org.zywx.wbpalmstar.platform.push.report;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.lang.reflect.Method;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.Map;
-
-import org.zywx.wbpalmstar.base.BUtility;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.text.format.Time;
-import android.util.DisplayMetrics;
 import android.util.Log;
+
+import org.zywx.wbpalmstar.base.BUtility;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.lang.reflect.Method;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class PushReportUtility {
     private static boolean isLog = true;
     public final static String KEY_APPVERIFY = "appverify";
-
-    public static String getLocalIpAddress() {
-        try {
-            for (Enumeration<NetworkInterface> en = NetworkInterface
-                    .getNetworkInterfaces(); en.hasMoreElements(); ) {
-                NetworkInterface intf = en.nextElement();
-                for (Enumeration<InetAddress> enumIpAddr = intf
-                        .getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
-                    InetAddress inetAddress = enumIpAddr.nextElement();
-                    if (!inetAddress.isLoopbackAddress()) {
-                        return inetAddress.getHostAddress().toString();
-                    }
-                }
-            }
-        } catch (SocketException ex) {
-            // Log.e(LOG_TAG, ex.toString());
-        }
-        return null;
-    }
-
-    public static String getNetName(Context activity) {
-        if (activity == null) {
-            return null;
-        }
-        String netName = null;
-        try {
-            ConnectivityManager cm = (ConnectivityManager) activity
-                    .getApplicationContext().getSystemService(
-                            Context.CONNECTIVITY_SERVICE);
-            if (cm != null) {
-                NetworkInfo info = cm.getActiveNetworkInfo();
-                if (info != null && info.isAvailable()) {
-                    switch (info.getType()) {
-                        case ConnectivityManager.TYPE_MOBILE:
-                            TelephonyManager telephonyManager = (TelephonyManager) activity
-                                    .getSystemService(Context.TELEPHONY_SERVICE);
-                            switch (telephonyManager.getNetworkType()) {
-                                case PushReportConstants.NETWORK_TYPE_1xRTT:
-                                case PushReportConstants.NETWORK_TYPE_CDMA:
-                                case PushReportConstants.NETWORK_TYPE_EDGE:
-                                case PushReportConstants.NETWORK_TYPE_GPRS:
-                                    netName = "GPRS";
-                                    break;
-                                case PushReportConstants.NETWORK_TYPE_EVDO_0:
-                                case PushReportConstants.NETWORK_TYPE_EVDO_A:
-                                case PushReportConstants.NETWORK_TYPE_HSDPA:
-                                case PushReportConstants.NETWORK_TYPE_HSPA:
-                                case PushReportConstants.NETWORK_TYPE_HSUPA:
-                                case PushReportConstants.NETWORK_TYPE_UMTS:
-                                    netName = "3G";
-                                    break;
-                            }
-                            break;
-                        case ConnectivityManager.TYPE_WIFI:
-                            netName = "WIFI";
-                            break;
-                    }
-                }
-            }
-        } catch (SecurityException e) {
-            netName = null;
-        }
-        return netName;
-    }
-
-    public static String getDeviceResolution(Context activity) {
-        if (activity == null) {
-            return null;
-        }
-
-        DisplayMetrics dm = activity.getResources().getDisplayMetrics();
-        return dm.widthPixels + "*" + dm.heightPixels;
-    }
-
-    @SuppressWarnings("rawtypes")
-    public static String getMapToString(Map inAttriDict) {
-        String attriDict = "";
-        if (inAttriDict != null) {
-            @SuppressWarnings("unchecked")
-            Iterator<Object> iterator = inAttriDict.keySet().iterator();
-            while (iterator.hasNext()) {
-                Object object = iterator.next();
-                if ("".equals(attriDict)) {
-
-                    attriDict = object + ":" + inAttriDict.get(object);
-                } else {
-                    attriDict += "," + object + ":" + inAttriDict.get(object);
-                }
-            }
-
-        }
-        return attriDict;
-    }
 
     public static String getNowTime() {
         Time time = new Time();

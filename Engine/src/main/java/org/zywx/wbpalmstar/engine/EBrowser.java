@@ -18,6 +18,17 @@
 
 package org.zywx.wbpalmstar.engine;
 
+import android.content.Context;
+import android.content.res.AssetManager;
+import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import org.json.JSONObject;
+import org.zywx.wbpalmstar.engine.universalex.EUExWidget.SpaceClickListener;
+import org.zywx.wbpalmstar.widgetone.WidgetOneApplication;
+import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -25,18 +36,6 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import org.json.JSONObject;
-import org.zywx.wbpalmstar.engine.universalex.EUExWidget.SpaceClickListener;
-import org.zywx.wbpalmstar.platform.myspace.MySpaceView;
-import org.zywx.wbpalmstar.widgetone.WidgetOneApplication;
-import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
-
-import android.content.Context;
-import android.content.res.AssetManager;
-import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 public class EBrowser {
 
@@ -290,13 +289,6 @@ public class EBrowser {
             return false;
         }
         return mBrwWindPol.isLockMenuKey();
-    }
-
-    public MySpaceView getAppCenter() {
-        if (null == mBrwWindPol) {
-            return null;
-        }
-        return mBrwWindPol.getAppCentView();
     }
 
     public void setMySpaceInfo(String inForResult, String inAnimiId,

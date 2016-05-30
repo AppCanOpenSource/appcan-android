@@ -18,6 +18,11 @@
 
 package org.zywx.wbpalmstar.platform.certificates;
 
+import android.content.Context;
+import android.content.res.AssetManager;
+
+import org.apache.http.conn.ssl.SSLSocketFactory;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -28,25 +33,6 @@ import java.util.HashMap;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import org.apache.http.HttpVersion;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.params.HttpClientParams;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.scheme.PlainSocketFactory;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
-import org.apache.http.protocol.HTTP;
-
-import android.content.Context;
-import android.content.res.AssetManager;
-
 public class Http {
 
     public static HashMap<String, KeyStore> KEY_STORE = new HashMap<String, KeyStore>();
@@ -56,72 +42,6 @@ public class Http {
      * 是否检查https证书为可信机构颁发
      */
     private static boolean isCheckTrustCert = false;
-
-    public static HttpClient getHttpsClient(int mTimeOut) {
-        try {
-            KeyStore trustStore = KeyStore.getInstance(keyType);
-            trustStore.load(null, null);
-            SSLSocketFactory socketFact = new HSSLSocketFactory(trustStore, null);
-            SchemeRegistry registry = new SchemeRegistry();
-            registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-            registry.register(new Scheme("https", socketFact, 443));
-
-            HttpParams params = new BasicHttpParams();
-            HttpConnectionParams.setConnectionTimeout(params, mTimeOut);
-            HttpConnectionParams.setSoTimeout(params, mTimeOut);
-            HttpConnectionParams.setSocketBufferSize(params, 8 * 1024);
-            HttpClientParams.setRedirecting(params, false);
-            HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-            HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
-
-            ClientConnectionManager ccm = new ThreadSafeClientConnManager(params, registry);
-            return new DefaultHttpClient(ccm, params);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return getHttpClient(mTimeOut);
-        }
-    }
-
-    public static HttpClient getHttpsClientWithCert(String cPassWord, String cPath, int mTimeOut, Context ctx) {
-        InputStream inStream = null;
-        try {
-            int index = cPath.lastIndexOf('/') + 1;
-            String keyName = cPath.substring(index);
-            KeyStore ksP12 = KEY_STORE.get(keyName);
-            if (null == ksP12) {
-                inStream = getInputStream(cPath, ctx);
-                ksP12 = KeyStore.getInstance(keyType);
-                ksP12.load(inStream, cPassWord.toCharArray());
-                KEY_STORE.put(keyName, ksP12);
-            }
-            SSLSocketFactory socketFact = new HSSLSocketFactory(ksP12, cPassWord);
-            SchemeRegistry registry = new SchemeRegistry();
-            registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-            registry.register(new Scheme("https", socketFact, 443));
-
-            HttpParams params = new BasicHttpParams();
-            HttpConnectionParams.setConnectionTimeout(params, mTimeOut);
-            HttpConnectionParams.setSoTimeout(params, mTimeOut);
-            HttpConnectionParams.setSocketBufferSize(params, 8 * 1024);
-            HttpClientParams.setRedirecting(params, false);
-            HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-            HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
-
-            ClientConnectionManager ccm = new ThreadSafeClientConnManager(params, registry);
-            return new DefaultHttpClient(ccm, params);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return getHttpsClient(mTimeOut);
-        } finally {
-            if (null != inStream) {
-                try {
-                    inStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
 
     private static InputStream getInputStream(String cPath, Context ctx)
             throws IOException, FileNotFoundException {
@@ -146,15 +66,6 @@ public class Http {
             inStream = new FileInputStream(cPath);
         }
         return inStream;
-    }
-
-    public static HttpClient getHttpClient(int mTimeOut) {
-        BasicHttpParams bparams = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(bparams, mTimeOut);
-        HttpConnectionParams.setSoTimeout(bparams, mTimeOut);
-        HttpConnectionParams.setSocketBufferSize(bparams, 8 * 1024);
-        HttpClientParams.setRedirecting(bparams, false);
-        return new DefaultHttpClient(bparams);
     }
 
     public static HNetSSLSocketFactory getSSLSocketFactoryWithCert(String cPassWord, String cPath, Context ctx) {
@@ -190,7 +101,8 @@ public class Http {
         return ssSocketFactory;
     }
 
-    public static HttpsURLConnection getHttpsURLConnection(URL url) throws Exception {
+    public static HttpsURLConnection getHttpsURLConnection(String urlString) throws Exception {
+        URL url=new URL(urlString);
         HttpsURLConnection mConnection = null;
         mConnection = (HttpsURLConnection) url.openConnection();
         javax.net.ssl.SSLSocketFactory ssFact = null;

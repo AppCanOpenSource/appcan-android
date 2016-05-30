@@ -56,13 +56,6 @@ public class ACEWebView extends XWalkView {
 		super(context);
 	}
 
-	static{
-		XWalkPreferences.setValue(XWalkPreferences.ALLOW_UNIVERSAL_ACCESS_FROM_FILE, true);
-		XWalkPreferences.setValue(XWalkPreferences.SUPPORT_MULTIPLE_WINDOWS, true);
-		XWalkPreferences.setValue(XWalkPreferences.JAVASCRIPT_CAN_OPEN_WINDOW, true);
-		XWalkPreferences.setValue(XWalkPreferences.ANIMATABLE_XWALK_VIEW,true);//设置TextureView为默认的渲染方式,
-	}
-	
 	protected void init(EBrowserView eBrowserView, boolean webApp) {
 		setBackgroundColor(0);
 		setAlpha(0.99f);
@@ -242,5 +235,9 @@ public class ACEWebView extends XWalkView {
     public float getScaleWrap() {
         return getScale();
     }
+
+	public int getHeightWrap() {
+		return getHeight();
+	}
 
 }

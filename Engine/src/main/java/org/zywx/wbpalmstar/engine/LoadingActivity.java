@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.zywx.wbpalmstar.base.BUtility;
+import org.zywx.wbpalmstar.base.WebViewSdkCompat;
 import org.zywx.wbpalmstar.engine.external.Compat;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 
@@ -67,6 +68,7 @@ public class LoadingActivity extends Activity {
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                WebViewSdkCompat.initInLoadingActivity(LoadingActivity.this);
                 if (!isTemp) {
                     try {
                         Intent intent = new Intent(LoadingActivity.this, EBrowserActivity.class);

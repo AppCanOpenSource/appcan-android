@@ -8,28 +8,21 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Message;
 import android.view.KeyEvent;
-import android.webkit.CookieSyncManager;
 import android.webkit.ValueCallback;
 import android.widget.EditText;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.xwalk.core.XWalkJavascriptResult;
 import org.xwalk.core.XWalkUIClient;
 import org.xwalk.core.XWalkView;
 import org.zywx.wbpalmstar.base.BDebug;
+import org.zywx.wbpalmstar.base.WebViewSdkCompat;
 import org.zywx.wbpalmstar.engine.EBrowserActivity;
 import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.EBrowserWindow;
-import org.zywx.wbpalmstar.engine.ELinkedList;
 import org.zywx.wbpalmstar.engine.ESystemInfo;
-import org.zywx.wbpalmstar.engine.universalex.EUExBase;
 import org.zywx.wbpalmstar.engine.universalex.EUExManager;
 import org.zywx.wbpalmstar.engine.universalex.EUExScript;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
-import org.zywx.wbpalmstar.engine.universalex.ThirdPluginObject;
-
-import java.util.Map;
 
 public class CBrowserMainFrame extends XWalkUIClient {
     protected String mParms;
@@ -174,8 +167,6 @@ public class CBrowserMainFrame extends XWalkUIClient {
                 target.loadUrl(weinreString);
             }
 
-            CookieSyncManager.getInstance().sync();
-
             BDebug.i(url, "   loaded");
         }
 
@@ -209,7 +200,7 @@ public class CBrowserMainFrame extends XWalkUIClient {
     @Override
     public void openFileChooser(XWalkView view, ValueCallback<Uri> uploadFile,
                                 String acceptType, String capture) {
-        ((EBrowserActivity) view.getContext()).setmUploadMessage(uploadFile);
+        ((EBrowserActivity) view.getContext()).setmUploadMessage(getCompatCallback(uploadFile));
         Intent i = new Intent(Intent.ACTION_GET_CONTENT);
         i.addCategory(Intent.CATEGORY_OPENABLE);
         i.setType("*/*");
@@ -279,58 +270,25 @@ public class CBrowserMainFrame extends XWalkUIClient {
             if (!(view instanceof EBrowserView)) {
                 return;
             }
-            JSONObject json = new JSONObject(parseStr);
-            String uexName = json.optString("uexName");
-            String method = json.optString("method");
-            JSONArray jsonArray = json.getJSONArray("args");
-            JSONArray typesArray = json.getJSONArray("types");
-            int length = jsonArray.length();
-            String[] args = new String[length];
-            for (int i = 0; i < length; i++) {
-                String type = typesArray.getString(i);
-                String arg = jsonArray.getString(i);
-                if ("undefined".equals(type) && "null".equals(arg)) {
-                    args[i] = null;
-                } else {
-                    args[i] = arg;
-                }
-            }
             EBrowserView browserView = (EBrowserView) view;
             final EUExManager uexManager = browserView.getEUExManager();
             if (uexManager != null) {
-                BDebug.i("appCanJsParse", "dispatch parseStr " + parseStr);
-                ELinkedList<EUExBase> plugins = uexManager
-                        .getThirdPlugins();
-                for (EUExBase plugin : plugins) {
-                    if (plugin.getUexName().equals(uexName)) {
-                        Object object = uexManager.callMethod(plugin,
-                                method, args);
-                        if (null != object) {
-                            result.confirmWithResult(object.toString());
-                            return;
-                        }
-                    }
-                }
-                // 调用单实例插件
-                Map<String, ThirdPluginObject> thirdPlugins = uexManager
-                        .getPlugins();
-                ThirdPluginObject thirdPluginObject = thirdPlugins
-                        .get(uexName);
-                if (thirdPluginObject != null
-                        && thirdPluginObject.isGlobal
-                        && thirdPluginObject.pluginObj != null) {
-                    Object object = uexManager.callMethod(
-                            thirdPluginObject.pluginObj,
-                            method, args);
-                    if (null != object) {
-                        result.confirmWithResult(object.toString());
-                        return;
-                    }
-                }
-                BDebug.e("plugin", uexName, "not exist...");
+                result.confirmWithResult(uexManager.dispatch(parseStr));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            if (BDebug.DEBUG) {
+                e.printStackTrace();
+            }
         }
     }
+
+    public WebViewSdkCompat.ValueCallback<Uri> getCompatCallback(final ValueCallback<Uri> uploadMsg){
+        return new WebViewSdkCompat.ValueCallback<Uri>() {
+            @Override
+            public void onReceiveValue(Uri uri) {
+                uploadMsg.onReceiveValue(uri);
+            }
+        };
+    }
+
 }

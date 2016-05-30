@@ -82,7 +82,21 @@ public class EUExScript {
                 " if (result.code != 200) {" +
                 "   console.log( \"method call error, code:\" + result.code + \", message: \" + result.result  );" +
                 "}"+
-                "return result.result;" +
+                "  var content = result.result;" +
+                 "  if (content.funcMaps != null) {" +
+                 "    for (var name in content.funcMaps) {" +
+                "      var targetFunc = content.funcMaps[name];" +
+                "      content[name] = function() {" +
+                "        var params = Array.prototype.slice.call(arguments, 0);" +
+                "        if (content.ext != null) {" +
+                "          params[params.length] = content.ext;" +
+                "        }" +
+                "        window[uexName][targetFunc].apply(uexName, params);" +
+                "      };" +
+                "    }" +
+                "    delete content.funcMaps;" +
+                "  }" +
+                "  return content;"+
                 "};"
                 +
                 "window.uexDispatcher={};" +
@@ -263,26 +277,6 @@ public class EUExScript {
                 + "hidePluginViewContainer:function(){uexDispatcher.dispatch('uexWindow','hidePluginViewContainer',jo(arguments));},"
                 + "getUrlQuery:function(){return uexDispatcher.dispatch('uexWindow','getUrlQuery',jo(arguments));},"
                 + "setAutorotateEnable:function(){return uexDispatcher.dispatch('uexWindow','setAutorotateEnable',jo(arguments))}};"
-                +
-//				// DataAnalysis 
-//				"window.uexDataAnalysis={"
-//				+ "setEvent:function(){if(uexDataAnalysis_.termination()){return;}uexDataAnalysis_.setEvent(jo(arguments));},"
-//				+ "beginEvent:function(){if(uexDataAnalysis_.termination()){return;}uexDataAnalysis_.beginEvent(jo(arguments));},"
-//				+ "updateParams:function(){if(uexDataAnalysis_.termination()){return;}uexDataAnalysis_.updateParams(jo(arguments));},"
-//				+ "getAuthorizeID:function(){uexDataAnalysis_.getAuthorizeID(jo(arguments));},"
-//				+ "getDisablePlugins:function(){uexDataAnalysis_.getDisablePlugins(jo(arguments));},"
-//				+ "getDisableWindows:function(){uexDataAnalysis_.getDisableWindows(jo(arguments));},"
-//				+ "refreshGetAuthorizeID:function(){uexDataAnalysis_.refreshGetAuthorizeID(jo(arguments));},"
-//				+ "setErrorReport:function(){uexDataAnalysis_.setErrorReport(jo(arguments));},"
-//				+ "getUserInfo:function(){uexDataAnalysis_.getUserInfo(jo(arguments));},"
-//				+ "endEvent:function(){if(uexDataAnalysis_.termination()){return;}uexDataAnalysis_.endEvent(jo(arguments));}};"
-//				+
-                // AppCenter
-                "window.uexAppCenter={"
-                + "appCenterLoginResult:function(){uexDispatcher.dispatch('uexAppCenter','appCenterLoginResult',jo(arguments));},"
-                + "downloadApp:function(){uexDispatcher.dispatch('uexAppCenter','downloadApp',jo(arguments));},"
-                + "loginOut:function(){uexDispatcher.dispatch('uexAppCenter','loginOut',jo(arguments));},"
-                + "getSessionKey:function(){uexDispatcher.dispatch('uexAppCenter','getSessionKey',jo(arguments));}};"
                 +
                 F_UEX_SECURE;
 

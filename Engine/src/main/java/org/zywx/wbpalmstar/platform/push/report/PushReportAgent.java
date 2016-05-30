@@ -26,11 +26,9 @@ import android.content.SharedPreferences.Editor;
 import android.text.TextUtils;
 import android.util.Log;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.zywx.wbpalmstar.base.ResoureFinder;
+import org.zywx.wbpalmstar.base.vo.NameValuePairVO;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.platform.encryption.PEncryption;
 import org.zywx.wbpalmstar.platform.push.PushService;
@@ -165,14 +163,14 @@ public class PushReportAgent implements PushReportConstants {
         if (TextUtils.isEmpty(taskId)) {
             String msgId = parsePushInfo2MsgId(pushInfo);
             if (msgId != null) {
-                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                List<NameValuePairVO> nameValuePairs = new ArrayList<NameValuePairVO>();
                 nameValuePairs
-                        .add(new BasicNameValuePair(KEY_PUSH_REPORT_MSGID, msgId));
-                nameValuePairs.add(new BasicNameValuePair(KEY_PUSH_REPORT_SOFTTOKEN,
+                        .add(new NameValuePairVO(KEY_PUSH_REPORT_MSGID, msgId));
+                nameValuePairs.add(new NameValuePairVO(KEY_PUSH_REPORT_SOFTTOKEN,
                         softToken));
-                nameValuePairs.add(new BasicNameValuePair(KEY_PUSH_REPORT_EVENTTYPE,
+                nameValuePairs.add(new NameValuePairVO(KEY_PUSH_REPORT_EVENTTYPE,
                         eventType));
-                nameValuePairs.add(new BasicNameValuePair(KEY_PUSH_REPORT_OCCUREDAT,
+                nameValuePairs.add(new NameValuePairVO(KEY_PUSH_REPORT_OCCUREDAT,
                         occuredAt));
                 if (eventType.equals(PushReportConstants.EVENT_TYPE_OPEN)) {
                     PushReportThread.getPushReportThread(context, sAgent,
@@ -248,14 +246,14 @@ public class PushReportAgent implements PushReportConstants {
     public static void setPushInfo(Context context, List nameValuePairs) {
         String softToken = PushReportUtility.getSoftToken((Activity) context,
                 mCurWgt.m_appkey);
-        nameValuePairs.add(new BasicNameValuePair("softToken", softToken));
-        nameValuePairs.add(new BasicNameValuePair("deviceToken", softToken));
+        nameValuePairs.add(new NameValuePairVO("softToken", softToken));
+        nameValuePairs.add(new NameValuePairVO("deviceToken", softToken));
         PushReportThread.getPushBindUserThread(context, sAgent,
                 TYPE_PUSH_BINDUSER, nameValuePairs).start();
     }
 
     public static void delPushInfo(Context context,
-                                   List<NameValuePair> nameValuePairs) {
+                                   List<NameValuePairVO> nameValuePairs) {
         PushReportThread.getPushBindUserThread(context, sAgent,
                 TYPE_PUSH_UNBINDUSER, nameValuePairs).start();
     }

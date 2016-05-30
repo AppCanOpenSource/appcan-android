@@ -20,15 +20,16 @@ package org.zywx.wbpalmstar.engine;
 
 import android.content.Context;
 import android.view.View;
-import android.webkit.WebChromeClient.CustomViewCallback;
 import android.widget.FrameLayout;
+
+import org.zywx.wbpalmstar.base.WebViewSdkCompat;
 
 
 public class EBrowserMainFrame extends FrameLayout {
 
     private EBrowser mBrw;
     private View mCustomPlayer;
-    private CustomViewCallback mCustomCallback;
+    private WebViewSdkCompat.CustomViewCallback mCustomCallback;
 
 
     public EBrowserMainFrame(Context context) {
@@ -41,7 +42,7 @@ public class EBrowserMainFrame extends FrameLayout {
         mBrw = eInBrw;
     }
 
-    public void showCustomView(View view, CustomViewCallback callback) {
+    public void showCustomView(View view, WebViewSdkCompat.CustomViewCallback callback) {
         if (null != mCustomPlayer) {
             removeView(mCustomPlayer);
             mCustomCallback.onCustomViewHidden();

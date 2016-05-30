@@ -21,6 +21,8 @@ package org.zywx.wbpalmstar.engine.universalex;
 import android.content.Context;
 import android.os.Build;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.engine.DataHelper;
@@ -52,25 +54,14 @@ public class EUExManager {
         window.setUexName(EUExWindow.tag);
         EUExWidget widget = new EUExWidget(mContext, brwView);
         widget.setUexName(EUExWidget.tag);
-        EUExAppCenter appCenter = new EUExAppCenter(mContext, brwView);
-        appCenter.setUexName(EUExAppCenter.tag);
-//		EUExDataAnalysis dataAnalysis = new EUExDataAnalysis(mContext, brwView);
-//		dataAnalysis.setUexName(EUExDataAnalysis.tag);
-//		brwView.addJavascriptInterface(widgetOne, EUExWidgetOne.tag);
-//		brwView.addJavascriptInterface(window, EUExWindow.tag);
-//		brwView.addJavascriptInterface(widget, EUExWidget.tag);
-//		brwView.addJavascriptInterface(appCenter, EUExAppCenter.tag);
         if (Build.VERSION.SDK_INT >= 11) {
             brwView.removeJavascriptInterface("searchBoxJavaBridge_");
             brwView.removeJavascriptInterface("accessibility");
             brwView.removeJavascriptInterface("accessibilityTraversal");
         }
-//		brwView.addJavascriptInterface(dataAnalysis, EUExDataAnalysis.tag);
         mThirdPlugins.add(widgetOne);
         mThirdPlugins.add(window);
         mThirdPlugins.add(widget);
-        mThirdPlugins.add(appCenter);
-//		mThirdPlugins.add(dataAnalysis);
         // third-party plugin
         Map<String, ThirdPluginObject> thirdPlugins = getPlugins();
 //		String symbol = "_";
@@ -96,7 +87,6 @@ public class EUExManager {
             if (null != objectIntance) {
 //				String uexName = uName + symbol;
                 objectIntance.setUexName(uName);
-//				brwView.addJavascriptInterface(objectIntance, uexName);
 
                 if (scriptObj.isGlobal) {
                     scriptObj.pluginObj = objectIntance;
@@ -113,6 +103,58 @@ public class EUExManager {
         ThirdPluginMgr tpm = app.getThirdPlugins();
         return tpm.getPlugins();
     }
+
+    /**
+     * 解析String 根据插件名找到对应的插件调用插件
+     * @return  返回结果，json格式
+     */
+    public String dispatch(String parseStr) throws JSONException {
+        BDebug.json( parseStr);
+        JSONObject json = new JSONObject(parseStr);
+        String pluginName = json.optString("uexName");
+        String methodName = json.optString("method");
+        JSONArray jsonArray = json.getJSONArray("args");
+        JSONArray typesArray = json.getJSONArray("types");
+        int length = jsonArray.length();
+        String[] params = new String[length];
+        for (int i = 0; i < length; i++) {
+            String type = typesArray.getString(i);
+            String arg = jsonArray.getString(i);
+            if ("undefined".equals(type) && "null".equals(arg)) {
+                params[i] = null;
+            } else {
+                params[i] = arg;
+            }
+        }
+
+        ELinkedList<EUExBase> plugins = getThirdPlugins();
+        for (EUExBase plugin : plugins) {
+            if (plugin.getUexName().equals(pluginName)) {
+                String resultStr =callMethod(plugin,
+                        methodName, params);
+                if (null != resultStr) {
+                        return resultStr;
+                }
+            }
+        }
+        // 调用单实例插件
+        Map<String, ThirdPluginObject> thirdPlugins = getPlugins();
+        ThirdPluginObject thirdPluginObject = thirdPlugins
+                .get(pluginName);
+        if (thirdPluginObject != null
+                && thirdPluginObject.isGlobal
+                && thirdPluginObject.pluginObj != null) {
+            String resultStr =callMethod(
+                    thirdPluginObject.pluginObj,
+                    methodName, params);
+            if (null != resultStr) {
+                return resultStr;
+            }
+        }
+        BDebug.e("plugin", pluginName, "not exist...");
+        return getReturn(204, "plugin " + pluginName + " not exist...");
+    }
+
 
     public String callMethod(final EUExBase plugin, final String methodName, final String[] params) {
         if (plugin.mDestroyed) {

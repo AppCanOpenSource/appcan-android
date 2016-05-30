@@ -23,16 +23,13 @@ import android.app.Application;
 import android.content.Context;
 import android.content.res.XmlResourceParser;
 import android.os.Message;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
+import android.support.annotation.Keep;
 
-import dalvik.system.DexClassLoader;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.zywx.wbpalmstar.base.BConstant;
 import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.BUtility;
+import org.zywx.wbpalmstar.base.WebViewSdkCompat;
+import org.zywx.wbpalmstar.base.vo.NameValuePairVO;
 import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.ELinkedList;
 import org.zywx.wbpalmstar.engine.EngineEventListener;
@@ -43,12 +40,18 @@ import org.zywx.wbpalmstar.platform.push.PushEngineEventListener;
 import org.zywx.wbpalmstar.widgetone.dataservice.WDataManager;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import dalvik.system.DexClassLoader;
 
 public class WidgetOneApplication extends Application {
 
@@ -72,10 +75,7 @@ public class WidgetOneApplication extends Application {
     public void onCreate() {
         super.onCreate();
         EUExUtil.init(this);
-        CookieSyncManager.createInstance(this);
-        CookieManager.getInstance().setAcceptCookie(true);
-        CookieManager.getInstance().removeSessionCookie();
-        CookieManager.getInstance().removeExpiredCookie();
+        WebViewSdkCompat.initInApplication(this);
         mCrashReport = ECrashHandler.getInstance(this);
         cachePath = getCacheDir().getAbsolutePath();
         copyLib();
@@ -260,6 +260,7 @@ public class WidgetOneApplication extends Application {
         }.start();
     }
 
+    @Keep
     public final WDataManager getWDataManager() {
         if (null == mWDataManager) {
             mWDataManager = new WDataManager(this);
@@ -276,7 +277,7 @@ public class WidgetOneApplication extends Application {
 
     public final void exitApp() {
         stopAnalyticsAgent();
-        CookieSyncManager.getInstance().stopSync();
+        WebViewSdkCompat.stopSync();
     }
 
     private final void stopAnalyticsAgent() {
@@ -371,16 +372,16 @@ public class WidgetOneApplication extends Application {
 
     public final void setPushInfo(String userId, String userNick,
                                   Context mContext, EBrowserView mBrwView) {
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+        List<NameValuePairVO> nameValuePairs = new ArrayList<NameValuePairVO>();
 
-        nameValuePairs.add(new BasicNameValuePair("userId", userId));
-        nameValuePairs.add(new BasicNameValuePair("userNick", userNick));
+        nameValuePairs.add(new NameValuePairVO("userId", userId));
+        nameValuePairs.add(new NameValuePairVO("userNick", userNick));
         String id = WDataManager.F_SPACE_APPID
-                .equals(WDataManager.m_rootWgt.m_appId) ? mBrwView
-                .getCurrentWidget().m_appId : WDataManager.m_rootWgt.m_appId;
-        nameValuePairs.add(new BasicNameValuePair("appId", id));
-        nameValuePairs.add(new BasicNameValuePair("platform", "1"));
-        nameValuePairs.add(new BasicNameValuePair("pushType", "mqtt"));
+                .equals(WDataManager.sRootWgt.m_appId) ? mBrwView
+                .getCurrentWidget().m_appId : WDataManager.sRootWgt.m_appId;
+        nameValuePairs.add(new NameValuePairVO("appId", id));
+        nameValuePairs.add(new NameValuePairVO("platform", "1"));
+        nameValuePairs.add(new NameValuePairVO("pushType", "mqtt"));
         for (EngineEventListener Listener : mListenerQueue) {
             Listener.setPushInfo(mContext, nameValuePairs);
         }
@@ -388,7 +389,7 @@ public class WidgetOneApplication extends Application {
 
     public final void delPushInfo(String userId, String userNick,
                                   Context mContext, EBrowserView mBrwView) {
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+        List<NameValuePairVO> nameValuePairs = new ArrayList<NameValuePairVO>();
         for (EngineEventListener Listener : mListenerQueue) {
             Listener.delPushInfo(mContext, nameValuePairs);
         }
