@@ -13,7 +13,7 @@ public class BaseResultVO implements Serializable {
     /**
      * 该字段会作为接口最后一个参数加到接口中。一般作为Id。
      */
-    private String ext;
+    private Object ext;
 
     /**
      * 接口对应Map
@@ -28,11 +28,11 @@ public class BaseResultVO implements Serializable {
         this.funcMaps = funcMaps;
     }
 
-    public String getExt() {
+    public Object getExt() {
         return ext;
     }
 
-    public void setExt(String ext) {
+    public void setExt(Object ext) {
         this.ext = ext;
     }
 }
