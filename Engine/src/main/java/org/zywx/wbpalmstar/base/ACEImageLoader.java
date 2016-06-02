@@ -70,6 +70,19 @@ public class ACEImageLoader {
         return aceImageLoader;
     }
 
+    /**
+     * "http://site.com/image.png" // from Web
+     * "file:///mnt/sdcard/image.png" // from SD card
+     * "file:///mnt/sdcard/video.mp4" // from SD card (video thumbnail)
+     * "content://media/external/images/media/13" // from content provider
+     * "content://media/external/video/media/13" // from content provider (video thumbnail)
+     * "assets://image.png" // from assets
+     * "drawable://" + R.drawable.img // from drawables (non-9patch images)
+     *
+     * @param imageView
+     * @param imgUrl
+     * @param <T>
+     */
     public <T extends ImageView> void displayImage(T imageView, String imgUrl) {
         String realImgUrl = null;
         if (imgUrl.startsWith(BUtility.F_Widget_RES_SCHEMA)) {
@@ -85,23 +98,21 @@ public class ACEImageLoader {
         } else {
             realImgUrl = imgUrl;
         }
-        displayImageWithOptions(realImgUrl,imageView,true);
+        displayImageWithOptions(realImgUrl, imageView, true);
     }
 
-    public <T extends ImageView> void displayImageWithOptions(String imgUrl, T imageView,boolean cacheOnDisk)
-    {
-        if (cacheOnDisk){
+    public <T extends ImageView> void displayImageWithOptions(String imgUrl, T imageView, boolean cacheOnDisk) {
+        if (cacheOnDisk) {
             DisplayImageOptions options;
-            options=new DisplayImageOptions.Builder()
+            options = new DisplayImageOptions.Builder()
                     .cacheOnDisk(true)
                     .build();
-            ImageLoader.getInstance().displayImage(imgUrl, imageView,options);
-        }else{
+            ImageLoader.getInstance().displayImage(imgUrl, imageView, options);
+        } else {
             ImageLoader.getInstance().displayImage(imgUrl, imageView);
         }
 
     }
-
 
 
 }
