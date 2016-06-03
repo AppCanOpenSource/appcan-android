@@ -18,6 +18,7 @@
 
 package org.zywx.wbpalmstar.engine.universalex;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -192,7 +193,7 @@ public abstract class EUExBase {
         if (null != mBrwView) {
 
             int flag=hasNext?1:0;
-            StringBuilder sb=new StringBuilder("javascript:uexCallback.callback(");
+            final StringBuilder sb=new StringBuilder("javascript:uexCallback.callback(");
             sb.append(callbackId).append(",").append(flag);
             for (Object obj:args){
                 sb.append(",");
@@ -207,8 +208,17 @@ public abstract class EUExBase {
              }
             sb.append(");");
             BDebug.i(sb.toString());
-            mBrwView.loadUrl(sb.toString());
-        }
+            if (mContext!=null&&mContext instanceof Activity){
+                ((Activity)mContext).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mBrwView.loadUrl(sb.toString());
+                    }
+                });
+            }else{
+                mBrwView.loadUrl(sb.toString());
+            }
+         }
     }
 
     /**
