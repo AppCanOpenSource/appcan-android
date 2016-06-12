@@ -642,6 +642,10 @@ public abstract class EUExBase {
         return WebViewSdkCompat.getCookie(inUrl);
     }
 
+    public final void clearCookie(){
+        WebViewSdkCompat.clearCookie();
+    }
+
     /**
      * 添加相应url的cookie.
      *
