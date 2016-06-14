@@ -121,6 +121,8 @@ public class WWidgetData implements Parcelable {
 
     public static int m_remove_loading = 1;//1,引擎关闭loading页；0，web调接口关闭loading页
 
+    public static boolean sFullScreen = false;//是否全屏
+
     public String mErrorPath;//页面加载错误时的错误页面路径
 
     public static final Parcelable.Creator<WWidgetData> CREATOR = new Creator<WWidgetData>() {
@@ -153,7 +155,7 @@ public class WWidgetData implements Parcelable {
             widget.m_opaque = source.readString();
             widget.m_bgColor = source.readString();
             widget.m_appkey = source.readString();
-            widget.mErrorPath=source.readString();
+            widget.mErrorPath = source.readString();
             if (widget.disablePluginsList != null) {
                 source.readStringList(widget.disablePluginsList);
             }
