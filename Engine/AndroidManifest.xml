@@ -21,7 +21,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/browser_main_theme"
-            android:windowSoftInputMode="stateHidden|adjustPan" >
+            android:windowSoftInputMode="stateHidden|adjustPan|screenSize" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
