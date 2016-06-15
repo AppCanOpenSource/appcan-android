@@ -83,7 +83,7 @@ public class EUExScript {
                 "   console.log( \"method call error, code:\" + result.code + \", message: \" + result.result  );" +
                 "}"+
                 "  var content = result.result; " +
-                "   if (content.funcMaps) { " +
+                "   if (content&&content.funcMaps) { " +
                 "     for (var name in content.funcMaps) { " +
                 "      (function(name){" +
                 "        var targetFunc = content.funcMaps[name]; " +
