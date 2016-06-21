@@ -82,7 +82,23 @@ public class EUExScript {
                 " if (result.code != 200) {" +
                 "   console.log( \"method call error, code:\" + result.code + \", message: \" + result.result  );" +
                 "}"+
-                "return result.result;" +
+                "  var content = result.result; " +
+                "   if (content&&content.funcMaps) { " +
+                "     for (var name in content.funcMaps) { " +
+                "      (function(name){" +
+                "        var targetFunc = content.funcMaps[name]; " +
+                "        content[name] = function() { " +
+                "          var params = Array.prototype.slice.call(arguments, 0); " +
+                "          if (content.ext) { " +
+                "            params[params.length] = content.ext; " +
+                "          } " +
+                "          return window[uexName][targetFunc].apply(uexName, params); " +
+                "        }; " +
+                "      })(name);" +
+                "    } " +
+                "    delete content.funcMaps; " +
+                "  } " +
+                "  return content;"+
                 "};"
                 +
                 "window.uexDispatcher={};" +

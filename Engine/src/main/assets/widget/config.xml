@@ -15,4 +15,5 @@
   <widgetOne version="[widgetOneVersion]"/>  
   <orientation>15</orientation>
   <error src="error.html"/>
+  <fullscreen>false</fullscreen>
 </widget>

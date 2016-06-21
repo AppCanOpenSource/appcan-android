@@ -119,32 +119,32 @@ QQ交流群：173758265
   gradle buildEngine
   ```
 
-- **jar{Flavor}Engine**:生成对应flavor的jar，不进行混淆
+- **build{Flavor}JarTemp**:生成对应flavor的jar，不进行混淆
 
   如输出crosswalk引擎的jar
 
   ```sh
-  gradle jarCrosswalkEngine
+  gradle buildCrosswalkJarTemp
   ```
 
   如果要输出所有flavor的jar
 
   ```sh
-  gradle jarEngine
+  gradle buildJarTemp
   ```
 
-- **proguard{Flavor}Engine**：生成对应flavor的jar，并且进行混淆
+- **build{Flavor}Jar**：生成对应flavor的jar，并且进行混淆
 
   如输出混淆过的crosswalk引擎jar
 
   ```sh
-  gradle proguardCrosswalkEngine
+  gradle buildCrosswalkJar
   ```
 
   如果要输出所有flavor的jar
 
   ```sh
-  gradle proguardEngine
+  gradle buildJar
   ```
 
   ​

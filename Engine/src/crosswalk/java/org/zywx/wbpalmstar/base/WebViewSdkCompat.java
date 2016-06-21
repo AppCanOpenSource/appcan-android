@@ -51,6 +51,10 @@ public class WebViewSdkCompat {
 
     }
 
+    public static void clearCookie() {
+        getCookieInstance().removeAllCookie();
+    }
+
     public enum ZoomDensityCompat{
         FAR(WebSettings.ZoomDensity.FAR),      // 240dpi
         MEDIUM(WebSettings.ZoomDensity.MEDIUM),    // 160dpi
