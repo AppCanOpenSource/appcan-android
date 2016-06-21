@@ -126,8 +126,10 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
         setAnimation(null);
         setNetworkAvailable(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            int debug = mBroWind.getWidget().m_appdebug;
-            setWebContentsDebuggingEnabled(debug == 1 ? true : false);
+            if (mBroWind!=null){
+                int debug = mBroWind.getWidget().m_appdebug;
+                setWebContentsDebuggingEnabled(debug == 1 ? true : false);
+            }
         }
         if (Build.VERSION.SDK_INT <= 7) {
             if (mBaSetting == null) {
@@ -841,7 +843,13 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
             mBroWind.closeAd();
             return;
         }
-        loadUrl("file:///android_asset/error/error.html");
+        String errorPath="file:///android_asset/error/error.html";
+        if (mBroWind!=null&&!TextUtils.isEmpty(getRootWidget().mErrorPath)){
+            errorPath="file:///android_asset/widget/"+getRootWidget().mErrorPath;
+            loadUrl(errorPath);
+        }else{
+            loadUrl(errorPath);
+        }
     }
 
     public int getType() {

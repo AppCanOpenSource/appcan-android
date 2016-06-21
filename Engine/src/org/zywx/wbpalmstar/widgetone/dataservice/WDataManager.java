@@ -887,7 +887,7 @@ public class WDataManager {
         widgetData.m_logServerIp = assetsData.m_logServerIp;
         widgetData.m_obfuscation = assetsData.m_obfuscation;
         widgetData.m_opaque = assetsData.m_opaque;
-
+        widgetData.mErrorPath=assetsData.mErrorPath;
         if (isUpdateWidget && isCopyAssetsFinish) {
             String matchAssetPath = BUtility.F_ASSET_PATH + "widget/";
             if (widgetData.m_indexUrl.startsWith(matchAssetPath)) {
@@ -1425,11 +1425,19 @@ public class WDataManager {
                             if ("true".equals(text)) {
                                 WWidgetData.m_remove_loading = 0;
                             }
-                        } else if ("hardware".equals(localName)) {
+                        }else if ("fullscreen".equals(localName)){
+                            String text = parser.nextText();
+                            if ("true".equals(text)) {
+                                WWidgetData.sFullScreen = true;
+                            }
+                        }else if ("hardware".equals(localName)) {
                             String text = parser.nextText();
                             if ("false".equals(text)) {
                                 EBrowserView.sHardwareAccelerate = false;
                             }
+                        }else if ("error".equals(localName)){
+                            widgetData.mErrorPath = parser.getAttributeValue(null,
+                                    "src");
                         }
                         break;
                     case XmlPullParser.END_DOCUMENT:

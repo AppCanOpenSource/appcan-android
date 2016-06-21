@@ -13,5 +13,6 @@
   <showmyspace>false</showmyspace>  
   <bgcolor>#fefefe</bgcolor>  
   <widgetOne version="[widgetOneVersion]"/>  
-  <orientation>15</orientation> 
+  <orientation>15</orientation>
+  <fullscreen>false</fullscreen>
 </widget>
