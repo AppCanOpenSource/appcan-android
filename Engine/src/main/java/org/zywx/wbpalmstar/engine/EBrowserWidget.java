@@ -745,6 +745,7 @@ public class EBrowserWidget extends AbsoluteLayout {
             boolean prevHidden = inEntry
                     .checkFlag(EBrwViewEntry.F_FLAG_NOT_HIDDEN);
             window.setPrevWindowWillHidden(prevHidden);
+            window.setQuery(EBrwViewEntry.VIEW_TYPE_MAIN, inEntry.mQuery);
             addWindow(window, hidden);
             boolean urlEmpty = inEntry.checkData();
             boolean isReload = inEntry.checkFlag(EBrwViewEntry.F_FLAG_RElOAD);
