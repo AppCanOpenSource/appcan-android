@@ -81,8 +81,10 @@ public class EUExManager {
                     objectIntance = (EUExBase) init.newInstance(mContext, brwView);
                 }
 
-            } catch (Exception e) {
-                BDebug.e(e.toString());
+            }catch (Exception e) {
+                if (BDebug.DEBUG){
+                    e.printStackTrace();
+                }
             }
             if (null != objectIntance) {
 //				String uexName = uName + symbol;
