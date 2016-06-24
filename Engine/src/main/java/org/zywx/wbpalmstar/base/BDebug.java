@@ -148,7 +148,7 @@ public class BDebug {
             if (TextUtils.isEmpty(json)) {
                 return;
             }
-            d(DataHelper.toPrettyJson(json));
+            i(DataHelper.toPrettyJson(json));
         }
     }
 
