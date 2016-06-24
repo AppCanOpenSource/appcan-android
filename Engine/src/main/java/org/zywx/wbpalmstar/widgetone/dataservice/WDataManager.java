@@ -1048,8 +1048,8 @@ public class WDataManager {
         for (int i = 0; i < files.length; i++) {
             try {
                 String fileName = files[i];
-                // we make sure file name not contains '.' to be a folder.
-                if (!fileName.contains(".")) {
+                /** folder name can be contains '.' */
+                if (m_context.getResources().getAssets().list(assetDir + "/" + fileName).length != 0) {
                     if (0 == assetDir.length()) {
                         CopyAssets(fileName, dir + fileName + "/");
                     } else {
