@@ -539,7 +539,8 @@ public class BUtility {
                     + path.substring(F_WIDGET_SCHEMA.length());
         } else if (path.startsWith(F_Widget_RES_SCHEMA)) {
             if (wgtType == 0) {
-                if (WDataManager.isUpdateWidget) {
+                if (WDataManager.isUpdateWidget
+                        && WDataManager.isCopyAssetsFinish) {
                     return WDataManager.m_sboxPath + F_Widget_RES_path
                             + path.substring(F_Widget_RES_SCHEMA.length());
                 } else {
