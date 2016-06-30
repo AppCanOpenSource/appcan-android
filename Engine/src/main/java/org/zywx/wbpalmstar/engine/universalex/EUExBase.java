@@ -25,6 +25,7 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Looper;
 import android.os.Message;
+import android.support.annotation.Keep;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
@@ -189,6 +190,7 @@ public abstract class EUExBase {
      * @param hasNext 是否有下一次回调。没有传false ，有传true
      * @param args 参数可以是任何对象，直接回调对象可使用DataHelper.gson.toJsonTree()方法
      */
+    @Keep
     public void callbackToJs(int callbackId,boolean hasNext,Object... args){
         if (null != mBrwView) {
 
@@ -199,11 +201,11 @@ public abstract class EUExBase {
                 sb.append(",");
                 boolean isStrArg = obj instanceof String;
                 if (isStrArg) {
-                    sb.append("\"");
+                    sb.append("\'");
                 }
                 sb.append(String.valueOf(obj));
                 if (isStrArg) {
-                    sb.append("\"");
+                    sb.append("\'");
                 }
              }
             sb.append(");");
