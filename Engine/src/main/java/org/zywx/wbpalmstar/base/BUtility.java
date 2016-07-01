@@ -32,6 +32,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.annotation.Keep;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Xml;
@@ -42,6 +43,7 @@ import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.platform.encryption.PEncryption;
 import org.zywx.wbpalmstar.widgetone.dataservice.WDataManager;
+import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -565,10 +567,19 @@ public class BUtility {
      *
      * @return
      */
+    @Keep
     public static String makeRealPath(String path, EBrowserView browserView) {
         path = makeUrl(browserView.getCurrentUrl(), path);
-        int wgtType = browserView.getCurrentWidget().m_wgtType;
-        String widgetPath = browserView.getCurrentWidget().getWidgetPath();
+        WWidgetData currentWidget=browserView.getCurrentWidget();
+        if (currentWidget==null){//当前没有widget时,取rootWidget
+            currentWidget=WDataManager.sRootWgt;
+        }
+        if (currentWidget==null){
+            BDebug.e("currentWidget is null");
+            return null;
+        }
+        int wgtType = currentWidget.m_wgtType;
+        String widgetPath = currentWidget.getWidgetPath();
         return makeRealPath(path, widgetPath, wgtType);
     }
 
@@ -726,6 +737,7 @@ public class BUtility {
      * @param url AppCan协议路径
      * @return
      */
+    @Keep
     public static String getRealPathWithCopyRes(EBrowserView mBrwView,String url){
         String realPath=makeRealPath(url,mBrwView);
         if (realPath.startsWith("/") && !realPath.startsWith ("/data")) {

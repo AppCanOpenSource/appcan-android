@@ -133,6 +133,7 @@ public abstract class EUExBase {
         callBackJsObject(mBrwView,methodName,object);
     }
 
+    @Keep
     public static void callBackJs(EBrowserView eBrowserView,String methodName, String jsonData){
         if (eBrowserView == null) {
             BDebug.e("mBrwView is null...");
@@ -140,9 +141,10 @@ public abstract class EUExBase {
         }
         String js = SCRIPT_HEADER + "if(" + methodName + "){"
                 + methodName + "('" + jsonData + "');}else{console.log('function "+methodName +" not found.')}";
-        eBrowserView.loadUrl(js);
+        callbackToJs(eBrowserView,js);
     }
 
+    @Keep
     public static void callBackJsObject(EBrowserView eBrowserView,String methodName, Object value){
         if (eBrowserView == null) {
             BDebug.e("mBrwView is null...");
@@ -150,7 +152,7 @@ public abstract class EUExBase {
         }
         String js = SCRIPT_HEADER + "if(" + methodName + "){"
                 + methodName + "(" + value + ");}else{console.log('function "+methodName +" not found.')}";
-        eBrowserView.loadUrl(js);
+        callbackToJs(eBrowserView,js);
     }
 
     public final void errorCallback(int inOpCode, int InErrorCode,
@@ -169,6 +171,12 @@ public abstract class EUExBase {
     private void callbackToJs(String js) {
         if (null != mBrwView) {
             mBrwView.addUriTask(js);
+        }
+    }
+
+    public static void callbackToJs(EBrowserView eBrowserView,String js) {
+        if (null != eBrowserView) {
+            eBrowserView.addUriTask(js);
         }
     }
 
@@ -210,6 +218,7 @@ public abstract class EUExBase {
              }
             sb.append(");");
             BDebug.i(sb.toString());
+            //在主线程回调
             if (mContext!=null&&mContext instanceof Activity){
                 ((Activity)mContext).runOnUiThread(new Runnable() {
                     @Override
@@ -218,7 +227,7 @@ public abstract class EUExBase {
                     }
                 });
             }else{
-                mBrwView.loadUrl(sb.toString());
+                callbackToJs(mBrwView,sb.toString());
             }
          }
     }
