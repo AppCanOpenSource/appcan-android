@@ -137,14 +137,14 @@ public class EBounceViewHeader extends RelativeLayout {
         mArrowImage.setVisibility(GONE);
         wapper.addView(mArrowImage);
 
-        mAnimationUp = new RotateAnimation(0, -180,
+        mAnimationUp = new RotateAnimation(-180, 0,
                 RotateAnimation.RELATIVE_TO_SELF, 0.5f,
                 RotateAnimation.RELATIVE_TO_SELF, 0.5f);
         mAnimationUp.setInterpolator(new AccelerateInterpolator());
         mAnimationUp.setDuration(250);
         mAnimationUp.setFillAfter(true);
 
-        mAnimationDown = new RotateAnimation(-180, 0,
+        mAnimationDown = new RotateAnimation(0, -180,
                 RotateAnimation.RELATIVE_TO_SELF, 0.5f,
                 RotateAnimation.RELATIVE_TO_SELF, 0.5f);
         mAnimationDown.setInterpolator(new AccelerateInterpolator());
