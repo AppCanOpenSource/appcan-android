@@ -846,6 +846,8 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
     public void addUriTask(String uri) {
         if (null != mBroWind && !mDestroyed) {
             mBroWind.addUriTask(this, uri);
+        }else{
+            BDebug.e("mBroWind is null or Destroyed");
         }
     }
 

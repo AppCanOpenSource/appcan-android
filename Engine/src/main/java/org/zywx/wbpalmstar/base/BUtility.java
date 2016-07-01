@@ -401,6 +401,22 @@ public class BUtility {
                 + path.getPath();
     }
 
+    public static String handleRelativePath(String inUrl) {
+        try {
+            int index = inUrl.indexOf("../");
+            while (index != -1) {
+                String beforeStr=inUrl.substring(0,index-1);
+                String afterStr=inUrl.substring(index + 3, inUrl.length());
+                inUrl = beforeStr.substring(0,beforeStr.lastIndexOf("/")+1).concat(afterStr);
+                index = inUrl.indexOf("../");
+            }
+            return inUrl;
+        }catch (Exception e){
+
+        }
+        return inUrl;
+    }
+
     public static String makeUrl(String inBaseUrl, String inUrl) {
         if (null == inUrl || inUrl.length() == 0) {
 
@@ -580,7 +596,7 @@ public class BUtility {
         }
         int wgtType = currentWidget.m_wgtType;
         String widgetPath = currentWidget.getWidgetPath();
-        return makeRealPath(path, widgetPath, wgtType);
+        return handleRelativePath(makeRealPath(path, widgetPath, wgtType));
     }
 
     /**
