@@ -489,7 +489,7 @@ public class EBrowserView extends WebView implements View.OnLongClickListener,
                 if (!isFocused()) {
                     strugglefoucs();
                 }
-
+                onScrollChanged(getScrollX(), getScrollY(), getScrollX(), getScrollY());
                 if (mIsNeedScroll) {
                     //modify no-response-for-onclick-event
                     int temp_ScrollY = this.getScrollY();
