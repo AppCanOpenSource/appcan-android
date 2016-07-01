@@ -1011,6 +1011,9 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
         if (mDestroyed) {
             return new WWidgetData();
         }
+        if (mBroWind==null){
+            return null;
+        }
         return mBroWind.getWidget();
     }
 
