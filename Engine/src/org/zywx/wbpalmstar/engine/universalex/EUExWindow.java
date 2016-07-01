@@ -2591,9 +2591,7 @@ public class EUExWindow extends EUExBase {
     }
 
     public void topBounceViewRefresh(String[] parm) {
-        if (!mBrwView.checkType(EBrwViewEntry.VIEW_TYPE_MAIN)) {
-            mBrwView.topBounceViewRefresh();
-        }
+        mBrwView.topBounceViewRefresh();
     }
 
     public void alert(String[] parm) {
