@@ -25,6 +25,7 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Looper;
 import android.os.Message;
+import android.support.annotation.Keep;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
@@ -132,6 +133,7 @@ public abstract class EUExBase {
         callBackJsObject(mBrwView,methodName,object);
     }
 
+    @Keep
     public static void callBackJs(EBrowserView eBrowserView,String methodName, String jsonData){
         if (eBrowserView == null) {
             BDebug.e("mBrwView is null...");
@@ -139,9 +141,10 @@ public abstract class EUExBase {
         }
         String js = SCRIPT_HEADER + "if(" + methodName + "){"
                 + methodName + "('" + jsonData + "');}else{console.log('function "+methodName +" not found.')}";
-        eBrowserView.loadUrl(js);
+        callbackToJs(eBrowserView,js);
     }
 
+    @Keep
     public static void callBackJsObject(EBrowserView eBrowserView,String methodName, Object value){
         if (eBrowserView == null) {
             BDebug.e("mBrwView is null...");
@@ -149,7 +152,7 @@ public abstract class EUExBase {
         }
         String js = SCRIPT_HEADER + "if(" + methodName + "){"
                 + methodName + "(" + value + ");}else{console.log('function "+methodName +" not found.')}";
-        eBrowserView.loadUrl(js);
+        callbackToJs(eBrowserView,js);
     }
 
     public final void errorCallback(int inOpCode, int InErrorCode,
@@ -171,6 +174,12 @@ public abstract class EUExBase {
         }
     }
 
+    public static void callbackToJs(EBrowserView eBrowserView,String js) {
+        if (null != eBrowserView) {
+            eBrowserView.addUriTask(js);
+        }
+    }
+
     private void callbackToJsAsyn(String js) {
         if (null != mBrwView) {
             mBrwView.addUriTaskAsyn(js);
@@ -189,6 +198,7 @@ public abstract class EUExBase {
      * @param hasNext 是否有下一次回调。没有传false ，有传true
      * @param args 参数可以是任何对象，直接回调对象可使用DataHelper.gson.toJsonTree()方法
      */
+    @Keep
     public void callbackToJs(int callbackId,boolean hasNext,Object... args){
         if (null != mBrwView) {
 
@@ -199,15 +209,16 @@ public abstract class EUExBase {
                 sb.append(",");
                 boolean isStrArg = obj instanceof String;
                 if (isStrArg) {
-                    sb.append("\"");
+                    sb.append("\'");
                 }
                 sb.append(String.valueOf(obj));
                 if (isStrArg) {
-                    sb.append("\"");
+                    sb.append("\'");
                 }
              }
             sb.append(");");
             BDebug.i(sb.toString());
+            //在主线程回调
             if (mContext!=null&&mContext instanceof Activity){
                 ((Activity)mContext).runOnUiThread(new Runnable() {
                     @Override
@@ -216,7 +227,7 @@ public abstract class EUExBase {
                     }
                 });
             }else{
-                mBrwView.loadUrl(sb.toString());
+                callbackToJs(mBrwView,sb.toString());
             }
          }
     }

@@ -846,6 +846,8 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
     public void addUriTask(String uri) {
         if (null != mBroWind && !mDestroyed) {
             mBroWind.addUriTask(this, uri);
+        }else{
+            BDebug.e("mBroWind is null or Destroyed");
         }
     }
 
@@ -1008,6 +1010,9 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
     public WWidgetData getCurrentWidget() {
         if (mDestroyed) {
             return new WWidgetData();
+        }
+        if (mBroWind==null){
+            return null;
         }
         return mBroWind.getWidget();
     }
