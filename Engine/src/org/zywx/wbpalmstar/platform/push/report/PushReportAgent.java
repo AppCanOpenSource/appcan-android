@@ -223,13 +223,13 @@ public class PushReportAgent implements PushReportConstants {
      * @param type 1 开 0 关
      */
     public static void setPushState(Context context, int type) {
-        PushReportUtility.log("setPushState--" + type);
         SharedPreferences sp = context.getSharedPreferences("saveData",
                 Context.MODE_MULTI_PROCESS);
         Editor editor = sp.edit();
         editor.putString("localPushMes", String.valueOf(type));
         editor.commit();
         String pushMes = sp.getString("pushMes", String.valueOf(type));
+        PushReportUtility.log("setPushState type " + type +" pushMes " + pushMes);
         if (type == 1 && "1".equals(pushMes)) {
             Intent myIntent = new Intent(context, PushService.class);
             myIntent.putExtra("type", type);
