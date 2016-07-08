@@ -867,6 +867,7 @@ public final class EBrowserActivity extends FragmentActivity {
                         }
                     }
                 }
+                loadByOtherApp();
             }
         }
     }
