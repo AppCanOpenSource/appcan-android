@@ -195,6 +195,32 @@ public final class EBrowserActivity extends FragmentActivity {
         }
     }
 
+    private void reflectionPluginMethod(String method, Intent intent) {
+        WidgetOneApplication app = (WidgetOneApplication) getApplication();
+        ThirdPluginMgr tpm = app.getThirdPlugins();
+        Map<String, ThirdPluginObject> thirdPlugins = tpm.getPlugins();
+        Set<Map.Entry<String, ThirdPluginObject>> pluginSet = thirdPlugins
+                .entrySet();
+        for (Map.Entry<String, ThirdPluginObject> entry : pluginSet) {
+            try {
+                String javaName = entry.getValue().jclass;
+                Class c = Class.forName(javaName, true, getClassLoader());
+                Object[] objs = new Object[2];
+                objs[0] = this;
+                objs[1] = intent;
+                Class[] argsClass = new Class[objs.length];
+                argsClass[0] = objs[0].getClass();
+                argsClass[1] = objs[1].getClass();
+                Method m = c.getMethod(method, argsClass);
+
+                if (null != m) {
+                    m.invoke(c, objs);
+                }
+            } catch (Exception e) {
+            }
+        }
+    }
+
     private final void initInternalBranch() {
         int sipId = EUExUtil.getResStringID("sip");
         if (0 != sipId) {
@@ -429,7 +455,7 @@ public final class EBrowserActivity extends FragmentActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         handleIntent(intent);
-        reflectionPluginMethod("onActivityNewIntent");
+        reflectionPluginMethod("onActivityNewIntent", intent);
     }
 
     public void handleIntent(Intent intent) {
