@@ -429,6 +429,7 @@ public final class EBrowserActivity extends FragmentActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         handleIntent(intent);
+        reflectionPluginMethod("onActivityNewIntent");
     }
 
     public void handleIntent(Intent intent) {
