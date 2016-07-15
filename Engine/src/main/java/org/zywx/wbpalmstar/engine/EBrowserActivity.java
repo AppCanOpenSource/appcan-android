@@ -209,8 +209,8 @@ public final class EBrowserActivity extends FragmentActivity {
                 objs[0] = this;
                 objs[1] = intent;
                 Class[] argsClass = new Class[objs.length];
-                argsClass[0] = objs[0].getClass();
-                argsClass[1] = objs[1].getClass();
+                argsClass[0] = Context.class;
+                argsClass[1] = Intent.class;
                 Method m = c.getMethod(method, argsClass);
 
                 if (null != m) {
