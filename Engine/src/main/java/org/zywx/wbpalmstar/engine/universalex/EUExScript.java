@@ -20,6 +20,9 @@ package org.zywx.wbpalmstar.engine.universalex;
 
 import android.os.Build;
 
+import org.zywx.wbpalmstar.base.BConstant;
+import org.zywx.wbpalmstar.engine.ESystemInfo;
+
 public class EUExScript {
 
     public static String F_UEX_SCRIPT;
@@ -126,6 +129,7 @@ public class EUExScript {
                 "window.uexWidgetOne={"
                 + "platformName:'android',"
                 + "platformVersion:'" + Build.VERSION.RELEASE + "',"
+                + "statusBarHeight:"+ ESystemInfo.getStateBarHeight(BConstant.app)+","
                 + "getId:function(){uexDispatcher.dispatch('uexWidgetOne','getId',jo(arguments));},"
                 + "getVersion:function(){uexDispatcher.dispatch('uexWidgetOne','getVersion',jo(arguments));},"
                 + "getPlatform:function(){return uexDispatcher.dispatch('uexWidgetOne','getPlatform',jo(arguments));},"
