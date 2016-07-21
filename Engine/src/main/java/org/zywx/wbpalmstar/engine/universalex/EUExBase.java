@@ -514,10 +514,12 @@ public abstract class EUExBase {
     }
 
     public void removeFragmentFromWindow(BaseFragment fragment) {
-        if (fragment.getView() != null) {
-            removeViewFromCurrentWindow(fragment.getView());
+        if (fragment != null) {
+            if (fragment.getView() != null) {
+                removeViewFromCurrentWindow(fragment.getView());
+            }
+            removeFragment(fragment);
         }
-        removeFragment(fragment);
     }
 
     /**

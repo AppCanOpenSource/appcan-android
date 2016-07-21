@@ -2265,7 +2265,7 @@ public class EUExWindow extends EUExBase {
     public void pageBack(String[] parm) {
         int state = 1;
         boolean can = mBrwView.canGoBack();
-        state = can ? 1 : 0;
+        state = can ? 0 : 1;
         if (can) {
             Message msg = new Message();
             msg.obj = this;
@@ -2286,7 +2286,7 @@ public class EUExWindow extends EUExBase {
     public void pageForward(String[] parm) {
         int state = 1;
         boolean can = mBrwView.canGoForward();
-        state = can ? 1 : 0;
+        state = can ? 0 : 1;
         if (can) {
             Message msg = new Message();
             msg.obj = this;
