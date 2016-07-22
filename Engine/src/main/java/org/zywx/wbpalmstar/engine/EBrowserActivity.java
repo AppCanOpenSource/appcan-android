@@ -35,8 +35,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Surface;
 import android.view.View;
@@ -73,7 +73,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-public final class EBrowserActivity extends FragmentActivity {
+import static android.R.attr.start;
+
+public final class EBrowserActivity extends BaseActivity {
 
     public static final int F_OAUTH_CODE = 100001;
     public final static int FILECHOOSER_RESULTCODE = 233;
@@ -111,19 +113,14 @@ public final class EBrowserActivity extends FragmentActivity {
             loadResError();
             return;
         }
-        Intent intent = new Intent(EBrowserActivity.this, org.zywx.wbpalmstar.engine.TempActivity.class);
-        intent.putExtra("isTemp", true);
-        startActivity(intent);
-        overridePendingTransition(EUExUtil.getResAnimID("platform_myspace_no_anim")
-                , EUExUtil.getResAnimID("platform_myspace_no_anim"));
-
+        startMaskActivity();
         mVisable = true;
         Window activityWindow = getWindow();
-        org.zywx.wbpalmstar.engine.ESystemInfo.getIntence().init(this);
-        mBrowser = new org.zywx.wbpalmstar.engine.EBrowser(this);
+        ESystemInfo.getIntence().init(this);
+        mBrowser = new EBrowser(this);
         mEHandler = new EHandler(Looper.getMainLooper());
         View splash = initEngineUI();
-        mBrowserAround = new org.zywx.wbpalmstar.engine.EBrowserAround(splash);
+        mBrowserAround = new EBrowserAround(splash);
 //		mScreen.setVisibility(View.INVISIBLE);
         setContentView(mScreen);
         initInternalBranch();
@@ -137,11 +134,10 @@ public final class EBrowserActivity extends FragmentActivity {
             delay = 1000L;
         }
         mEHandler.sendMessageDelayed(loadDelayMsg, delay);
-        Message initAppMsg = mEHandler.obtainMessage(EHandler.F_MSG_INIT_APP);
-        WidgetOneApplication app = (WidgetOneApplication) getApplication();
-        app.initApp(this, initAppMsg);
+        initEngine((WWidgetData) getIntent().getParcelableExtra(LoadingActivity.KEY_INTENT_WIDGET_DATA));
+        getIntent().removeExtra(LoadingActivity.KEY_INTENT_WIDGET_DATA);
 
-        org.zywx.wbpalmstar.engine.EUtil.printeBackup(savedInstanceState, "onCreate");
+        EUtil.printeBackup(savedInstanceState, "onCreate");
         // EUtil.checkAndroidProxy(getBaseContext());
 
         handleIntent(getIntent());
@@ -231,8 +227,8 @@ public final class EBrowserActivity extends FragmentActivity {
         }
     }
 
-    private final void initEngine(Message resultMsg) {
-        if (resultMsg.arg1 == 0) {
+    private final void initEngine(WWidgetData rootWidget) {
+        if (rootWidget == null || TextUtils.isEmpty(rootWidget.m_indexUrl)) {
             loadResError();
             return;
         }
@@ -240,7 +236,6 @@ public final class EBrowserActivity extends FragmentActivity {
 
         ACEDes.getObfuscationList();
 
-        WWidgetData rootWidget = (WWidgetData) resultMsg.obj;
         // String[] plugins = {"uexXmlHttpMgr", "uexCamera"};
         // rootWidget.disablePlugins = plugins;
         changeConfiguration(rootWidget.m_orientation);
@@ -274,22 +269,9 @@ public final class EBrowserActivity extends FragmentActivity {
             return;
         }
         ConfigXmlUtil.setStatusBarColor(this,WWidgetData.sStatusBarColor);
-        final LocalBroadcastManager broadcastManager = LocalBroadcastManager
-                .getInstance(this);
-        mEHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mLoadingRemoved = true;
-                        getWindow().setBackgroundDrawable(new ColorDrawable(0xFFFFFFFF));
-                        Intent intent = new Intent(org.zywx.wbpalmstar.engine.LoadingActivity.BROADCAST_ACTION);
-                        broadcastManager.sendBroadcast(intent);
-                    }
-                });
-            }
-        }, delayTime);
+        mLoadingRemoved = true;
+        getWindow().setBackgroundDrawable(new ColorDrawable(0xFFFFFFFF));
+        sendFinishLoadingBroadcast(delayTime);
     }
 
 
@@ -932,9 +914,6 @@ public final class EBrowserActivity extends FragmentActivity {
 
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case F_MSG_INIT_APP:
-                    initEngine(msg);
-                    break;
                 case F_MSG_LOAD_DELAY:
                     try {
                         Intent intent = getIntent();
