@@ -850,7 +850,19 @@ public abstract class EUExBase {
         }
     }
 
-
     public void onHandleMessage(Message msg) {
+    }
+
+    /**
+     * 区分接口收到的参数,简单判断字符串是否是json格式的String,没有必要完整校验一遍
+     * @param str
+     * @return
+     */
+    public boolean isJsonString(String str){
+        if (TextUtils.isEmpty(str)){
+            return false;
+        }
+        return str.startsWith("{") && str.endsWith("}")||
+                str.startsWith("[") && str.endsWith("]");
     }
 }
