@@ -12,5 +12,9 @@ public class WindowSetSlidingWindowVO implements Serializable {
 
     public WindowSlidingItemVO rightSliding;
 
+    public String animationId;
+
+    public String bg;
+
 
 }

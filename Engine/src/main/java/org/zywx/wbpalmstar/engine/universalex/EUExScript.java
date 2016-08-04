@@ -260,7 +260,8 @@ public class EUExScript {
                 + "setSlidingWindow:function(){uexDispatcher.dispatch('uexWindow','setSlidingWindow',jo(arguments));},"
                 + "setSlidingWindowEnabled:function(){uexDispatcher.dispatch('uexWindow','setSlidingWindowEnabled',jo(arguments));},"
                 + "toggleSlidingWindow:function(){uexDispatcher.dispatch('uexWindow','toggleSlidingWindow',jo(arguments));},"
-                + "getSlidingWindowState:function(){uexDispatcher.dispatch('uexWindow','getSlidingWindowState',jo(arguments));},"
+                + "getSlidingWindowState:function(){return uexDispatcher.dispatch('uexWindow'," +
+                "'getSlidingWindowState',jo(arguments));},"
                 + "setLoadingImagePath:function(){uexDispatcher.dispatch('uexWindow','setLoadingImagePath',jo(arguments));},"
 
                 + "setBounce:function(){uexDispatcher.dispatch('uexWindow','setBounce',jo(arguments));},"

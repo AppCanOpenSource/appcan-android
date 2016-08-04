@@ -59,7 +59,11 @@ import org.zywx.wbpalmstar.base.vo.CreateContainerVO;
 import org.zywx.wbpalmstar.base.vo.SetSwipeCloseEnableVO;
 import org.zywx.wbpalmstar.base.vo.ShareInputVO;
 import org.zywx.wbpalmstar.base.vo.WindowAnimVO;
+import org.zywx.wbpalmstar.base.vo.WindowOpenSlibingVO;
 import org.zywx.wbpalmstar.base.vo.WindowOpenVO;
+import org.zywx.wbpalmstar.base.vo.WindowSetFrameVO;
+import org.zywx.wbpalmstar.base.vo.WindowSetSlidingWindowVO;
+import org.zywx.wbpalmstar.base.vo.WindowSlidingItemVO;
 import org.zywx.wbpalmstar.engine.DataHelper;
 import org.zywx.wbpalmstar.engine.EBounceView;
 import org.zywx.wbpalmstar.engine.EBrowser;
@@ -464,21 +468,19 @@ public class EUExWindow extends EUExBase {
             editor.putLong(BUtility.m_loadingImageTime, time);
             editor.commit();
         } catch (JSONException e) {
-            e.printStackTrace();
+            if (BDebug.DEBUG) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void setWindowFrame(String[] parm) {
-        if (parm.length < 3) {
-            return;
+        if (isFirstParamExistAndIsJson(parm)){
+            WindowJsonWrapper.setWindowFrame(this,
+                    DataHelper.gson.fromJson(parm[0], WindowSetFrameVO.class));
+        }else{
+            setWindowFrameMsg(parm);
         }
-        Message msg = new Message();
-        msg.obj = this;
-        msg.what = MSG_FUNCTION_SETWINDOWFRAME;
-        Bundle bd = new Bundle();
-        bd.putStringArray(TAG_BUNDLE_PARAM, parm);
-        msg.setData(bd);
-        mHandler.sendMessage(msg);
     }
 
     public void setWindowFrameMsg(String[] parm) {
@@ -598,16 +600,11 @@ public class EUExWindow extends EUExBase {
     }
 
     public void openSlibing(String[] parm) {
-        if (parm.length < 6) {
-            return;
+        if(isFirstParamExistAndIsJson(parm)){
+            WindowJsonWrapper.openSlibing(this,DataHelper.gson.fromJson(parm[0], WindowOpenSlibingVO.class));
+        }else{
+            openSlibingMsg(parm);
         }
-        Message msg = new Message();
-        msg.obj = this;
-        msg.what = MSG_FUNCTION_OPENSLIBING;
-        Bundle bd = new Bundle();
-        bd.putStringArray(TAG_BUNDLE_PARAM, parm);
-        msg.setData(bd);
-        mHandler.sendMessage(msg);
     }
 
     public void openSlibingMsg(String[] parm) {
@@ -810,14 +807,7 @@ public class EUExWindow extends EUExBase {
         }
     }
 
-    public void getSlidingWindowState(String[] param) {
-        Message msg = new Message();
-        msg.obj = this;
-        msg.what = MSG_FUNCTION_GET_SLIDING_WINDOW_STATE;
-        mHandler.sendMessage(msg);
-    }
-
-    private void hanldeGetSlidingWindowState() {
+    public int getSlidingWindowState(String[] param) {
         EBrowserActivity activity = (EBrowserActivity) mContext;
         SlidingMenu slidingMenu = activity.globalSlidingMenu;
         if (slidingMenu != null) {
@@ -825,7 +815,9 @@ public class EUExWindow extends EUExBase {
             String js = "javascript:if(uexWindow.cbSlidingWindowState){uexWindow.cbSlidingWindowState("
                     + state + ");}";
             mBrwView.addUriTask(js);
+            return state;
         }
+        return 1;
     }
 
     public void setSlidingWindowEnabled(String[] param) {
@@ -868,98 +860,87 @@ public class EUExWindow extends EUExBase {
     }
 
     public void handleSetSlidingWin(String[] param) {
-        String jsonStr = param[0];
+        WindowSetSlidingWindowVO slidingWindowVO = DataHelper.gson.fromJson(param[0],
+                WindowSetSlidingWindowVO.class);
         EBrowserActivity activity = (EBrowserActivity) mContext;
-        try {
-            JSONObject jsonObject = new JSONObject(jsonStr);
-            int with = 0;
-            String url;
-            int slidingMode = SlidingMenu.LEFT;
-            boolean isAttach = false;
-            JSONObject leftJsonObj = null;
-            JSONObject rightJsonObj = null;
-            View menuView;
-            if (activity.globalSlidingMenu.getParent() != null) {
-                return;
-            }
 
-            String animationId = jsonObject.optString("animationId");
-            if (jsonObject.has("leftSliding")) {
-                leftJsonObj = new JSONObject(jsonObject.getString("leftSliding"));
-                if (leftJsonObj != null) {
-                    slidingMode = SlidingMenu.LEFT;
-                    with = leftJsonObj.getInt("width");
-                    url = leftJsonObj.getString("url");
-                    if (with > 0) {
-                        activity.globalSlidingMenu.setBehindWidth(with);
-                    }
-                    menuView = LayoutInflater.from(mContext).inflate(finder.getLayoutId("menu_frame"), null);
-                    activity.globalSlidingMenu.setMenu(menuView);
-                    addBrowserWindowToSldingWin(url, EBrowserWindow.rootLeftSlidingWinName);
-                    isAttach = true;
-                }
-            }
-
-            if (jsonObject.has("rightSliding")) {
-                rightJsonObj = new JSONObject(jsonObject.getString("rightSliding"));
-                if (rightJsonObj != null) {
-                    slidingMode = SlidingMenu.RIGHT;
-                    with = rightJsonObj.getInt("width");
-                    url = rightJsonObj.getString("url");
-                    if (with > 0) {
-                        activity.globalSlidingMenu.setBehindWidth(with);
-                    }
-                    menuView = LayoutInflater.from(mContext).inflate(finder.getLayoutId("menu_frame_two"), null);
-                    activity.globalSlidingMenu.setSecondaryMenu(menuView);
-                    activity.globalSlidingMenu.setSecondaryShadowDrawable(finder.getDrawable("shadowright"));
-                    addBrowserWindowToSldingWin(url, EBrowserWindow.rootRightSlidingWinName);
-                    isAttach = true;
-                }
-            }
-
-            if ("1".equals(animationId)) {
-                //仿QQ侧边栏动画
-                activity.globalSlidingMenu.setBehindCanvasTransformer(new SlidingMenu.CanvasTransformer() {
-                    @Override
-                    public void transformCanvas(Canvas canvas, float percentOpen) {
-                        float scale = (float) (percentOpen * 0.25 + 0.75);
-                        canvas.scale(scale, scale, 0, canvas.getHeight() / 2);
-                    }
-                });
-                activity.globalSlidingMenu.setAboveCanvasTransformer(new SlidingMenu.CanvasTransformer() {
-                    @Override
-                    public void transformCanvas(Canvas canvas, float percentOpen) {
-                        float scale = (float) (1 - percentOpen * 0.20);
-                        canvas.scale(scale, scale, canvas.getWidth() / 2, canvas.getHeight() / 2);
-                    }
-                });
-                activity.globalSlidingMenu.setFadeEnabled(false);
-            } else {
-                activity.globalSlidingMenu.setShadowWidthRes(EUExUtil.getResDimenID("shadow_width"));
-                if (!jsonObject.has("leftSliding") && jsonObject.has("rightSliding")) {
-                    activity.globalSlidingMenu.setShadowDrawable(EUExUtil.getResDrawableID("shadowright"));
-                } else {
-                    activity.globalSlidingMenu.setShadowDrawable(EUExUtil.getResDrawableID("shadow"));
-                }
-                activity.globalSlidingMenu.setFadeDegree(0.35f);
-            }
-
-            String bg = jsonObject.optString("bg");
-            if (!TextUtils.isEmpty(bg)) {
-                setViewBackground(activity.globalSlidingMenu, bg, mBrwView.getCurrentWidget().m_indexUrl);
-            }
-
-            if (leftJsonObj != null && rightJsonObj != null) {
-                slidingMode = SlidingMenu.LEFT_RIGHT;
-            }
-
-            if (isAttach == true) {
-                activity.globalSlidingMenu.setMode(slidingMode);
-                activity.globalSlidingMenu.attachToActivity(activity, SlidingMenu.SLIDING_CONTENT);
-                mBrwView.setBackgroundColor(Color.TRANSPARENT);
-            }
-        } catch (JSONException e) {
+        int with = 0;
+        String url;
+        int slidingMode = SlidingMenu.LEFT;
+        boolean isAttach = false;
+        View menuView;
+        if (activity.globalSlidingMenu.getParent() != null) {
+            return;
         }
+        if (slidingWindowVO.leftSliding != null) {
+            slidingMode = SlidingMenu.LEFT;
+            with = Integer.parseInt(slidingWindowVO.leftSliding.width);
+            url = slidingWindowVO.leftSliding.url;
+            if (with > 0) {
+                activity.globalSlidingMenu.setBehindWidth(with);
+            }
+            menuView = LayoutInflater.from(mContext).inflate(finder.getLayoutId("menu_frame"), null);
+            activity.globalSlidingMenu.setMenu(menuView);
+            addBrowserWindowToSldingWin(url, EBrowserWindow.rootLeftSlidingWinName);
+            isAttach = true;
+        }
+
+        if (slidingWindowVO.rightSliding != null) {
+            slidingMode = SlidingMenu.RIGHT;
+            with = Integer.parseInt(slidingWindowVO.rightSliding.width);
+            url = slidingWindowVO.rightSliding.url;
+            if (with > 0) {
+                activity.globalSlidingMenu.setBehindWidth(with);
+            }
+            menuView = LayoutInflater.from(mContext).inflate(finder.getLayoutId("menu_frame_two"), null);
+            activity.globalSlidingMenu.setSecondaryMenu(menuView);
+            activity.globalSlidingMenu.setSecondaryShadowDrawable(finder.getDrawable("shadowright"));
+            addBrowserWindowToSldingWin(url, EBrowserWindow.rootRightSlidingWinName);
+            isAttach = true;
+        }
+
+        if ("1".equals(slidingWindowVO.animationId)) {
+            //仿QQ侧边栏动画
+            activity.globalSlidingMenu.setBehindCanvasTransformer(new SlidingMenu.CanvasTransformer() {
+                @Override
+                public void transformCanvas(Canvas canvas, float percentOpen) {
+                    float scale = (float) (percentOpen * 0.25 + 0.75);
+                    canvas.scale(scale, scale, 0, canvas.getHeight() / 2);
+                }
+            });
+            activity.globalSlidingMenu.setAboveCanvasTransformer(new SlidingMenu.CanvasTransformer() {
+                @Override
+                public void transformCanvas(Canvas canvas, float percentOpen) {
+                    float scale = (float) (1 - percentOpen * 0.20);
+                    canvas.scale(scale, scale, canvas.getWidth() / 2, canvas.getHeight() / 2);
+                }
+            });
+            activity.globalSlidingMenu.setFadeEnabled(false);
+        } else {
+            activity.globalSlidingMenu.setShadowWidthRes(EUExUtil.getResDimenID("shadow_width"));
+            if (slidingWindowVO.leftSliding == null && slidingWindowVO.rightSliding != null) {
+                activity.globalSlidingMenu.setShadowDrawable(EUExUtil.getResDrawableID("shadowright"));
+            } else {
+                activity.globalSlidingMenu.setShadowDrawable(EUExUtil.getResDrawableID("shadow"));
+            }
+            activity.globalSlidingMenu.setFadeDegree(0.35f);
+        }
+
+        String bg = slidingWindowVO.bg;
+        if (!TextUtils.isEmpty(bg)) {
+            setViewBackground(activity.globalSlidingMenu, bg, mBrwView.getCurrentWidget().m_indexUrl);
+        }
+
+        if (slidingWindowVO.rightSliding != null && slidingWindowVO.leftSliding != null) {
+            slidingMode = SlidingMenu.LEFT_RIGHT;
+        }
+
+        if (isAttach) {
+            activity.globalSlidingMenu.setMode(slidingMode);
+            activity.globalSlidingMenu.attachToActivity(activity, SlidingMenu.SLIDING_CONTENT);
+            mBrwView.setBackgroundColor(Color.TRANSPARENT);
+        }
+
     }
 
     public void setViewBackground(View view, String bgColor, String baseUrl) {
@@ -2353,13 +2334,11 @@ public class EUExWindow extends EUExBase {
     }
 
     public void windowBack(String[] parm) {
-        Message msg = new Message();
-        msg.obj = this;
-        msg.what = MSG_FUNCTION_WINDOWBACK;
-        Bundle bd = new Bundle();
-        bd.putStringArray(TAG_BUNDLE_PARAM, parm);
-        msg.setData(bd);
-        mHandler.sendMessage(msg);
+        if (isFirstParamExistAndIsJson(parm)){
+            WindowJsonWrapper.windowBack(this,DataHelper.gson.fromJson(parm[0],WindowAnimVO.class));
+        }else{
+            windowBackMsg(parm);
+        }
     }
 
     public void windowBackMsg(String[] parm) {
@@ -2402,14 +2381,13 @@ public class EUExWindow extends EUExBase {
         return SpManager.getInstance().getString(params[0], "");
     }
 
-    public void windowForward(String[] parm) {
-        Message msg = new Message();
-        msg.obj = this;
-        msg.what = MSG_FUNCTION_WINDOWFORWARD;
-        Bundle bd = new Bundle();
-        bd.putStringArray(TAG_BUNDLE_PARAM, parm);
-        msg.setData(bd);
-        mHandler.sendMessage(msg);
+    public void windowForward(String[] params) {
+        if (isFirstParamExistAndIsJson(params)){
+            WindowJsonWrapper.windowForward(this,DataHelper.gson.fromJson(params[0],
+                    WindowAnimVO.class));
+        }else{
+            windowForwardMsg(params);
+        }
     }
 
     public void windowForwardMsg(String[] parm) {
@@ -3710,9 +3688,6 @@ public class EUExWindow extends EUExBase {
                 break;
             case MSG_FUNCTION_TOGGLE_SLIDINGWIN:
                 hanldeToggleSlidingWindow(param);
-                break;
-            case MSG_FUNCTION_GET_SLIDING_WINDOW_STATE:
-                hanldeGetSlidingWindowState();
                 break;
             case MSG_FUNCTION_REFRESH:
                 String url = mBrwView.getRelativeUrl();

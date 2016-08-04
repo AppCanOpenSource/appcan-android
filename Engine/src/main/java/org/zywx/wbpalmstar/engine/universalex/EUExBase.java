@@ -865,4 +865,16 @@ public abstract class EUExBase {
         return str.startsWith("{") && str.endsWith("}")||
                 str.startsWith("[") && str.endsWith("]");
     }
+
+    /**
+     * 判断数组的第一个是否存在并且是Json格式
+     * @param params
+     * @return
+     */
+    public boolean isFirstParamExistAndIsJson(String[] params){
+        if (params==null||params.length==0){
+            return false;
+        }
+        return isJsonString(params[0]);
+    }
 }
