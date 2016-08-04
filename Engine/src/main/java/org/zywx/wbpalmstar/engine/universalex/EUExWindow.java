@@ -58,6 +58,8 @@ import org.zywx.wbpalmstar.base.util.SpManager;
 import org.zywx.wbpalmstar.base.vo.CreateContainerVO;
 import org.zywx.wbpalmstar.base.vo.SetSwipeCloseEnableVO;
 import org.zywx.wbpalmstar.base.vo.ShareInputVO;
+import org.zywx.wbpalmstar.base.vo.WindowAnimVO;
+import org.zywx.wbpalmstar.base.vo.WindowOpenVO;
 import org.zywx.wbpalmstar.engine.DataHelper;
 import org.zywx.wbpalmstar.engine.EBounceView;
 import org.zywx.wbpalmstar.engine.EBrowser;
@@ -71,6 +73,7 @@ import org.zywx.wbpalmstar.engine.EDialogTask;
 import org.zywx.wbpalmstar.engine.ESystemInfo;
 import org.zywx.wbpalmstar.engine.EUtil;
 import org.zywx.wbpalmstar.engine.EViewEntry;
+import org.zywx.wbpalmstar.engine.universalex.wrapper.WindowJsonWrapper;
 import org.zywx.wbpalmstar.platform.window.ActionSheetDialog;
 import org.zywx.wbpalmstar.platform.window.ActionSheetDialog.ActionSheetDialogItemClickListener;
 import org.zywx.wbpalmstar.platform.window.PromptDialog;
@@ -189,17 +192,13 @@ public class EUExWindow extends EUExBase {
 
     }
 
-    public void open(String[] parm) {
-        if (parm.length < 7) {
-            return;
+    public void open(String[] params) {
+        if (isJsonString(params[0])){
+            WindowOpenVO openVO=DataHelper.gson.fromJson(params[0],WindowOpenVO.class);
+            WindowJsonWrapper.open(this,openVO);
+        }else{
+            openMsg(params);
         }
-        Message msg = new Message();
-        msg.obj = this;
-        msg.what = MSG_FUNCTION_OPEN;
-        Bundle bd = new Bundle();
-        bd.putStringArray(TAG_BUNDLE_PARAM, parm);
-        msg.setData(bd);
-        mHandler.sendMessage(msg);
     }
 
     public void openMsg(String[] parm) {
@@ -224,10 +223,10 @@ public class EUExWindow extends EUExBase {
         String bgColor = "#00000000";
         boolean hasExtraInfo = false;
         int hardware = -1;
-        if (parm.length > 7) {
+        if (parm.length > 7&&parm[7]!=null) {
             animDuration = parm[7];
         }
-        if (parm.length > 8) {
+        if (parm.length > 8&&parm[8]!=null) {
             String jsonData = parm[8];
             try {
                 JSONObject json = new JSONObject(jsonData);
@@ -245,8 +244,7 @@ public class EUExWindow extends EUExBase {
                 if (hardware != -1) {
                     hasExtraInfo = true;
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
+            } catch (JSONException ignored) {
             }
         }
         String cUrl = mBrwView.getCurrentUrl();
@@ -275,6 +273,9 @@ public class EUExWindow extends EUExBase {
             height = parseHeight(inHeight);
             flag = Integer.parseInt(inFlag);
         } catch (Exception e) {
+            if (BDebug.DEBUG){
+                e.printStackTrace();
+            }
             errorCallback(0, EUExCallback.F_E_UEXWINDOW_OPEN, "Illegal parameter");
             return;
         }
@@ -324,17 +325,8 @@ public class EUExWindow extends EUExBase {
         curWind.createWindow(mBrwView, windEntry);
     }
 
-    public void openPresentWindow(String[] params){
-        if (params.length < 7) {
-            return;
-        }
-        Message msg = new Message();
-        msg.obj = this;
-        msg.what = MSG_FUNCTION_OPEN;
-        Bundle bd = new Bundle();
-        bd.putStringArray(TAG_BUNDLE_PARAM, params);
-        msg.setData(bd);
-        mHandler.sendMessage(msg);
+    public void openPresentWindow(String[] params){//与iOS保持一致添加的接口
+        open(params);
     }
 
     public int getHeight(String[] params){
@@ -516,13 +508,11 @@ public class EUExWindow extends EUExBase {
     }
 
     public void close(String[] parm) {
-        Message msg = mHandler.obtainMessage();
-        msg.what = MSG_FUNCTION_CLOSE;
-        msg.obj = this;
-        Bundle bd = new Bundle();
-        bd.putStringArray(TAG_BUNDLE_PARAM, parm);
-        msg.setData(bd);
-        mHandler.sendMessage(msg);
+        if (parm!=null&&parm.length>0&&isJsonString(parm[0])){
+            WindowJsonWrapper.close(this,DataHelper.gson.fromJson(parm[0], WindowAnimVO.class));
+        }else{
+            closeMsg(parm);
+        }
     }
 
     public void exit(String[] parm) {
@@ -729,6 +719,10 @@ public class EUExWindow extends EUExBase {
     }
 
     public void evaluateScript(String[] parm) {
+        evaluateScriptMsg(parm);
+    }
+
+    public void evaluateScriptMsg(String[] parm) {
         if (parm.length < 3) {
             return;
         }
@@ -2262,7 +2256,7 @@ public class EUExWindow extends EUExBase {
         mHandler.sendMessage(msg);
     }
 
-    public void pageBack(String[] parm) {
+    public boolean pageBack(String[] parm) {
         int state = 1;
         boolean can = mBrwView.canGoBack();
         state = can ? 0 : 1;
@@ -2281,9 +2275,10 @@ public class EUExWindow extends EUExBase {
         // return;
         // }
         // wind.goBack();
+        return can;
     }
 
-    public void pageForward(String[] parm) {
+    public boolean pageForward(String[] parm) {
         int state = 1;
         boolean can = mBrwView.canGoForward();
         state = can ? 0 : 1;
@@ -2302,6 +2297,7 @@ public class EUExWindow extends EUExBase {
         // return;
         // }
         // wind.goForward();
+        return can;
     }
 
     public void setReportKey(String[] parm) {
