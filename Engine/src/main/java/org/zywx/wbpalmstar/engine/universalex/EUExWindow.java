@@ -69,6 +69,7 @@ import org.zywx.wbpalmstar.base.vo.WindowPromptResultVO;
 import org.zywx.wbpalmstar.base.vo.WindowPromptVO;
 import org.zywx.wbpalmstar.base.vo.WindowSetFrameVO;
 import org.zywx.wbpalmstar.base.vo.WindowSetSlidingWindowVO;
+import org.zywx.wbpalmstar.base.vo.WindowShowBounceViewVO;
 import org.zywx.wbpalmstar.base.vo.WindowSlidingItemVO;
 import org.zywx.wbpalmstar.base.vo.WindowToastVO;
 import org.zywx.wbpalmstar.engine.DataHelper;
@@ -2429,8 +2430,8 @@ public class EUExWindow extends EUExBase {
         mBrwView.getBrowserWindow().windowGoForward(animId, duration);
     }
 
-    public void getBounce(String[] parm) {
-        mBrwView.getBounce();
+    public int  getBounce(String[] parm) {
+        return mBrwView.getBounce();
     }
 
     public void setBounce(String[] parm) {
@@ -2468,6 +2469,11 @@ public class EUExWindow extends EUExBase {
     }
 
     public void showBounceView(String[] parm) {
+        if (isJsonString(parm[0])){
+            WindowJsonWrapper.showBounceView(this,DataHelper.gson.fromJson(parm[0],
+                    WindowShowBounceViewVO.class));
+            return;
+        }
         if (parm.length < 3) {
             return;
         }
@@ -2804,7 +2810,6 @@ public class EUExWindow extends EUExBase {
         }
         final int callbackId=valueOfCallbackId(callbackIdStr);
         if (inButtonLables != null && inButtonLables.length == 2) {
-            final JSONObject jsonObject = new JSONObject();
             mPrompt = PromptDialog.show(mContext, inTitle, inMessage, inDefaultValue,hint, inButtonLables[0], new
                     OnClickListener() {
                 @Override
@@ -3251,17 +3256,7 @@ public class EUExWindow extends EUExBase {
 
     private void disturbLongPressGestureMsg(String[] params) {
         int disturb = Integer.parseInt(params[0]);
-        mBrwView.setDisturbLongPressGesture(disturb == 0 ? false : true);
-    }
-
-    public void createPluginViewContainer(String[] parm) {
-        Message msg = mHandler.obtainMessage();
-        msg.what = MSG_PLUGINVIEW_CONTAINER_CREATE;
-        msg.obj = this;
-        Bundle bd = new Bundle();
-        bd.putStringArray(TAG_BUNDLE_PARAM, parm);
-        msg.setData(bd);
-        mHandler.sendMessage(msg);
+        mBrwView.setDisturbLongPressGesture(disturb != 0);
     }
 
     /**
@@ -3269,10 +3264,11 @@ public class EUExWindow extends EUExBase {
      *
      * @param params
      */
-    private void createPluginViewContainerMsg(String[] params) {
+    public boolean createPluginViewContainer(String[] params) {
+
         if (params == null || params.length < 1) {
             errorCallback(0, 0, "error params!");
-            return;
+            return false;
         }
         final CreateContainerVO inputVO = DataHelper.gson.fromJson(params[0], CreateContainerVO.class);
 
@@ -3283,7 +3279,7 @@ public class EUExWindow extends EUExBase {
             if (view instanceof ContainerViewPager) {
                 ContainerViewPager pager = (ContainerViewPager) view;
                 if (inputVO.getId().equals((String) pager.getContainerVO().getId())) {
-                    return;
+                    return false;
                 }
             }//end instance
         }//end for
@@ -3293,25 +3289,25 @@ public class EUExWindow extends EUExBase {
                 Vector<FrameLayout>());
         containerViewPager.setAdapter(containerAdapter);
         containerViewPager.setOnPageChangeListener(new ContainerViewPager.OnPageChangeListener() {
-			
-			@Override
-			public void onPageSelected(int index) {
-				String js = SCRIPT_HEADER + "if("
-						+ function_onPluginContainerPageChange + "){"
-						+ function_onPluginContainerPageChange + "(" + inputVO.getId()
-						+ "," + EUExCallback.F_C_INT + "," + index
-						+ SCRIPT_TAIL;
-				onCallback(js);
-			}
-			
-			@Override
-			public void onPageScrolled(int arg0, float arg1, int arg2) {
-			}
-			
-			@Override
-			public void onPageScrollStateChanged(int arg0) {
-			}
-		});
+
+            @Override
+            public void onPageSelected(int index) {
+                String js = SCRIPT_HEADER + "if("
+                        + function_onPluginContainerPageChange + "){"
+                        + function_onPluginContainerPageChange + "(" + inputVO.getId()
+                        + "," + EUExCallback.F_C_INT + "," + index
+                        + SCRIPT_TAIL;
+                onCallback(js);
+            }
+
+            @Override
+            public void onPageScrolled(int arg0, float arg1, int arg2) {
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int arg0) {
+            }
+        });
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams((int) inputVO.getW(), (int) inputVO.getH());
         lp.leftMargin = (int) inputVO.getX();
         lp.topMargin = (int) inputVO.getY();
@@ -3321,7 +3317,9 @@ public class EUExWindow extends EUExBase {
                     + function_cbCreatePluginViewContainer + "(" + inputVO.getId() + "," + EUExCallback.F_C_TEXT + ",'"
                     + "success" + "'" + SCRIPT_TAIL;
             onCallback(js);
+            return true;
         }
+        return false;
     }
 
     public void showPluginViewContainer(String[] parm) {
@@ -3414,25 +3412,15 @@ public class EUExWindow extends EUExBase {
         }
     }
 
-    public void closePluginViewContainer(String[] parm) {
-        Message msg = mHandler.obtainMessage();
-        msg.what = MSG_PLUGINVIEW_CONTAINER_CLOSE;
-        msg.obj = this;
-        Bundle bd = new Bundle();
-        bd.putStringArray(TAG_BUNDLE_PARAM, parm);
-        msg.setData(bd);
-        mHandler.sendMessage(msg);
-    }
-
     /**
      * 移除一个容器
      *
      * @param params
      */
-    private void closePluginViewContainerMsg(String[] params) {
+    public boolean closePluginViewContainer(String[] params) {
         if (params == null || params.length < 1) {
             errorCallback(0, 0, "error params!");
-            return;
+            return false;
         }
         try {
             JSONObject json = new JSONObject(params[0]);
@@ -3458,13 +3446,17 @@ public class EUExWindow extends EUExBase {
                                 + function_cbClosePluginViewContainer + "(" + opid + "," + EUExCallback.F_C_TEXT + ",'"
                                 + "success" + "'" + SCRIPT_TAIL;
                         onCallback(js);
-                        return;
+                        return true;
                     }
                 }//end instance
             }//end for
         } catch (Exception e) {
-            e.printStackTrace();
+            if (BDebug.DEBUG) {
+                e.printStackTrace();
+            }
+            return false;
         }
+        return false;
     }
 
     public void setPageInContainer(String[] parm) {
@@ -3768,12 +3760,6 @@ public class EUExWindow extends EUExBase {
                 break;
             case MSG_DISTURB_LONG_PRESS_GESTURE:
                 disturbLongPressGestureMsg(param);
-                break;
-            case MSG_PLUGINVIEW_CONTAINER_CREATE:
-                createPluginViewContainerMsg(param);
-                break;
-            case MSG_PLUGINVIEW_CONTAINER_CLOSE:
-                closePluginViewContainerMsg(param);
                 break;
             case MSG_PLUGINVIEW_CONTAINER_SET:
                 setPageInContainerMsg(param);

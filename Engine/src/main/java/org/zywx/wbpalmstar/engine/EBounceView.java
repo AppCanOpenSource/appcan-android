@@ -480,8 +480,10 @@ public class EBounceView extends LinearLayout {
         }
     }
 
-    public void getBounce() {
-        mBrwView.cbBounceState(mBounce ? 1 : 0);
+    public int getBounce() {
+        int result=mBounce ? 1 : 0;
+        mBrwView.cbBounceState(result);
+        return result;
     }
 
     public void setBounce(boolean flag) {
