@@ -144,10 +144,10 @@ public class EUExScript {
                 +
                 // Widget
                 "window.uexWidget={"
-                + "startWidget:function(){uexDispatcher.dispatch('uexWidget','startWidget',jo(arguments));},"
+                + "startWidget:function(){return uexDispatcher.dispatch('uexWidget','startWidget',jo(arguments));},"
                 + "startWidgetWithPath:function(){uexDispatcher.dispatch('uexWidget','startWidgetWithPath',jo(arguments));},"
                 + "finishWidget:function(){uexDispatcher.dispatch('uexWidget','finishWidget',jo(arguments));},"
-                + "removeWidget:function(){uexDispatcher.dispatch('uexWidget','removeWidget',jo(arguments));},"
+                + "removeWidget:function(){return uexDispatcher.dispatch('uexWidget','removeWidget',jo(arguments));},"
                 + "getOpenerInfo:function(){uexDispatcher.dispatch('uexWidget','getOpenerInfo',jo(arguments));},"
                 + "setMySpaceInfo:function(){uexDispatcher.dispatch('uexWidget','setMySpaceInfo',jo(arguments));},"
                 + "setPushNotifyCallback:function(){uexDispatcher.dispatch('uexWidget','setPushNotifyCallback',jo(arguments));},"

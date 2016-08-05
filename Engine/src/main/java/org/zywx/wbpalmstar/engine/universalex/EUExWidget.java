@@ -45,7 +45,11 @@ import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.JsConst;
 import org.zywx.wbpalmstar.base.ResoureFinder;
 import org.zywx.wbpalmstar.base.vo.AppInstalledVO;
+import org.zywx.wbpalmstar.base.vo.ErrorResultVO;
 import org.zywx.wbpalmstar.base.vo.StartAppVO;
+import org.zywx.wbpalmstar.base.vo.WidgetCheckUpdateResultVO;
+import org.zywx.wbpalmstar.base.vo.WidgetFinishVO;
+import org.zywx.wbpalmstar.base.vo.WidgetStartVO;
 import org.zywx.wbpalmstar.engine.DataHelper;
 import org.zywx.wbpalmstar.engine.EBrowserActivity;
 import org.zywx.wbpalmstar.engine.EBrowserAnimation;
@@ -53,6 +57,7 @@ import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.EBrowserWidget;
 import org.zywx.wbpalmstar.engine.EBrowserWindow;
 import org.zywx.wbpalmstar.engine.EWgtResultInfo;
+import org.zywx.wbpalmstar.engine.universalex.wrapper.WidgetJsonWrapper;
 import org.zywx.wbpalmstar.platform.push.report.PushReportConstants;
 import org.zywx.wbpalmstar.widgetone.WidgetOneApplication;
 import org.zywx.wbpalmstar.widgetone.dataservice.ReData;
@@ -92,13 +97,25 @@ public class EUExWidget extends EUExBase {
         super(context, inParent);
     }
 
-    public void startWidget(String[] parm) {
+    public boolean startWidget(String[] parm) {
+
+        if (isJsonString(parm[0])){
+            WidgetStartVO startVO= DataHelper.gson.fromJson(parm[0], WidgetStartVO.class);
+            parm=new String[]{
+                    startVO.appId,
+                    startVO.animId,
+                    startVO.funcName,
+                    startVO.info,
+                    startVO.animDuration
+            };
+        }
+
         if (parm.length < 4) {
-            return;
+            return false;
         }
         EBrowserWindow curWind = mBrwView.getBrowserWindow();
         if (null == curWind) {
-            return;
+            return false;
         }
         String inAppId = parm[0];
         String inAnimiId = parm[1];
@@ -106,10 +123,10 @@ public class EUExWidget extends EUExBase {
         String inInfo = parm[3];
         String animDuration = null;
         String appKey = null;
-        if (parm.length == 5) {
+        if (parm.length >= 5) {
             animDuration = parm[4];
         }
-        if (parm.length == 6) {
+        if (parm.length >= 6) {
             appKey = parm[5];
         }
         int animId = EBrowserAnimation.ANIM_ID_NONE;
@@ -136,7 +153,7 @@ public class EUExWidget extends EUExBase {
                         , inAppId + ""));
                 jsCallback(function_startWidget, 0, EUExCallback.F_C_INT,
                         EUExCallback.F_C_FAILED);
-                return;
+                return false;
             }
             data.m_appkey = appKey;
             EWgtResultInfo info = new EWgtResultInfo(inForResult, inInfo);
@@ -145,15 +162,18 @@ public class EUExWidget extends EUExBase {
             if (startWidget(data, info)) {
                 jsCallback(function_startWidget, 0, EUExCallback.F_C_INT,
                         EUExCallback.F_C_SUCCESS);
+                return true;
             } else {
                 jsCallback(function_startWidget, 0, EUExCallback.F_C_INT,
                         EUExCallback.F_C_FAILED);
+                return false;
             }
         } catch (Exception e) {
             e.printStackTrace();
             showErrorAlert(EUExUtil.getString("platform_widget_search_failed"));
             jsCallback(function_startWidget, 0, EUExCallback.F_C_INT,
                     EUExCallback.F_C_FAILED);
+            return false;
         }
 
     }
@@ -452,6 +472,11 @@ public class EUExWidget extends EUExBase {
     }
 
     public void finishWidget(String[] parm) {
+        if (isFirstParamExistAndIsJson(parm)){
+            WidgetFinishVO finishVO=DataHelper.gson.fromJson(parm[0],WidgetFinishVO.class);
+            WidgetJsonWrapper.finishWidget(this,finishVO);
+        }
+
         if (parm.length < 1) {
             return;
         }
@@ -475,9 +500,9 @@ public class EUExWidget extends EUExBase {
         finishWidget(inResultInfo, appId, isWgtBG);
     }
 
-    public void removeWidget(String[] parm) {
+    public boolean removeWidget(String[] parm) {
         if (parm.length < 1) {
-            return;
+            return false;
         }
         String inAppId = parm[0];
         WDataManager dm = new WDataManager(mContext);
@@ -485,9 +510,11 @@ public class EUExWidget extends EUExBase {
         if (info.equals("0")) {
             jsCallback(function_removeWidget, 0, EUExCallback.F_C_INT,
                     EUExCallback.F_C_SUCCESS);
+            return true;
         } else {
             jsCallback(function_removeWidget, 0, EUExCallback.F_C_INT,
                     EUExCallback.F_C_FAILED);
+            return false;
         }
     }
 
@@ -674,57 +701,49 @@ public class EUExWidget extends EUExBase {
     }
 
     public void checkUpdate(String[] parm) {
+        int callbackId=-1;
+        if (parm.length>0){
+            callbackId=valueOfCallbackId(parm[0]);
+        }
         final WWidgetData widgetData = mBrwView.getCurrentWidget();
+        final int finalCallbackId = callbackId;
         new Thread("Appcan-uexWidgetCheckUpdate") {
             public void run() {
-                JSONObject obj = new JSONObject();
-                try {
-                    if (widgetData != null) {
-                        // if (widgetData.m_appId != null
-                        // && widgetData.m_appId.length() > 0) {
-                        WDataManager dataManager = new WDataManager(mContext);
-                        ReData reData = dataManager.ChekeUpdate(mContext,
-                                widgetData.m_updateurl, widgetData.m_appId,
-                                widgetData.m_ver);
-                        if (reData == null) {
-                            obj.put(EUExCallback.F_JK_RESULT,
-                                    EUExCallback.F_JV_ERROR);
-                            jsCallback(function_checkUpdate, 0,
-                                    EUExCallback.F_C_JSON, obj.toString());
-                            return;
-                        } else if (!TextUtils.isEmpty(reData.fileUrl)) {
-                            obj.put(EUExCallback.F_JK_RESULT,
-                                    EUExCallback.F_JV_UPDATE);
-                            obj.put(EUExCallback.F_JK_NAME, reData.fileName);
-                            obj.put(EUExCallback.F_JK_SIZE, reData.fileSize);
-                            obj.put(EUExCallback.F_JK_URL, reData.fileUrl);
-                            obj.put(EUExCallback.F_JK_VERSION, reData.version);
+                WidgetCheckUpdateResultVO resultVO = new WidgetCheckUpdateResultVO();
+                ErrorResultVO errorResultVO = new ErrorResultVO();
+                if (widgetData != null) {
+                    // if (widgetData.m_appId != null
+                    // && widgetData.m_appId.length() > 0) {
+                    WDataManager dataManager = new WDataManager(mContext);
+                    ReData reData = dataManager.ChekeUpdate(mContext,
+                            widgetData.m_updateurl, widgetData.m_appId,
+                            widgetData.m_ver);
+                    if (reData == null) {
+                        errorResultVO.errorCode = 2;
+                        resultVO.result = 2;
+                        if (finalCallbackId != -1) {
+                            callbackToJs(finalCallbackId, false, DataHelper.gson.toJsonTree(errorResultVO),
+                                    DataHelper.gson.toJsonTree(resultVO));
                         } else {
-                            obj.put(EUExCallback.F_JK_RESULT,
-                                    EUExCallback.F_JV_NO_UPDATE);
+                            jsCallback(function_checkUpdate, 0,
+                                    EUExCallback.F_C_JSON, DataHelper.gson.toJson(resultVO));
                         }
-                        jsCallback(function_checkUpdate, 0,
-                                EUExCallback.F_C_JSON, obj.toString());
-
-                        // } else {
-                        // obj.put(EUExCallback.F_JK_RESULT,
-                        // EUExCallback.F_JV_NO_REGIST);
-                        // jsCallback(function_checkUpdate, 0,
-                        // EUExCallback.F_C_JSON, obj.toString());
-                        // }
                         return;
+                    } else if (!TextUtils.isEmpty(reData.fileUrl)) {
+                        resultVO.result = 0;
+                        resultVO.name = reData.fileName;
+                        resultVO.size = reData.fileSize;
+                        resultVO.url = reData.fileUrl;
+                        resultVO.version = reData.version;
+                    } else {
+                        resultVO.result = 1;
                     }
-                    obj.put(EUExCallback.F_JK_RESULT, EUExCallback.F_JV_ERROR);
-                    jsCallback(function_checkUpdate, 0, EUExCallback.F_C_JSON,
-                            obj.toString());
-                } catch (Exception e) {
-                    try {
-                        obj.put(EUExCallback.F_JK_RESULT,
-                                EUExCallback.F_JV_ERROR);
-                    } catch (JSONException e1) {
+                    if (finalCallbackId != -1) {
+                        callbackToJs(finalCallbackId, false, null, DataHelper.gson.toJsonTree(resultVO));
+                    } else {
+                        jsCallback(function_checkUpdate, 0,
+                                EUExCallback.F_C_JSON, DataHelper.gson.toJson(resultVO));
                     }
-                    jsCallback(function_checkUpdate, 0, EUExCallback.F_C_JSON,
-                            obj.toString());
                 }
             }
         }.start();
