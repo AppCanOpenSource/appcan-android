@@ -28,6 +28,6 @@ public class WindowOpenMultiPopoverVO implements Serializable {
 
     public String indexSelected;
 
-    public WindowMultiPopoverExtraVO extraInfo;
+    public WindowMultiPopoverExtraVO extras;
 
 }

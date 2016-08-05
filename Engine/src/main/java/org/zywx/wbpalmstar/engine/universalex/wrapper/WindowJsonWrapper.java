@@ -122,7 +122,7 @@ public class WindowJsonWrapper {
                 popoverVO.fontSize,
                 popoverVO.flag,
                 popoverVO.bottomMargin,
-                popoverVO.extraInfo==null?null:DataHelper.gson.toJson(popoverVO.extraInfo)
+                popoverVO.extras==null?null:DataHelper.gson.toJson(popoverVO.extras)
         });
     }
 
@@ -148,7 +148,7 @@ public class WindowJsonWrapper {
                 multiPopoverVO.fontSize,
                 multiPopoverVO.flag,
                 multiPopoverVO.indexSelected,
-                multiPopoverVO.extraInfo==null?null:DataHelper.gson.toJson(multiPopoverVO.extraInfo)
+                multiPopoverVO.extras==null?null:DataHelper.gson.toJson(multiPopoverVO.extras)
         });
     }
 
@@ -182,7 +182,7 @@ public class WindowJsonWrapper {
         window.confirm(new String[]{
                 confirmVO.title,
                 confirmVO.message,
-                confirmVO.buttonLabel,
+                confirmVO.buttonLabels,
                 callbackId
         });
     }

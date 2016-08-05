@@ -12,6 +12,6 @@ public class WindowConfirmVO implements Serializable {
 
     public String message;
 
-    public String buttonLabel;
+    public String buttonLabels;
 
 }
