@@ -74,6 +74,7 @@ public class WidgetOneApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        BConstant.app = this;
         EUExUtil.init(this);
         WebViewSdkCompat.initInApplication(this);
         mCrashReport = ECrashHandler.getInstance(this);
@@ -83,7 +84,6 @@ public class WidgetOneApplication extends Application {
         initClassLoader();
         initPlugin();
         reflectionPluginMethod("onApplicationCreate");
-        BConstant.app = this;
         BDebug.init();
     }
 

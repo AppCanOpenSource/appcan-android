@@ -18,12 +18,14 @@
 
 package org.zywx.wbpalmstar.engine.universalex;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Looper;
 import android.os.Message;
+import android.support.annotation.Keep;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
@@ -131,6 +133,7 @@ public abstract class EUExBase {
         callBackJsObject(mBrwView,methodName,object);
     }
 
+    @Keep
     public static void callBackJs(EBrowserView eBrowserView,String methodName, String jsonData){
         if (eBrowserView == null) {
             BDebug.e("mBrwView is null...");
@@ -138,9 +141,10 @@ public abstract class EUExBase {
         }
         String js = SCRIPT_HEADER + "if(" + methodName + "){"
                 + methodName + "('" + jsonData + "');}else{console.log('function "+methodName +" not found.')}";
-        eBrowserView.loadUrl(js);
+        callbackToJs(eBrowserView,js);
     }
 
+    @Keep
     public static void callBackJsObject(EBrowserView eBrowserView,String methodName, Object value){
         if (eBrowserView == null) {
             BDebug.e("mBrwView is null...");
@@ -148,7 +152,7 @@ public abstract class EUExBase {
         }
         String js = SCRIPT_HEADER + "if(" + methodName + "){"
                 + methodName + "(" + value + ");}else{console.log('function "+methodName +" not found.')}";
-        eBrowserView.loadUrl(js);
+        callbackToJs(eBrowserView,js);
     }
 
     public final void errorCallback(int inOpCode, int InErrorCode,
@@ -170,6 +174,12 @@ public abstract class EUExBase {
         }
     }
 
+    public static void callbackToJs(EBrowserView eBrowserView,String js) {
+        if (null != eBrowserView) {
+            eBrowserView.addUriTask(js);
+        }
+    }
+
     private void callbackToJsAsyn(String js) {
         if (null != mBrwView) {
             mBrwView.addUriTaskAsyn(js);
@@ -188,27 +198,38 @@ public abstract class EUExBase {
      * @param hasNext 是否有下一次回调。没有传false ，有传true
      * @param args 参数可以是任何对象，直接回调对象可使用DataHelper.gson.toJsonTree()方法
      */
+    @Keep
     public void callbackToJs(int callbackId,boolean hasNext,Object... args){
         if (null != mBrwView) {
 
             int flag=hasNext?1:0;
-            StringBuilder sb=new StringBuilder("javascript:uexCallback.callback(");
+            final StringBuilder sb=new StringBuilder("javascript:uexCallback.callback(");
             sb.append(callbackId).append(",").append(flag);
             for (Object obj:args){
                 sb.append(",");
                 boolean isStrArg = obj instanceof String;
                 if (isStrArg) {
-                    sb.append("\"");
+                    sb.append("\'");
                 }
                 sb.append(String.valueOf(obj));
                 if (isStrArg) {
-                    sb.append("\"");
+                    sb.append("\'");
                 }
              }
             sb.append(");");
             BDebug.i(sb.toString());
-            mBrwView.loadUrl(sb.toString());
-        }
+            //在主线程回调
+            if (mContext!=null&&mContext instanceof Activity){
+                ((Activity)mContext).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mBrwView.loadUrl(sb.toString());
+                    }
+                });
+            }else{
+                callbackToJs(mBrwView,sb.toString());
+            }
+         }
     }
 
     /**
@@ -493,10 +514,12 @@ public abstract class EUExBase {
     }
 
     public void removeFragmentFromWindow(BaseFragment fragment) {
-        if (fragment.getView() != null) {
-            removeViewFromCurrentWindow(fragment.getView());
+        if (fragment != null) {
+            if (fragment.getView() != null) {
+                removeViewFromCurrentWindow(fragment.getView());
+            }
+            removeFragment(fragment);
         }
-        removeFragment(fragment);
     }
 
     /**
@@ -630,6 +653,10 @@ public abstract class EUExBase {
     public final String getCookie(String inUrl) {
 
         return WebViewSdkCompat.getCookie(inUrl);
+    }
+
+    public final void clearCookie(){
+        WebViewSdkCompat.clearCookie();
     }
 
     /**
@@ -823,7 +850,55 @@ public abstract class EUExBase {
         }
     }
 
-
     public void onHandleMessage(Message msg) {
     }
+
+    /**
+     * 区分接口收到的参数,简单判断字符串是否是json格式的String,没有必要完整校验一遍
+     * @param str
+     * @return
+     */
+    @Keep
+    boolean isJsonString(String str){
+        if (TextUtils.isEmpty(str)){
+            return false;
+        }
+        return str.startsWith("{") && str.endsWith("}")||
+                str.startsWith("[") && str.endsWith("]");
+    }
+
+    /**
+     * 判断数组的第一个是否存在并且是Json格式
+     * @param params
+     * @return
+     */
+    @Keep
+    boolean isFirstParamExistAndIsJson(String[] params){
+        if (params==null||params.length==0){
+            return false;
+        }
+        return isJsonString(params[0]);
+    }
+
+    /**
+     * 获取callbackId ,-1为无效值
+     * @param callbackIdStr
+     * @return 为空或转换失败时返回-1
+     */
+    @Keep
+    int valueOfCallbackId(String callbackIdStr){
+        int callbackId=-1;
+        if (TextUtils.isEmpty(callbackIdStr)||callbackIdStr.equals("null")){
+            return callbackId;
+        }
+        try{
+            callbackId=Integer.parseInt(callbackIdStr);
+        }catch (Exception e){
+            if (BDebug.DEBUG){
+                e.printStackTrace();
+            }
+        }
+        return callbackId;
+    }
+
 }

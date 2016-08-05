@@ -475,7 +475,7 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
                 if (!isFocused()) {
                     strugglefoucs();
                 }
-
+                onScrollChanged(getScrollX(), getScrollY(), getScrollX(), getScrollY());
                 if (mIsNeedScroll) {
                     //modify no-response-for-onclick-event
                     int temp_ScrollY = this.getScrollY();
@@ -846,6 +846,8 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
     public void addUriTask(String uri) {
         if (null != mBroWind && !mDestroyed) {
             mBroWind.addUriTask(this, uri);
+        }else{
+            BDebug.e("mBroWind is null or Destroyed");
         }
     }
 
@@ -1008,6 +1010,9 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
     public WWidgetData getCurrentWidget() {
         if (mDestroyed) {
             return new WWidgetData();
+        }
+        if (mBroWind==null){
+            return null;
         }
         return mBroWind.getWidget();
     }
@@ -1240,14 +1245,18 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
         addUriTask(js);
     }
 
-    public void getBounce() {
+    public int getBounce() {
         if (mDestroyed) {
-            return;
+            return 0;
         }
         EViewEntry bounceEntry = new EViewEntry();
         bounceEntry.obj = getParent();
         mBroWind.addBounceTask(bounceEntry,
                 EViewEntry.F_BOUNCE_TASK_GET_BOUNCE_VIEW);
+        if (bounceEntry.obj instanceof EBounceView){
+            return ((EBounceView) bounceEntry.obj).getBounce();
+        }
+        return 0;
     }
 
     public void setBounce(int flag) {

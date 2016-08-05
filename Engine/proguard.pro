@@ -153,6 +153,10 @@
     public <init>(android.content.Context,android.util.AttributeSet);
 }
 
+-keep class org.zywx.wbpalmstar.engine.universalex.EUExCallback {
+    <fields>;
+    <methods>;
+}
 -keepclasseswithmembers,allowshrinking class * {
     public <init>(android.content.Context,android.util.AttributeSet,int);
 }

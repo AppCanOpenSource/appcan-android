@@ -77,6 +77,7 @@ QQ交流群：173758265
 ├── outputs
 │   ├── engine
 │   ├── jar
+│   ├── aar 
 │   └── logs
 └── tmp
 ```
@@ -87,7 +88,7 @@ QQ交流群：173758265
 
 **outputs/jar**:`Engine`moudle编译出来的jar，以`-un-proguard.jar`结尾的为未混淆的jar，其他为混淆过的jar
 
-
+**outputs/aar**:`Engine`module生成的aar
 
 ### 关于混淆
 
@@ -119,36 +120,64 @@ QQ交流群：173758265
   gradle buildEngine
   ```
 
-- **jar{Flavor}Engine**:生成对应flavor的jar，不进行混淆
+- **build{Flavor}JarTemp**:生成对应flavor的jar，不进行混淆
 
   如输出crosswalk引擎的jar
 
   ```sh
-  gradle jarCrosswalkEngine
+  gradle buildCrosswalkJarTemp
   ```
 
   如果要输出所有flavor的jar
 
   ```sh
-  gradle jarEngine
+  gradle buildJarTemp
   ```
 
-- **proguard{Flavor}Engine**：生成对应flavor的jar，并且进行混淆
+- **build{Flavor}Jar**：生成对应flavor的jar，并且进行混淆
 
   如输出混淆过的crosswalk引擎jar
 
   ```sh
-  gradle proguardCrosswalkEngine
+  gradle buildCrosswalkJar
   ```
 
   如果要输出所有flavor的jar
 
   ```sh
-  gradle proguardEngine
+  gradle buildJar 
+  ```
+
+- **build{Flavor}Aar**：生成对应flavor的aar
+
+  如输出混淆过的System引擎aar
+
+  ```sh
+  gradle buildSystemAar
+  ```
+
+  如果要输出所有flavor的aar
+
+  ```sh
+  gradle buildAar 
+  ```
+  **说明**：生成aar需要将`Engine`目录下的`build.gradle`文件中的
+
+  ```groovy
+  apply plugin: 'com.android.applicaiton'
+  ```
+
+  替换成
+
+  ```groovy
+  apply plugin: 'com.android.library'
+  ```
+
+  并注释掉
+
+  ```groovy
+  applicationId 'org.zywx.wbpalmstar.widgetone.uex'
   ```
 
   ​
 
-
-
-###  

@@ -20,6 +20,7 @@ package org.zywx.wbpalmstar.engine.universalex;
 
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.Keep;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -81,8 +82,10 @@ public class EUExManager {
                     objectIntance = (EUExBase) init.newInstance(mContext, brwView);
                 }
 
-            } catch (Exception e) {
-                BDebug.e(e.toString());
+            }catch (Exception e) {
+                if (BDebug.DEBUG){
+                    e.printStackTrace();
+                }
             }
             if (null != objectIntance) {
 //				String uexName = uName + symbol;
@@ -108,6 +111,7 @@ public class EUExManager {
      * 解析String 根据插件名找到对应的插件调用插件
      * @return  返回结果，json格式
      */
+    @Keep
     public String dispatch(String parseStr) throws JSONException {
         BDebug.json( parseStr);
         JSONObject json = new JSONObject(parseStr);

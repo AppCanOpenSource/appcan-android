@@ -20,6 +20,9 @@ package org.zywx.wbpalmstar.engine.universalex;
 
 import android.os.Build;
 
+import org.zywx.wbpalmstar.base.BConstant;
+import org.zywx.wbpalmstar.engine.ESystemInfo;
+
 public class EUExScript {
 
     public static String F_UEX_SCRIPT;
@@ -82,20 +85,22 @@ public class EUExScript {
                 " if (result.code != 200) {" +
                 "   console.log( \"method call error, code:\" + result.code + \", message: \" + result.result  );" +
                 "}"+
-                "  var content = result.result;" +
-                 "  if (content.funcMaps != null) {" +
-                 "    for (var name in content.funcMaps) {" +
-                "      var targetFunc = content.funcMaps[name];" +
-                "      content[name] = function() {" +
-                "        var params = Array.prototype.slice.call(arguments, 0);" +
-                "        if (content.ext != null) {" +
-                "          params[params.length] = content.ext;" +
-                "        }" +
-                "        window[uexName][targetFunc].apply(uexName, params);" +
-                "      };" +
-                "    }" +
-                "    delete content.funcMaps;" +
-                "  }" +
+                "  var content = result.result; " +
+                "   if (content&&content.funcMaps) { " +
+                "     for (var name in content.funcMaps) { " +
+                "      (function(name){" +
+                "        var targetFunc = content.funcMaps[name]; " +
+                "        content[name] = function() { " +
+                "          var params = Array.prototype.slice.call(arguments, 0); " +
+                "          if (content.ext) { " +
+                "            params[params.length] = content.ext; " +
+                "          } " +
+                "          return window[uexName][targetFunc].apply(uexName, params); " +
+                "        }; " +
+                "      })(name);" +
+                "    } " +
+                "    delete content.funcMaps; " +
+                "  } " +
                 "  return content;"+
                 "};"
                 +
@@ -124,6 +129,7 @@ public class EUExScript {
                 "window.uexWidgetOne={"
                 + "platformName:'android',"
                 + "platformVersion:'" + Build.VERSION.RELEASE + "',"
+                + "statusBarHeight:"+ ESystemInfo.getStateBarHeight(BConstant.app)+","
                 + "getId:function(){uexDispatcher.dispatch('uexWidgetOne','getId',jo(arguments));},"
                 + "getVersion:function(){uexDispatcher.dispatch('uexWidgetOne','getVersion',jo(arguments));},"
                 + "getPlatform:function(){return uexDispatcher.dispatch('uexWidgetOne','getPlatform',jo(arguments));},"
@@ -169,8 +175,8 @@ public class EUExScript {
                 + "getWidth:function(){return uexDispatcher.dispatch('uexWindow','getWidth',jo(arguments));},"
                 + "forward:function(){uexDispatcher.dispatch('uexWindow','forward',jo(arguments));},"
                 + "back:function(){uexDispatcher.dispatch('uexWindow','back',jo(arguments));},"
-                + "pageBack:function(){uexDispatcher.dispatch('uexWindow','pageBack',jo(arguments));},"
-                + "pageForward:function(){uexDispatcher.dispatch('uexWindow','pageForward',jo(arguments));},"
+                + "pageBack:function(){return uexDispatcher.dispatch('uexWindow','pageBack',jo(arguments));},"
+                + "pageForward:function(){return uexDispatcher.dispatch('uexWindow','pageForward',jo(arguments));},"
                 + "showSoftKeyboard:function(){uexDispatcher.dispatch('uexWindow','showSoftKeyboard',jo(arguments));},"
                 + "hideSoftKeyboard:function(){uexDispatcher.dispatch('uexWindow','hideSoftKeyboard',jo(arguments));},"
                 + "alert:function(){uexDispatcher.dispatch('uexWindow','alert',jo(arguments));},"
@@ -254,11 +260,12 @@ public class EUExScript {
                 + "setSlidingWindow:function(){uexDispatcher.dispatch('uexWindow','setSlidingWindow',jo(arguments));},"
                 + "setSlidingWindowEnabled:function(){uexDispatcher.dispatch('uexWindow','setSlidingWindowEnabled',jo(arguments));},"
                 + "toggleSlidingWindow:function(){uexDispatcher.dispatch('uexWindow','toggleSlidingWindow',jo(arguments));},"
-                + "getSlidingWindowState:function(){uexDispatcher.dispatch('uexWindow','getSlidingWindowState',jo(arguments));},"
+                + "getSlidingWindowState:function(){return uexDispatcher.dispatch('uexWindow'," +
+                "'getSlidingWindowState',jo(arguments));},"
                 + "setLoadingImagePath:function(){uexDispatcher.dispatch('uexWindow','setLoadingImagePath',jo(arguments));},"
 
                 + "setBounce:function(){uexDispatcher.dispatch('uexWindow','setBounce',jo(arguments));},"
-                + "getBounce:function(){uexDispatcher.dispatch('uexWindow','getBounce',jo(arguments));},"
+                + "getBounce:function(){return uexDispatcher.dispatch('uexWindow','getBounce',jo(arguments));},"
                 + "notifyBounceEvent:function(){uexDispatcher.dispatch('uexWindow','notifyBounceEvent',jo(arguments));},"
                 + "showBounceView:function(){uexDispatcher.dispatch('uexWindow','showBounceView',jo(arguments));},"
                 + "resetBounceView:function(){uexDispatcher.dispatch('uexWindow','resetBounceView',jo(arguments));},"
@@ -271,8 +278,10 @@ public class EUExScript {
                 + "setIsSupportSwipeCallback:function(){uexDispatcher.dispatch('uexWindow','setIsSupportSwipeCallback',jo(arguments));},"
                 + "disturbLongPressGesture:function(){uexDispatcher.dispatch('uexWindow','disturbLongPressGesture',jo(arguments));},"
                 + "setPageInContainer:function(){uexDispatcher.dispatch('uexWindow','setPageInContainer',jo(arguments));},"
-                + "closePluginViewContainer:function(){uexDispatcher.dispatch('uexWindow','closePluginViewContainer',jo(arguments));},"
-                + "createPluginViewContainer:function(){uexDispatcher.dispatch('uexWindow','createPluginViewContainer',jo(arguments));},"
+                + "closePluginViewContainer:function(){return uexDispatcher.dispatch('uexWindow'," +
+                "'closePluginViewContainer',jo(arguments));},"
+                + "createPluginViewContainer:function(){return uexDispatcher.dispatch('uexWindow'," +
+                "'createPluginViewContainer',jo(arguments));},"
                 + "showPluginViewContainer:function(){uexDispatcher.dispatch('uexWindow','showPluginViewContainer',jo(arguments));},"
                 + "hidePluginViewContainer:function(){uexDispatcher.dispatch('uexWindow','hidePluginViewContainer',jo(arguments));},"
                 + "getUrlQuery:function(){return uexDispatcher.dispatch('uexWindow','getUrlQuery',jo(arguments));},"

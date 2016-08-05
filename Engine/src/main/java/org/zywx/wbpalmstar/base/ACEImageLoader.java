@@ -19,6 +19,8 @@
 
 package org.zywx.wbpalmstar.base;
 
+import android.graphics.Bitmap;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.ace.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
@@ -27,10 +29,13 @@ import com.ace.universalimageloader.cache.memory.impl.LRULimitedMemoryCache;
 import com.ace.universalimageloader.core.DisplayImageOptions;
 import com.ace.universalimageloader.core.ImageLoader;
 import com.ace.universalimageloader.core.ImageLoaderConfiguration;
+import com.ace.universalimageloader.core.assist.FailReason;
 import com.ace.universalimageloader.core.assist.QueueProcessingType;
 import com.ace.universalimageloader.core.download.BaseImageDownloader;
+import com.ace.universalimageloader.core.listener.ImageLoadingListener;
 
 import org.zywx.wbpalmstar.base.cache.DiskCache;
+import org.zywx.wbpalmstar.base.listener.ImageLoaderListener;
 
 /**
  * Created by ylt on 2015/4/28.
@@ -70,7 +75,24 @@ public class ACEImageLoader {
         return aceImageLoader;
     }
 
+    /**
+     * "http://site.com/image.png" // from Web
+     * "file:///mnt/sdcard/image.png" // from SD card
+     * "file:///mnt/sdcard/video.mp4" // from SD card (video thumbnail)
+     * "content://media/external/images/media/13" // from content provider
+     * "content://media/external/video/media/13" // from content provider (video thumbnail)
+     * "assets://image.png" // from assets
+     * "drawable://" + R.drawable.img // from drawables (non-9patch images)
+     *
+     * @param imageView
+     * @param imgUrl
+     * @param <T>
+     */
     public <T extends ImageView> void displayImage(T imageView, String imgUrl) {
+        displayImageWithOptions(getPrefixImageUrl(imgUrl), imageView, true);
+    }
+
+    private String getPrefixImageUrl(String imgUrl){
         String realImgUrl = null;
         if (imgUrl.startsWith(BUtility.F_Widget_RES_SCHEMA)) {
             String assetFileName = BUtility.F_Widget_RES_path
@@ -85,23 +107,59 @@ public class ACEImageLoader {
         } else {
             realImgUrl = imgUrl;
         }
-        displayImageWithOptions(realImgUrl,imageView,true);
+        return realImgUrl;
     }
 
-    public <T extends ImageView> void displayImageWithOptions(String imgUrl, T imageView,boolean cacheOnDisk)
-    {
-        if (cacheOnDisk){
+    public <T extends ImageView> void displayImageWithOptions(String imgUrl, T imageView, boolean cacheOnDisk) {
+        if (cacheOnDisk) {
             DisplayImageOptions options;
-            options=new DisplayImageOptions.Builder()
+            options = new DisplayImageOptions.Builder()
                     .cacheOnDisk(true)
                     .build();
-            ImageLoader.getInstance().displayImage(imgUrl, imageView,options);
-        }else{
+            ImageLoader.getInstance().displayImage(imgUrl, imageView, options);
+        } else {
             ImageLoader.getInstance().displayImage(imgUrl, imageView);
         }
 
     }
 
+    /**
+     * 同步获取bitmap
+     */
+    public Bitmap getBitmapSync(String url){
+        return ImageLoader.getInstance().loadImageSync(getPrefixImageUrl(url));
+    }
+
+    /**
+     * 异步获取bitmap
+     */
+    public void getBitmap(String url, final ImageLoaderListener listener) {
+        ImageLoader.getInstance().loadImage(getPrefixImageUrl(url), new ImageLoadingListener() {
+            @Override
+            public void onLoadingStarted(String s, View view) {
+
+            }
+
+            @Override
+            public void onLoadingFailed(String s, View view, FailReason failReason) {
+                if (listener != null) {
+                    listener.onLoaded(null);
+                }
+            }
+
+            @Override
+            public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+                if (listener != null) {
+                    listener.onLoaded(bitmap);
+                }
+            }
+
+            @Override
+            public void onLoadingCancelled(String s, View view) {
+                listener.onLoaded(null);
+            }
+        });
+    }
 
 
 }

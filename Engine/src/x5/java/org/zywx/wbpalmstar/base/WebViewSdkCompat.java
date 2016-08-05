@@ -62,7 +62,9 @@ public class WebViewSdkCompat {
         CookieManager.getInstance().setCookie(inUrl, cookie);
         CookieSyncManager.getInstance().sync();
     }
-
+    public static void clearCookie() {
+        CookieManager.getInstance().removeAllCookie();
+    }
     public static String getCookie(String inUrl) {
         return CookieManager.getInstance().getCookie(inUrl);
     }

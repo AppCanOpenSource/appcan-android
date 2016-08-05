@@ -95,21 +95,15 @@ public class BDebug {
     }
 
     public static void logToFileJson(String plugin,String json){
-        if (!BDebug.DEBUG){
-            return;
-        }
         logToFile(plugin, DataHelper.toPrettyJson(json));
     }
 
     /**
-     * 输出日志到文件,每个插件使用单独的文件保存,文件超过100k时会清空所有内容
+     * 不判断是否调试模式，直接输出日志到文件,每个插件使用单独的文件保存,文件超过100k时会清空所有内容
      * @param plugin 插件名作为文件名 引擎使用BDebug.FILE_NAME_LOG_ENGINE
      * @param content 日志内容,添加到文件最后
      */
     public static void logToFile(String plugin,String content){
-        if (!BDebug.DEBUG){
-            return;
-        }
         if(TextUtils.isEmpty(plugin)||TextUtils.isEmpty(content)){
             BDebug.e("params error.");
             return;
@@ -154,7 +148,7 @@ public class BDebug {
             if (TextUtils.isEmpty(json)) {
                 return;
             }
-            d(DataHelper.toPrettyJson(json));
+            i(DataHelper.toPrettyJson(json));
         }
     }
 

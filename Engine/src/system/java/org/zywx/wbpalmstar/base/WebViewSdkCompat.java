@@ -1,6 +1,7 @@
 package org.zywx.wbpalmstar.base;
 
 import android.content.Context;
+import android.os.Build;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebChromeClient;
@@ -36,6 +37,19 @@ public class WebViewSdkCompat {
 
     public static void stopSync(){
         CookieSyncManager.getInstance().stopSync();
+    }
+
+    public static void clearCookie() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            CookieManager.getInstance().removeAllCookies(new android.webkit.ValueCallback<Boolean>() {
+                @Override
+                public void onReceiveValue(Boolean value) {
+
+                }
+            });
+        }else{
+            CookieManager.getInstance().removeAllCookie();
+        }
     }
 
     public enum ZoomDensityCompat{
