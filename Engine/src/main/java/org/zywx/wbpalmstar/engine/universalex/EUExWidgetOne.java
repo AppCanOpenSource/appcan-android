@@ -171,14 +171,17 @@ public class EUExWidgetOne extends EUExBase {
         ;
     }
 
-    public void getMainWidgetId(String[] parm) {
+    public String getMainWidgetId(String[] parm) {
+        String appId=null;
         if (WDataManager.sRootWgt != null) {
+            appId=WDataManager.sRootWgt.m_appId;
             jsCallback(function_getMainWidgetId, 0, EUExCallback.F_C_TEXT,
                     WDataManager.sRootWgt.m_appId);
         } else {
+            appId=null;
             jsCallback(function_getMainWidgetId, 0, EUExCallback.F_C_TEXT, -1);
         }
-
+        return appId;
     }
 
     @AppCanAPI

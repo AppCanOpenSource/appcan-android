@@ -142,7 +142,8 @@ public class EUExScript {
                 + "cleanCache:function(){uexDispatcher.dispatch('uexWidgetOne','cleanCache',jo(arguments));},"
                 + "getEngineVersion:function(){return uexDispatcher.dispatch('uexWidgetOne','getEngineVersion',jo(arguments));},"
                 + "getEngineVersionCode:function(){return uexDispatcher.dispatch('uexWidgetOne','getEngineVersionCode',jo(arguments));},"
-                + "getMainWidgetId:function(){uexDispatcher.dispatch('uexWidgetOne','getMainWidgetId',jo(arguments));}};"
+                + "getMainWidgetId:function(){return uexDispatcher.dispatch('uexWidgetOne','getMainWidgetId',jo" +
+                "(arguments));}};"
                 +
                 // Widget
                 "window.uexWidget={"
