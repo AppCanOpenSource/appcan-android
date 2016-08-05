@@ -41,6 +41,7 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.JsConst;
 import org.zywx.wbpalmstar.base.ResoureFinder;
@@ -240,10 +241,10 @@ public class EUExWidget extends EUExBase {
         app.delPushInfo(uId, uNickName, mContext, mBrwView);
     }
 
-    public void startApp(String[] params) {
+    public boolean startApp(String[] params) {
         if (params.length < 2) {
-            Log.e(tag, "startApp has error params!!!");
-            return;
+            BDebug.e(tag, "startApp has error params!!!");
+            return false;
         }
         String startMode = params[0];
         Intent intent = null;
@@ -259,9 +260,9 @@ public class EUExWidget extends EUExBase {
                     extraVO = DataHelper.gson.fromJson(params[4],StartAppVO.class);
                 }
                 if (TextUtils.isEmpty(pkgName)) {
-                    Log.e(tag, "startApp has error params!!!");
+                    BDebug.e(tag, "startApp has error pkgName!!!");
                     callBackPluginJs(JsConst.CALLBACK_START_APP, "error params");
-                    return;
+                    return false;
                 }
 
                 if (params.length > 2) {
@@ -271,9 +272,9 @@ public class EUExWidget extends EUExBase {
                     clsName = getMainActivity(pkgName);
                 }
                 if (TextUtils.isEmpty(clsName)) {
-                    Log.e(tag, "startApp has error params!!!");
+                    BDebug.e(tag, "startApp has error clsName!!!");
                     callBackPluginJs(JsConst.CALLBACK_START_APP, "package is not exist!");
-                    return;
+                    return false;
                 }
                 ComponentName component = new ComponentName(pkgName, clsName);
                 intent = new Intent();
@@ -297,15 +298,15 @@ public class EUExWidget extends EUExBase {
                     intent = setIntentFilter(intent, filterJson);
                 }
             } else {
-                Log.e(tag, "startApp has error params!!!");
+                BDebug.e(tag, "startApp has error startMode!!!");
                 callBackPluginJs(JsConst.CALLBACK_START_APP, "error params!");
-                return;
+                return false;
             }
         }
         if (intent == null) {
-            Log.e(tag, "startApp has error params!!!");
+            BDebug.e(tag, "startApp has error params!!!");
             callBackPluginJs(JsConst.CALLBACK_START_APP, "error params!");
-            return;
+            return false;
         }
         if (params.length > 3) {
             extraJson = params[3];
@@ -319,8 +320,10 @@ public class EUExWidget extends EUExBase {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);// 添加NEW_TASK_FLAG
             }
             startActivity(intent);
+            return true;
         } catch (ActivityNotFoundException e) {
             callBackPluginJs(JsConst.CALLBACK_START_APP, e.getMessage());
+            return false;
         }
     }
 

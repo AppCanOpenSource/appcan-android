@@ -157,7 +157,7 @@ public class EUExScript {
                 + "setPushInfo:function(){uexDispatcher.dispatch('uexWidget','setPushInfo',jo(arguments));},"
                 + "setPushState:function(){uexDispatcher.dispatch('uexWidget','setPushState',jo(arguments));},"
                 + "getPushState:function(){uexDispatcher.dispatch('uexWidget','getPushState',jo(arguments));},"
-                + "startApp:function(){uexDispatcher.dispatch('uexWidget','startApp',jo(arguments));},"
+                + "startApp:function(){return uexDispatcher.dispatch('uexWidget','startApp',jo(arguments));},"
                 + "setSpaceEnable:function(){uexDispatcher.dispatch('uexWidget','setSpaceEnable',jo(arguments));},"
                 + "setLogServerIp:function(){uexDispatcher.dispatch('uexWidget','setLogServerIp',jo(arguments));},"
                 + "delPushInfo:function(){uexDispatcher.dispatch('uexWidget','delPushInfo',jo(arguments));},"
