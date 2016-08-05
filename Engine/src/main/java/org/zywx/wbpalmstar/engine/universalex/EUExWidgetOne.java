@@ -93,7 +93,7 @@ public class EUExWidgetOne extends EUExBase {
         }
     }
 
-    public void getCurrentWidgetInfo(String[] parm) {
+    public JSONObject getCurrentWidgetInfo(String[] parm) {
         WWidgetData wgtData = mBrwView.getCurrentWidget();
         JSONObject obj = new JSONObject();
         try {
@@ -115,7 +115,7 @@ public class EUExWidgetOne extends EUExBase {
             jsCallback(function_getCurrentWidgetInfo, 0, EUExCallback.F_C_INT,
                     EUExCallback.F_C_FAILED);
         }
-
+        return obj;
     }
 
     public void getVersion(String[] parm) {
