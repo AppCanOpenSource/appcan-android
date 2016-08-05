@@ -858,7 +858,8 @@ public abstract class EUExBase {
      * @param str
      * @return
      */
-    public boolean isJsonString(String str){
+    @Keep
+    boolean isJsonString(String str){
         if (TextUtils.isEmpty(str)){
             return false;
         }
@@ -871,10 +872,33 @@ public abstract class EUExBase {
      * @param params
      * @return
      */
-    public boolean isFirstParamExistAndIsJson(String[] params){
+    @Keep
+    boolean isFirstParamExistAndIsJson(String[] params){
         if (params==null||params.length==0){
             return false;
         }
         return isJsonString(params[0]);
     }
+
+    /**
+     * 获取callbackId ,-1为无效值
+     * @param callbackIdStr
+     * @return 为空或转换失败时返回-1
+     */
+    @Keep
+    int valueOfCallbackId(String callbackIdStr){
+        int callbackId=-1;
+        if (TextUtils.isEmpty(callbackIdStr)||callbackIdStr.equals("null")){
+            return callbackId;
+        }
+        try{
+            callbackId=Integer.parseInt(callbackIdStr);
+        }catch (Exception e){
+            if (BDebug.DEBUG){
+                e.printStackTrace();
+            }
+        }
+        return callbackId;
+    }
+
 }

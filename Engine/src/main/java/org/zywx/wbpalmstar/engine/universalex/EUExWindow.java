@@ -58,12 +58,19 @@ import org.zywx.wbpalmstar.base.util.SpManager;
 import org.zywx.wbpalmstar.base.vo.CreateContainerVO;
 import org.zywx.wbpalmstar.base.vo.SetSwipeCloseEnableVO;
 import org.zywx.wbpalmstar.base.vo.ShareInputVO;
+import org.zywx.wbpalmstar.base.vo.WindowActionSheetVO;
+import org.zywx.wbpalmstar.base.vo.WindowAlertVO;
 import org.zywx.wbpalmstar.base.vo.WindowAnimVO;
+import org.zywx.wbpalmstar.base.vo.WindowConfirmVO;
+import org.zywx.wbpalmstar.base.vo.WindowCreateProgressDialogVO;
 import org.zywx.wbpalmstar.base.vo.WindowOpenSlibingVO;
 import org.zywx.wbpalmstar.base.vo.WindowOpenVO;
+import org.zywx.wbpalmstar.base.vo.WindowPromptResultVO;
+import org.zywx.wbpalmstar.base.vo.WindowPromptVO;
 import org.zywx.wbpalmstar.base.vo.WindowSetFrameVO;
 import org.zywx.wbpalmstar.base.vo.WindowSetSlidingWindowVO;
 import org.zywx.wbpalmstar.base.vo.WindowSlidingItemVO;
+import org.zywx.wbpalmstar.base.vo.WindowToastVO;
 import org.zywx.wbpalmstar.engine.DataHelper;
 import org.zywx.wbpalmstar.engine.EBounceView;
 import org.zywx.wbpalmstar.engine.EBrowser;
@@ -2532,6 +2539,11 @@ public class EUExWindow extends EUExBase {
     }
 
     public void alert(String[] parm) {
+        if (isFirstParamExistAndIsJson(parm)){
+            WindowJsonWrapper.alert(this,DataHelper.gson.fromJson(parm[0],
+                    WindowAlertVO.class));
+            return;
+        }
         if (parm.length < 3) {
             return;
         }
@@ -2552,6 +2564,12 @@ public class EUExWindow extends EUExBase {
     }
 
     public void confirm(String[] parm) {
+        if (isFirstParamExistAndIsJson(parm)){
+            WindowJsonWrapper.confirm(this,DataHelper.gson.fromJson(
+                    parm[0], WindowConfirmVO.class
+            ),parm.length>1?parm[1]:null);
+            return;
+        }
         if (parm.length < 3) {
             return;
         }
@@ -2564,10 +2582,17 @@ public class EUExWindow extends EUExBase {
         task.msg = inMessage;
         task.buttonLables = inButtonLable;
         task.mUexWind = this;
+        task.callbackId=parm.length>3?parm[3]:null;
         mBrwView.getBrowserWindow().addDialogTask(task);
     }
 
     public void prompt(String[] parm) {
+        if (isFirstParamExistAndIsJson(parm)){
+            WindowJsonWrapper.prompt(this,DataHelper.gson.fromJson(
+                    parm[0], WindowPromptVO.class
+            ),parm.length>1?parm[1]:null);
+            return;
+        }
         if (parm.length < 4) {
             return;
         }
@@ -2588,21 +2613,17 @@ public class EUExWindow extends EUExBase {
         if (parm.length>4) {
             task.hint =parm[4];
         }
+        task.callbackId=parm.length>5?parm[5]:null;
         task.mUexWind = this;
         curWind.addDialogTask(task);
     }
 
     public void toast(String[] parm) {
-        if (parm.length < 4) {
-            return;
+        if (isFirstParamExistAndIsJson(parm)){
+            WindowJsonWrapper.toast(this,DataHelper.gson.fromJson(parm[0], WindowToastVO.class));
+        }else{
+            toastMsg(parm);
         }
-        Message msg = new Message();
-        msg.obj = this;
-        msg.what = MSG_FUNCTION_TOAST;
-        Bundle bd = new Bundle();
-        bd.putStringArray(TAG_BUNDLE_PARAM, parm);
-        msg.setData(bd);
-        mHandler.sendMessage(msg);
     }
 
     public void toastMsg(String[] parm) {
@@ -2673,7 +2694,7 @@ public class EUExWindow extends EUExBase {
         }
     }
 
-    public void private_confirm(String inTitle, String inMessage, String[] inButtonLable) {
+    public void private_confirm(String inTitle, String inMessage, String[] inButtonLable,String callbackIdStr) {
 		/*if (!((EBrowserActivity) mContext).isVisable()) {
 			return;
 		}*/
@@ -2684,6 +2705,7 @@ public class EUExWindow extends EUExBase {
 //		if (null != mConfirm) {
 //			return;
 //		}
+        final int callbackId=valueOfCallbackId(callbackIdStr);
         try {
             int length = inButtonLable.length;
             if (length > 0 && length <= 3) {
@@ -2697,8 +2719,7 @@ public class EUExWindow extends EUExBase {
                             @Override
                             public void onClick(DialogInterface dialog,
                                                 int which) {
-                                jsCallback(function_confirm, 0,
-                                        EUExCallback.F_C_INT, 0);
+                                resultConfirmResult(0,callbackId);
                                 dialog.dismiss();
                                 mConfirm = null;
                             }
@@ -2710,8 +2731,7 @@ public class EUExWindow extends EUExBase {
                                     @Override
                                     public void onClick(DialogInterface dialog,
                                                         int which) {
-                                        jsCallback(function_confirm, 0,
-                                                EUExCallback.F_C_INT, 0);
+                                        resultConfirmResult(0,callbackId);
                                         dialog.dismiss();
                                         mConfirm = null;
                                     }
@@ -2721,8 +2741,7 @@ public class EUExWindow extends EUExBase {
                                             @Override
                                             public void onClick(DialogInterface dialog,
                                                                 int which) {
-                                                jsCallback(function_confirm, 0,
-                                                        EUExCallback.F_C_INT, 1);
+                                                resultConfirmResult(1,callbackId);
                                                 dialog.dismiss();
                                                 mConfirm = null;
                                             }
@@ -2734,8 +2753,7 @@ public class EUExWindow extends EUExBase {
                                     @Override
                                     public void onClick(DialogInterface dialog,
                                                         int which) {
-                                        jsCallback(function_confirm, 0,
-                                                EUExCallback.F_C_INT, 0);
+                                        resultConfirmResult(0,callbackId);
                                         dialog.dismiss();
                                         mConfirm = null;
                                     }
@@ -2745,8 +2763,7 @@ public class EUExWindow extends EUExBase {
                                     @Override
                                     public void onClick(DialogInterface dialog,
                                                         int which) {
-                                        jsCallback(function_confirm, 0,
-                                                EUExCallback.F_C_INT, 1);
+                                        resultConfirmResult(1,callbackId);
                                         dialog.dismiss();
                                         mConfirm = null;
                                     }
@@ -2756,9 +2773,7 @@ public class EUExWindow extends EUExBase {
                                     @Override
                                     public void onClick(DialogInterface dialog,
                                                         int which) {
-                                        jsCallback(function_confirm, 0,
-                                                EUExCallback.F_C_INT, 2);
-                                        dialog.dismiss();
+                                        resultConfirmResult(2,callbackId);
                                         mConfirm = null;
                                     }
                                 }).show();
@@ -2770,32 +2785,35 @@ public class EUExWindow extends EUExBase {
         }
     }
 
+    private void resultConfirmResult(int result,int callbackId){
+        if(callbackId!=-1){
+            callbackToJs(callbackId,false,result);
+        }else{
+            jsCallback(function_confirm, 0,
+                    EUExCallback.F_C_INT, result);
+        }
+    }
+
     public void private_prompt(String inTitle, String inMessage, String inDefaultValue, String[] inButtonLables,
-                               String hint) {
+                               String hint, final String callbackIdStr) {
 		/*if (!((EBrowserActivity) mContext).isVisable()) {
 			return;
 		}*/
         if (null != mPrompt) {
             return;
         }
+        final int callbackId=valueOfCallbackId(callbackIdStr);
         if (inButtonLables != null && inButtonLables.length == 2) {
             final JSONObject jsonObject = new JSONObject();
             mPrompt = PromptDialog.show(mContext, inTitle, inMessage, inDefaultValue,hint, inButtonLables[0], new
                     OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    try {
-                        final PromptDialog wPromptDialog = (PromptDialog) dialog;
-                        hideSoftKeyboard(wPromptDialog.getWindowToken());
-                        dialog.dismiss();
-                        mPrompt = null;
-                        jsonObject.put(EUExCallback.F_JK_NUM, 0);
-                        jsonObject.put(EUExCallback.F_JK_VALUE, wPromptDialog.getInput());
-                        jsCallback(function_prompt, 0, EUExCallback.F_C_JSON, jsonObject.toString());
-                    } catch (Exception e) {
-                        errorCallback(0, 0, e.toString());
-                        e.printStackTrace();
-                    }
+                    final PromptDialog wPromptDialog = (PromptDialog) dialog;
+                    hideSoftKeyboard(wPromptDialog.getWindowToken());
+                    dialog.dismiss();
+                    mPrompt = null;
+                    resultPrompt(wPromptDialog.getInput(),0,callbackId);
                 }
             }, inButtonLables[1], new OnClickListener() {
                 @Override
@@ -2804,16 +2822,20 @@ public class EUExWindow extends EUExBase {
                     hideSoftKeyboard(wPromptDialog.getWindowToken());
                     dialog.dismiss();
                     mPrompt = null;
-                    try {
-                        jsonObject.put(EUExCallback.F_JK_NUM, 1);
-                        jsonObject.put(EUExCallback.F_JK_VALUE, wPromptDialog.getInput());
-                        jsCallback(function_prompt, 0, EUExCallback.F_C_JSON, jsonObject.toString());
-                    } catch (Exception e) {
-                        errorCallback(0, 0, e.toString());
-                        e.printStackTrace();
-                    }
+                    resultPrompt(wPromptDialog.getInput(),1,callbackId);
                 }
             });
+        }
+    }
+
+    private void resultPrompt(String data,int index, int callbackId){
+        WindowPromptResultVO resultVO=new WindowPromptResultVO();
+        resultVO.data=data;
+        resultVO.index=index;
+        if (callbackId!=-1){
+            callbackToJs(callbackId,false,DataHelper.gson.toJsonTree(resultVO));
+        }else{
+            jsCallback(function_prompt, 0, EUExCallback.F_C_JSON, DataHelper.gson.toJson(resultVO));
         }
     }
 
@@ -2863,17 +2885,12 @@ public class EUExWindow extends EUExBase {
     }
 
     public void actionSheet(String[] params) {
-        if (params == null || params.length < 3) {
-            errorCallback(0, 0, "error params!");
-            return;
-        }
-        Message msg = new Message();
-        msg.obj = this;
-        msg.what = MSG_ACTION_SHEET;
-        Bundle bd = new Bundle();
-        bd.putStringArray(TAG_BUNDLE_PARAM, params);
-        msg.setData(bd);
-        mHandler.sendMessage(msg);
+       if (isFirstParamExistAndIsJson(params)){
+           WindowJsonWrapper.actionSheet(this,DataHelper.gson.fromJson(params[0],
+                   WindowActionSheetVO.class),params.length>1?params[1]:null);
+       }else{
+           actionSheetMsg(params);
+       }
     }
 
     public void actionSheetMsg(String[] params) {
@@ -2886,20 +2903,33 @@ public class EUExWindow extends EUExBase {
         String inTitle = params[0];
         String inCancel = params[1];
         final String[] btnLabels = params[2].split(",");
+        int callbackId=-1;
+        if (params.length>3){
+            callbackId=valueOfCallbackId(params[3]);
+        }
+        final int finalCallbackId = callbackId;
         ActionSheetDialog.show(mContext, btnLabels, inTitle, inCancel, new ActionSheetDialogItemClickListener() {
 
             @Override
             public void onItemClicked(ActionSheetDialog dialog, int postion) {
-                jsCallback(function_actionSheet, 0, EUExCallback.F_C_INT, postion);
+                resultActionSheet(postion,finalCallbackId);
                 EBrowser.clearFlag();
             }
 
             @Override
             public void onCanceled(ActionSheetDialog dialog) {
-                jsCallback(function_actionSheet, 0, EUExCallback.F_C_INT, btnLabels.length);
+                resultActionSheet(btnLabels.length, finalCallbackId);
                 EBrowser.clearFlag();
             }
         });
+    }
+
+    private void resultActionSheet(int position,int callbackId){
+        if(callbackId!=-1){
+            callbackToJs(callbackId,false,position);
+        }else{
+            jsCallback(function_actionSheet, 0, EUExCallback.F_C_INT, position);
+        }
     }
 
     public void statusBarNotification(String[] params) {
@@ -2965,17 +2995,12 @@ public class EUExWindow extends EUExBase {
     }
 
     public void createProgressDialog(String[] params) {
-        if (params == null || params.length < 2) {
-            errorCallback(0, 0, "error params!");
-            return;
+        if (isFirstParamExistAndIsJson(params)){
+            WindowJsonWrapper.createProgressDialog(this,
+                    DataHelper.gson.fromJson(params[0], WindowCreateProgressDialogVO.class));
+        }else{
+            createProgressDialogMsg(params);
         }
-        Message msg = new Message();
-        msg.obj = this;
-        msg.what = MSG_CREATE_PROGRESS_DIALOG;
-        Bundle bd = new Bundle();
-        bd.putStringArray(TAG_BUNDLE_PARAM, params);
-        msg.setData(bd);
-        mHandler.sendMessage(msg);
     }
 
     public void createProgressDialogMsg(String[] params) {

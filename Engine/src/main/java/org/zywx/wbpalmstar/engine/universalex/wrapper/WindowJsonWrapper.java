@@ -178,21 +178,23 @@ public class WindowJsonWrapper {
         });
     }
 
-    public static void confirm(EUExWindow window, WindowConfirmVO confirmVO){
+    public static void confirm(EUExWindow window, WindowConfirmVO confirmVO,String callbackId){
         window.confirm(new String[]{
                 confirmVO.title,
                 confirmVO.message,
-                confirmVO.buttonLabel
+                confirmVO.buttonLabel,
+                callbackId
         });
     }
 
-    public static void prompt(EUExWindow window, WindowPromptVO promptVO){
+    public static void prompt(EUExWindow window, WindowPromptVO promptVO,String callbackId){
         window.prompt(new String[]{
                 promptVO.title,
                 promptVO.message,
                 promptVO.defaultValue,
                 promptVO.buttonLabel,
-                promptVO.hint
+                promptVO.hint,
+                callbackId
         });
     }
 
@@ -214,11 +216,12 @@ public class WindowJsonWrapper {
         });
     }
 
-    public static void actionSheet(EUExWindow window, WindowActionSheetVO actionSheetVO){
+    public static void actionSheet(EUExWindow window, WindowActionSheetVO actionSheetVO,String callbackId){
         window.actionSheetMsg(new String[]{
                 actionSheetVO.title,
                 actionSheetVO.cancel,
-                actionSheetVO.buttons
+                actionSheetVO.buttons,
+                callbackId
         });
     }
 
