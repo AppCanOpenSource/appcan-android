@@ -688,13 +688,15 @@ public class EUExWidget extends EUExBase {
         curWind.getBrowser().setMySpaceInfo(inForResult, inAnimiId, inInfo);
     }
 
-    public void getOpenerInfo(String[] parm) {
+    public String getOpenerInfo(String[] parm) {
         EBrowserWindow curWind = mBrwView.getBrowserWindow();
         if (null == curWind) {
-            return;
+            return null;
         }
+        String opener=curWind.getOpener();
         jsCallback(function_getOpenerInfo, 0, EUExCallback.F_C_TEXT,
-                curWind.getOpener());
+                opener);
+        return opener;
     }
 
     public void setPushNotifyCallback(String[] parm) {
@@ -797,21 +799,23 @@ public class EUExWidget extends EUExBase {
         });
     }
 
-    public void getMBaaSHost(String[] parm) {
+    public String getMBaaSHost(String[] parm) {
         String mbaas_host = ResoureFinder.getInstance().getString(mContext, "mbaas_host");
         jsCallback(function_getMBaaSHost, 0, EUExCallback.F_C_TEXT, mbaas_host);
+        return mbaas_host;
     }
 
-    public void getPushState(String[] parm) {
+    public boolean getPushState(String[] parm) {
         SharedPreferences sp = mContext.getSharedPreferences("saveData",
                 Context.MODE_MULTI_PROCESS);
         String pushMes = sp.getString("pushMes", "0");
         String localPushMes = sp.getString("localPushMes", pushMes);
         jsCallback(function_getPushState, 0, EUExCallback.F_C_INT,
                 Integer.parseInt(localPushMes));
+        return "1".equals(localPushMes);
     }
 
-    public void getPushInfo(String[] parm) {
+    public String getPushInfo(String[] parm) {
         String type = PUSH_MSG_BODY;
         if (parm.length >= 1) {
             type = parm[0];
@@ -832,6 +836,7 @@ public class EUExWidget extends EUExBase {
                     userInfo, System.currentTimeMillis() + "");
             jsCallback(function_getPushInfo, 0, EUExCallback.F_C_TEXT, userInfo);
         }
+        return userInfo;
     }
 
     public void share(String inShareTitle, String inSubject, String inContent) {
@@ -877,31 +882,17 @@ public class EUExWidget extends EUExBase {
         return false;
     }
 
-    public void isAppInstalled(String[] params) {
+    public boolean isAppInstalled(String[] params) {
         if (params == null || params.length < 1) {
             errorCallback(0, 0, "error params!");
-            return;
-        }
-        Message msg = new Message();
-        msg.obj = this;
-        msg.what = MSG_IS_APP_INSTALLED;
-        Bundle bd = new Bundle();
-        bd.putStringArray(BUNDLE_DATA, params);
-        msg.setData(bd);
-        mHandler.sendMessage(msg);
-    }
-
-    public void isAppInstalledMsg(String[] params) {
-        if (params == null || params.length < 1) {
-            errorCallback(0, 0, "error params!");
-            return;
+            return false;
         }
         String json = params[0];
         AppInstalledVO data = DataHelper.gson.fromJson(json, AppInstalledVO.class);
         String packageName = data.getAppData();
         if (TextUtils.isEmpty(packageName)) {
             errorCallback(0, 0, "error params!");
-            return;
+            return false;
         }
         JSONObject jsonObject = new JSONObject();
         int result;
@@ -918,6 +909,7 @@ public class EUExWidget extends EUExBase {
             e.printStackTrace();
         }
         callBackPluginJs(JsConst.CALLBACK_IS_APP_INSTALLED, jsonObject.toString());
+        return result==0;
     }
 
     public void reloadWidgetByAppId(String[] params){
@@ -972,9 +964,6 @@ public class EUExWidget extends EUExBase {
         }
         Bundle bundle = message.getData();
         switch (message.what) {
-            case MSG_IS_APP_INSTALLED:
-                isAppInstalledMsg(bundle.getStringArray(BUNDLE_DATA));
-                break;
             case MSG_RELOAD_WIDGET_BY_APPID:
                 reloadWidgetByAppIdMsg(bundle.getStringArray(BUNDLE_DATA));
                 break;
