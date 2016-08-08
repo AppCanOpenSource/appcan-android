@@ -24,6 +24,8 @@ import org.zywx.wbpalmstar.engine.universalex.EUExWindow;
 
 /**
  * Created by ylt on 16/8/3.
+ *
+ * 兼容Window 相关接口 Json传参
  */
 
 public class WindowJsonWrapper {
