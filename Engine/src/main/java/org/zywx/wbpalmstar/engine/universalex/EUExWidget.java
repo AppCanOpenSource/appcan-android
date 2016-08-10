@@ -99,8 +99,11 @@ public class EUExWidget extends EUExBase {
     }
 
     public boolean startWidget(String[] parm) {
-
+        int callbackId=-1;
         if (isJsonString(parm[0])){
+            if (parm.length>1){
+                callbackId=valueOfCallbackId(parm[1]);
+            }
             WidgetStartVO startVO= DataHelper.gson.fromJson(parm[0], WidgetStartVO.class);
             parm=new String[]{
                     startVO.appId,
@@ -152,8 +155,7 @@ public class EUExWidget extends EUExBase {
             if (data == null) {
                 showErrorAlert(String.format(EUExUtil.getString("platform_widget_not_exist")
                         , inAppId + ""));
-                jsCallback(function_startWidget, 0, EUExCallback.F_C_INT,
-                        EUExCallback.F_C_FAILED);
+                resultStartWidget(false,callbackId);
                 return false;
             }
             data.m_appkey = appKey;
@@ -161,23 +163,31 @@ public class EUExWidget extends EUExBase {
             info.setAnimiId(animId);
             info.setDuration(duration);
             if (startWidget(data, info)) {
-                jsCallback(function_startWidget, 0, EUExCallback.F_C_INT,
-                        EUExCallback.F_C_SUCCESS);
+                resultStartWidget(true,callbackId);
                 return true;
             } else {
-                jsCallback(function_startWidget, 0, EUExCallback.F_C_INT,
-                        EUExCallback.F_C_FAILED);
+                resultStartWidget(false,callbackId);
                 return false;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            if (BDebug.DEBUG) {
+                e.printStackTrace();
+            }
+            resultStartWidget(false,callbackId);
             showErrorAlert(EUExUtil.getString("platform_widget_search_failed"));
-            jsCallback(function_startWidget, 0, EUExCallback.F_C_INT,
-                    EUExCallback.F_C_FAILED);
             return false;
         }
-
     }
+
+    private void resultStartWidget(boolean result,int callbackId){
+        if (callbackId==-1){
+            jsCallback(function_startWidget, 0, EUExCallback.F_C_INT,
+                    EUExCallback.F_C_FAILED);
+        }else{
+            callbackToJs(callbackId,false,result?0:1);
+        }
+    }
+
 
     private void showErrorAlert(final String msg) {
         /*Runnable ui = new Runnable() {
