@@ -21,10 +21,12 @@ package org.zywx.wbpalmstar.widgetone;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.content.res.XmlResourceParser;
+import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.os.Message;
 import android.support.annotation.Keep;
 
+import org.xmlpull.v1.XmlPullParser;
 import org.zywx.wbpalmstar.base.BConstant;
 import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.BUtility;
@@ -40,18 +42,11 @@ import org.zywx.wbpalmstar.platform.push.PushEngineEventListener;
 import org.zywx.wbpalmstar.widgetone.dataservice.WDataManager;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import dalvik.system.DexClassLoader;
 
 public class WidgetOneApplication extends Application {
 
@@ -59,11 +54,6 @@ public class WidgetOneApplication extends Application {
     private WDataManager mWDataManager;
     protected ECrashHandler mCrashReport;
     private ELinkedList<EngineEventListener> mListenerQueue;
-    private String cachePath = null;
-    private String dexJar = "dexfile/jar";
-    private String dexLib = "dexfile/armeabi";
-    private String optFile = "dexfile/out";
-    private String[] pluginJars = null;
 
     public WidgetOneApplication() {
         mListenerQueue = new ELinkedList<EngineEventListener>();
@@ -78,10 +68,6 @@ public class WidgetOneApplication extends Application {
         EUExUtil.init(this);
         WebViewSdkCompat.initInApplication(this);
         mCrashReport = ECrashHandler.getInstance(this);
-        cachePath = getCacheDir().getAbsolutePath();
-        copyLib();
-        copyJar();
-        initClassLoader();
         initPlugin();
         reflectionPluginMethod("onApplicationCreate");
         BDebug.init();
@@ -105,139 +91,25 @@ public class WidgetOneApplication extends Application {
         }
     }
 
-    private void copyLib() {
-
-        InputStream in = null;
-        BufferedInputStream bis = null;
-        FileOutputStream fos = null;
-        String libPath = cachePath + File.separator + dexLib;
-        File dirFile = new File(libPath);
-        if (dirFile != null)
-            dirFile.delete();
-        if (!dirFile.exists()) {
-            dirFile.mkdirs();
-        }
-        try {
-            String[] libs = getAssets().list(dexLib);
-            if (null != libs && libs.length > 0) {
-                for (int i = 0; i < libs.length; i++) {
-                    in = getAssets().open(dexLib + File.separator + libs[i]);
-                    File file = new File(libPath + File.separator + libs[i]);
-
-                    if (!file.exists()) {
-                        try {
-                            file.createNewFile();
-                        } catch (IOException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
-                    }
-                    bis = new BufferedInputStream(in);
-                    fos = new FileOutputStream(file);
-
-                    byte[] b = new byte[1024];
-                    int len = 0;
-                    while ((len = bis.read(b)) != -1) {
-                        fos.write(b, 0, len);
-                    }
-                    fos.flush();
-                    in.close();
-                    bis.close();
-
-                }
-            }
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } finally {
-            try {
-                if (in != null && bis != null && fos != null) {
-                    in.close();
-                    bis.close();
-                    fos.close();
-                }
-
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void copyJar() {
-        InputStream in = null;
-        BufferedInputStream bis = null;
-        FileOutputStream fos = null;
-        String jarPath = cachePath + File.separator + dexJar;
-        File dirFile = new File(jarPath);
-        pluginJars = null;
-        if (dirFile != null)
-            dirFile.delete();
-        if (!dirFile.exists()) {
-            dirFile.mkdirs();
-        }
-        try {
-            pluginJars = getAssets().list(dexJar);
-
-            if (pluginJars != null && pluginJars.length > 0) {
-
-                for (int i = 0; i < pluginJars.length; i++) {
-                    in = getAssets().open(
-                            dexJar + File.separator + pluginJars[i]);
-                    File file = new File(jarPath + File.separator
-                            + pluginJars[i]);
-
-                    if (!file.exists()) {
-                        try {
-                            file.createNewFile();
-                        } catch (IOException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
-                    }
-                    bis = new BufferedInputStream(in);
-                    fos = new FileOutputStream(file);
-
-                    byte[] b = new byte[1024];
-                    int len = 0;
-                    while ((len = bis.read(b)) != -1) {
-                        fos.write(b, 0, len);
-                    }
-                    fos.flush();
-                    in.close();
-                    bis.close();
-
-                }
-            }
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } finally {
-
-            if (in != null && bis != null && fos != null) {
-                try {
-                    in.close();
-                    bis.close();
-                    fos.close();
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-
-            }
-
-        }
-
-    }
-
     private final void initPlugin() {
+		if (null == mThirdPluginMgr) {
+			long time = System.currentTimeMillis();
+			long cost = 0;
+			mThirdPluginMgr = new ThirdPluginMgr(this);
+			// 开始拷贝和加载旧版dex动态库插件
+			mThirdPluginMgr.loadInitAllDexPluginClass();
+			// 开始拷贝和加载动态库插件
+			mThirdPluginMgr.loadInitAllDynamicPluginClass(mListenerQueue);
+			// 开始加载打包内置的xml中的plugin文件
+			XmlPullParser plugins = null;
         int id = EUExUtil.getResXmlID("plugin");
         if (id == 0) {
             throw new RuntimeException(EUExUtil.getString("plugin_config_no_exist"));
         }
-        XmlResourceParser plugins = getResources().getXml(id);
-        if (null == mThirdPluginMgr) {
-            mThirdPluginMgr = new ThirdPluginMgr(plugins, mListenerQueue, this);
+			plugins = getResources().getXml(id);
+			mThirdPluginMgr.initClass(plugins, mListenerQueue, null);
+			cost = System.currentTimeMillis() - time;
+			BDebug.i("DL", "plugins loading total costs " + cost);
         }
     }
 
@@ -407,69 +279,27 @@ public class WidgetOneApplication extends Application {
         }
     }
 
-    // 因为之前的方法无法替换子进程的classloader，故改成以下的方式。由于每一个进程初始化的时候都会初始化一次他的application，而且默认的classloader是和application的classloader一样的
-    // 故在application初始化的时候，替换掉application的classloader。之前只有在主进程中才替换掉application的loader，所以子进程还是无法加载动态插件
-    private void initClassLoader() {
-        try {
-            pluginJars = getAssets().list(dexJar);
+	@Override
+	public AssetManager getAssets() {
+		// TODO Auto-generated method stub
+		AssetManager assetManager = mThirdPluginMgr == null ? super.getAssets()
+				: mThirdPluginMgr.getAssets();
+		return assetManager == null ? super.getAssets() : assetManager;
+	}
 
-            if (pluginJars != null && pluginJars.length > 0) {
+	@Override
+	public Resources getResources() {
+		// TODO Auto-generated method stub
+		Resources resources = mThirdPluginMgr == null ? super.getResources()
+				: mThirdPluginMgr.getResources();
+		return resources == null ? super.getResources() : resources;
+	}
 
-                // create the dexPath
-
-                int PluginCount = pluginJars.length;
-                String dexPath = cachePath + File.separator + dexJar;
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < PluginCount; i++) {
-                    sb.append(dexPath).append(File.separator)
-                            .append(pluginJars[i]).append(File.pathSeparator);
-                }
-                dexPath = sb.toString();
-
-                // create the optPath
-
-                String optPath = cachePath + File.separator + optFile;
-                File dirFile = new File(optPath);
-                if (!dirFile.exists()) {
-                    dirFile.mkdirs();
-                }
-                String libPath = cachePath + File.separator + dexLib;
-
-                // create the dexclassloader
-                DexClassLoader dexCl = new DexClassLoader(dexPath, optPath,
-                        libPath, getClassLoader());
-
-                // use reflection tech replace the current classloader
-
-                Context mBase = new Smith<Context>(this, "mBase").get();
-
-                Object mPackageInfo = new Smith<Object>(mBase, "mPackageInfo")
-                        .get();
-
-                Smith<ClassLoader> sClassLoader = new Smith<ClassLoader>(
-                        mPackageInfo, "mClassLoader");
-                sClassLoader.set(dexCl);
-
-            }
-
-			/*
-             * Field mMainThread =
-			 * Activity.class.getDeclaredField("mMainThread");
-			 * mMainThread.setAccessible(true); Object mainThread =
-			 * mMainThread.get((EBrowserActivity) context); Class threadClass =
-			 * mainThread.getClass(); Field mPackages =
-			 * threadClass.getDeclaredField("mPackages");
-			 * mPackages.setAccessible(true); WeakReference<?> ref; Map<String,
-			 * ?> map = (Map<String, ?>) mPackages.get(mainThread); ref =
-			 * (WeakReference<?>) map.get(context.getPackageName()); Object apk
-			 * = ref.get(); Class apkClass = apk.getClass();
-			 * 
-			 * Field mClassLoader = apkClass.getDeclaredField("mClassLoader");
-			 * mClassLoader.setAccessible(true); mClassLoader.set(apk, dexCl);
-			 */
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+	@Override
+	public ClassLoader getClassLoader() {
+		// TODO Auto-generated method stub
+		ClassLoader classLoader = mThirdPluginMgr == null ? super
+				.getClassLoader() : mThirdPluginMgr.getClassLoader();
+		return classLoader == null ? super.getClassLoader() : classLoader;
+	}
 }
