@@ -3023,7 +3023,7 @@ public class EUExWindow extends EUExBase {
         closeAlert();
         // mBrwView.resetBounceView(0);
         // mBrwView.resetBounceView(1);
-        destroyProgressDialog(null);
+        //destroyProgressDialog(null);
         return true;
     }
 
