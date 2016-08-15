@@ -93,6 +93,7 @@ public class EUExWidgetOne extends EUExBase {
         }
     }
 
+    @AppCanAPI
     public JSONObject getCurrentWidgetInfo(String[] parm) {
         WWidgetData wgtData = mBrwView.getCurrentWidget();
         JSONObject obj = new JSONObject();
@@ -122,6 +123,7 @@ public class EUExWidgetOne extends EUExBase {
 //		jsCallback(function_getVersion, 0, EUExCallback.F_C_TEXT, ResoureFinder.getInstance().getString(mContext, "widgetone_version"));
     }
 
+    @AppCanAPI
     public int getPlatform(String[] parm) {
         jsCallback(function_getPlatForm, 0, EUExCallback.F_C_INT,
                 EUExCallback.F_JV_ANDROID);
@@ -171,6 +173,7 @@ public class EUExWidgetOne extends EUExBase {
         ;
     }
 
+    @AppCanAPI
     public String getMainWidgetId(String[] parm) {
         String appId=null;
         if (WDataManager.sRootWgt != null) {

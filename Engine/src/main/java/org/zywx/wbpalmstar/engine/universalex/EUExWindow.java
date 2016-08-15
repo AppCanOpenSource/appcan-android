@@ -54,6 +54,7 @@ import org.json.JSONObject;
 import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.ResoureFinder;
+import org.zywx.wbpalmstar.base.util.AppCanAPI;
 import org.zywx.wbpalmstar.base.util.SpManager;
 import org.zywx.wbpalmstar.base.vo.CreateContainerVO;
 import org.zywx.wbpalmstar.base.vo.SetSwipeCloseEnableVO;
@@ -2430,6 +2431,7 @@ public class EUExWindow extends EUExBase {
         mBrwView.getBrowserWindow().windowGoForward(animId, duration);
     }
 
+    @AppCanAPI
     public int  getBounce(String[] parm) {
         return mBrwView.getBounce();
     }
@@ -2663,12 +2665,14 @@ public class EUExWindow extends EUExBase {
         mHandler.sendMessage(msg);
     }
 
+    @AppCanAPI
     public int getState(String[] parm) {
         int state = mBrwView.getBrowserWindow().isShown() ? 0 : 1;
         jsCallback(function_getState, 0, EUExCallback.F_C_INT, state);
         return state;
     }
 
+    @AppCanAPI
     public String getUrlQuery(String[] parm) {
         String query = mBrwView.getQuery();
         jsCallback(function_getQuery, 0, EUExCallback.F_C_TEXT, query);

@@ -45,6 +45,7 @@ import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.JsConst;
 import org.zywx.wbpalmstar.base.ResoureFinder;
+import org.zywx.wbpalmstar.base.util.AppCanAPI;
 import org.zywx.wbpalmstar.base.vo.AppInstalledVO;
 import org.zywx.wbpalmstar.base.vo.ErrorResultVO;
 import org.zywx.wbpalmstar.base.vo.StartAppVO;
@@ -98,6 +99,7 @@ public class EUExWidget extends EUExBase {
         super(context, inParent);
     }
 
+    @AppCanAPI
     public boolean startWidget(String[] parm) {
         int callbackId=-1;
         if (isJsonString(parm[0])){
@@ -809,12 +811,14 @@ public class EUExWidget extends EUExBase {
         });
     }
 
+    @AppCanAPI
     public String getMBaaSHost(String[] parm) {
         String mbaas_host = ResoureFinder.getInstance().getString(mContext, "mbaas_host");
         jsCallback(function_getMBaaSHost, 0, EUExCallback.F_C_TEXT, mbaas_host);
         return mbaas_host;
     }
 
+    @AppCanAPI
     public boolean getPushState(String[] parm) {
         SharedPreferences sp = mContext.getSharedPreferences("saveData",
                 Context.MODE_MULTI_PROCESS);
@@ -825,6 +829,7 @@ public class EUExWidget extends EUExBase {
         return "1".equals(localPushMes);
     }
 
+    @AppCanAPI
     public String getPushInfo(String[] parm) {
         String type = PUSH_MSG_BODY;
         if (parm.length >= 1) {
@@ -892,6 +897,7 @@ public class EUExWidget extends EUExBase {
         return false;
     }
 
+    @AppCanAPI
     public boolean isAppInstalled(String[] params) {
         if (params == null || params.length < 1) {
             errorCallback(0, 0, "error params!");
