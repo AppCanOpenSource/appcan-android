@@ -64,11 +64,18 @@ import org.zywx.wbpalmstar.base.vo.WindowAlertVO;
 import org.zywx.wbpalmstar.base.vo.WindowAnimVO;
 import org.zywx.wbpalmstar.base.vo.WindowConfirmVO;
 import org.zywx.wbpalmstar.base.vo.WindowCreateProgressDialogVO;
+import org.zywx.wbpalmstar.base.vo.WindowEvaluateMultiPopoverScriptVO;
+import org.zywx.wbpalmstar.base.vo.WindowEvaluatePopoverScriptVO;
+import org.zywx.wbpalmstar.base.vo.WindowEvaluateScriptVO;
+import org.zywx.wbpalmstar.base.vo.WindowOpenMultiPopoverVO;
 import org.zywx.wbpalmstar.base.vo.WindowOpenSlibingVO;
 import org.zywx.wbpalmstar.base.vo.WindowOpenVO;
 import org.zywx.wbpalmstar.base.vo.WindowPromptResultVO;
 import org.zywx.wbpalmstar.base.vo.WindowPromptVO;
 import org.zywx.wbpalmstar.base.vo.WindowSetFrameVO;
+import org.zywx.wbpalmstar.base.vo.WindowSetMultiPopoverFrameVO;
+import org.zywx.wbpalmstar.base.vo.WindowSetMultiPopoverSelectedVO;
+import org.zywx.wbpalmstar.base.vo.WindowSetPopoverFrameVO;
 import org.zywx.wbpalmstar.base.vo.WindowSetSlidingWindowVO;
 import org.zywx.wbpalmstar.base.vo.WindowShowBounceViewVO;
 import org.zywx.wbpalmstar.base.vo.WindowSlidingItemVO;
@@ -725,7 +732,12 @@ public class EUExWindow extends EUExBase {
     }
 
     public void evaluateScript(String[] parm) {
-        evaluateScriptMsg(parm);
+        if (isFirstParamExistAndIsJson(parm)){
+            WindowJsonWrapper.evaluateScript(this,
+                    DataHelper.gson.fromJson(parm[0], WindowEvaluateScriptVO.class));
+        }else{
+            evaluateScriptMsg(parm);
+        }
     }
 
     public void evaluateScriptMsg(String[] parm) {
@@ -1231,16 +1243,12 @@ public class EUExWindow extends EUExBase {
     }
 
     public void setPopoverFrame(String[] parm) {
-        if (parm.length < 5) {
-            return;
+        if (isFirstParamExistAndIsJson(parm)){
+            WindowJsonWrapper.setPopoverFrame(this,
+                    DataHelper.gson.fromJson(parm[0],WindowSetPopoverFrameVO.class));
+        }else{
+            setPopoverFrameMsg(parm);
         }
-        Message msg = new Message();
-        msg.obj = this;
-        msg.what = MSG_FUNCTION_SETPOPOVERFRAME;
-        Bundle bd = new Bundle();
-        bd.putStringArray(TAG_BUNDLE_PARAM, parm);
-        msg.setData(bd);
-        mHandler.sendMessage(msg);
     }
 
     public void setHardwareEnable(final String[] params) {
@@ -1310,7 +1318,12 @@ public class EUExWindow extends EUExBase {
     }
 
     public void openMultiPopover(String[] parm) {
-        Log.d("multi", "open multi pop");
+        if (isFirstParamExistAndIsJson(parm)){
+            WindowJsonWrapper.openMultiPopover(this,DataHelper.gson.fromJson(parm[0],
+                    WindowOpenMultiPopoverVO.class));
+            return;
+        }
+
         if (parm.length < 10) {
             return;
         }
@@ -1538,6 +1551,11 @@ public class EUExWindow extends EUExBase {
     }
 
     public void setSelectedPopOverInMultiWindow(String[] parm) {
+        if (isFirstParamExistAndIsJson(parm)){
+            WindowJsonWrapper.setSelectedPopOverInMultiWindow(this,
+                    DataHelper.gson.fromJson(parm[0], WindowSetMultiPopoverSelectedVO.class));
+        }
+
         if (parm == null || parm.length < 2) {
             errorCallback(0, EUExCallback.F_E_UEXWINDOW_EVAL, "Illegal parameter");
             return;
@@ -1585,6 +1603,11 @@ public class EUExWindow extends EUExBase {
     }
 
     public void setMultiPopoverFrame(String[] parm) {
+        if (isFirstParamExistAndIsJson(parm)){
+            WindowJsonWrapper.setMultiPopoverFrame(this,DataHelper.gson.fromJson(parm[0],
+                    WindowSetMultiPopoverFrameVO.class));
+            return;
+        }
         if (parm.length < 5) {
             return;
         }
@@ -1630,6 +1653,13 @@ public class EUExWindow extends EUExBase {
     }
 
     public void evaluateMultiPopoverScript(String[] parm) {
+
+        if (isFirstParamExistAndIsJson(parm)){
+            WindowJsonWrapper.evaluateMultiPopoverScript(this,
+                    DataHelper.gson.fromJson(parm[0], WindowEvaluateMultiPopoverScriptVO.class));
+            return;
+        }
+
         if (parm.length < 4) {
             return;
         }
@@ -1645,6 +1675,11 @@ public class EUExWindow extends EUExBase {
     }
 
     public void evaluatePopoverScript(String[] parm) {
+        if (isFirstParamExistAndIsJson(parm)){
+            WindowJsonWrapper.evaluatePopoverScript(this,
+                    DataHelper.gson.fromJson(parm[0], WindowEvaluatePopoverScriptVO.class));
+            return;
+        }
         if (parm.length < 3) {
             return;
         }
