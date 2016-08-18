@@ -73,8 +73,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import static android.R.attr.start;
-
 public final class EBrowserActivity extends BaseActivity {
 
     public static final int F_OAUTH_CODE = 100001;
