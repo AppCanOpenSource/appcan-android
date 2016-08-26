@@ -850,7 +850,55 @@ public abstract class EUExBase {
         }
     }
 
-
     public void onHandleMessage(Message msg) {
     }
+
+    /**
+     * 区分接口收到的参数,简单判断字符串是否是json格式的String,没有必要完整校验一遍
+     * @param str
+     * @return
+     */
+    @Keep
+    boolean isJsonString(String str){
+        if (TextUtils.isEmpty(str)){
+            return false;
+        }
+        return str.startsWith("{") && str.endsWith("}")||
+                str.startsWith("[") && str.endsWith("]");
+    }
+
+    /**
+     * 判断数组的第一个是否存在并且是Json格式
+     * @param params
+     * @return
+     */
+    @Keep
+    boolean isFirstParamExistAndIsJson(String[] params){
+        if (params==null||params.length==0){
+            return false;
+        }
+        return isJsonString(params[0]);
+    }
+
+    /**
+     * 获取callbackId ,-1为无效值
+     * @param callbackIdStr
+     * @return 为空或转换失败时返回-1
+     */
+    @Keep
+    int valueOfCallbackId(String callbackIdStr){
+        int callbackId=-1;
+        if (TextUtils.isEmpty(callbackIdStr)||callbackIdStr.equals("null")){
+            return callbackId;
+        }
+        try{
+            callbackId=Integer.parseInt(callbackIdStr);
+        }catch (Exception e){
+            if (BDebug.DEBUG){
+                e.printStackTrace();
+            }
+        }
+        return callbackId;
+    }
+
 }

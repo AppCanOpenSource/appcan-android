@@ -1245,14 +1245,18 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
         addUriTask(js);
     }
 
-    public void getBounce() {
+    public int getBounce() {
         if (mDestroyed) {
-            return;
+            return 0;
         }
         EViewEntry bounceEntry = new EViewEntry();
         bounceEntry.obj = getParent();
         mBroWind.addBounceTask(bounceEntry,
                 EViewEntry.F_BOUNCE_TASK_GET_BOUNCE_VIEW);
+        if (bounceEntry.obj instanceof EBounceView){
+            return ((EBounceView) bounceEntry.obj).getBounce();
+        }
+        return 0;
     }
 
     public void setBounce(int flag) {

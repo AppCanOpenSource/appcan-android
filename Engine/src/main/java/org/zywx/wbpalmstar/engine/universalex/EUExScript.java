@@ -20,6 +20,9 @@ package org.zywx.wbpalmstar.engine.universalex;
 
 import android.os.Build;
 
+import org.zywx.wbpalmstar.base.BConstant;
+import org.zywx.wbpalmstar.engine.ESystemInfo;
+
 public class EUExScript {
 
     public static String F_UEX_SCRIPT;
@@ -126,25 +129,29 @@ public class EUExScript {
                 "window.uexWidgetOne={"
                 + "platformName:'android',"
                 + "platformVersion:'" + Build.VERSION.RELEASE + "',"
+                + "statusBarHeight:"+ ESystemInfo.getStateBarHeight(BConstant.app)+","
                 + "getId:function(){uexDispatcher.dispatch('uexWidgetOne','getId',jo(arguments));},"
                 + "getVersion:function(){uexDispatcher.dispatch('uexWidgetOne','getVersion',jo(arguments));},"
                 + "getPlatform:function(){return uexDispatcher.dispatch('uexWidgetOne','getPlatform',jo(arguments));},"
                 + "exit:function(){uexDispatcher.dispatch('uexWidgetOne','exit',jo(arguments));},"
                 + "getWidgetNumber:function(){uexDispatcher.dispatch('uexWidgetOne','getWidgetNumber',jo(arguments));},"
-                + "getWidgetInfo:function(){uexDispatcher.dispatch('uexWidgetOne','getWidgetInfo',jo(arguments));},"
+                + "getWidgetInfo:function(){return uexDispatcher.dispatch('uexWidgetOne','getWidgetInfo',jo" +
+                "(arguments)" +
+                ");},"
                 + "getCurrentWidgetInfo:function(){uexDispatcher.dispatch('uexWidgetOne','getCurrentWidgetInfo',jo(arguments));},"
                 + "cleanCache:function(){uexDispatcher.dispatch('uexWidgetOne','cleanCache',jo(arguments));},"
                 + "getEngineVersion:function(){return uexDispatcher.dispatch('uexWidgetOne','getEngineVersion',jo(arguments));},"
                 + "getEngineVersionCode:function(){return uexDispatcher.dispatch('uexWidgetOne','getEngineVersionCode',jo(arguments));},"
-                + "getMainWidgetId:function(){uexDispatcher.dispatch('uexWidgetOne','getMainWidgetId',jo(arguments));}};"
+                + "getMainWidgetId:function(){return uexDispatcher.dispatch('uexWidgetOne','getMainWidgetId',jo" +
+                "(arguments));}};"
                 +
                 // Widget
                 "window.uexWidget={"
-                + "startWidget:function(){uexDispatcher.dispatch('uexWidget','startWidget',jo(arguments));},"
+                + "startWidget:function(){return uexDispatcher.dispatch('uexWidget','startWidget',jo(arguments));},"
                 + "startWidgetWithPath:function(){uexDispatcher.dispatch('uexWidget','startWidgetWithPath',jo(arguments));},"
                 + "finishWidget:function(){uexDispatcher.dispatch('uexWidget','finishWidget',jo(arguments));},"
-                + "removeWidget:function(){uexDispatcher.dispatch('uexWidget','removeWidget',jo(arguments));},"
-                + "getOpenerInfo:function(){uexDispatcher.dispatch('uexWidget','getOpenerInfo',jo(arguments));},"
+                + "removeWidget:function(){return uexDispatcher.dispatch('uexWidget','removeWidget',jo(arguments));},"
+                + "getOpenerInfo:function(){return uexDispatcher.dispatch('uexWidget','getOpenerInfo',jo(arguments));},"
                 + "setMySpaceInfo:function(){uexDispatcher.dispatch('uexWidget','setMySpaceInfo',jo(arguments));},"
                 + "setPushNotifyCallback:function(){uexDispatcher.dispatch('uexWidget','setPushNotifyCallback',jo(arguments));},"
                 + "loadApp:function(){uexDispatcher.dispatch('uexWidget','loadApp',jo(arguments));},"
@@ -152,14 +159,16 @@ public class EUExScript {
                 + "checkUpdate:function(){uexDispatcher.dispatch('uexWidget','checkUpdate',jo(arguments));},"
                 + "setPushInfo:function(){uexDispatcher.dispatch('uexWidget','setPushInfo',jo(arguments));},"
                 + "setPushState:function(){uexDispatcher.dispatch('uexWidget','setPushState',jo(arguments));},"
-                + "getPushState:function(){uexDispatcher.dispatch('uexWidget','getPushState',jo(arguments));},"
-                + "startApp:function(){uexDispatcher.dispatch('uexWidget','startApp',jo(arguments));},"
+                + "getPushState:function(){return uexDispatcher.dispatch('uexWidget','getPushState',jo(arguments));},"
+                + "startApp:function(){return uexDispatcher.dispatch('uexWidget','startApp',jo(arguments));},"
                 + "setSpaceEnable:function(){uexDispatcher.dispatch('uexWidget','setSpaceEnable',jo(arguments));},"
                 + "setLogServerIp:function(){uexDispatcher.dispatch('uexWidget','setLogServerIp',jo(arguments));},"
                 + "delPushInfo:function(){uexDispatcher.dispatch('uexWidget','delPushInfo',jo(arguments));},"
-                + "isAppInstalled:function(){uexDispatcher.dispatch('uexWidget','isAppInstalled',jo(arguments));},"
-                + "getPushInfo:function(){uexDispatcher.dispatch('uexWidget','getPushInfo',jo(arguments));},"
-                + "getMBaaSHost:function(){uexDispatcher.dispatch('uexWidget','getMBaaSHost',jo(arguments));},"
+                + "isAppInstalled:function(){return uexDispatcher.dispatch('uexWidget','isAppInstalled',jo(arguments)" +
+                ")" +
+                ";},"
+                + "getPushInfo:function(){return uexDispatcher.dispatch('uexWidget','getPushInfo',jo(arguments));},"
+                + "getMBaaSHost:function(){return uexDispatcher.dispatch('uexWidget','getMBaaSHost',jo(arguments));},"
                 + "reloadWidgetByAppId:function(){uexDispatcher.dispatch('uexWidget','reloadWidgetByAppId',jo(arguments));},"
                 + "closeLoading:function(){uexDispatcher.dispatch('uexWidget','closeLoading',jo(arguments));},"
                 + "moveToBack:function(){uexDispatcher.dispatch('uexWidget','moveToBack',jo(arguments));},"
@@ -171,8 +180,8 @@ public class EUExScript {
                 + "getWidth:function(){return uexDispatcher.dispatch('uexWindow','getWidth',jo(arguments));},"
                 + "forward:function(){uexDispatcher.dispatch('uexWindow','forward',jo(arguments));},"
                 + "back:function(){uexDispatcher.dispatch('uexWindow','back',jo(arguments));},"
-                + "pageBack:function(){uexDispatcher.dispatch('uexWindow','pageBack',jo(arguments));},"
-                + "pageForward:function(){uexDispatcher.dispatch('uexWindow','pageForward',jo(arguments));},"
+                + "pageBack:function(){return uexDispatcher.dispatch('uexWindow','pageBack',jo(arguments));},"
+                + "pageForward:function(){return uexDispatcher.dispatch('uexWindow','pageForward',jo(arguments));},"
                 + "showSoftKeyboard:function(){uexDispatcher.dispatch('uexWindow','showSoftKeyboard',jo(arguments));},"
                 + "hideSoftKeyboard:function(){uexDispatcher.dispatch('uexWindow','hideSoftKeyboard',jo(arguments));},"
                 + "alert:function(){uexDispatcher.dispatch('uexWindow','alert',jo(arguments));},"
@@ -256,11 +265,12 @@ public class EUExScript {
                 + "setSlidingWindow:function(){uexDispatcher.dispatch('uexWindow','setSlidingWindow',jo(arguments));},"
                 + "setSlidingWindowEnabled:function(){uexDispatcher.dispatch('uexWindow','setSlidingWindowEnabled',jo(arguments));},"
                 + "toggleSlidingWindow:function(){uexDispatcher.dispatch('uexWindow','toggleSlidingWindow',jo(arguments));},"
-                + "getSlidingWindowState:function(){uexDispatcher.dispatch('uexWindow','getSlidingWindowState',jo(arguments));},"
+                + "getSlidingWindowState:function(){return uexDispatcher.dispatch('uexWindow'," +
+                "'getSlidingWindowState',jo(arguments));},"
                 + "setLoadingImagePath:function(){uexDispatcher.dispatch('uexWindow','setLoadingImagePath',jo(arguments));},"
 
                 + "setBounce:function(){uexDispatcher.dispatch('uexWindow','setBounce',jo(arguments));},"
-                + "getBounce:function(){uexDispatcher.dispatch('uexWindow','getBounce',jo(arguments));},"
+                + "getBounce:function(){return uexDispatcher.dispatch('uexWindow','getBounce',jo(arguments));},"
                 + "notifyBounceEvent:function(){uexDispatcher.dispatch('uexWindow','notifyBounceEvent',jo(arguments));},"
                 + "showBounceView:function(){uexDispatcher.dispatch('uexWindow','showBounceView',jo(arguments));},"
                 + "resetBounceView:function(){uexDispatcher.dispatch('uexWindow','resetBounceView',jo(arguments));},"
@@ -273,8 +283,10 @@ public class EUExScript {
                 + "setIsSupportSwipeCallback:function(){uexDispatcher.dispatch('uexWindow','setIsSupportSwipeCallback',jo(arguments));},"
                 + "disturbLongPressGesture:function(){uexDispatcher.dispatch('uexWindow','disturbLongPressGesture',jo(arguments));},"
                 + "setPageInContainer:function(){uexDispatcher.dispatch('uexWindow','setPageInContainer',jo(arguments));},"
-                + "closePluginViewContainer:function(){uexDispatcher.dispatch('uexWindow','closePluginViewContainer',jo(arguments));},"
-                + "createPluginViewContainer:function(){uexDispatcher.dispatch('uexWindow','createPluginViewContainer',jo(arguments));},"
+                + "closePluginViewContainer:function(){return uexDispatcher.dispatch('uexWindow'," +
+                "'closePluginViewContainer',jo(arguments));},"
+                + "createPluginViewContainer:function(){return uexDispatcher.dispatch('uexWindow'," +
+                "'createPluginViewContainer',jo(arguments));},"
                 + "showPluginViewContainer:function(){uexDispatcher.dispatch('uexWindow','showPluginViewContainer',jo(arguments));},"
                 + "hidePluginViewContainer:function(){uexDispatcher.dispatch('uexWindow','hidePluginViewContainer',jo(arguments));},"
                 + "getUrlQuery:function(){return uexDispatcher.dispatch('uexWindow','getUrlQuery',jo(arguments));},"

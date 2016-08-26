@@ -161,7 +161,7 @@ public class ESystemInfo {
         return entance;
     }
 
-    private int getStateBarHeight(Context context) {
+    public static int getStateBarHeight(Context context) {
         Class<?> classl;
         Object dimen;
         Field field;

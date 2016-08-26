@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.0'
+        classpath 'com.android.tools.build:gradle:2.1.2'
         classpath fileTree(dir: '../gradle-plugin', include: '*.jar')
     }
 }
@@ -76,4 +76,5 @@ dependencies {
     crosswalkCompile files('src/libs/libacedes_for_crosswalk.jar')
     compile files('libs/wmqtt.jar')
     x5Compile fileTree(dir: 'src/x5/libs', include: '*.jar')
+    compile files('libs/dynamicLoadLib.jar')
 }

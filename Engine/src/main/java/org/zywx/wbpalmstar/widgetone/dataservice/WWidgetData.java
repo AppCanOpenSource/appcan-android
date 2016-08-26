@@ -125,6 +125,8 @@ public class WWidgetData implements Parcelable {
 
     public String mErrorPath;//页面加载错误时的错误页面路径
 
+    public static int sStatusBarColor=-1;
+
     public static final Parcelable.Creator<WWidgetData> CREATOR = new Creator<WWidgetData>() {
         public WWidgetData createFromParcel(Parcel source) {
             WWidgetData widget = new WWidgetData();

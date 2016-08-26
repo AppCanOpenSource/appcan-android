@@ -19,13 +19,16 @@
 package org.zywx.wbpalmstar.engine;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.webkit.GeolocationPermissions;
 import android.webkit.WebStorage.QuotaUpdater;
 import android.widget.FrameLayout;
 
@@ -144,4 +147,29 @@ public class CBrowserMainFrame7 extends CBrowserMainFrame {
 //		mFile = null;
 //	}
 
+    @Override
+    public void onGeolocationPermissionsHidePrompt() {
+        super.onGeolocationPermissionsHidePrompt();
+    }
+
+    @Override
+    public void onGeolocationPermissionsShowPrompt(final String origin, final GeolocationPermissions.Callback callback) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setMessage("是否允许获取您的位置信息?");
+        DialogInterface.OnClickListener dialogButtonOnClickListener = new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int clickedButton) {
+                if (DialogInterface.BUTTON_POSITIVE == clickedButton) {
+                    callback.invoke(origin, true, true);
+                } else if (DialogInterface.BUTTON_NEGATIVE == clickedButton) {
+                    callback.invoke(origin, false, false);
+                }
+            }
+        };
+        builder.setPositiveButton("允许", dialogButtonOnClickListener);
+        builder.setNegativeButton("拒绝", dialogButtonOnClickListener);
+        builder.show();
+        super.onGeolocationPermissionsShowPrompt(origin, callback);
+    }
 }

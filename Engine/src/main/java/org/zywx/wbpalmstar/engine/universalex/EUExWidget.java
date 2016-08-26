@@ -41,11 +41,17 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.JsConst;
 import org.zywx.wbpalmstar.base.ResoureFinder;
+import org.zywx.wbpalmstar.base.util.AppCanAPI;
 import org.zywx.wbpalmstar.base.vo.AppInstalledVO;
+import org.zywx.wbpalmstar.base.vo.ErrorResultVO;
 import org.zywx.wbpalmstar.base.vo.StartAppVO;
+import org.zywx.wbpalmstar.base.vo.WidgetCheckUpdateResultVO;
+import org.zywx.wbpalmstar.base.vo.WidgetFinishVO;
+import org.zywx.wbpalmstar.base.vo.WidgetStartVO;
 import org.zywx.wbpalmstar.engine.DataHelper;
 import org.zywx.wbpalmstar.engine.EBrowserActivity;
 import org.zywx.wbpalmstar.engine.EBrowserAnimation;
@@ -53,6 +59,7 @@ import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.EBrowserWidget;
 import org.zywx.wbpalmstar.engine.EBrowserWindow;
 import org.zywx.wbpalmstar.engine.EWgtResultInfo;
+import org.zywx.wbpalmstar.engine.universalex.wrapper.WidgetJsonWrapper;
 import org.zywx.wbpalmstar.platform.push.report.PushReportConstants;
 import org.zywx.wbpalmstar.widgetone.WidgetOneApplication;
 import org.zywx.wbpalmstar.widgetone.dataservice.ReData;
@@ -92,13 +99,29 @@ public class EUExWidget extends EUExBase {
         super(context, inParent);
     }
 
-    public void startWidget(String[] parm) {
+    @AppCanAPI
+    public boolean startWidget(String[] parm) {
+        int callbackId=-1;
+        if (isJsonString(parm[0])){
+            if (parm.length>1){
+                callbackId=valueOfCallbackId(parm[1]);
+            }
+            WidgetStartVO startVO= DataHelper.gson.fromJson(parm[0], WidgetStartVO.class);
+            parm=new String[]{
+                    startVO.appId,
+                    startVO.animId,
+                    startVO.funcName,
+                    startVO.info,
+                    startVO.animDuration
+            };
+        }
+
         if (parm.length < 4) {
-            return;
+            return false;
         }
         EBrowserWindow curWind = mBrwView.getBrowserWindow();
         if (null == curWind) {
-            return;
+            return false;
         }
         String inAppId = parm[0];
         String inAnimiId = parm[1];
@@ -106,10 +129,10 @@ public class EUExWidget extends EUExBase {
         String inInfo = parm[3];
         String animDuration = null;
         String appKey = null;
-        if (parm.length == 5) {
+        if (parm.length >= 5) {
             animDuration = parm[4];
         }
-        if (parm.length == 6) {
+        if (parm.length >= 6) {
             appKey = parm[5];
         }
         int animId = EBrowserAnimation.ANIM_ID_NONE;
@@ -134,29 +157,39 @@ public class EUExWidget extends EUExBase {
             if (data == null) {
                 showErrorAlert(String.format(EUExUtil.getString("platform_widget_not_exist")
                         , inAppId + ""));
-                jsCallback(function_startWidget, 0, EUExCallback.F_C_INT,
-                        EUExCallback.F_C_FAILED);
-                return;
+                resultStartWidget(false,callbackId);
+                return false;
             }
             data.m_appkey = appKey;
             EWgtResultInfo info = new EWgtResultInfo(inForResult, inInfo);
             info.setAnimiId(animId);
             info.setDuration(duration);
             if (startWidget(data, info)) {
-                jsCallback(function_startWidget, 0, EUExCallback.F_C_INT,
-                        EUExCallback.F_C_SUCCESS);
+                resultStartWidget(true,callbackId);
+                return true;
             } else {
-                jsCallback(function_startWidget, 0, EUExCallback.F_C_INT,
-                        EUExCallback.F_C_FAILED);
+                resultStartWidget(false,callbackId);
+                return false;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            if (BDebug.DEBUG) {
+                e.printStackTrace();
+            }
+            resultStartWidget(false,callbackId);
             showErrorAlert(EUExUtil.getString("platform_widget_search_failed"));
+            return false;
+        }
+    }
+
+    private void resultStartWidget(boolean result,int callbackId){
+        if (callbackId==-1){
             jsCallback(function_startWidget, 0, EUExCallback.F_C_INT,
                     EUExCallback.F_C_FAILED);
+        }else{
+            callbackToJs(callbackId,false,result?0:1);
         }
-
     }
+
 
     private void showErrorAlert(final String msg) {
         /*Runnable ui = new Runnable() {
@@ -220,10 +253,10 @@ public class EUExWidget extends EUExBase {
         app.delPushInfo(uId, uNickName, mContext, mBrwView);
     }
 
-    public void startApp(String[] params) {
+    public boolean startApp(String[] params) {
         if (params.length < 2) {
-            Log.e(tag, "startApp has error params!!!");
-            return;
+            BDebug.e(tag, "startApp has error params!!!");
+            return false;
         }
         String startMode = params[0];
         Intent intent = null;
@@ -239,9 +272,9 @@ public class EUExWidget extends EUExBase {
                     extraVO = DataHelper.gson.fromJson(params[4],StartAppVO.class);
                 }
                 if (TextUtils.isEmpty(pkgName)) {
-                    Log.e(tag, "startApp has error params!!!");
+                    BDebug.e(tag, "startApp has error pkgName!!!");
                     callBackPluginJs(JsConst.CALLBACK_START_APP, "error params");
-                    return;
+                    return false;
                 }
 
                 if (params.length > 2) {
@@ -251,9 +284,9 @@ public class EUExWidget extends EUExBase {
                     clsName = getMainActivity(pkgName);
                 }
                 if (TextUtils.isEmpty(clsName)) {
-                    Log.e(tag, "startApp has error params!!!");
+                    BDebug.e(tag, "startApp has error clsName!!!");
                     callBackPluginJs(JsConst.CALLBACK_START_APP, "package is not exist!");
-                    return;
+                    return false;
                 }
                 ComponentName component = new ComponentName(pkgName, clsName);
                 intent = new Intent();
@@ -277,15 +310,15 @@ public class EUExWidget extends EUExBase {
                     intent = setIntentFilter(intent, filterJson);
                 }
             } else {
-                Log.e(tag, "startApp has error params!!!");
+                BDebug.e(tag, "startApp has error startMode!!!");
                 callBackPluginJs(JsConst.CALLBACK_START_APP, "error params!");
-                return;
+                return false;
             }
         }
         if (intent == null) {
-            Log.e(tag, "startApp has error params!!!");
+            BDebug.e(tag, "startApp has error params!!!");
             callBackPluginJs(JsConst.CALLBACK_START_APP, "error params!");
-            return;
+            return false;
         }
         if (params.length > 3) {
             extraJson = params[3];
@@ -299,8 +332,10 @@ public class EUExWidget extends EUExBase {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);// 添加NEW_TASK_FLAG
             }
             startActivity(intent);
+            return true;
         } catch (ActivityNotFoundException e) {
             callBackPluginJs(JsConst.CALLBACK_START_APP, e.getMessage());
+            return false;
         }
     }
 
@@ -452,6 +487,11 @@ public class EUExWidget extends EUExBase {
     }
 
     public void finishWidget(String[] parm) {
+        if (isFirstParamExistAndIsJson(parm)){
+            WidgetFinishVO finishVO=DataHelper.gson.fromJson(parm[0],WidgetFinishVO.class);
+            WidgetJsonWrapper.finishWidget(this,finishVO);
+        }
+
         if (parm.length < 1) {
             return;
         }
@@ -475,9 +515,9 @@ public class EUExWidget extends EUExBase {
         finishWidget(inResultInfo, appId, isWgtBG);
     }
 
-    public void removeWidget(String[] parm) {
+    public boolean removeWidget(String[] parm) {
         if (parm.length < 1) {
-            return;
+            return false;
         }
         String inAppId = parm[0];
         WDataManager dm = new WDataManager(mContext);
@@ -485,9 +525,11 @@ public class EUExWidget extends EUExBase {
         if (info.equals("0")) {
             jsCallback(function_removeWidget, 0, EUExCallback.F_C_INT,
                     EUExCallback.F_C_SUCCESS);
+            return true;
         } else {
             jsCallback(function_removeWidget, 0, EUExCallback.F_C_INT,
                     EUExCallback.F_C_FAILED);
+            return false;
         }
     }
 
@@ -658,13 +700,15 @@ public class EUExWidget extends EUExBase {
         curWind.getBrowser().setMySpaceInfo(inForResult, inAnimiId, inInfo);
     }
 
-    public void getOpenerInfo(String[] parm) {
+    public String getOpenerInfo(String[] parm) {
         EBrowserWindow curWind = mBrwView.getBrowserWindow();
         if (null == curWind) {
-            return;
+            return null;
         }
+        String opener=curWind.getOpener();
         jsCallback(function_getOpenerInfo, 0, EUExCallback.F_C_TEXT,
-                curWind.getOpener());
+                opener);
+        return opener;
     }
 
     public void setPushNotifyCallback(String[] parm) {
@@ -674,57 +718,49 @@ public class EUExWidget extends EUExBase {
     }
 
     public void checkUpdate(String[] parm) {
+        int callbackId=-1;
+        if (parm.length>0){
+            callbackId=valueOfCallbackId(parm[0]);
+        }
         final WWidgetData widgetData = mBrwView.getCurrentWidget();
+        final int finalCallbackId = callbackId;
         new Thread("Appcan-uexWidgetCheckUpdate") {
             public void run() {
-                JSONObject obj = new JSONObject();
-                try {
-                    if (widgetData != null) {
-                        // if (widgetData.m_appId != null
-                        // && widgetData.m_appId.length() > 0) {
-                        WDataManager dataManager = new WDataManager(mContext);
-                        ReData reData = dataManager.ChekeUpdate(mContext,
-                                widgetData.m_updateurl, widgetData.m_appId,
-                                widgetData.m_ver);
-                        if (reData == null) {
-                            obj.put(EUExCallback.F_JK_RESULT,
-                                    EUExCallback.F_JV_ERROR);
-                            jsCallback(function_checkUpdate, 0,
-                                    EUExCallback.F_C_JSON, obj.toString());
-                            return;
-                        } else if (!TextUtils.isEmpty(reData.fileUrl)) {
-                            obj.put(EUExCallback.F_JK_RESULT,
-                                    EUExCallback.F_JV_UPDATE);
-                            obj.put(EUExCallback.F_JK_NAME, reData.fileName);
-                            obj.put(EUExCallback.F_JK_SIZE, reData.fileSize);
-                            obj.put(EUExCallback.F_JK_URL, reData.fileUrl);
-                            obj.put(EUExCallback.F_JK_VERSION, reData.version);
+                WidgetCheckUpdateResultVO resultVO = new WidgetCheckUpdateResultVO();
+                ErrorResultVO errorResultVO = new ErrorResultVO();
+                if (widgetData != null) {
+                    // if (widgetData.m_appId != null
+                    // && widgetData.m_appId.length() > 0) {
+                    WDataManager dataManager = new WDataManager(mContext);
+                    ReData reData = dataManager.ChekeUpdate(mContext,
+                            widgetData.m_updateurl, widgetData.m_appId,
+                            widgetData.m_ver);
+                    if (reData == null) {
+                        errorResultVO.errorCode = 2;
+                        resultVO.result = 2;
+                        if (finalCallbackId != -1) {
+                            callbackToJs(finalCallbackId, false, DataHelper.gson.toJsonTree(errorResultVO),
+                                    DataHelper.gson.toJsonTree(resultVO));
                         } else {
-                            obj.put(EUExCallback.F_JK_RESULT,
-                                    EUExCallback.F_JV_NO_UPDATE);
+                            jsCallback(function_checkUpdate, 0,
+                                    EUExCallback.F_C_JSON, DataHelper.gson.toJson(resultVO));
                         }
-                        jsCallback(function_checkUpdate, 0,
-                                EUExCallback.F_C_JSON, obj.toString());
-
-                        // } else {
-                        // obj.put(EUExCallback.F_JK_RESULT,
-                        // EUExCallback.F_JV_NO_REGIST);
-                        // jsCallback(function_checkUpdate, 0,
-                        // EUExCallback.F_C_JSON, obj.toString());
-                        // }
                         return;
+                    } else if (!TextUtils.isEmpty(reData.fileUrl)) {
+                        resultVO.result = 0;
+                        resultVO.name = reData.fileName;
+                        resultVO.size = reData.fileSize;
+                        resultVO.url = reData.fileUrl;
+                        resultVO.version = reData.version;
+                    } else {
+                        resultVO.result = 1;
                     }
-                    obj.put(EUExCallback.F_JK_RESULT, EUExCallback.F_JV_ERROR);
-                    jsCallback(function_checkUpdate, 0, EUExCallback.F_C_JSON,
-                            obj.toString());
-                } catch (Exception e) {
-                    try {
-                        obj.put(EUExCallback.F_JK_RESULT,
-                                EUExCallback.F_JV_ERROR);
-                    } catch (JSONException e1) {
+                    if (finalCallbackId != -1) {
+                        callbackToJs(finalCallbackId, false, null, DataHelper.gson.toJsonTree(resultVO));
+                    } else {
+                        jsCallback(function_checkUpdate, 0,
+                                EUExCallback.F_C_JSON, DataHelper.gson.toJson(resultVO));
                     }
-                    jsCallback(function_checkUpdate, 0, EUExCallback.F_C_JSON,
-                            obj.toString());
                 }
             }
         }.start();
@@ -775,21 +811,26 @@ public class EUExWidget extends EUExBase {
         });
     }
 
-    public void getMBaaSHost(String[] parm) {
+    @AppCanAPI
+    public String getMBaaSHost(String[] parm) {
         String mbaas_host = ResoureFinder.getInstance().getString(mContext, "mbaas_host");
         jsCallback(function_getMBaaSHost, 0, EUExCallback.F_C_TEXT, mbaas_host);
+        return mbaas_host;
     }
 
-    public void getPushState(String[] parm) {
+    @AppCanAPI
+    public boolean getPushState(String[] parm) {
         SharedPreferences sp = mContext.getSharedPreferences("saveData",
                 Context.MODE_MULTI_PROCESS);
         String pushMes = sp.getString("pushMes", "0");
         String localPushMes = sp.getString("localPushMes", pushMes);
         jsCallback(function_getPushState, 0, EUExCallback.F_C_INT,
                 Integer.parseInt(localPushMes));
+        return "1".equals(localPushMes);
     }
 
-    public void getPushInfo(String[] parm) {
+    @AppCanAPI
+    public String getPushInfo(String[] parm) {
         String type = PUSH_MSG_BODY;
         if (parm.length >= 1) {
             type = parm[0];
@@ -810,6 +851,7 @@ public class EUExWidget extends EUExBase {
                     userInfo, System.currentTimeMillis() + "");
             jsCallback(function_getPushInfo, 0, EUExCallback.F_C_TEXT, userInfo);
         }
+        return userInfo;
     }
 
     public void share(String inShareTitle, String inSubject, String inContent) {
@@ -855,31 +897,18 @@ public class EUExWidget extends EUExBase {
         return false;
     }
 
-    public void isAppInstalled(String[] params) {
+    @AppCanAPI
+    public boolean isAppInstalled(String[] params) {
         if (params == null || params.length < 1) {
             errorCallback(0, 0, "error params!");
-            return;
-        }
-        Message msg = new Message();
-        msg.obj = this;
-        msg.what = MSG_IS_APP_INSTALLED;
-        Bundle bd = new Bundle();
-        bd.putStringArray(BUNDLE_DATA, params);
-        msg.setData(bd);
-        mHandler.sendMessage(msg);
-    }
-
-    public void isAppInstalledMsg(String[] params) {
-        if (params == null || params.length < 1) {
-            errorCallback(0, 0, "error params!");
-            return;
+            return false;
         }
         String json = params[0];
         AppInstalledVO data = DataHelper.gson.fromJson(json, AppInstalledVO.class);
         String packageName = data.getAppData();
         if (TextUtils.isEmpty(packageName)) {
             errorCallback(0, 0, "error params!");
-            return;
+            return false;
         }
         JSONObject jsonObject = new JSONObject();
         int result;
@@ -896,6 +925,7 @@ public class EUExWidget extends EUExBase {
             e.printStackTrace();
         }
         callBackPluginJs(JsConst.CALLBACK_IS_APP_INSTALLED, jsonObject.toString());
+        return result==0;
     }
 
     public void reloadWidgetByAppId(String[] params){
@@ -950,9 +980,6 @@ public class EUExWidget extends EUExBase {
         }
         Bundle bundle = message.getData();
         switch (message.what) {
-            case MSG_IS_APP_INSTALLED:
-                isAppInstalledMsg(bundle.getStringArray(BUNDLE_DATA));
-                break;
             case MSG_RELOAD_WIDGET_BY_APPID:
                 reloadWidgetByAppIdMsg(bundle.getStringArray(BUNDLE_DATA));
                 break;
