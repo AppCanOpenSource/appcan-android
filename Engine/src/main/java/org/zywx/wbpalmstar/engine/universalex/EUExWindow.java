@@ -1318,7 +1318,8 @@ public class EUExWindow extends EUExBase {
     }
 
     public void openMultiPopover(String[] parm) {
-        if (isFirstParamExistAndIsJson(parm)){
+        if (isFirstParamExistAndIsJson(parm)&&parm.length<3){
+            //老的接口第一个参数也是json
             WindowJsonWrapper.openMultiPopover(this,DataHelper.gson.fromJson(parm[0],
                     WindowOpenMultiPopoverVO.class));
             return;
