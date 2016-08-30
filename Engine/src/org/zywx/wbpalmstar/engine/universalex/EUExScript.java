@@ -188,6 +188,7 @@ public class EUExScript {
                 + "insertPopoverBelowPopover:function(){uexDispatcher.dispatch('uexWindow','insertPopoverBelowPopover',jo(arguments));},"
                 + "bringPopoverToFront:function(){uexDispatcher.dispatch('uexWindow','bringPopoverToFront',jo(arguments));},"
                 + "sendPopoverToBack:function(){uexDispatcher.dispatch('uexWindow','sendPopoverToBack',jo(arguments));},"
+                + "setPopoverVisibility:function(){uexDispatcher.dispatch('uexWindow','setPopoverVisibility',jo(arguments));},"
 
                 + "insertWindowAboveWindow:function(){uexDispatcher.dispatch('uexWindow','insertWindowAboveWindow',jo(arguments));},"
                 + "insertWindowBelowWindow:function(){uexDispatcher.dispatch('uexWindow','insertWindowBelowWindow',jo(arguments));},"

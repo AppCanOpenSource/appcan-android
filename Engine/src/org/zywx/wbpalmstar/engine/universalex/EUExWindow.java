@@ -174,6 +174,7 @@ public class EUExWindow extends EUExBase {
     private static final int MSG_DISTURB_LONG_PRESS_GESTURE = 59;
     private static final int MSG_FUNCTION_SETAUTOROTATEENABLE= 60;
     private static final int MSG_FUNCTION_SETLOADINGIMAGEPATH= 61;
+    private static final int MSG_FUNCTION_SETPOPOVERVISIBILITY = 62;
     private AlertDialog mAlert;
     private AlertDialog.Builder mConfirm;
     private PromptDialog mPrompt;
@@ -1818,6 +1819,32 @@ public class EUExWindow extends EUExBase {
         String popName1 = parm[0];
         String popName2 = parm[1];
         curWind.insertPopoverBelowPopover(popName1, popName2);
+    }
+
+    public void setPopoverVisibility(String[] parm) {
+        if (!mBrwView.checkType(EBrwViewEntry.VIEW_TYPE_MAIN)
+                || parm.length < 2) {
+            return;
+        }
+        Message msg = new Message();
+        msg.obj = this;
+        msg.what = MSG_FUNCTION_SETPOPOVERVISIBILITY;
+        Bundle bd = new Bundle();
+        bd.putStringArray(TAG_BUNDLE_PARAM, parm);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
+    }
+
+    public void setPopoverVisibilityMsg(String[] parm) {
+        String popName = parm[0];
+        int visible = Integer.parseInt(parm[1]);
+        EBrowserWindow curWind = mBrwView.getBrowserWindow();
+        if (null == curWind) {
+            return;
+        }
+
+
+        curWind.setPopoverVisibility(popName, visible);
     }
 
     public void bringPopoverToFront(String[] parm) {
@@ -3824,6 +3851,9 @@ public class EUExWindow extends EUExBase {
                 break;
             case MSG_PLUGINVIEW_CONTAINER_HIDE:
                 hidePluginViewContainerMsg(param);
+                break;
+            case MSG_FUNCTION_SETPOPOVERVISIBILITY:
+                setPopoverVisibilityMsg(param);
                 break;
             default:
                 break;
