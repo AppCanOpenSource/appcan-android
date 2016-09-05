@@ -2419,11 +2419,19 @@ public class EUExWindow extends EUExBase {
     }
 
     public void putLocalData(String[] params) {
-        SpManager.getInstance().putString(params[0],params[1]);
+        boolean isSession=false;
+        if (params.length>2){
+            isSession=Boolean.valueOf(params[2]);
+        }
+        SpManager.getInstance().putString(params[0],params[1],isSession);
     }
 
     public String getLocalData(String[] params) {
-        return SpManager.getInstance().getString(params[0], "");
+        boolean isSession=false;
+        if (params.length>2){
+            isSession=Boolean.valueOf(params[2]);
+        }
+        return SpManager.getInstance().getString(params[0], "",isSession);
     }
 
     public void windowForward(String[] params) {
