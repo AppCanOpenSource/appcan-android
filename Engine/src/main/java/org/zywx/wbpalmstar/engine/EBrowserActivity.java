@@ -35,7 +35,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Surface;
@@ -62,7 +61,6 @@ import org.zywx.wbpalmstar.engine.universalex.ThirdPluginObject;
 import org.zywx.wbpalmstar.platform.push.PushDataInfo;
 import org.zywx.wbpalmstar.platform.push.PushRecieveMsgReceiver;
 import org.zywx.wbpalmstar.platform.push.report.PushReportConstants;
-import org.zywx.wbpalmstar.widgetone.WidgetOneApplication;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
 import java.io.BufferedReader;
@@ -171,8 +169,7 @@ public final class EBrowserActivity extends BaseActivity {
     }
 
     private void reflectionPluginMethod(String method) {
-        WidgetOneApplication app = (WidgetOneApplication) getApplication();
-        ThirdPluginMgr tpm = app.getThirdPlugins();
+        ThirdPluginMgr tpm = AppCan.getInstance().getThirdPlugins();
         Map<String, ThirdPluginObject> thirdPlugins = tpm.getPlugins();
         Set<Map.Entry<String, ThirdPluginObject>> pluginSet = thirdPlugins
                 .entrySet();
@@ -190,8 +187,7 @@ public final class EBrowserActivity extends BaseActivity {
     }
 
     private void reflectionPluginMethod(String method, Intent intent) {
-        WidgetOneApplication app = (WidgetOneApplication) getApplication();
-        ThirdPluginMgr tpm = app.getThirdPlugins();
+        ThirdPluginMgr tpm = AppCan.getInstance().getThirdPlugins();
         Map<String, ThirdPluginObject> thirdPlugins = tpm.getPlugins();
         Set<Map.Entry<String, ThirdPluginObject>> pluginSet = thirdPlugins
                 .entrySet();
@@ -248,8 +244,7 @@ public final class EBrowserActivity extends BaseActivity {
         mBrowserAround.setSpaceFlag(rootWidget.getSpaceStatus());
         mEHandler.sendMessageDelayed(
                 mEHandler.obtainMessage(EHandler.F_MSG_LOAD_DELAY), 100);
-        WidgetOneApplication app = (WidgetOneApplication) getApplication();
-        app.widgetRegist(rootWidget, this);
+        AppCan.getInstance().widgetRegist(rootWidget, this);
     }
 
     public final void hideCustomView() {
@@ -270,6 +265,7 @@ public final class EBrowserActivity extends BaseActivity {
         mLoadingRemoved = true;
         getWindow().setBackgroundDrawable(new ColorDrawable(0xFFFFFFFF));
         sendFinishLoadingBroadcast(delayTime);
+        showToast("加载完成");
     }
 
 
@@ -579,8 +575,7 @@ public final class EBrowserActivity extends BaseActivity {
         if (null != mScreen) {
             mScreen.removeAllViews();
         }
-        WidgetOneApplication app = (WidgetOneApplication) getApplication();
-        app.exitApp();
+        AppCan.getInstance().exitApp();
         mEHandler.clean();
         mBrowserAround.clean();
         mFinish = true;

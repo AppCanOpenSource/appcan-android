@@ -1,5 +1,6 @@
 package org.zywx.wbpalmstar.base;
 
+import android.app.Activity;
 import android.content.Context;
 
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient;
@@ -20,7 +21,14 @@ public class WebViewSdkCompat {
 
     public static final String type = "x5";
 
-    public static void initInLoadingActivity(Context context) {
+    public static void initInActivity(Activity activity) {
+    }
+
+    public static void initInApplication(Context context) {
+        CookieSyncManager.createInstance(context);
+        CookieManager.getInstance().setAcceptCookie(true);
+        CookieManager.getInstance().removeSessionCookie();
+        CookieManager.getInstance().removeExpiredCookie();
 
         final CountDownLatch countDownLatch = new CountDownLatch(1);
 
@@ -49,13 +57,6 @@ public class WebViewSdkCompat {
                 }
             }
         }
-    }
-
-    public static void initInApplication(Context context) {
-        CookieSyncManager.createInstance(context);
-        CookieManager.getInstance().setAcceptCookie(true);
-        CookieManager.getInstance().removeSessionCookie();
-        CookieManager.getInstance().removeExpiredCookie();
     }
 
     public static void setCookie(String inUrl, String cookie) {
