@@ -638,9 +638,7 @@ public final class EBrowserActivity extends BaseActivity {
         } else if (flag == 10) {// landscape and reverse landscape
             or = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
         } else if (flag == 15) {// sensor
-            or = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR;
-        } else {
-            ;
+            or = ActivityInfo.SCREEN_ORIENTATION_USER;
         }
         return or;
     }
