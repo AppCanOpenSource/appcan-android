@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.annotation.Keep;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.zywx.wbpalmstar.base.BConstant;
@@ -49,7 +48,6 @@ public class AppCan {
     private AppCan(){
     }
 
-    @Keep
     public static AppCan getInstance(){
         if (sAppCan ==null){
             sAppCan =new AppCan();
@@ -57,7 +55,6 @@ public class AppCan {
         return sAppCan;
     }
 
-    @Keep
     public WWidgetData getRootWidgetData(){
         return mWidgetData;
     }
@@ -65,7 +62,6 @@ public class AppCan {
     /**
      * 同步初始化引擎
      */
-    @Keep
     public boolean initSync(Context context){
         mContext=context.getApplicationContext();
         if (!(mContext instanceof Application)){
@@ -101,7 +97,6 @@ public class AppCan {
      * 异步初始化引擎
      * @param initListener
      */
-    @Keep
     public void init(final Context context, final OnAppCanInitListener initListener) {
         new Thread(new Runnable() {
             @Override
@@ -125,7 +120,6 @@ public class AppCan {
      * @param activity
      * @param bundle 传递给网页的数据
      */
-    @Keep
     public void start(final Activity activity, final Bundle bundle){
         activity.runOnUiThread(new Runnable() {
             @Override
@@ -152,7 +146,6 @@ public class AppCan {
      * @param indexUrl 起始页
      * @param bundle 传递给网页的数据
      */
-    @Keep
     public void start(Activity activity,String indexUrl,Bundle bundle){
         if (mWidgetData!=null){
             mWidgetData.m_indexUrl=indexUrl;
@@ -200,7 +193,6 @@ public class AppCan {
         }
     }
 
-    @Keep
     public final WDataManager getWDataManager() {
         if (null == mWDataManager) {
             mWDataManager = new WDataManager(mContext);
@@ -208,7 +200,6 @@ public class AppCan {
         return mWDataManager;
     }
 
-    @Keep
     public final ThirdPluginMgr getThirdPlugins() {
         if (null == mThirdPluginMgr) {
             initPlugin();
@@ -216,13 +207,11 @@ public class AppCan {
         return mThirdPluginMgr;
     }
 
-    @Keep
     public final void exitApp() {
         stopAnalyticsAgent();
         WebViewSdkCompat.stopSync();
     }
 
-    @Keep
     public AssetManager getAssets() {
         if (mThirdPluginMgr==null||mThirdPluginMgr.getAssets()==null){
             return mContext.getAssets();
@@ -231,14 +220,12 @@ public class AppCan {
         }
     }
 
-    @Keep
     public Resources getResources() {
         Resources resources = AppCan.getInstance().getThirdPlugins() == null ? mContext.getResources()
                 : AppCan.getInstance().getThirdPlugins().getResources();
         return resources == null ? mContext.getResources() : resources;
     }
 
-    @Keep
     public ClassLoader getClassLoader() {
         ClassLoader classLoader = mThirdPluginMgr == null ? mContext
                 .getClassLoader() : mThirdPluginMgr.getClassLoader();
