@@ -205,6 +205,7 @@ public class EUExWindow extends EUExBase {
     public void openMsg(String[] parm) {
         EBrowserWindow curWind = mBrwView.getBrowserWindow();
         if (null == curWind) {
+            BDebug.e("curWind is null");
             return;
         }
         String inWindowName = parm[0];
@@ -254,6 +255,7 @@ public class EUExWindow extends EUExBase {
         boolean hi = curWind.isHidden();
         boolean eq = curWind.getName().equals(inWindowName);
         if (op || hi || eq) {
+            BDebug.e(op,hi,eq);
             return;
         }
         int width = 0;
@@ -275,6 +277,9 @@ public class EUExWindow extends EUExBase {
             height = parseHeight(inHeight);
             flag = Integer.parseInt(inFlag);
         } catch (Exception e) {
+            if (BDebug.DEBUG){
+                e.printStackTrace();
+            }
             errorCallback(0, EUExCallback.F_E_UEXWINDOW_OPEN, "Illegal parameter");
             return;
         }
