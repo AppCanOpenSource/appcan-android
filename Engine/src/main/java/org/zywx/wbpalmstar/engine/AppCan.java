@@ -37,6 +37,7 @@ import static org.zywx.wbpalmstar.engine.LoadingActivity.KEY_INTENT_WIDGET_DATA;
  */
 public class AppCan {
 
+    public static final String ACTION_APPCAN_SDK="action.appcan.sdk";
     private static AppCan sAppCan;
     private ThirdPluginMgr mThirdPluginMgr;
     private ELinkedList<EngineEventListener> mListenerQueue;
@@ -44,6 +45,7 @@ public class AppCan {
     protected ECrashHandler mCrashReport;
     private Context mContext;
     private WWidgetData mWidgetData;
+    private boolean showLoading=false;
 
     private AppCan(){
     }
@@ -126,6 +128,9 @@ public class AppCan {
             public void run() {
                 WebViewSdkCompat.initInActivity(activity);
                 Intent intent = new Intent(mContext, EBrowserActivity.class);
+                if (showLoading){
+                    intent.setAction(ACTION_APPCAN_SDK);
+                }
                 if (null != bundle) {
                     intent.putExtras(bundle);
                 }
@@ -357,5 +362,9 @@ public class AppCan {
         for (EngineEventListener Listener : mListenerQueue) {
             Listener.getPushInfo(mContext, userInfo, occuredAt);
         }
+    }
+
+    public void setShowLoading(boolean showLoading) {
+        this.showLoading = showLoading;
     }
 }

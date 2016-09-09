@@ -158,6 +158,7 @@ public class LoadingActivity extends Activity {
         AppCan.getInstance().init(this, new OnAppCanInitListener() {
             @Override
             public void onInit() {
+                AppCan.getInstance().setShowLoading(true);
                 AppCan.getInstance().start(LoadingActivity.this,getIntent().getExtras());
             }
 
