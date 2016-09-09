@@ -95,7 +95,10 @@
     <fields>;
     <methods>;
 }
-
+-keep class org.zywx.wbpalmstar.engine.AppCan {
+    <fields>;
+    <methods>;
+}
 -keep class org.zywx.wbpalmstar.engine.universalex.EUExBase {
     <fields>;
     <methods>;

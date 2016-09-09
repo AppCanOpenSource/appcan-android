@@ -26,7 +26,6 @@ import android.graphics.BitmapFactory;
 
 import org.json.JSONObject;
 import org.zywx.wbpalmstar.engine.universalex.EUExWidget.SpaceClickListener;
-import org.zywx.wbpalmstar.widgetone.WidgetOneApplication;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
 import java.io.File;
@@ -50,11 +49,11 @@ public class EBrowser {
     private static int mflag;
     private boolean mfromPush;
     private Map<String, Bitmap> mBgBitmapCache;
-    private WidgetOneApplication mApp;
+    private AppCan mApp;
 
     public EBrowser(Context context) {
         mContext = context;
-        mApp = (WidgetOneApplication) mContext.getApplicationContext();
+        mApp = AppCan.getInstance();
     }
 
     public void init(EBrowserWidgetPool eBrwWidPo) {
