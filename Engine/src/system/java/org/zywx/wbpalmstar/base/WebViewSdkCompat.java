@@ -1,5 +1,6 @@
 package org.zywx.wbpalmstar.base;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.webkit.CookieManager;
@@ -14,7 +15,7 @@ public class WebViewSdkCompat {
 
     public static final String type="system";
 
-    public static void initInLoadingActivity(Context context){
+    public static void initInActivity(Activity activity){
 
     }
 

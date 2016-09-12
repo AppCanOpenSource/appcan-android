@@ -1,5 +1,6 @@
 package org.zywx.wbpalmstar.base;
 
+import android.app.Activity;
 import android.content.Context;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -26,8 +27,8 @@ public class WebViewSdkCompat {
 
     public static final String type="crosswalk";
 
-    public static void initInLoadingActivity(Context context) {
-        XWalkView xWalkView=new XWalkView(context);
+    public static void initInActivity(Activity activity) {
+        XWalkView xWalkView=new XWalkView(activity);
         getCookieInstance().removeExpiredCookie();
         getCookieInstance().removeSessionCookie();
     }

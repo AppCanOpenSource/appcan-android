@@ -29,7 +29,7 @@ import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.engine.DataHelper;
 import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.ELinkedList;
-import org.zywx.wbpalmstar.widgetone.WidgetOneApplication;
+import org.zywx.wbpalmstar.engine.AppCan;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -102,8 +102,7 @@ public class EUExManager {
     }
 
     public Map<String, ThirdPluginObject> getPlugins() {
-        WidgetOneApplication app = (WidgetOneApplication) mContext.getApplicationContext();
-        ThirdPluginMgr tpm = app.getThirdPlugins();
+        ThirdPluginMgr tpm = AppCan.getInstance().getThirdPlugins();
         return tpm.getPlugins();
     }
 

@@ -35,7 +35,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Surface;
@@ -62,7 +61,6 @@ import org.zywx.wbpalmstar.engine.universalex.ThirdPluginObject;
 import org.zywx.wbpalmstar.platform.push.PushDataInfo;
 import org.zywx.wbpalmstar.platform.push.PushRecieveMsgReceiver;
 import org.zywx.wbpalmstar.platform.push.report.PushReportConstants;
-import org.zywx.wbpalmstar.widgetone.WidgetOneApplication;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
 import java.io.BufferedReader;
@@ -88,7 +86,6 @@ public final class EBrowserActivity extends BaseActivity {
     private EUExBase mActivityCallback;
     private boolean mCallbackRuning;
     private org.zywx.wbpalmstar.engine.EBrowserMainFrame mEBrwMainFrame;
-    private FrameLayout mScreen;
     private boolean mFinish;
     private boolean mVisable;
     private boolean mPageFinish;
@@ -111,16 +108,17 @@ public final class EBrowserActivity extends BaseActivity {
             loadResError();
             return;
         }
-        startMaskActivity();
+        if (AppCan.ACTION_APPCAN_SDK.equals(getIntent().getAction())) {
+            startMaskActivity();
+        }
         mVisable = true;
         Window activityWindow = getWindow();
         ESystemInfo.getIntence().init(this);
         mBrowser = new EBrowser(this);
         mEHandler = new EHandler(Looper.getMainLooper());
-        View splash = initEngineUI();
-        mBrowserAround = new EBrowserAround(splash);
-//		mScreen.setVisibility(View.INVISIBLE);
-        setContentView(mScreen);
+        initEngineUI();
+        mBrowserAround = new EBrowserAround(this);
+        setContentView(mEBrwMainFrame);
         initInternalBranch();
 
         ACEDes.setContext(this);
@@ -171,8 +169,7 @@ public final class EBrowserActivity extends BaseActivity {
     }
 
     private void reflectionPluginMethod(String method) {
-        WidgetOneApplication app = (WidgetOneApplication) getApplication();
-        ThirdPluginMgr tpm = app.getThirdPlugins();
+        ThirdPluginMgr tpm = AppCan.getInstance().getThirdPlugins();
         Map<String, ThirdPluginObject> thirdPlugins = tpm.getPlugins();
         Set<Map.Entry<String, ThirdPluginObject>> pluginSet = thirdPlugins
                 .entrySet();
@@ -190,8 +187,7 @@ public final class EBrowserActivity extends BaseActivity {
     }
 
     private void reflectionPluginMethod(String method, Intent intent) {
-        WidgetOneApplication app = (WidgetOneApplication) getApplication();
-        ThirdPluginMgr tpm = app.getThirdPlugins();
+        ThirdPluginMgr tpm = AppCan.getInstance().getThirdPlugins();
         Map<String, ThirdPluginObject> thirdPlugins = tpm.getPlugins();
         Set<Map.Entry<String, ThirdPluginObject>> pluginSet = thirdPlugins
                 .entrySet();
@@ -237,7 +233,7 @@ public final class EBrowserActivity extends BaseActivity {
         // String[] plugins = {"uexXmlHttpMgr", "uexCamera"};
         // rootWidget.disablePlugins = plugins;
         changeConfiguration(rootWidget.m_orientation);
-        org.zywx.wbpalmstar.engine.EBrowserWidgetPool eBrwWidPo = new org.zywx.wbpalmstar.engine.EBrowserWidgetPool(mBrowser,
+        EBrowserWidgetPool eBrwWidPo = new EBrowserWidgetPool(mBrowser,
                 mEBrwMainFrame, mBrowserAround);
         mBrowser.init(eBrwWidPo);
         // rootWidget.m_indexUrl = "http://xhsnbjlxt.cloud7.com.cn";
@@ -248,8 +244,7 @@ public final class EBrowserActivity extends BaseActivity {
         mBrowserAround.setSpaceFlag(rootWidget.getSpaceStatus());
         mEHandler.sendMessageDelayed(
                 mEHandler.obtainMessage(EHandler.F_MSG_LOAD_DELAY), 100);
-        WidgetOneApplication app = (WidgetOneApplication) getApplication();
-        app.widgetRegist(rootWidget, this);
+        AppCan.getInstance().widgetRegist(rootWidget, this);
     }
 
     public final void hideCustomView() {
@@ -576,11 +571,7 @@ public final class EBrowserActivity extends BaseActivity {
         if (null != mBrowser) {
             mBrowser.clean();
         }
-        if (null != mScreen) {
-            mScreen.removeAllViews();
-        }
-        WidgetOneApplication app = (WidgetOneApplication) getApplication();
-        app.exitApp();
+        AppCan.getInstance().exitApp();
         mEHandler.clean();
         mBrowserAround.clean();
         mFinish = true;
@@ -643,9 +634,7 @@ public final class EBrowserActivity extends BaseActivity {
         } else if (flag == 10) {// landscape and reverse landscape
             or = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
         } else if (flag == 15) {// sensor
-            or = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR;
-        } else {
-            ;
+            or = ActivityInfo.SCREEN_ORIENTATION_USER;
         }
         return or;
     }
@@ -719,76 +708,12 @@ public final class EBrowserActivity extends BaseActivity {
         return null;
     }
 
-    private final View initEngineUI() {
-        mScreen = new FrameLayout(this);
-        FrameLayout.LayoutParams screenPa = new FrameLayout.LayoutParams(
-                Compat.FILL, Compat.FILL);
-        mScreen.setLayoutParams(screenPa);
-
-        mEBrwMainFrame = new org.zywx.wbpalmstar.engine.EBrowserMainFrame(this);
+    private final void initEngineUI() {
+        mEBrwMainFrame = new EBrowserMainFrame(this);
         FrameLayout.LayoutParams mainPagePa = new FrameLayout.LayoutParams(
                 Compat.FILL, Compat.FILL);
-        org.zywx.wbpalmstar.engine.EUtil.viewBaseSetting(mEBrwMainFrame);
+        EUtil.viewBaseSetting(mEBrwMainFrame);
         mEBrwMainFrame.setLayoutParams(mainPagePa);
-        mScreen.addView(mEBrwMainFrame);
-
-        FrameLayout splash = new FrameLayout(this);
-        splash.setClickable(true);
-
-        FrameLayout.LayoutParams shelterPa = new FrameLayout.LayoutParams(
-                Compat.FILL, Compat.FILL);
-        splash.setLayoutParams(shelterPa);
-        mScreen.addView(splash);
-
-
-		/*
-		 * ImageView background = new ImageView(this);
-		 * 
-		 * FrameLayout.LayoutParams backgroundPa = new
-		 * FrameLayout.LayoutParams(Compat.FILL, Compat.FILL);
-		 * background.setLayoutParams(backgroundPa);
-		 * 
-		 * 
-		 * 
-		 * splash.addView(background);
-		 */
-		/*
-		 * if(0 < screenWidth && screenWidth < 480){
-		 * foreground.setBackgroundResource(EResources.startup_fg_small); }else
-		 * if(480 <= screenWidth && screenWidth < 720){
-		 * foreground.setBackgroundResource(EResources.startup_fg_normal); }else
-		 * if(720 <= screenWidth && screenWidth < 1080){ if(0 !=
-		 * EResources.startup_fg_large){
-		 * foreground.setBackgroundResource(EResources.startup_fg_large); }else{
-		 * foreground.setBackgroundResource(EResources.startup_fg_normal); }
-		 * }else { if(0 != EResources.startup_fg_xlarge){
-		 * foreground.setBackgroundResource(EResources.startup_fg_xlarge);
-		 * }else{
-		 * foreground.setBackgroundResource(EResources.startup_fg_normal); } }
-		 */
-		/*
-		 * FrameLayout.LayoutParams foregroundPa = new
-		 * FrameLayout.LayoutParams(Compat.WRAP, Compat.WRAP);
-		 * foregroundPa.gravity = Gravity.CENTER;
-		 * foreground.setLayoutParams(foregroundPa); splash.addView(foreground);
-		 */
-
-		/*
-		 * ImageView mark = new ImageView(this);
-		 * mark.setBackgroundResource(EResources.mark_bg);
-		 * FrameLayout.LayoutParams markPa = new
-		 * FrameLayout.LayoutParams(Compat.WRAP, Compat.WRAP); markPa.gravity =
-		 * Gravity.BOTTOM | Gravity.RIGHT; mark.setLayoutParams(markPa);
-		 * splash.addView(mark); if(develop){ TextView worn = new
-		 * TextView(this); worn.setText("测试版本仅用于开发测试");
-		 * worn.setTextColor(0xffff0000);
-		 * worn.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-		 * FrameLayout.LayoutParams wornPa = new
-		 * FrameLayout.LayoutParams(Compat.FILL, Compat.WRAP); wornPa.gravity =
-		 * Gravity.TOP; wornPa.leftMargin = 10; wornPa.topMargin = 10;
-		 * worn.setLayoutParams(wornPa); splash.addView(worn); }
-		 */
-        return splash;
     }
 
     public Thread[] findAllVMThreads() {
@@ -930,7 +855,6 @@ public final class EBrowserActivity extends BaseActivity {
                         e.printStackTrace();
                     }
                 case F_MSG_LOAD_HIDE_SH:
-                    mScreen.setVisibility(View.VISIBLE);
                     setContentViewVisible(0);
                     if (mBrowserAround.checkTimeFlag()) {
                         mBrowser.hiddenShelter();

@@ -20,10 +20,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.zywx.wbpalmstar.base.BUtility;
-import org.zywx.wbpalmstar.base.WebViewSdkCompat;
+import org.zywx.wbpalmstar.base.listener.OnAppCanInitListener;
 import org.zywx.wbpalmstar.engine.external.Compat;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
-import org.zywx.wbpalmstar.widgetone.dataservice.WDataManager;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
 import java.io.InputStream;
@@ -64,41 +63,9 @@ public class LoadingActivity extends Activity {
         addDevelopInfo();
         hideMenu();
         if (!isTemp) {
-            getWidgetData();
-         }
-    }
-
-    /**
-     * 延时启动Activity，有些机型的Launcher App动画没有播放完，直接启动会闪
-     */
-    private void handleWidgetData() {
-        WebViewSdkCompat.initInLoadingActivity(LoadingActivity.this);
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (!isTemp) {
-                    startActivityWithData(EBrowserActivity.class);
-                }
-            }
-        }, 700);
-
-    }
-
-    private void startActivityWithData(Class<?> cls) {
-        Intent intent = new Intent(LoadingActivity.this, cls);
-        Bundle bundle = getIntent().getExtras();
-        if (null != bundle) {
-            intent.putExtras(bundle);
+            startEngine();
         }
-        if (mWidgetData != null) {
-            intent.putExtra(KEY_INTENT_WIDGET_DATA, mWidgetData);
-        }
-        startActivity(intent);
-        overridePendingTransition(EUExUtil.getResAnimID("platform_myspace_no_anim")
-                , EUExUtil.getResAnimID("platform_myspace_no_anim"));
-
     }
-
 
     private void handleIntent() {
         try {
@@ -117,7 +84,8 @@ public class LoadingActivity extends Activity {
     }
 
     private void addLoadingImage(ViewGroup parent) {
-        InputStream inputStream = getResources().openRawResource(EUExUtil.getResDrawableID("startup_bg_16_9"));
+        InputStream inputStream = getResources().openRawResource(
+                getResources().getIdentifier("startup_bg_16_9","drawable",getPackageName()));
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         Bitmap bm = BUtility.createBitmapWithStream(inputStream,
@@ -186,18 +154,19 @@ public class LoadingActivity extends Activity {
         }
     }
 
-    private void getWidgetData() {
-        new Thread(new Runnable() {
+    private void startEngine() {
+        AppCan.getInstance().init(this, new OnAppCanInitListener() {
             @Override
-            public void run() {
-                WDataManager wDataManager = new WDataManager(LoadingActivity.this.getApplicationContext());
-                mWidgetData = wDataManager.getWidgetData();
-                if (mWidgetData != null && mWidgetData.m_indexUrl != null) {
-                    BUtility.initWidgetOneFile(LoadingActivity.this.getApplicationContext(), mWidgetData.m_appId);
-                }
-                mHandler.sendEmptyMessage(MSG_GET_WIDGET_DATA);
+            public void onInit() {
+                AppCan.getInstance().setShowLoading(true);
+                AppCan.getInstance().start(LoadingActivity.this,getIntent().getExtras());
             }
-        }).start();
+
+            @Override
+            public void onError() {
+
+            }
+        });
     }
 
     private static class LoadingHandler extends Handler{
@@ -212,9 +181,7 @@ public class LoadingActivity extends Activity {
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case MSG_GET_WIDGET_DATA:
-                    if (mActivity.get()!=null){
-                        mActivity.get().handleWidgetData();
-                    }
+
                     break;
                 default:
                     super.handleMessage(msg);

@@ -38,7 +38,6 @@ import org.zywx.wbpalmstar.base.BConstant;
 import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.engine.external.Compat;
 import org.zywx.wbpalmstar.engine.universalex.EUExWidget.SpaceClickListener;
-import org.zywx.wbpalmstar.widgetone.WidgetOneApplication;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
 public class EBrowserWidgetPool {
@@ -174,9 +173,7 @@ public class EBrowserWidgetPool {
         mWidPoolLoop.sendMessage(msg);
 
         // wgt report
-        WidgetOneApplication app = (WidgetOneApplication) mContext
-                .getApplicationContext();
-        app.widgetReport(inData, mContext);
+        AppCan.getInstance().widgetReport(inData, mContext);
     }
 
     public void start() {

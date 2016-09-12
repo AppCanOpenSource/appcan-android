@@ -22,11 +22,7 @@ package org.zywx.wbpalmstar.engine;
 import android.app.Activity;
 import android.content.Context;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
 
 import org.zywx.wbpalmstar.engine.universalex.EUExBase;
 import org.zywx.wbpalmstar.engine.universalex.EUExEventListener;
@@ -40,7 +36,6 @@ import java.util.List;
 
 public class EBrowserAround implements android.view.View.OnClickListener {
 
-    private View mScreenSplash;
     private DragableView mHover;
     private int mSpaceFlag;
     private boolean mTimeFlag;
@@ -53,9 +48,8 @@ public class EBrowserAround implements android.view.View.OnClickListener {
     private EBrowserWidgetPool mBrwWidPool;
     private boolean mIsSpaceEnable = false;
 
-    public EBrowserAround(View layout) {
-        mScreenSplash = layout;
-        mContext = layout.getContext();
+    public EBrowserAround(Context context) {
+        mContext = context;
         mEventListeners = new ArrayList<EUExEventListener>();
     }
 
@@ -107,29 +101,6 @@ public class EBrowserAround implements android.view.View.OnClickListener {
     }
 
     public void hiddenSplashScreen(int flag) {
-//		Animation nin = new AlphaAnimation(1.0f, 0.0f);
-//		nin.setDuration(300);
-//		nin.setAnimationListener(new AnimationListener() {
-//			public void onAnimationStart(Animation animation) {}
-//			public void onAnimationRepeat(Animation animation) {}
-//			public void onAnimationEnd(Animation animation) {
-//				mScreenSplash.setVisibility(View.GONE);
-//				ViewGroup parent = (ViewGroup) mScreenSplash.getParent();
-//				if(null != parent){
-//					parent.removeView(mScreenSplash);
-//					mScreenSplash = null;
-//				}
-//				onReady();
-//			}
-//		});
-//		mScreenSplash.startAnimation(nin);
-
-        mScreenSplash.setVisibility(View.GONE);
-        ViewGroup parent = (ViewGroup) mScreenSplash.getParent();
-        if (null != parent) {
-            parent.removeView(mScreenSplash);
-            mScreenSplash = null;
-        }
         onReady();
         if (ESystemInfo.getIntence().mIsDevelop || !checkSpaceFlag(WWidgetData.F_SPACESTATUS_CLOSE)) {
             checkHover();
@@ -207,7 +178,6 @@ public class EBrowserAround implements android.view.View.OnClickListener {
     public void clean() {
         mContext = null;
         mHover = null;
-        mScreenSplash = null;
         mEventListeners.clear();
     }
 
