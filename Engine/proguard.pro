@@ -348,7 +348,7 @@
     public void closeLoading(java.lang.String[]);
     public void moveToBack(java.lang.String[]);
     public void setSwipeCloseEnable(java.lang.String[]);
-
+    public void setLoadingImagePath(java.lang.String[]);
     public void setEvent(java.lang.String[]);
     public void beginEvent(java.lang.String[]);
     public void endEvent(java.lang.String[]);

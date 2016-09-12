@@ -188,6 +188,7 @@ public class EUExScript {
                 + "insertPopoverBelowPopover:function(){uexDispatcher.dispatch('uexWindow','insertPopoverBelowPopover',jo(arguments));},"
                 + "bringPopoverToFront:function(){uexDispatcher.dispatch('uexWindow','bringPopoverToFront',jo(arguments));},"
                 + "sendPopoverToBack:function(){uexDispatcher.dispatch('uexWindow','sendPopoverToBack',jo(arguments));},"
+                + "setPopoverVisibility:function(){uexDispatcher.dispatch('uexWindow','setPopoverVisibility',jo(arguments));},"
 
                 + "insertWindowAboveWindow:function(){uexDispatcher.dispatch('uexWindow','insertWindowAboveWindow',jo(arguments));},"
                 + "insertWindowBelowWindow:function(){uexDispatcher.dispatch('uexWindow','insertWindowBelowWindow',jo(arguments));},"
@@ -213,12 +214,14 @@ public class EUExScript {
                 + "share:function(){uexDispatcher.dispatch('uexWindow','share',jo(arguments));},"
                 + "putLocalData:function(){uexDispatcher.dispatch('uexWindow','putLocalData',jo(arguments));},"
                 + "getLocalData:function(){return uexDispatcher.dispatch('uexWindow','getLocalData',jo(arguments));},"
+                + "getWindowName:function(){return uexDispatcher.dispatch('uexWindow','getWindowName',jo(arguments));},"
 
 
                 + "setSlidingWindow:function(){uexDispatcher.dispatch('uexWindow','setSlidingWindow',jo(arguments));},"
                 + "setSlidingWindowEnabled:function(){uexDispatcher.dispatch('uexWindow','setSlidingWindowEnabled',jo(arguments));},"
                 + "toggleSlidingWindow:function(){uexDispatcher.dispatch('uexWindow','toggleSlidingWindow',jo(arguments));},"
                 + "getSlidingWindowState:function(){uexDispatcher.dispatch('uexWindow','getSlidingWindowState',jo(arguments));},"
+                + "setLoadingImagePath:function(){uexDispatcher.dispatch('uexWindow','setLoadingImagePath',jo(arguments));},"
 
                 + "setBounce:function(){uexDispatcher.dispatch('uexWindow','setBounce',jo(arguments));},"
                 + "getBounce:function(){uexDispatcher.dispatch('uexWindow','getBounce',jo(arguments));},"

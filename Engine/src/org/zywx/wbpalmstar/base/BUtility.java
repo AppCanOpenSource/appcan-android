@@ -22,6 +22,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -81,6 +82,9 @@ public class BUtility {
     public final static String F_Widget_RES_path = "widget/wgtRes/";
     public final static String F_Widget_RES_SCHEMA = "res://";
     public final static String F_SBOX_SCHEMA = "box://";
+    public final static String m_loadingImageSp = "loadingImageSp";
+    public final static String m_loadingImagePath = "loadingImagePath";
+    public final static String m_loadingImageTime= "loadingImageTime";
 
     public static boolean isDes = false;
     public static String g_desPath = "";
@@ -535,7 +539,8 @@ public class BUtility {
                     + path.substring(F_WIDGET_SCHEMA.length());
         } else if (path.startsWith(F_Widget_RES_SCHEMA)) {
             if (wgtType == 0) {
-                if (WDataManager.isUpdateWidget) {
+                if (WDataManager.isUpdateWidget
+                        && WDataManager.isCopyAssetsFinish) {
                     return WDataManager.m_sboxPath + F_Widget_RES_path
                             + path.substring(F_Widget_RES_SCHEMA.length());
                 } else {
@@ -878,6 +883,55 @@ public class BUtility {
             }
         }
         return inSampleSize;
+    }
+
+    public static Bitmap createBitmapWithPath(String pathName, int reqWidth,
+                                              int reqHeight) {
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        opts.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(pathName, opts);
+        opts.inSampleSize = calculateInSampleSize(opts, reqWidth, reqHeight);
+        opts.inTempStorage = new byte[64 * 1024];
+        opts.inJustDecodeBounds = false;
+        Bitmap bm = BitmapFactory.decodeFile(pathName, opts);
+        return bm;
+    }
+
+    public static Bitmap getLoadingBitmap(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(
+                BUtility.m_loadingImageSp, Context.MODE_PRIVATE);
+        String path = sp.getString(m_loadingImagePath, "");
+        InputStream input = null;
+        if (TextUtils.isEmpty(path)) {
+            input = context.getResources().openRawResource(
+                    EUExUtil.getResDrawableID("startup_bg_16_9"));
+        } else {
+            if (path.startsWith(F_Widget_RES_path)) {
+                try {
+                    input = context.getResources().getAssets().open(path);
+                } catch (Exception e) {
+                    input = context.getResources().openRawResource(
+                            EUExUtil.getResDrawableID("startup_bg_16_9"));
+                    e.printStackTrace();
+                }
+            } else {
+                File file = new File(path);
+                if (!file.exists()) {
+                    input = context.getResources().openRawResource(
+                            EUExUtil.getResDrawableID("startup_bg_16_9"));
+                    BDebug.d("The loading path " + path + " does not exist");
+                }
+            }
+        }
+        DisplayMetrics dm = new DisplayMetrics();
+        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(dm);
+        Bitmap bm = null;
+        if (input != null) {
+            bm = createBitmapWithStream(input, dm.widthPixels, dm.heightPixels);
+        } else {
+            bm = createBitmapWithPath(path, dm.widthPixels, dm.heightPixels);
+        }
+        return bm;
     }
 
     /**
