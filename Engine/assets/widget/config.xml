@@ -15,4 +15,5 @@
   <widgetOne version="[widgetOneVersion]"/>  
   <orientation>15</orientation>
   <fullscreen>false</fullscreen>
+  <statusbar color="#00000000"/>
 </widget>
