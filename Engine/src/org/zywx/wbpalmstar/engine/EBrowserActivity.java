@@ -50,6 +50,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.zywx.wbpalmstar.acedes.ACEDes;
 import org.zywx.wbpalmstar.base.BDebug;
+import org.zywx.wbpalmstar.base.util.ConfigXmlUtil;
 import org.zywx.wbpalmstar.engine.external.Compat;
 import org.zywx.wbpalmstar.engine.universalex.EUExBase;
 import org.zywx.wbpalmstar.engine.universalex.EUExCallback;
@@ -110,6 +111,9 @@ public final class EBrowserActivity extends FragmentActivity {
             loadResError();
             return;
         }
+
+        ConfigXmlUtil.setFullScreen(this);
+
         Intent intent = new Intent(EBrowserActivity.this, TempActivity.class);
         intent.putExtra("isTemp", true);
         startActivity(intent);
@@ -194,6 +198,32 @@ public final class EBrowserActivity extends FragmentActivity {
         }
     }
 
+    private void reflectionPluginMethod(String method, Intent intent) {
+        WidgetOneApplication app = (WidgetOneApplication) getApplication();
+        ThirdPluginMgr tpm = app.getThirdPlugins();
+        Map<String, ThirdPluginObject> thirdPlugins = tpm.getPlugins();
+        Set<Map.Entry<String, ThirdPluginObject>> pluginSet = thirdPlugins
+                .entrySet();
+        for (Map.Entry<String, ThirdPluginObject> entry : pluginSet) {
+            try {
+                String javaName = entry.getValue().jclass;
+                Class c = Class.forName(javaName, true, getClassLoader());
+                Object[] objs = new Object[2];
+                objs[0] = this;
+                objs[1] = intent;
+                Class[] argsClass = new Class[objs.length];
+                argsClass[0] = Context.class;
+                argsClass[1] = Intent.class;
+                Method m = c.getMethod(method, argsClass);
+
+                if (null != m) {
+                    m.invoke(c, objs);
+                }
+            } catch (Exception e) {
+            }
+        }
+    }
+
     private final void initInternalBranch() {
         int sipId = EUExUtil.getResStringID("sip");
         if (0 != sipId) {
@@ -209,7 +239,7 @@ public final class EBrowserActivity extends FragmentActivity {
             loadResError();
             return;
         }
-
+        ConfigXmlUtil.setFullScreen(this);
         ACEDes.getObfuscationList();
 
         WWidgetData rootWidget = (WWidgetData) resultMsg.obj;
@@ -245,6 +275,7 @@ public final class EBrowserActivity extends FragmentActivity {
         if (mLoadingRemoved) {
             return;
         }
+        ConfigXmlUtil.setStatusBarColor(this,WWidgetData.sStatusBarColor);
         final LocalBroadcastManager broadcastManager = LocalBroadcastManager
                 .getInstance(this);
         mEHandler.postDelayed(new Runnable() {
@@ -427,6 +458,7 @@ public final class EBrowserActivity extends FragmentActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         handleIntent(intent);
+        reflectionPluginMethod("onActivityNewIntent", intent);
     }
 
     public void handleIntent(Intent intent) {
@@ -628,10 +660,18 @@ public final class EBrowserActivity extends FragmentActivity {
             or = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
         } else if (flag == 8) {// reverse landscape
             or = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
-        } else if (flag == 15) {// sensor
-            or = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR;
-        } else {
-            ;
+        } else if (flag == 5) {// portrait and reverse portrait, Some devices only portrait effective
+            if (Build.VERSION.SDK_INT>=18){
+                or=ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT;
+            }else {
+                or = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT;
+            }
+        } else if (flag == 10) {// landscape and reverse landscape
+            if (Build.VERSION.SDK_INT>=18){
+                or=ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE;
+            }else {
+                or = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
+            }
         }
         return or;
     }
@@ -865,6 +905,7 @@ public final class EBrowserActivity extends FragmentActivity {
                         }
                     }
                 }
+                loadByOtherApp();
             }
         }
     }

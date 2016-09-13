@@ -75,6 +75,9 @@ public class EBrowserSetting implements EBrowserBaseSetting {
         if (Build.VERSION.SDK_INT <= 7) {
             invokeHtml5(mWebSetting);
         }
+        if (Build.VERSION.SDK_INT >= 14) {
+            mWebSetting.setTextZoom(100);;
+        }
         if (webApp) {
             mWebSetting.setUseWideViewPort(true);
 //			mWebSetting.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);

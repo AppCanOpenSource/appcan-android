@@ -23,6 +23,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -172,6 +173,8 @@ public class EUExWindow extends EUExBase {
     private static final int MSG_SET_IS_SUPPORT_SWIPE_CALLBACK = 58;
     private static final int MSG_DISTURB_LONG_PRESS_GESTURE = 59;
     private static final int MSG_FUNCTION_SETAUTOROTATEENABLE= 60;
+    private static final int MSG_FUNCTION_SETLOADINGIMAGEPATH= 61;
+    private static final int MSG_FUNCTION_SETPOPOVERVISIBILITY = 62;
     private AlertDialog mAlert;
     private AlertDialog.Builder mConfirm;
     private PromptDialog mPrompt;
@@ -202,6 +205,7 @@ public class EUExWindow extends EUExBase {
     public void openMsg(String[] parm) {
         EBrowserWindow curWind = mBrwView.getBrowserWindow();
         if (null == curWind) {
+            BDebug.e("curWind is null");
             return;
         }
         String inWindowName = parm[0];
@@ -251,6 +255,7 @@ public class EUExWindow extends EUExBase {
         boolean hi = curWind.isHidden();
         boolean eq = curWind.getName().equals(inWindowName);
         if (op || hi || eq) {
+            BDebug.e(op,hi,eq);
             return;
         }
         int width = 0;
@@ -272,6 +277,9 @@ public class EUExWindow extends EUExBase {
             height = parseHeight(inHeight);
             flag = Integer.parseInt(inFlag);
         } catch (Exception e) {
+            if (BDebug.DEBUG){
+                e.printStackTrace();
+            }
             errorCallback(0, EUExCallback.F_E_UEXWINDOW_OPEN, "Illegal parameter");
             return;
         }
@@ -439,6 +447,37 @@ public class EUExWindow extends EUExBase {
         if (null != mBrwView) {
             EBrowserActivity activity = (EBrowserActivity) mContext;
             activity.setAutorotateEnable(enabled);
+        }
+    }
+
+    public void setLoadingImagePath(String[] parm) {
+        if (parm.length < 1) {
+            return;
+        }
+        Message msg = new Message();
+        msg.obj = this;
+        msg.what = MSG_FUNCTION_SETLOADINGIMAGEPATH;
+        Bundle bd = new Bundle();
+        bd.putStringArray(TAG_BUNDLE_PARAM, parm);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
+    }
+
+    public void setLoadingImagePathMsg(String[] parm) {
+        String json = parm[0];
+        try {
+            JSONObject jsonObject = new JSONObject(json);
+            String path = jsonObject.optString(BUtility.m_loadingImagePath);
+            path = BUtility.getRealPathWithCopyRes(mBrwView,path);
+            long time = jsonObject.optLong(BUtility.m_loadingImageTime);
+            SharedPreferences sp = mContext.getSharedPreferences(
+                    BUtility.m_loadingImageSp, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putString(BUtility.m_loadingImagePath, path);
+            editor.putLong(BUtility.m_loadingImageTime, time);
+            editor.commit();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
@@ -1787,6 +1826,32 @@ public class EUExWindow extends EUExBase {
         curWind.insertPopoverBelowPopover(popName1, popName2);
     }
 
+    public void setPopoverVisibility(String[] parm) {
+        if (!mBrwView.checkType(EBrwViewEntry.VIEW_TYPE_MAIN)
+                || parm.length < 2) {
+            return;
+        }
+        Message msg = new Message();
+        msg.obj = this;
+        msg.what = MSG_FUNCTION_SETPOPOVERVISIBILITY;
+        Bundle bd = new Bundle();
+        bd.putStringArray(TAG_BUNDLE_PARAM, parm);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
+    }
+
+    public void setPopoverVisibilityMsg(String[] parm) {
+        String popName = parm[0];
+        int visible = Integer.parseInt(parm[1]);
+        EBrowserWindow curWind = mBrwView.getBrowserWindow();
+        if (null == curWind) {
+            return;
+        }
+
+
+        curWind.setPopoverVisibility(popName, visible);
+    }
+
     public void bringPopoverToFront(String[] parm) {
         if (!mBrwView.checkType(EBrwViewEntry.VIEW_TYPE_MAIN)
                 || parm.length < 1) {
@@ -2269,7 +2334,7 @@ public class EUExWindow extends EUExBase {
     public void pageBack(String[] parm) {
         int state = 1;
         boolean can = mBrwView.canGoBack();
-        state = can ? 1 : 0;
+        state = can ? 0 : 1;
         if (can) {
             Message msg = new Message();
             msg.obj = this;
@@ -2290,7 +2355,7 @@ public class EUExWindow extends EUExBase {
     public void pageForward(String[] parm) {
         int state = 1;
         boolean can = mBrwView.canGoForward();
-        state = can ? 1 : 0;
+        state = can ? 0 : 1;
         if (can) {
             Message msg = new Message();
             msg.obj = this;
@@ -2558,9 +2623,7 @@ public class EUExWindow extends EUExBase {
     }
 
     public void topBounceViewRefresh(String[] parm) {
-        if (!mBrwView.checkType(EBrwViewEntry.VIEW_TYPE_MAIN)) {
-            mBrwView.topBounceViewRefresh();
-        }
+        mBrwView.topBounceViewRefresh();
     }
 
     public void alert(String[] parm) {
@@ -2992,7 +3055,7 @@ public class EUExWindow extends EUExBase {
         closeAlert();
         // mBrwView.resetBounceView(0);
         // mBrwView.resetBounceView(1);
-        destroyProgressDialog(null);
+        //destroyProgressDialog(null);
         return true;
     }
 
@@ -3706,6 +3769,9 @@ public class EUExWindow extends EUExBase {
             case MSG_FUNCTION_SETORIENTATION:
                 if (param != null) setOrientationMsg(param);
                 break;
+            case MSG_FUNCTION_SETLOADINGIMAGEPATH:
+                if(param != null) setLoadingImagePathMsg(param);
+                break;
             case MSG_FUNCTION_SETAUTOROTATEENABLE:
                 if(param != null) setAutorotateEnableMsg(param);
                 break;
@@ -3790,6 +3856,9 @@ public class EUExWindow extends EUExBase {
                 break;
             case MSG_PLUGINVIEW_CONTAINER_HIDE:
                 hidePluginViewContainerMsg(param);
+                break;
+            case MSG_FUNCTION_SETPOPOVERVISIBILITY:
+                setPopoverVisibilityMsg(param);
                 break;
             default:
                 break;

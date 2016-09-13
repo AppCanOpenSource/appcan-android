@@ -164,7 +164,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         mMainView.init();
         if (null == inEntry) {
             setName("root");
-            mMainView.setRelativeUrl("index.html");
+            mMainView.setRelativeUrl(mBroWidget.getWidget().m_indexUrl);
 
             if (!TextUtils.isEmpty(mBroWidget.getWidget().m_opaque)) {
                 /**wanglei del 20151124*/
@@ -474,6 +474,18 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         }
     }
 
+    public void setPopoverVisibility(String name, int visible) {
+
+        EViewEntry entry = new EViewEntry();
+        entry.arg1 = name;
+        entry.flag = visible;
+
+        Message msg = mWindLoop.obtainMessage();
+        msg.what = F_WHANDLER_SET_POPOVER_VISIBLE;
+        msg.obj = entry;
+        mWindLoop.sendMessage(msg);
+    }
+
     public void bringPopoverToFront(String name) {
         EBrowserView bv = mPopTable.get(name);
         if (null != bv) {
@@ -482,6 +494,21 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
             msg.what = F_WHANDLER_BING_POPOVER_TO_FRONT;
             msg.obj = v;
             mWindLoop.sendMessage(msg);
+        } else {
+
+            ArrayList<EBrowserView> list = mMultiPopTable.get(name);
+            if (null != list && list.size() > 1) {
+                EBrowserView mainWebview = list.get(0);
+
+                if (mainWebview != null) {
+
+                    View v = (View) mainWebview.getParent();
+                    Message msg = mWindLoop.obtainMessage();
+                    msg.what = F_WHANDLER_BING_POPOVER_TO_FRONT;
+                    msg.obj = v;
+                    mWindLoop.sendMessage(msg);
+                }
+            }
         }
     }
 
@@ -493,6 +520,21 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
             msg.what = F_WHANDLER_SEND_POPOVER_TO_BACK;
             msg.obj = v;
             mWindLoop.sendMessage(msg);
+        } else {
+
+            ArrayList<EBrowserView> list = mMultiPopTable.get(name);
+            if (null != list && list.size() > 1) {
+                EBrowserView mainWebview = list.get(0);
+
+                if (mainWebview != null) {
+
+                    View v = (View) mainWebview.getParent();
+                    Message msg = mWindLoop.obtainMessage();
+                    msg.what = F_WHANDLER_SEND_POPOVER_TO_BACK;
+                    msg.obj = v;
+                    mWindLoop.sendMessage(msg);
+                }
+            }
         }
     }
 
@@ -2051,8 +2093,10 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
     public static final int F_WHANDLER_MULTIPOP_SELECTED_CHANGE = 30;
     public static final int F_SHOW_SOFTKEYBOARD = 31;
     public static final int F_WHANDLER_MULTIPOP_SET = 32;
+    public static final int F_WHANDLER_SET_POPOVER_VISIBLE = 33;
 
-    public static final int TOTAL = F_WHANDLER_SET_VISIBLE + 1;
+
+    public static final int TOTAL = F_WHANDLER_SET_POPOVER_VISIBLE + 1;
 
     public class WindowHander extends Handler {
 
@@ -2221,6 +2265,39 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
+                    break;
+
+                case F_WHANDLER_SET_POPOVER_VISIBLE:
+                {
+                    EViewEntry mEntry = (EViewEntry) msg.obj;
+
+                    String popName = mEntry.arg1;
+                    int isVisible = ((0 == mEntry.flag) ? View.INVISIBLE : View.VISIBLE);
+
+                    View vTarget = null;
+                    EBrowserView bv = mPopTable.get(popName);
+                    if (null != bv) {
+                        vTarget = (View) bv.getParent();
+
+                    } else {
+
+                        ArrayList<EBrowserView> list = mMultiPopTable.get(popName);
+                        if (null != list && list.size() > 1) {
+                            EBrowserView mainWebview = list.get(0);
+
+                            if (mainWebview != null) {
+
+                                vTarget = (View) mainWebview.getParent();
+                            }
+                        }
+                    }
+
+                    if (vTarget != null) {
+                        vTarget.setVisibility(isVisible);
+                    }
+
+
+                }
                     break;
             }
         }

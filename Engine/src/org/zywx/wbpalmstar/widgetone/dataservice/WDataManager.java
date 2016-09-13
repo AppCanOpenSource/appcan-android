@@ -25,6 +25,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Xml;
@@ -801,6 +802,7 @@ public class WDataManager {
                         isCopyAssetsFinish = true;
                         editor.putBoolean(m_copyAssetsFinish, true);
                         editor.commit();
+                        BDebug.i("CopyAssets", "finish");
                     } else {
                         BDebug.i("getWidgetData", "copyAssetsThread");
                         copyAssetsThread("widget", m_sboxPath + "widget/");
@@ -887,7 +889,7 @@ public class WDataManager {
         widgetData.m_logServerIp = assetsData.m_logServerIp;
         widgetData.m_obfuscation = assetsData.m_obfuscation;
         widgetData.m_opaque = assetsData.m_opaque;
-
+        widgetData.mErrorPath=assetsData.mErrorPath;
         if (isUpdateWidget && isCopyAssetsFinish) {
             String matchAssetPath = BUtility.F_ASSET_PATH + "widget/";
             if (widgetData.m_indexUrl.startsWith(matchAssetPath)) {
@@ -1017,6 +1019,7 @@ public class WDataManager {
                     Editor editor = m_preferences.edit();
                     editor.putBoolean(m_copyAssetsFinish, true);
                     editor.commit();
+                    BDebug.i("copyAssetsThread", "finish");
                 } catch (Exception e) {
                 }
             }
@@ -1042,8 +1045,8 @@ public class WDataManager {
         for (int i = 0; i < files.length; i++) {
             try {
                 String fileName = files[i];
-                // we make sure file name not contains '.' to be a folder.
-                if (!fileName.contains(".")) {
+                /** folder name can be contains '.' */
+                if (m_context.getResources().getAssets().list(assetDir + "/" + fileName).length != 0) {
                     if (0 == assetDir.length()) {
                         CopyAssets(fileName, dir + fileName + "/");
                     } else {
@@ -1425,11 +1428,21 @@ public class WDataManager {
                             if ("true".equals(text)) {
                                 WWidgetData.m_remove_loading = 0;
                             }
-                        } else if ("hardware".equals(localName)) {
+                        }else if ("fullscreen".equals(localName)){
+                            String text = parser.nextText();
+                            if ("true".equals(text)) {
+                                WWidgetData.sFullScreen = true;
+                            }
+                        }else if ("hardware".equals(localName)) {
                             String text = parser.nextText();
                             if ("false".equals(text)) {
                                 EBrowserView.sHardwareAccelerate = false;
                             }
+                        }else if ("error".equals(localName)){
+                            widgetData.mErrorPath = parser.getAttributeValue(null,
+                                    "src");
+                        }else if("statusbar".equals(localName)){
+                            WWidgetData.sStatusBarColor= Color.parseColor(parser.getAttributeValue(null,"color"));
                         }
                         break;
                     case XmlPullParser.END_DOCUMENT:

@@ -13,5 +13,7 @@
   <showmyspace>false</showmyspace>  
   <bgcolor>#fefefe</bgcolor>  
   <widgetOne version="[widgetOneVersion]"/>  
-  <orientation>15</orientation> 
+  <orientation>15</orientation>
+  <fullscreen>false</fullscreen>
+  <statusbar color="#00000000"/>
 </widget>

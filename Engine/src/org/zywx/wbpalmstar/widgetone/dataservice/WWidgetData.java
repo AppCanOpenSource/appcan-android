@@ -18,10 +18,10 @@
 
 package org.zywx.wbpalmstar.widgetone.dataservice;
 
-import java.util.ArrayList;
-
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.util.ArrayList;
 
 public class WWidgetData implements Parcelable {
 
@@ -121,6 +121,12 @@ public class WWidgetData implements Parcelable {
 
     public static int m_remove_loading = 1;//1,引擎关闭loading页；0，web调接口关闭loading页
 
+    public static boolean sFullScreen = false;//是否全屏
+
+    public String mErrorPath;//页面加载错误时的错误页面路径
+
+    public static int sStatusBarColor=-1;
+
     public static final Parcelable.Creator<WWidgetData> CREATOR = new Creator<WWidgetData>() {
         public WWidgetData createFromParcel(Parcel source) {
             WWidgetData widget = new WWidgetData();
@@ -151,6 +157,7 @@ public class WWidgetData implements Parcelable {
             widget.m_opaque = source.readString();
             widget.m_bgColor = source.readString();
             widget.m_appkey = source.readString();
+            widget.mErrorPath = source.readString();
             if (widget.disablePluginsList != null) {
                 source.readStringList(widget.disablePluginsList);
             }
@@ -225,6 +232,7 @@ public class WWidgetData implements Parcelable {
         parcel.writeString(m_opaque);
         parcel.writeString(m_bgColor);
         parcel.writeString(m_appkey);
+        parcel.writeString(mErrorPath);
         parcel.writeStringList(disablePluginsList);
         parcel.writeStringList(disableRootWindowsList);
         parcel.writeStringList(disableSonWindowsList);
@@ -294,6 +302,8 @@ public class WWidgetData implements Parcelable {
         sb.append("m_id: " + m_id);
         sb.append("\n");
         sb.append("m_remove_loading:" + m_remove_loading);
+        sb.append("\n");
+        sb.append("mErrorPath:" + mErrorPath);
         sb.append("\n");
         return sb.toString();
     }

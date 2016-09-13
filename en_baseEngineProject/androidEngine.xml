@@ -2,5 +2,5 @@
 <info>
     <version>sdksuit_3.2_160202_01</version>
 	<package>android_Engine_3.2_160202_01</package>
-	<description>1、修复uexWidget.reloadWidgetByAppId()无效问题；2、添加和删除插件view时不使用Handler发送消息的方式；3、uexWindow增加setAutorotateEnable接口。</description>
+	<description>EBrowserActivity添加对onNewIntent生命周期的反射处理，插件可拦截该生命周期。</description>
 </info>

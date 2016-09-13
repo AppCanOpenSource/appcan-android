@@ -5,11 +5,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.WindowManager;
@@ -20,8 +20,6 @@ import android.widget.TextView;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.engine.external.Compat;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
-
-import java.io.InputStream;
 
 
 /**
@@ -36,6 +34,7 @@ public class TempActivity extends Activity {
     };
 
     private boolean isTemp = false;
+    private long showTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,11 +42,7 @@ public class TempActivity extends Activity {
         FrameLayout rootLayout = new FrameLayout(this);
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
         rootLayout.setLayoutParams(layoutParams);
-        InputStream inputStream = getResources().openRawResource(EUExUtil.getResDrawableID("startup_bg_16_9"));
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        Bitmap bm = BUtility.createBitmapWithStream(inputStream,
-                dm.widthPixels, dm.heightPixels);
+        Bitmap bm = BUtility.getLoadingBitmap(this);
         if (bm != null) {
             ImageView imageView = new ImageView(this);
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -68,6 +63,7 @@ public class TempActivity extends Activity {
             rootLayout.addView(worn);
         }
         setContentView(rootLayout);
+        showTime = System.currentTimeMillis();
         try {
             Intent intent = getIntent();
             if (intent != null) {
@@ -121,9 +117,26 @@ public class TempActivity extends Activity {
     private class MyBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            finish();
-            overridePendingTransition(EUExUtil.getResAnimID("platform_myspace_fade_in_anim")
-                    , EUExUtil.getResAnimID("platform_myspace_fade_out_anim"));
+            SharedPreferences sp = getSharedPreferences(
+                    BUtility.m_loadingImageSp, Context.MODE_PRIVATE);
+            long lodingTime = sp.getLong(BUtility.m_loadingImageTime, 0);
+            long time = System.currentTimeMillis() - showTime;
+            //若前端同时调用了uexWidget.closeLoading()、uexWindow.setLoadingImagePath()，则启动图显示时间以最长的为准；
+            if (lodingTime > time) {
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        finish();
+                        overridePendingTransition(EUExUtil.getResAnimID("platform_myspace_fade_in_anim"),
+                                EUExUtil.getResAnimID("platform_myspace_fade_out_anim"));
+                    }
+                }, lodingTime - time);
+            } else {
+                finish();
+                overridePendingTransition(EUExUtil.getResAnimID("platform_myspace_fade_in_anim"),
+                        EUExUtil.getResAnimID("platform_myspace_fade_out_anim"));
+            }
+
         }
     }
 }
