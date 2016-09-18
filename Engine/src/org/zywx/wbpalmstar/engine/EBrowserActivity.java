@@ -275,6 +275,7 @@ public final class EBrowserActivity extends FragmentActivity {
         if (mLoadingRemoved) {
             return;
         }
+        ConfigXmlUtil.setStatusBarColor(this,WWidgetData.sStatusBarColor);
         final LocalBroadcastManager broadcastManager = LocalBroadcastManager
                 .getInstance(this);
         mEHandler.postDelayed(new Runnable() {

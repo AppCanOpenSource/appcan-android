@@ -25,6 +25,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Xml;
@@ -1440,6 +1441,8 @@ public class WDataManager {
                         }else if ("error".equals(localName)){
                             widgetData.mErrorPath = parser.getAttributeValue(null,
                                     "src");
+                        }else if("statusbar".equals(localName)){
+                            WWidgetData.sStatusBarColor= Color.parseColor(parser.getAttributeValue(null,"color"));
                         }
                         break;
                     case XmlPullParser.END_DOCUMENT:

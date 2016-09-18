@@ -26,8 +26,6 @@ import android.os.Message;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
-import dalvik.system.DexClassLoader;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.zywx.wbpalmstar.base.BConstant;
@@ -43,12 +41,18 @@ import org.zywx.wbpalmstar.platform.push.PushEngineEventListener;
 import org.zywx.wbpalmstar.widgetone.dataservice.WDataManager;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import dalvik.system.DexClassLoader;
 
 public class WidgetOneApplication extends Application {
 
