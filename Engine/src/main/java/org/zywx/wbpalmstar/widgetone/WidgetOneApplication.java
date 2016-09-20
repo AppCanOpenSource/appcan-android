@@ -19,8 +19,10 @@
 package org.zywx.wbpalmstar.widgetone;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
+import android.support.multidex.MultiDex;
 
 import org.zywx.wbpalmstar.engine.AppCan;
 
@@ -32,6 +34,12 @@ public class WidgetOneApplication extends Application {
     public void onCreate() {
         super.onCreate();
 //         init=true;
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 
     @Override

@@ -32,7 +32,7 @@ android {
         applicationId 'org.zywx.wbpalmstar.widgetone.uex'
         minSdkVersion 14
         targetSdkVersion 19 //
-        //    multiDexEnabled true
+        multiDexEnabled true
     }
     productFlavors {
         crosswalk {
