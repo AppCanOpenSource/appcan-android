@@ -23,7 +23,6 @@ import android.app.Application;
 import android.content.Context;
 import android.content.res.XmlResourceParser;
 import android.os.Message;
-import android.support.multidex.MultiDex;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
@@ -108,12 +107,6 @@ public class WidgetOneApplication extends Application {
             } catch (Exception e) {
             }
         }
-    }
-
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        MultiDex.install(this);
     }
 
     private void copyLib() {
