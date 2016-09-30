@@ -43,7 +43,7 @@ public class AppCan {
     private ELinkedList<EngineEventListener> mListenerQueue;
     private WDataManager mWDataManager;
     protected ECrashHandler mCrashReport;
-    private Context mContext;
+    private Context mContext;//Application
     private WWidgetData mWidgetData;
     private boolean showLoading=false;
 
@@ -169,9 +169,12 @@ public class AppCan {
                 Class c = Class.forName(javaName, true, getClassLoader());
                 Method m = c.getMethod(method, new Class[]{Context.class});
                 if (null != m) {
-                    m.invoke(c, new Object[]{this});
+                    m.invoke(c, new Object[]{mContext});
                 }
             } catch (Exception e) {
+                if (BDebug.DEBUG){
+                    e.printStackTrace();
+                }
             }
         }
     }
