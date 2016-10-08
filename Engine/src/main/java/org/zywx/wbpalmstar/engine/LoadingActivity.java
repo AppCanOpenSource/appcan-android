@@ -101,7 +101,7 @@ public class LoadingActivity extends Activity {
     private void addDevelopInfo() {
         if (EBrowserActivity.develop) {
             TextView worn = new TextView(this);
-            worn.setText(EUExUtil.getString("platform_only_test"));
+            worn.setText(getResources().getIdentifier("platform_only_test","string",getPackageName()));
             worn.setTextColor(0xffff0000);
             worn.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
             FrameLayout.LayoutParams wornPa = new FrameLayout.LayoutParams(
