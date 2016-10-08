@@ -20,6 +20,7 @@ public class ContainerViewPager extends ViewPager {
         this.mContainerVO = containerVO;
     }
 
+    @Keep
     public CreateContainerVO getContainerVO() {
         return mContainerVO;
     }
