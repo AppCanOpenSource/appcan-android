@@ -43,8 +43,8 @@ import org.zywx.wbpalmstar.engine.EBrowserAnimation;
 import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.EBrowserWindow;
 import org.zywx.wbpalmstar.engine.EWgtResultInfo;
-import org.zywx.wbpalmstar.engine.universalex.EUExWindow.ContainerAdapter;
-import org.zywx.wbpalmstar.engine.universalex.EUExWindow.ContainerViewPager;
+import org.zywx.wbpalmstar.engine.container.ContainerAdapter;
+import org.zywx.wbpalmstar.engine.container.ContainerViewPager;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
 import java.io.File;

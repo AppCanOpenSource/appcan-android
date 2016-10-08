@@ -34,14 +34,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Message;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
@@ -78,7 +75,6 @@ import org.zywx.wbpalmstar.base.vo.WindowSetMultiPopoverSelectedVO;
 import org.zywx.wbpalmstar.base.vo.WindowSetPopoverFrameVO;
 import org.zywx.wbpalmstar.base.vo.WindowSetSlidingWindowVO;
 import org.zywx.wbpalmstar.base.vo.WindowShowBounceViewVO;
-import org.zywx.wbpalmstar.base.vo.WindowSlidingItemVO;
 import org.zywx.wbpalmstar.base.vo.WindowToastVO;
 import org.zywx.wbpalmstar.engine.DataHelper;
 import org.zywx.wbpalmstar.engine.EBounceView;
@@ -93,6 +89,8 @@ import org.zywx.wbpalmstar.engine.EDialogTask;
 import org.zywx.wbpalmstar.engine.ESystemInfo;
 import org.zywx.wbpalmstar.engine.EUtil;
 import org.zywx.wbpalmstar.engine.EViewEntry;
+import org.zywx.wbpalmstar.engine.container.ContainerAdapter;
+import org.zywx.wbpalmstar.engine.container.ContainerViewPager;
 import org.zywx.wbpalmstar.engine.universalex.wrapper.WindowJsonWrapper;
 import org.zywx.wbpalmstar.platform.window.ActionSheetDialog;
 import org.zywx.wbpalmstar.platform.window.ActionSheetDialog.ActionSheetDialogItemClickListener;
@@ -3334,7 +3332,7 @@ public class EUExWindow extends EUExBase {
 
         ContainerViewPager containerViewPager = new ContainerViewPager(mContext, inputVO);
         ContainerAdapter containerAdapter = new ContainerAdapter(new
-                Vector<FrameLayout>());
+                Vector<FrameLayout>(),inputVO.getTitles());
         containerViewPager.setAdapter(containerAdapter);
         containerViewPager.setOnPageChangeListener(new ContainerViewPager.OnPageChangeListener() {
 
@@ -3543,74 +3541,6 @@ public class EUExWindow extends EUExBase {
             e.printStackTrace();
         }
     }
-
-    class ContainerViewPager extends ViewPager {
-        private CreateContainerVO mContainerVO;
-
-        public ContainerViewPager(Context context, CreateContainerVO containerVO) {
-            super(context);
-            this.mContainerVO = containerVO;
-        }
-
-        public CreateContainerVO getContainerVO() {
-            return mContainerVO;
-        }
-    }
-
-    class ContainerAdapter extends PagerAdapter {
-        Vector<FrameLayout> viewList;
-        int mChildCount = 0;
-
-        public ContainerAdapter(Vector<FrameLayout> viewList) {
-            this.viewList = viewList;
-        }
-
-        public Vector<FrameLayout> getViewList() {
-            return viewList;
-        }
-
-        public void setViewList(Vector<FrameLayout> viewList) {
-            this.viewList = viewList;
-        }
-
-        @Override
-        public int getCount() {
-            return viewList.size();
-        }
-
-        @Override
-        public boolean isViewFromObject(View view, Object arg1) {
-            return view == arg1;
-        }
-
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            container.addView(viewList.get(position));
-            return viewList.get(position);
-        }
-
-        @Override
-        public int getItemPosition(Object object) {
-            if (mChildCount > 0) {
-                mChildCount--;
-                return POSITION_NONE;
-            }
-            return super.getItemPosition(object);
-        }
-
-        @Override
-        public void notifyDataSetChanged() {
-            mChildCount = getCount();
-            super.notifyDataSetChanged();
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            View item = viewList.get(position);
-            container.removeView(item);
-        }
-    }
-
 
     public void share(String[] params){
         String jsonStr=params[0];
