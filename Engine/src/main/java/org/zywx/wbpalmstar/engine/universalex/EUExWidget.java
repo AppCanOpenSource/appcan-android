@@ -244,6 +244,7 @@ public class EUExWidget extends EUExBase {
         AppCan.getInstance().delPushInfo(uId, uNickName, mContext, mBrwView);
     }
 
+    @AppCanAPI
     public boolean startApp(String[] params) {
         if (params.length < 2) {
             BDebug.e(tag, "startApp has error params!!!");
@@ -506,6 +507,7 @@ public class EUExWidget extends EUExBase {
         finishWidget(inResultInfo, appId, isWgtBG);
     }
 
+    @AppCanAPI
     public boolean removeWidget(String[] parm) {
         if (parm.length < 1) {
             return false;
@@ -691,6 +693,7 @@ public class EUExWidget extends EUExBase {
         curWind.getBrowser().setMySpaceInfo(inForResult, inAnimiId, inInfo);
     }
 
+    @AppCanAPI
     public String getOpenerInfo(String[] parm) {
         EBrowserWindow curWind = mBrwView.getBrowserWindow();
         if (null == curWind) {

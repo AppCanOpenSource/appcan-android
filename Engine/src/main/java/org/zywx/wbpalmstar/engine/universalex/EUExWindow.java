@@ -347,10 +347,12 @@ public class EUExWindow extends EUExBase {
         open(params);
     }
 
+    @AppCanAPI
     public int getHeight(String[] params){
         return mBrwView.getBrowserWindow().getHeight();
     }
 
+    @AppCanAPI
     public int getWidth(String[] params){
         return mBrwView.getBrowserWindow().getWidth();
     }
@@ -403,6 +405,7 @@ public class EUExWindow extends EUExBase {
         activity.runOnUiThread(ui);
     }
 
+    @AppCanAPI
     public void setOrientation(String[] parm) {
         if (parm.length < 1) {
             return;
@@ -429,6 +432,7 @@ public class EUExWindow extends EUExBase {
         }
     }
 
+    @AppCanAPI
     public void setAutorotateEnable(String[] parm) {
         if (parm.length < 1) {
             return;
@@ -826,6 +830,7 @@ public class EUExWindow extends EUExBase {
         }
     }
 
+    @AppCanAPI
     public int getSlidingWindowState(String[] param) {
         EBrowserActivity activity = (EBrowserActivity) mContext;
         SlidingMenu slidingMenu = activity.globalSlidingMenu;
@@ -2280,6 +2285,7 @@ public class EUExWindow extends EUExBase {
         mHandler.sendMessage(msg);
     }
 
+    @AppCanAPI
     public boolean pageBack(String[] parm) {
         int state = 1;
         boolean can = mBrwView.canGoBack();
@@ -2302,6 +2308,7 @@ public class EUExWindow extends EUExBase {
         return can;
     }
 
+    @AppCanAPI
     public boolean pageForward(String[] parm) {
         int state = 1;
         boolean can = mBrwView.canGoForward();
@@ -2424,6 +2431,7 @@ public class EUExWindow extends EUExBase {
         SpManager.getInstance().putString(params[0],params[1],isSession);
     }
 
+    @AppCanAPI
     public String getLocalData(String[] params) {
         boolean isSession=false;
         if (params.length>2){
@@ -2508,6 +2516,7 @@ public class EUExWindow extends EUExBase {
         mBrwView.notifyBounceEvent(type, status);
     }
 
+    @AppCanAPI
     public String getWindowName(String[] params){
         return mBrwView.getWindowName();
     }
@@ -3310,6 +3319,7 @@ public class EUExWindow extends EUExBase {
      *
      * @param params
      */
+    @AppCanAPI
     public boolean createPluginViewContainer(String[] params) {
 
         if (params == null || params.length < 1) {
@@ -3368,6 +3378,7 @@ public class EUExWindow extends EUExBase {
         return false;
     }
 
+    @AppCanAPI
     public void showPluginViewContainer(String[] parm) {
         Message msg = mHandler.obtainMessage();
         msg.what = MSG_PLUGINVIEW_CONTAINER_SHOW;
@@ -3413,6 +3424,7 @@ public class EUExWindow extends EUExBase {
         }
     }
 
+    @AppCanAPI
     public void hidePluginViewContainer(String[] parm) {
         Message msg = mHandler.obtainMessage();
         msg.what = MSG_PLUGINVIEW_CONTAINER_HIDE;
@@ -3463,6 +3475,7 @@ public class EUExWindow extends EUExBase {
      *
      * @param params
      */
+    @AppCanAPI
     public boolean closePluginViewContainer(String[] params) {
         if (params == null || params.length < 1) {
             errorCallback(0, 0, "error params!");
@@ -3505,6 +3518,7 @@ public class EUExWindow extends EUExBase {
         return false;
     }
 
+    @AppCanAPI
     public void setPageInContainer(String[] parm) {
         Message msg = mHandler.obtainMessage();
         msg.what = MSG_PLUGINVIEW_CONTAINER_SET;
@@ -3538,10 +3552,13 @@ public class EUExWindow extends EUExBase {
                 }//end instance
             }//end for
         } catch (Exception e) {
-            e.printStackTrace();
+            if (BDebug.DEBUG) {
+                e.printStackTrace();
+            }
         }
     }
 
+    @AppCanAPI
     public void share(String[] params){
         String jsonStr=params[0];
         ShareInputVO inputVO=DataHelper.gson.fromJson(jsonStr,ShareInputVO.class);
