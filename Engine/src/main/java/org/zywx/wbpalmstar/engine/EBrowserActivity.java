@@ -79,13 +79,13 @@ public final class EBrowserActivity extends BaseActivity {
     public final static String APP_TYPE_START_BACKGROUND = "1";
     public final static String APP_TYPE_START_FORGROUND= "2";
 
-    private org.zywx.wbpalmstar.engine.EBrowser mBrowser;
+    private EBrowser mBrowser;
     private boolean mKeyDown;
     private EHandler mEHandler;
-    private org.zywx.wbpalmstar.engine.EBrowserAround mBrowserAround;
+    private EBrowserAround mBrowserAround;
     private EUExBase mActivityCallback;
     private boolean mCallbackRuning;
-    private org.zywx.wbpalmstar.engine.EBrowserMainFrame mEBrwMainFrame;
+    private EBrowserMainFrame mEBrwMainFrame;
     private boolean mFinish;
     private boolean mVisable;
     private boolean mPageFinish;
@@ -104,7 +104,7 @@ public final class EBrowserActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(null);
-        if (!org.zywx.wbpalmstar.engine.EResources.init(this)) {
+        if (!EResources.init(this)) {
             loadResError();
             return;
         }
@@ -294,13 +294,13 @@ public final class EBrowserActivity extends BaseActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         // super.onSaveInstanceState(outState);
-        org.zywx.wbpalmstar.engine.EUtil.printeBackup(outState, "onSaveInstanceState");
+        EUtil.printeBackup(outState, "onSaveInstanceState");
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         // super.onRestoreInstanceState(savedInstanceState);
-        org.zywx.wbpalmstar.engine.EUtil.printeBackup(savedInstanceState, "onSaveInstanceState");
+        EUtil.printeBackup(savedInstanceState, "onSaveInstanceState");
     }
 
     @Override
@@ -369,28 +369,28 @@ public final class EBrowserActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        org.zywx.wbpalmstar.engine.EUtil.loge("App onStart");
+        EUtil.loge("App onStart");
         reflectionPluginMethod("onActivityStart");
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        org.zywx.wbpalmstar.engine.EUtil.loge("App onRestart");
+        EUtil.loge("App onRestart");
         reflectionPluginMethod("onActivityReStart");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        org.zywx.wbpalmstar.engine.EUtil.loge("App onStop");
+        EUtil.loge("App onStop");
         reflectionPluginMethod("onActivityStop");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        org.zywx.wbpalmstar.engine.EUtil.loge("App onResume");
+        EUtil.loge("App onResume");
         mVisable = true;
         if (null != mBrowser) {
             mBrowser.onAppResume();
@@ -404,7 +404,7 @@ public final class EBrowserActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        org.zywx.wbpalmstar.engine.EUtil.loge("App onDestroy");
+        EUtil.loge("App onDestroy");
         super.onDestroy();
         reflectionPluginMethod("onActivityDestroy");
         Process.killProcess(Process.myPid());
@@ -414,7 +414,7 @@ public final class EBrowserActivity extends BaseActivity {
     protected void onPause() {
         isForground = false;
         super.onPause();
-        org.zywx.wbpalmstar.engine.EUtil.loge("App onPause");
+        EUtil.loge("App onPause");
         mVisable = false;
         if (mFinish) {
             return;
@@ -442,12 +442,12 @@ public final class EBrowserActivity extends BaseActivity {
             Intent firstIntent = getIntent();
             int type = intent.getIntExtra("ntype", 0);
             switch (type) {
-            case org.zywx.wbpalmstar.engine.ENotification.F_TYPE_PUSH:
+            case ENotification.F_TYPE_PUSH:
                 handlePushNotify(intent);
                 break;
-            case org.zywx.wbpalmstar.engine.ENotification.F_TYPE_USER:
+            case ENotification.F_TYPE_USER:
                 break;
-            case org.zywx.wbpalmstar.engine.ENotification.F_TYPE_SYS:
+            case ENotification.F_TYPE_SYS:
                 break;
             default:
                 getIntentData(intent);
@@ -510,10 +510,10 @@ public final class EBrowserActivity extends BaseActivity {
 
     private final void loadResError() {
         AlertDialog.Builder dia = new AlertDialog.Builder(this);
-        dia.setTitle(org.zywx.wbpalmstar.engine.EResources.display_dialog_error);
-        dia.setMessage(org.zywx.wbpalmstar.engine.EResources.display_init_error);
+        dia.setTitle(EResources.display_dialog_error);
+        dia.setMessage(EResources.display_init_error);
         dia.setCancelable(false);
-        dia.setPositiveButton(org.zywx.wbpalmstar.engine.EResources.display_confirm,
+        dia.setPositiveButton(EResources.display_confirm,
                 new OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         finish();
@@ -536,10 +536,10 @@ public final class EBrowserActivity extends BaseActivity {
         }
         try {
             AlertDialog.Builder tDialog = new AlertDialog.Builder(this);
-            tDialog.setTitle(org.zywx.wbpalmstar.engine.EResources.display_exitdialog_msg);
-            tDialog.setNegativeButton(org.zywx.wbpalmstar.engine.EResources.display_cancel, null);
-            tDialog.setMessage(org.zywx.wbpalmstar.engine.EResources.display_exitdialog_app_text);
-            tDialog.setPositiveButton(org.zywx.wbpalmstar.engine.EResources.display_confirm,
+            tDialog.setTitle(EResources.display_exitdialog_msg);
+            tDialog.setNegativeButton(EResources.display_cancel, null);
+            tDialog.setMessage(EResources.display_exitdialog_app_text);
+            tDialog.setPositiveButton(EResources.display_confirm,
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -842,10 +842,10 @@ public final class EBrowserActivity extends BaseActivity {
                         Intent intent = getIntent();
                         int type = intent.getIntExtra("ntype", 0);
                         switch (type) {
-                            case org.zywx.wbpalmstar.engine.ENotification.F_TYPE_PUSH:
+                            case ENotification.F_TYPE_PUSH:
                                 mBrowser.setFromPush(true);
                                 break;
-                            case org.zywx.wbpalmstar.engine.ENotification.F_TYPE_USER:
+                            case ENotification.F_TYPE_USER:
                                 // onNewIntent(intent);
                                 break;
                         }
