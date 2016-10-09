@@ -52,16 +52,9 @@ import org.zywx.wbpalmstar.base.vo.StartAppVO;
 import org.zywx.wbpalmstar.base.vo.WidgetCheckUpdateResultVO;
 import org.zywx.wbpalmstar.base.vo.WidgetFinishVO;
 import org.zywx.wbpalmstar.base.vo.WidgetStartVO;
-import org.zywx.wbpalmstar.engine.DataHelper;
-import org.zywx.wbpalmstar.engine.EBrowserActivity;
-import org.zywx.wbpalmstar.engine.EBrowserAnimation;
-import org.zywx.wbpalmstar.engine.EBrowserView;
-import org.zywx.wbpalmstar.engine.EBrowserWidget;
-import org.zywx.wbpalmstar.engine.EBrowserWindow;
-import org.zywx.wbpalmstar.engine.EWgtResultInfo;
+import org.zywx.wbpalmstar.engine.*;
 import org.zywx.wbpalmstar.engine.universalex.wrapper.WidgetJsonWrapper;
 import org.zywx.wbpalmstar.platform.push.report.PushReportConstants;
-import org.zywx.wbpalmstar.widgetone.WidgetOneApplication;
 import org.zywx.wbpalmstar.widgetone.dataservice.ReData;
 import org.zywx.wbpalmstar.widgetone.dataservice.WDataManager;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
@@ -248,11 +241,10 @@ public class EUExWidget extends EUExBase {
         if (params.length > 1) {
             uNickName = params[1];
         }
-        WidgetOneApplication app = (WidgetOneApplication) ((Activity) mContext)
-                .getApplication();
-        app.delPushInfo(uId, uNickName, mContext, mBrwView);
+        AppCan.getInstance().delPushInfo(uId, uNickName, mContext, mBrwView);
     }
 
+    @AppCanAPI
     public boolean startApp(String[] params) {
         if (params.length < 2) {
             BDebug.e(tag, "startApp has error params!!!");
@@ -515,6 +507,7 @@ public class EUExWidget extends EUExBase {
         finishWidget(inResultInfo, appId, isWgtBG);
     }
 
+    @AppCanAPI
     public boolean removeWidget(String[] parm) {
         if (parm.length < 1) {
             return false;
@@ -700,6 +693,7 @@ public class EUExWidget extends EUExBase {
         curWind.getBrowser().setMySpaceInfo(inForResult, inAnimiId, inInfo);
     }
 
+    @AppCanAPI
     public String getOpenerInfo(String[] parm) {
         EBrowserWindow curWind = mBrwView.getBrowserWindow();
         if (null == curWind) {
@@ -772,18 +766,14 @@ public class EUExWidget extends EUExBase {
         }
         final String userId = parm[0];
         final String userNick = parm[1];
-        WidgetOneApplication app = (WidgetOneApplication) ((Activity) mContext)
-                .getApplication();
-        app.setPushInfo(userId, userNick, mContext, mBrwView);
+        AppCan.getInstance().setPushInfo(userId, userNick, mContext, mBrwView);
     }
 
     public void setPushState(String[] parm) {
         if (parm.length != 1) {
             return;
         }
-        WidgetOneApplication app = (WidgetOneApplication) ((Activity) mContext)
-                .getApplication();
-        app.setPushState(Integer.parseInt(parm[0]));
+        AppCan.getInstance().setPushState(Integer.parseInt(parm[0]));
 
     }
 
@@ -847,7 +837,7 @@ public class EUExWidget extends EUExBase {
                     PushReportConstants.PUSH_DATA_SHAREPRE_DATA, "");
         }
         if (!TextUtils.isEmpty(userInfo)) {
-            ((WidgetOneApplication) mContext.getApplicationContext()).getPushInfo(
+            AppCan.getInstance().getPushInfo(
                     userInfo, System.currentTimeMillis() + "");
             jsCallback(function_getPushInfo, 0, EUExCallback.F_C_TEXT, userInfo);
         }

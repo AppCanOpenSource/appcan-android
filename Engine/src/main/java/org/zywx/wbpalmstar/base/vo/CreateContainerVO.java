@@ -20,6 +20,7 @@
 package org.zywx.wbpalmstar.base.vo;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by ylt on 15/12/24.
@@ -33,6 +34,8 @@ public class CreateContainerVO implements Serializable {
     private String id;
     private long animTime = 300;
     private long animDelayTime = 100;
+
+    private List<String> titles;
 
     public float getX() {
         return x;
@@ -88,5 +91,13 @@ public class CreateContainerVO implements Serializable {
 
     public void setAnimDelayTime(long animDelayTime) {
         this.animDelayTime = animDelayTime;
+    }
+
+    public List<String> getTitles() {
+        return titles;
+    }
+
+    public void setTitles(List<String> titles) {
+        this.titles = titles;
     }
 }

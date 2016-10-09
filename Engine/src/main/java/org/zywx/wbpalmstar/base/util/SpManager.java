@@ -29,14 +29,19 @@ import org.zywx.wbpalmstar.base.BConstant;
  */
 public class SpManager {
 
-    public static final String SP_NAME="appcan_data";
+    private static final String SP_NAME="appcan_data";
+    private static final String SP_TEMP_NAME="appcan_data_temp";
+
 
     private static SpManager instance=null;
 
     private SharedPreferences mSharedPreferences;
 
-    public SpManager(Context context) {
+    private SharedPreferences mSharedPreferencesTemp;//session
+
+    private SpManager(Context context) {
         mSharedPreferences=context.getSharedPreferences(SP_NAME,Context.MODE_PRIVATE);
+        mSharedPreferencesTemp=context.getSharedPreferences(SP_TEMP_NAME,Context.MODE_PRIVATE);
     }
 
     public static SpManager getInstance(){
@@ -63,4 +68,31 @@ public class SpManager {
         return mSharedPreferences.edit().remove(key).commit();
     }
 
+    public boolean putString(String key, String value,boolean isSession){
+        if (isSession){
+            return mSharedPreferencesTemp.edit().putString(key,value).commit();
+        }else{
+            return mSharedPreferences.edit().putString(key,value).commit();
+        }
+    }
+
+    public String getString(String key, String defValue,boolean isSession) {
+        if (isSession){
+            return mSharedPreferencesTemp.getString(key, defValue);
+        }else{
+            return mSharedPreferences.getString(key, defValue);
+        }
+     }
+
+    public boolean remove(String key,boolean isSession) {
+        if (isSession){
+            return mSharedPreferencesTemp.edit().remove(key).commit();
+        }else{
+            return mSharedPreferences.edit().remove(key).commit();
+        }
+    }
+
+    public boolean clearSession(){
+        return mSharedPreferencesTemp.edit().clear().commit();
+    }
 }

@@ -95,7 +95,10 @@
     <fields>;
     <methods>;
 }
-
+-keep class org.zywx.wbpalmstar.engine.AppCan {
+    <fields>;
+    <methods>;
+}
 -keep class org.zywx.wbpalmstar.engine.universalex.EUExBase {
     <fields>;
     <methods>;
@@ -307,8 +310,6 @@
     public void setHardwareEnable(java.lang.String[]);
     public void setPopHardwareEnable(java.lang.String[]);
     public void setPageInContainer(java.lang.String[]);
-    public void createPluginViewContainer(java.lang.String[]);
-    public void closePluginViewContainer(java.lang.String[]);
     public void showPluginViewContainer(java.lang.String[]);
     public void hidePluginViewContainer(java.lang.String[]);
     public void share(java.lang.String[]);
@@ -338,7 +339,6 @@
     public void finishWidget(java.lang.String[]);
     public void removeWidget(java.lang.String[]);
     public void loadApp(java.lang.String[]);
-    public void startApp(java.lang.String[]);
     public void isAppInstalled(java.lang.String[]);
     public void installApp(java.lang.String[]);
     public void setMySpaceInfo(java.lang.String[]);
