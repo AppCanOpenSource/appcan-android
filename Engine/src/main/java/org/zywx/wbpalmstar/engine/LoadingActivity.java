@@ -20,7 +20,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.zywx.wbpalmstar.base.BUtility;
-import org.zywx.wbpalmstar.base.listener.OnAppCanInitListener;
 import org.zywx.wbpalmstar.engine.external.Compat;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
@@ -155,18 +154,8 @@ public class LoadingActivity extends Activity {
     }
 
     private void startEngine() {
-        AppCan.getInstance().init(this, new OnAppCanInitListener() {
-            @Override
-            public void onInit() {
-                AppCan.getInstance().setShowLoading(true);
-                AppCan.getInstance().start(LoadingActivity.this,getIntent().getExtras());
-            }
-
-            @Override
-            public void onError() {
-
-            }
-        });
+        AppCan.getInstance().setShowLoading(true);
+        AppCan.getInstance().start(LoadingActivity.this,getIntent().getExtras());
     }
 
     private static class LoadingHandler extends Handler{
