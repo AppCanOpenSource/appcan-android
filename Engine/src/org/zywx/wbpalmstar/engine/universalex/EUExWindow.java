@@ -1083,6 +1083,10 @@ public class EUExWindow extends EUExBase {
     }
 
     public void openPopoverMsg(String[] parm) {
+        if (mBrwView.checkType(EBrwViewEntry.VIEW_TYPE_POP)){
+            BDebug.e("popover不能打开popover ");
+            return;
+        }
         EBrowserWindow curWind = mBrwView.getBrowserWindow();
         if (null == curWind) {
             return;
