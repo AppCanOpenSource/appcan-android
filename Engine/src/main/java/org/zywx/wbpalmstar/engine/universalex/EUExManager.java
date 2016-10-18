@@ -22,10 +22,10 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.Keep;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.zywx.wbpalmstar.base.BDebug;
+import org.zywx.wbpalmstar.base.vo.AppCanJsVO;
 import org.zywx.wbpalmstar.engine.DataHelper;
 import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.ELinkedList;
@@ -35,6 +35,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Locale;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -113,16 +114,17 @@ public class EUExManager {
     @Keep
     public String dispatch(String parseStr) throws JSONException {
         BDebug.json( parseStr);
-        JSONObject json = new JSONObject(parseStr);
-        String pluginName = json.optString("uexName");
-        String methodName = json.optString("method");
-        JSONArray jsonArray = json.getJSONArray("args");
-        JSONArray typesArray = json.getJSONArray("types");
-        int length = jsonArray.length();
+        AppCanJsVO appCanJs = new AppCanJsVO();
+        appCanJs = DataHelper.gson.fromJson(parseStr, AppCanJsVO.class);
+        String uexName = appCanJs.uexName;
+        String method = appCanJs.method;
+        List<String> appCanJsArgs = appCanJs.args;
+        List<String> appCanJsTypes = appCanJs.types;
+        int length = appCanJsArgs.size();
         String[] params = new String[length];
         for (int i = 0; i < length; i++) {
-            String type = typesArray.getString(i);
-            String arg = jsonArray.getString(i);
+            String type = appCanJsTypes.get(i);
+            String arg = appCanJsArgs.get(i);
             if ("undefined".equals(type) && "null".equals(arg)) {
                 params[i] = null;
             } else {
