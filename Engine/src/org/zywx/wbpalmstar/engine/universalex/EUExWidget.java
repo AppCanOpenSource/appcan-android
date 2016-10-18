@@ -107,10 +107,10 @@ public class EUExWidget extends EUExBase {
         String inInfo = parm[3];
         String animDuration = null;
         String appKey = null;
-        if (parm.length == 5) {
+        if (parm.length >= 5) {
             animDuration = parm[4];
         }
-        if (parm.length == 6) {
+        if (parm.length >= 6) {
             appKey = parm[5];
         }
         int animId = EBrowserAnimation.ANIM_ID_NONE;
@@ -237,10 +237,6 @@ public class EUExWidget extends EUExBase {
             if ("0".equals(startMode)) {
                 String pkgName = params[1];
                 String clsName = null;
-                StartAppVO extraVO=null;
-                if (params.length>4) {
-                    extraVO = DataHelper.gson.fromJson(params[4],StartAppVO.class);
-                }
                 if (TextUtils.isEmpty(pkgName)) {
                     Log.e(tag, "startApp has error params!!!");
                     callBackPluginJs(JsConst.CALLBACK_START_APP, "error params");
@@ -260,14 +256,6 @@ public class EUExWidget extends EUExBase {
                 }
                 ComponentName component = new ComponentName(pkgName, clsName);
                 intent = new Intent();
-                if (extraVO!=null&&extraVO.getData()!=null){
-                    Uri contentUrl=Uri.parse(extraVO.getData());
-                    intent.setData(contentUrl);
-                }
-                // 如果isNewTask.equals("0") by waka
-                if (extraVO != null && "0".equals(extraVO.getIsNewTask())) {
-                    switchNewTask = false;// NEW_TASK开关置为false
-                }
                 intent.setComponent(component);
             } else if ("1".equals(startMode)) {
                 String action = params[1];
@@ -284,6 +272,18 @@ public class EUExWidget extends EUExBase {
                 callBackPluginJs(JsConst.CALLBACK_START_APP, "error params!");
                 return;
             }
+        }
+        StartAppVO extraVO = null;
+        if (params.length > 4) {
+            extraVO = DataHelper.gson.fromJson(params[4], StartAppVO.class);
+        }
+        if (extraVO != null && extraVO.getData() != null) {
+            Uri contentUrl = Uri.parse(extraVO.getData());
+            intent.setData(contentUrl);
+        }
+        // 如果isNewTask.equals("0") by waka
+        if (extraVO != null && "0".equals(extraVO.getIsNewTask())) {
+            switchNewTask = false;// NEW_TASK开关置为false
         }
         if (intent == null) {
             Log.e(tag, "startApp has error params!!!");
@@ -408,10 +408,10 @@ public class EUExWidget extends EUExBase {
         String inInfo = parm[3];
         String animDuration = null;
         String appKey = null;
-        if (parm.length == 5) {
+        if (parm.length >= 5) {
             animDuration = parm[4];
         }
-        if (parm.length == 6) {
+        if (parm.length >= 6) {
             appKey = parm[5];
         }
         int animId = EBrowserAnimation.ANIM_ID_NONE;

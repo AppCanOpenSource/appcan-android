@@ -263,8 +263,6 @@ public class EBrowserWidgetPool {
         Animation[] animPair = EBrowserAnimation.getAnimPair(animiId, duration);
         Animation showAnim = animPair[0];
         Animation hiddenAnim = animPair[1];
-        showAnim.setStartOffset(500);
-        hiddenAnim.setStartOffset(500);
         hiddenAnim.setAnimationListener(new AnimationListener() {
             public void onAnimationStart(Animation animation) {
             }
