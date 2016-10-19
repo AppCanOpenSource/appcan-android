@@ -114,10 +114,9 @@ public class EUExManager {
     @Keep
     public String dispatch(String parseStr) throws JSONException {
         BDebug.json( parseStr);
-        AppCanJsVO appCanJs = new AppCanJsVO();
-        appCanJs = DataHelper.gson.fromJson(parseStr, AppCanJsVO.class);
-        String uexName = appCanJs.uexName;
-        String method = appCanJs.method;
+        AppCanJsVO appCanJs = DataHelper.gson.fromJson(parseStr, AppCanJsVO.class);
+        String pluginName = appCanJs.uexName;
+        String methodName = appCanJs.method;
         List<String> appCanJsArgs = appCanJs.args;
         List<String> appCanJsTypes = appCanJs.types;
         int length = appCanJsArgs.size();
