@@ -6,6 +6,7 @@ public class AppCanJsVO {
 
     public String uexName;
     public String method;
-    public List<String> args;
+    public List<Object> args;
     public List<String> types;
+
 }

@@ -22,20 +22,22 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.Keep;
 
+import com.google.gson.reflect.TypeToken;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.vo.AppCanJsVO;
+import org.zywx.wbpalmstar.engine.AppCan;
 import org.zywx.wbpalmstar.engine.DataHelper;
 import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.ELinkedList;
-import org.zywx.wbpalmstar.engine.AppCan;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Locale;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -114,16 +116,21 @@ public class EUExManager {
     @Keep
     public String dispatch(String parseStr) throws JSONException {
         BDebug.json( parseStr);
-        AppCanJsVO appCanJs = DataHelper.gson.fromJson(parseStr, AppCanJsVO.class);
+        AppCanJsVO appCanJs = DataHelper.gson.fromJson(parseStr, new TypeToken<AppCanJsVO>(){}.getType());
         String pluginName = appCanJs.uexName;
         String methodName = appCanJs.method;
-        List<String> appCanJsArgs = appCanJs.args;
+        List<Object> appCanJsArgs = appCanJs.args;
         List<String> appCanJsTypes = appCanJs.types;
         int length = appCanJsArgs.size();
         String[] params = new String[length];
         for (int i = 0; i < length; i++) {
             String type = appCanJsTypes.get(i);
-            String arg = appCanJsArgs.get(i);
+            String arg;
+            if (appCanJsArgs.get(i) instanceof String){
+                arg= (String) appCanJsArgs.get(i);
+            }else{
+                arg = DataHelper.gson.toJson(appCanJsArgs.get(i));
+            }
             if ("undefined".equals(type) && "null".equals(arg)) {
                 params[i] = null;
             } else {
