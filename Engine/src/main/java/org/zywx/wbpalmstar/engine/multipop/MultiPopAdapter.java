@@ -23,7 +23,6 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.engine.EBounceView;
 
 import java.util.ArrayList;
@@ -43,7 +42,6 @@ public class MultiPopAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        BDebug.d("multi", "adapter size:" , mViewList.size());
         return mViewList.size();
     }
 
