@@ -26,6 +26,7 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.support.annotation.Keep;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -2884,5 +2885,10 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
                 }
             }
         }
+    }
+
+    @Keep
+    public Map<String, ViewPager> getMultiPopPagerMap(){
+        return mMultiPopPager;
     }
 }
