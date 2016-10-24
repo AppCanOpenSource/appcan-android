@@ -16,53 +16,67 @@
  *
  */
 
-package org.zywx.wbpalmstar.engine;
+package org.zywx.wbpalmstar.engine.multipop;
 
+import android.support.annotation.Keep;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
+import org.zywx.wbpalmstar.base.BDebug;
+import org.zywx.wbpalmstar.engine.EBounceView;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Keep
 public class MultiPopAdapter extends PagerAdapter {
 
-    ArrayList<EBounceView> viewList;
+    ArrayList<EBounceView> mViewList;
+    private List<String> mPageTitles;
 
-
+    @Keep
     public MultiPopAdapter(ArrayList<EBounceView> viewList) {
         super();
-        this.viewList = viewList;
+        this.mViewList = viewList;
     }
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
-        Log.d("multi", "adapter size:" + viewList.size());
-        return viewList.size();
+        BDebug.d("multi", "adapter size:" , mViewList.size());
+        return mViewList.size();
     }
 
     @Override
     public boolean isViewFromObject(View arg0, Object arg1) {
-        // TODO Auto-generated method stub
         return arg0 == arg1;
     }
 
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        // TODO Auto-generated method stub
-        container.removeView(viewList.get(position));
+        container.removeView(mViewList.get(position));
 
     }
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        // TODO Auto-generated method stub
-        container.addView(viewList.get(position));
+        container.addView(mViewList.get(position));
 
-        return viewList.get(position);
+        return mViewList.get(position);
     }
 
+    @Override
+    public CharSequence getPageTitle(int position) {
+        if (mPageTitles!=null&&mPageTitles.size()>position){
+            return mPageTitles.get(position);
+        }
+        return super.getPageTitle(position);
+    }
+
+    @Keep
+    public void setMultiPopTitles(List<String> pageTitles){
+        this.mPageTitles=pageTitles;
+    }
 
 }

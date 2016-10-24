@@ -15,9 +15,10 @@ import java.util.Vector;
 @Keep
 public class ContainerAdapter extends PagerAdapter {
     Vector<FrameLayout> mViewList;
-    List<String> mTitles;
+    private List<String> mTitles;
     int mChildCount = 0;
 
+    @Keep
     public ContainerAdapter(Vector<FrameLayout> viewList) {
         this(viewList,null);
     }
@@ -78,5 +79,10 @@ public class ContainerAdapter extends PagerAdapter {
     public void destroyItem(ViewGroup container, int position, Object object) {
         View item = mViewList.get(position);
         container.removeView(item);
+    }
+
+    @Keep
+    public void setContainerTitles(List<String> titles){
+        this.mTitles=titles;
     }
 }
