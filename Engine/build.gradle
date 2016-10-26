@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.2'
+        classpath 'com.android.tools.build:gradle:2.2.2'
         classpath fileTree(dir: '../gradle-plugin', include: '*.jar')
     }
 }
@@ -13,8 +13,8 @@ apply plugin: 'appcan'
 
 android {
 
-    compileSdkVersion 23
-    buildToolsVersion '23.0.2'
+    compileSdkVersion 24
+    buildToolsVersion '24.0.0'
     packagingOptions {
         exclude 'META-INF/MANIFEST.MF'
         exclude 'META-INF/LICENSE.txt'
