@@ -121,8 +121,6 @@ public final class EBrowserActivity extends BaseActivity {
         setContentView(mEBrwMainFrame);
         initInternalBranch();
 
-        ACEDes.setContext(this);
-
         Message loadDelayMsg = mEHandler
                 .obtainMessage(EHandler.F_MSG_LOAD_HIDE_SH);
         long delay = 3 * 1000L;

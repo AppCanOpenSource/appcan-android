@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import org.xmlpull.v1.XmlPullParser;
+import org.zywx.wbpalmstar.acedes.ACEDes;
 import org.zywx.wbpalmstar.base.BConstant;
 import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.BUtility;
@@ -76,6 +77,7 @@ public class AppCan {
         mListenerQueue.add(pushlistener);
         BDebug.init();
         BConstant.app = (Application) mContext;
+        ACEDes.setContext(mContext);
         EUExUtil.init(mContext);
         WebViewSdkCompat.initInApplication(mContext);
         mCrashReport = ECrashHandler.getInstance(mContext);
