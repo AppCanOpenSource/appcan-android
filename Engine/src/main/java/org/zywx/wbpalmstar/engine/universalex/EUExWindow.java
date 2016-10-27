@@ -1813,6 +1813,18 @@ public class EUExWindow extends EUExBase {
         curWind.insertPopoverBelowPopover(popName1, popName2);
     }
 
+    @AppCanAPI
+    public boolean setPopoverVisibility(String[] params) {
+        String popName = params[0];
+        int visible = Integer.parseInt(params[1]);
+        EBrowserWindow curWind = mBrwView.getBrowserWindow();
+        if (null == curWind) {
+            BDebug.e("curWind is null");
+            return false;
+        }
+       return curWind.setPopoverVisibility(popName, visible);
+    }
+
     public void bringPopoverToFront(String[] parm) {
         if (!mBrwView.checkType(EBrwViewEntry.VIEW_TYPE_MAIN)
                 || parm.length < 1) {

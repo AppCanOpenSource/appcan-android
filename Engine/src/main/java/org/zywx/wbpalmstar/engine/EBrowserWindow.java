@@ -2462,6 +2462,35 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
 
     }
 
+    public boolean setPopoverVisibility(String popName, int visible) {
+        int isVisible = ((0 == visible) ? View.GONE : View.VISIBLE);
+        View vTarget = null;
+        EBrowserView bv = mPopTable.get(popName);
+        if (null != bv) {
+            vTarget = (View) bv.getParent();
+        } else {
+
+            ArrayList<EBrowserView> list = mMultiPopTable.get(popName);
+            if (null != list && list.size() > 1) {
+                EBrowserView mainWebview = list.get(0);
+
+                if (mainWebview != null) {
+
+                    vTarget = (View) mainWebview.getParent();
+                }
+            }
+        }
+
+        if (vTarget != null) {
+            vTarget.setVisibility(isVisible);
+            return true;
+        }else{
+            BDebug.e("target popover is not found");
+        }
+        return false;
+    }
+
+
     /**
      * 设置window是否开启硬件加速
      *
