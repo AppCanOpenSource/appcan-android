@@ -16,19 +16,19 @@ public class WindowOpenPopoverVO implements Serializable {
 
     public String data;
 
-    public String x;
+    public int x;
 
-    public String y;
+    public int y;
 
-    public String w;
+    public int w;
 
-    public String h;
+    public int h;
 
-    public String fontSize;
+    public int fontSize;
 
-    public String flag;
+    public int flag;
 
-    public String bottomMargin;
+    public int bottomMargin;
 
     public WindowOpenPopoverExtraVO extras;
 

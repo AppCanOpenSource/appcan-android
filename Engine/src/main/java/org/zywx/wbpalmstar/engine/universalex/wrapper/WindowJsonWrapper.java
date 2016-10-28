@@ -38,7 +38,7 @@ public class WindowJsonWrapper {
                 openVO.animID,
                 openVO.w,
                 openVO.h,
-                openVO.flag,
+                String.valueOf(openVO.flag),
                 openVO.animDuration,
                 openVO.extras == null ? null : DataHelper.gson.toJson(openVO.extras)
         });
@@ -117,13 +117,13 @@ public class WindowJsonWrapper {
                 popoverVO.dataType,
                 popoverVO.url,
                 popoverVO.data,
-                popoverVO.x,
-                popoverVO.y,
-                popoverVO.w,
-                popoverVO.h,
-                popoverVO.fontSize,
-                popoverVO.flag,
-                popoverVO.bottomMargin,
+                String.valueOf(popoverVO.x),
+                String.valueOf(popoverVO.y),
+                String.valueOf(popoverVO.w),
+                String.valueOf(popoverVO.h),
+                String.valueOf(popoverVO.fontSize),
+                String.valueOf(popoverVO.flag),
+                String.valueOf(popoverVO.bottomMargin),
                 popoverVO.extras==null?null:DataHelper.gson.toJson(popoverVO.extras)
         });
     }
@@ -143,12 +143,12 @@ public class WindowJsonWrapper {
                 DataHelper.gson.toJson(multiPopoverVO.content),
                 multiPopoverVO.name,
                 multiPopoverVO.dataType,
-                multiPopoverVO.x,
-                multiPopoverVO.y,
-                multiPopoverVO.w,
-                multiPopoverVO.h,
-                multiPopoverVO.fontSize,
-                multiPopoverVO.flag,
+                String.valueOf(multiPopoverVO.x),
+                String.valueOf(multiPopoverVO.y),
+                String.valueOf(multiPopoverVO.w),
+                String.valueOf(multiPopoverVO.h),
+                String.valueOf(multiPopoverVO.fontSize),
+                String.valueOf(multiPopoverVO.flag),
                 multiPopoverVO.indexSelected,
                 multiPopoverVO.extras==null?null:DataHelper.gson.toJson(multiPopoverVO.extras)
         });

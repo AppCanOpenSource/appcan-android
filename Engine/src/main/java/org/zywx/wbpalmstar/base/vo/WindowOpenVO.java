@@ -20,7 +20,7 @@ public class WindowOpenVO implements Serializable {
 
     public String h;
 
-    public String flag;
+    public int flag;
 
     public String animDuration;
 
