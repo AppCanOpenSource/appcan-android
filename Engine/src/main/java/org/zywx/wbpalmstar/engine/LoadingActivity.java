@@ -154,7 +154,7 @@ public class LoadingActivity extends Activity {
     }
 
     private void startEngine() {
-        AppCan.getInstance().setShowLoading(true);
+        AppCan.getInstance().setWidgetSdk(false);
         AppCan.getInstance().start(LoadingActivity.this,getIntent().getExtras());
     }
 
