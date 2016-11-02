@@ -111,7 +111,7 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
             WWidgetData widgetData = mBroWind.getWidget();
             if (widgetData != null) {
                 int debug = widgetData.m_appdebug;
-                super.setRemoteDebug(debug == 1 || BDebug.DEBUG);
+                super.setRemoteDebug(debug == 1);
             }
         }
     }
