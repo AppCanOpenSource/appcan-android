@@ -5,26 +5,20 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.engine.external.Compat;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
-import java.io.InputStream;
 import java.lang.ref.WeakReference;
 
 
@@ -56,7 +50,6 @@ public class LoadingActivity extends Activity {
         mHandler=new LoadingHandler(this);
         handleIntent();
         initRootView();
-        addLoadingImage(mRootLayout);
         setContentView(mRootLayout);
         registerFinishReceiver();
         addDevelopInfo();
@@ -80,21 +73,6 @@ public class LoadingActivity extends Activity {
         mRootLayout = new FrameLayout(this);
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
         mRootLayout.setLayoutParams(layoutParams);
-    }
-
-    private void addLoadingImage(ViewGroup parent) {
-        InputStream inputStream = getResources().openRawResource(
-                getResources().getIdentifier("startup_bg_16_9","drawable",getPackageName()));
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        Bitmap bm = BUtility.createBitmapWithStream(inputStream,
-                dm.widthPixels, dm.heightPixels);
-        if (bm != null) {
-            ImageView imageView = new ImageView(this);
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            imageView.setImageBitmap(bm);
-            parent.addView(imageView);
-        }
     }
 
     private void addDevelopInfo() {

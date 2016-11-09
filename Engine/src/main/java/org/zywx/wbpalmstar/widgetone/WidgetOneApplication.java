@@ -24,6 +24,7 @@ import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.support.multidex.MultiDex;
 
+import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.engine.AppCan;
 
 public class WidgetOneApplication extends Application {
@@ -33,8 +34,10 @@ public class WidgetOneApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        AppCan.getInstance().initSync(this);//有些插件需要在别的进程初始化,因此最好在Application.onCreate()里面初始化引擎,或者将反射调用部分抽离出来
+        long startTime=System.currentTimeMillis();
+        AppCan.getInstance().initSync(this.getApplicationContext());//有些插件需要在别的进程初始化,因此最好在Application.onCreate()里面初始化引擎,或者将反射调用部分抽离出来
         init=true;
+        BDebug.e("appcan","init time ",(System.currentTimeMillis()-startTime));
     }
 
     @Override

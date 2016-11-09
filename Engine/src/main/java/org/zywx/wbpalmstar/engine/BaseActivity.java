@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
+import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 
 /**
@@ -44,6 +45,7 @@ public class BaseActivity extends FragmentActivity implements Handler.Callback{
      * @param delayTime 延时发送广播，单位毫秒
      */
     protected void sendFinishLoadingBroadcast(long delayTime) {
+        BDebug.d("send broadcast delayTime: ",delayTime);
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
