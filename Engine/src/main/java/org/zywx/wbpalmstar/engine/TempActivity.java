@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.engine.external.Compat;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
@@ -91,10 +92,10 @@ public class TempActivity extends Activity {
         public void onReceive(Context context, Intent intent) {
             SharedPreferences sp = getSharedPreferences(
                     BUtility.m_loadingImageSp, Context.MODE_PRIVATE);
-            long lodingTime = sp.getLong(BUtility.m_loadingImageTime, 0);
+            long loadingTime = sp.getLong(BUtility.m_loadingImageTime, 0);
             long time = System.currentTimeMillis() - showTime;
             //若前端同时调用了uexWidget.closeLoading()、uexWindow.setLoadingImagePath()，则启动图显示时间以最长的为准；
-            if (lodingTime > time) {
+            if (loadingTime > time) {
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -102,7 +103,8 @@ public class TempActivity extends Activity {
                         overridePendingTransition(EUExUtil.getResAnimID("platform_myspace_fade_in_anim"),
                                 EUExUtil.getResAnimID("platform_myspace_fade_out_anim"));
                     }
-                }, lodingTime - time);
+                }, loadingTime - time);
+                BDebug.d("loading delay ",loadingTime-time);
             } else {
                 finish();
                 overridePendingTransition(EUExUtil.getResAnimID("platform_myspace_fade_in_anim"),
