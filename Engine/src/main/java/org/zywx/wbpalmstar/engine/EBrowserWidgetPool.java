@@ -90,11 +90,6 @@ public class EBrowserWidgetPool {
 
     }
 
-    public void dumpPageInfo(int type) {
-
-        mWgtStack.peek().dumpPageInfo(type);
-    }
-
     protected void clean() {
         mWidPoolLoop.removeMessages(F_WIDGET_POOL_LOOP_START_WIDGET);
         mWidPoolLoop.removeMessages(F_WIDGET_POOL_LOOP_FINISH_WIDGET);

@@ -604,10 +604,6 @@ public class EBrowserWidget extends AbsoluteLayout {
         beNotify.uexOnAuthorize(id);
     }
 
-    public void dumpPageInfo(int type) {
-        mBroWindow.dumpPageInfo(type);
-    }
-
     public void notifyVisibilityChanged(int visibility) {
 
         mBroWindow.notifyVisibilityChanged(visibility);

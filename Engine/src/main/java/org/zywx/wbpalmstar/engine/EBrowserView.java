@@ -20,7 +20,6 @@ package org.zywx.wbpalmstar.engine;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.view.ViewPager;
@@ -53,11 +52,6 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
     public static final String CONTENT_MIMETYPE_HTML = "text/html";
     public static final String CONTENT_DEFAULT_CODE = "utf-8";
 
-    public static final int F_PRINT_TYPE_DOM_TREE = 0;
-    public static final int F_PRINT_TYPE_DISPLAY_TREE = 1;
-    public static final int F_PRINT_TYPE_RENDER_TREE = 2;
-    public static final int F_PRINT_TYPE_DRAW_PAGE = 3;
-
     private int mType;
     private String mName;
     private String mQuery;
@@ -74,13 +68,6 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
     private boolean mDestroyed;
     private EBrwViewAnim mViewAnim;
     private Method mDismissZoomControl;
-
-    // use for debug
-    private Method mDumpDisplayTree;
-    private Method mDumpDomTree;
-    private Method mDumpRenderTree;
-    private Method mDrawPage;
-
     private int mMyCountId;
 
     private int mScrollDistance = 10;
@@ -263,7 +250,6 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
         return mSupportZoom;
     }
 
-    @SuppressLint("NewApi")
     public void initPrivateVoid() {
         Class[] nullParm = {};
         try {
@@ -274,36 +260,6 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
             ;
         }
 
-        try {
-            mDumpDisplayTree = WebView.class.getDeclaredMethod(
-                    "dumpDisplayTree", nullParm);
-            mDumpDisplayTree.setAccessible(true);
-        } catch (Exception e) {
-            ;
-        }
-        Class[] booleanParam = {boolean.class};
-        try {
-            mDumpDomTree = WebView.class.getDeclaredMethod("dumpDomTree",
-                    booleanParam);
-            mDumpDomTree.setAccessible(true);
-        } catch (Exception e) {
-            ;
-        }
-        try {
-            mDumpRenderTree = WebView.class.getDeclaredMethod("dumpRenderTree",
-                    booleanParam);
-            mDumpRenderTree.setAccessible(true);
-        } catch (Exception e) {
-            ;
-        }
-        try {
-            Class[] canvasParam = {Canvas.class};
-            mDrawPage = WebView.class
-                    .getDeclaredMethod("drawPage", canvasParam);
-            mDrawPage.setAccessible(true);
-        } catch (Exception e) {
-            ;
-        }
         if (Build.VERSION.SDK_INT >= 9) {
             setOverScrollMode(2);
             return;
@@ -315,23 +271,6 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
             setOverScrollMode.invoke(this, 2);
         } catch (Exception e) {
             ;
-        }
-    }
-
-    public void dumpPageInfo(int type) {
-        switch (type) {
-            case F_PRINT_TYPE_DOM_TREE:
-                myDumpDomTree();
-                break;
-            case F_PRINT_TYPE_DISPLAY_TREE:
-                myDumpDisplayTree();
-                break;
-            case F_PRINT_TYPE_RENDER_TREE:
-                myDumpRenderTree();
-                break;
-            case F_PRINT_TYPE_DRAW_PAGE:
-
-                break;
         }
     }
 
@@ -421,46 +360,6 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
                 resume.invoke(this);
             } catch (Exception e) {
                 ;
-            }
-        }
-    }
-
-    public void myDumpDisplayTree() {
-        if (null != mDumpDisplayTree) {
-            try {
-                mDumpDisplayTree.invoke(this);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void myDumpDomTree() {
-        if (null != mDumpDomTree) {
-            try {
-                mDumpDomTree.invoke(this, false);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void myDumpRenderTree() {
-        if (null != mDumpRenderTree) {
-            try {
-                mDumpRenderTree.invoke(this, false);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void myDrawPage(Canvas canvas) {
-        if (null != mDrawPage) {
-            try {
-                mDrawPage.invoke(this, canvas);
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
     }

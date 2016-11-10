@@ -80,10 +80,6 @@ public class EBrowser {
         return c;
     }
 
-    public void dumpPageInfo(int type) {
-        mBrwWindPol.dumpPageInfo(type);
-    }
-
     public WWidgetData getRootWidget() {
 
         return mBrwWindPol.getRootWidget();

@@ -169,7 +169,6 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
                 /**wanglei del 20151124*/
 //                mMainView.setBrwViewBackground(mBroWidget.getWidget().getOpaque(),
 //                        mBroWidget.getWidget().m_bgColor, mBroWidget.getWidget().m_indexUrl);
-
                 /**wanglei add 20151124*/
                 mBounceView.setBounceViewBackground(mBroWidget.getWidget().getOpaque(),
                         mBroWidget.getWidget().m_bgColor, mBroWidget.getWidget().m_indexUrl, mMainView);
@@ -1400,11 +1399,6 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
 
     }
 
-    public void myDrawPage(Canvas canvas) {
-        mMainView.myDrawPage(canvas);
-        // mMainView.draw(canvas);
-    }
-
     private void notifyTopShown() {
         mMainView.loadUrl(EUExScript.F_UEX_SCRIPT_TOP_SHOW);
     }
@@ -1466,10 +1460,6 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
 
     public void setSupportZoom() {
         mMainView.setSupportZoom();
-    }
-
-    public void dumpPageInfo(int type) {
-        mMainView.dumpPageInfo(type);
     }
 
     protected void stopLoad() {
