@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,6 +16,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import org.zywx.wbpalmstar.base.util.ConfigXmlUtil;
 import org.zywx.wbpalmstar.engine.external.Compat;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
@@ -50,6 +52,7 @@ public class LoadingActivity extends Activity {
         mHandler=new LoadingHandler(this);
         handleIntent();
         initRootView();
+        ConfigXmlUtil.setStatusBarColor(this, Color.TRANSPARENT);
         setContentView(mRootLayout);
         registerFinishReceiver();
         addDevelopInfo();
@@ -85,7 +88,7 @@ public class LoadingActivity extends Activity {
                     Compat.FILL, Compat.WRAP);
             wornPa.gravity = Gravity.TOP;
             wornPa.leftMargin = 10;
-            wornPa.topMargin = 10;
+            wornPa.topMargin = 30;
             worn.setLayoutParams(wornPa);
             mRootLayout.addView(worn);
         }

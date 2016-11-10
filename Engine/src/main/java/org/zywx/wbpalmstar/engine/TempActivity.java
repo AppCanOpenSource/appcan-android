@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.BUtility;
+import org.zywx.wbpalmstar.base.util.ConfigXmlUtil;
 import org.zywx.wbpalmstar.engine.external.Compat;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 
@@ -41,6 +43,7 @@ public class TempActivity extends Activity {
         FrameLayout rootLayout = new FrameLayout(this);
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
         rootLayout.setLayoutParams(layoutParams);
+        ConfigXmlUtil.setStatusBarColor(this, Color.TRANSPARENT);
         if (EBrowserActivity.develop) {
             TextView worn = new TextView(this);
             worn.setText(EUExUtil.getString("platform_only_test"));
@@ -50,7 +53,7 @@ public class TempActivity extends Activity {
                     Compat.FILL, Compat.WRAP);
             wornPa.gravity = Gravity.TOP;
             wornPa.leftMargin = 10;
-            wornPa.topMargin = 10;
+            wornPa.topMargin = 60;
             worn.setLayoutParams(wornPa);
             rootLayout.addView(worn);
         }
