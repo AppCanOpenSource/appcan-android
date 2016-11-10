@@ -88,7 +88,7 @@ public class LoadingActivity extends Activity {
                     Compat.FILL, Compat.WRAP);
             wornPa.gravity = Gravity.TOP;
             wornPa.leftMargin = 10;
-            wornPa.topMargin = 30;
+            wornPa.topMargin = 60;
             worn.setLayoutParams(wornPa);
             mRootLayout.addView(worn);
         }
