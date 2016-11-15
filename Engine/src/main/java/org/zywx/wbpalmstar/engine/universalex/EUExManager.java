@@ -128,6 +128,12 @@ public class EUExManager {
             String arg;
             if (appCanJsArgs.get(i) instanceof String){
                 arg= (String) appCanJsArgs.get(i);
+            }else if ("function".equals(type)){
+                if (appCanJsArgs.get(i) instanceof Double) {
+                    arg = String.valueOf(((Double) appCanJsArgs.get(i)).intValue());//Gson 默认把int转成double
+                }else{
+                    arg = String.valueOf(appCanJsArgs.get(i));
+                }
             }else{
                 arg = DataHelper.gson.toJson(appCanJsArgs.get(i));
             }
