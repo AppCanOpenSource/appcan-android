@@ -11,7 +11,6 @@
 -libraryjars libs/wmqtt.jar
 -libraryjars libs/httpmime-4.1.3.jar
 -libraryjars libs/android-support-v4.jar
--libraryjars libs/libacedes-v1.jar
 -libraryjars libs/commons-io-2.4.jar
 -libraryjars libs/aceimageloader.jar
 -libraryjars libs/gson-2.2.4.jar
@@ -32,7 +31,7 @@
 -keep public class * extends android.support.v4.**
 -keep public class * extends android.app.Fragment
 -keep public class * extends android.support.v4.app.FragmentActivity
-
+-keep public class * extends org.xwalk.core.XWalkView
 -dontwarn org.chromium.**
 -dontwarn javax.annotation.**
 
@@ -92,26 +91,20 @@
     <fields>;
     <methods>;
 }
--keep class org.zywx.wbpalmstar.engine.universalex.EUExDispatcher {
-    <fields>;
-    <methods>;
-}
 -keep class org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData {
     <fields>;
     <methods>;
 }
-
+-keep class org.zywx.wbpalmstar.engine.AppCan {
+    <fields>;
+    <methods>;
+}
 -keep class org.zywx.wbpalmstar.engine.universalex.EUExBase {
     <fields>;
     <methods>;
 }
 
 -keep class org.zywx.wbpalmstar.engine.universalex.c{
-    <fields>;
-    <methods>;
-}
-
--keep class org.zywx.wbpalmstar.engine.universalex.EUExCallback {
     <fields>;
     <methods>;
 }
@@ -127,6 +120,12 @@
 }
 
 -keep class org.zywx.wbpalmstar.engine.EBrowserView {
+    <fields>;
+    <methods>;
+}
+
+
+-keep class org.zywx.wbpalmstar.engine.webview.ACEWebView {
     <fields>;
     <methods>;
 }
@@ -157,6 +156,10 @@
     public <init>(android.content.Context,android.util.AttributeSet);
 }
 
+-keep class org.zywx.wbpalmstar.engine.universalex.EUExCallback {
+    <fields>;
+    <methods>;
+}
 -keepclasseswithmembers,allowshrinking class * {
     public <init>(android.content.Context,android.util.AttributeSet,int);
 }
@@ -210,6 +213,16 @@
 # Application classes that will be serialized/deserialized over Gson
 
 ##---------------End: proguard configuration for Gson  ----------
+
+-keepclassmembers class * {
+    @org.zywx.wbpalmstar.base.util.AppCanAPI *;
+}
+
+-keep,allowobfuscation @interface android.support.annotation.Keep
+-keep @android.support.annotation.Keep class *
+-keepclassmembers class * {
+    @android.support.annotation.Keep *;
+}
 
 -keepclassmembers public class * {
     public void open(java.lang.String[]);
@@ -297,8 +310,6 @@
     public void setHardwareEnable(java.lang.String[]);
     public void setPopHardwareEnable(java.lang.String[]);
     public void setPageInContainer(java.lang.String[]);
-    public void createPluginViewContainer(java.lang.String[]);
-    public void closePluginViewContainer(java.lang.String[]);
     public void showPluginViewContainer(java.lang.String[]);
     public void hidePluginViewContainer(java.lang.String[]);
     public void share(java.lang.String[]);
@@ -328,7 +339,6 @@
     public void finishWidget(java.lang.String[]);
     public void removeWidget(java.lang.String[]);
     public void loadApp(java.lang.String[]);
-    public void startApp(java.lang.String[]);
     public void isAppInstalled(java.lang.String[]);
     public void installApp(java.lang.String[]);
     public void setMySpaceInfo(java.lang.String[]);
@@ -349,6 +359,7 @@
     public void moveToBack(java.lang.String[]);
     public void setSwipeCloseEnable(java.lang.String[]);
     public void setLoadingImagePath(java.lang.String[]);
+
     public void setEvent(java.lang.String[]);
     public void beginEvent(java.lang.String[]);
     public void endEvent(java.lang.String[]);

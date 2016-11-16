@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<widget appId="11352882" channelCode="000" height="480" sreensize="3.5" version="00.00.0002" widgetId="" width="320">
+    <name>插件整合</name>
+    <description>管理widget应用</description>
+    <author email="3g2win@mail.com">3g2win</author>
+    <icon src="icon.png"/>
+    <license href="http://3g2win.com"/>
+    <content encoding="utf-8" src="index.html"/>
+    <logserverip>192.168.1.28</logserverip>
+    <obfuscation>false</obfuscation>
+    <updateurl>http://192.168.1.28:8080/widget/update</updateurl>
+    <showmyspace>false</showmyspace>
+    <bgcolor>#fefefe</bgcolor>
+    <widgetOne version="[widgetOneVersion]"/>
+    <orientation>15</orientation>
+    <error src="error.html"/>
+    <fullscreen>false</fullscreen>
+    <statusbar color="#00000000"/>
+</widget>

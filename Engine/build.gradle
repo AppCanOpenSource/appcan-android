@@ -3,49 +3,24 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.2'
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath fileTree(dir: '../gradle-plugin', include: '*.jar')
     }
 }
-import proguard.gradle.ProGuardTask
 
 apply plugin: 'com.android.application'
-
-dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar',exclude:'android-support-v4.jar')
-    compile 'com.android.support:support-v4:23.1.0'
-}
+apply plugin: 'appcan'
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion '23.0.2'
+
+    compileSdkVersion 24
+    buildToolsVersion '24.0.0'
     packagingOptions {
         exclude 'META-INF/MANIFEST.MF'
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
     }
     sourceSets {
-        main {
-            manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src']
-            resources.srcDirs = ['src']
-            aidl.srcDirs = ['src']
-            renderscript.srcDirs = ['src']
-            res.srcDirs = ['res']
-            assets.srcDirs = ['assets']
-            jniLibs.srcDirs = ['libs']
-        }
-
-        // Move the tests to tests/java, tests/res, etc...
-        instrumentTest.setRoot('tests')
-
-        // Move the build types to build-types/<type>
-        // For instance, build-types/debug/java, build-types/debug/AndroidManifest.xml, ...
-        // This moves them out of them default location under src/<type>/... which would
-        // conflict with src/ being used by the main source set.
-        // Adding new build types or product flavors should be accompanied
         // by a similar customization.
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
@@ -56,9 +31,16 @@ android {
     defaultConfig {
         applicationId 'org.zywx.wbpalmstar.widgetone.uex'
         minSdkVersion 14
-        targetSdkVersion 14 //
+        targetSdkVersion 19 //
+        multiDexEnabled true
     }
     productFlavors {
+        crosswalk {
+        }
+        system {
+        }
+        x5 {
+        }
     }
     buildTypes {
         debug {
@@ -75,37 +57,24 @@ android {
     }
 }
 
-task clearJar(type: Delete) {
-    delete 'build/libs/AppCanEngine.jar'
-    delete 'build/libs/AppCanEngine_un_pro.jar'
+repositories {
+    flatDir {
+        dirs 'libs','src/crosswalk/libs'
+    }
 }
 
-task makeJar(type:Jar,dependsOn:['compileReleaseJavaWithJavac']) {
-    //指定生成的jar名
-    archiveName 'AppCanEngine_un_pro.jar'
-    //从哪里打包class文件
-    from('build/intermediates/classes/release/')
-    destinationDir=file('build/libs')
-    //打包到jar后的目录结构
-//    into('')
-    //去掉不需要打包的目录和文件
-//    exclude('test/', 'BuildConfig.class', 'R.class')
-    //去掉R$开头的文件
-//    exclude{ it.name.startsWith('R$');}
-    exclude('**/R.class')
-    exclude('**/R\$*.class')
-//    include('com/slidingmenu/lib/*')
-//    include('org/zywx/wbpalmstar/*')
-}
-
-makeJar.dependsOn(clearJar)
-
-def androidSDKDir = plugins.getPlugin('com.android.application').sdkHandler.getSdkFolder()
-def androidJarDir = androidSDKDir.toString() + '/platforms/' + "${android.compileSdkVersion}" + '/android.jar'
-
-task proguardEngineJar(type: ProGuardTask, dependsOn: ['makeJar']) {
-    injars('build/libs/AppCanEngine_un_pro.jar')
-    outjars('build/libs/AppCanEngine.jar')
-    libraryjars(androidJarDir)
-    configuration 'proguard.pro'
+dependencies {
+    crosswalkCompile(name: 'crosswalk-19.49.514.0', ext: 'aar')
+    crosswalkCompile fileTree(dir: 'src/crosswalk/libs', include: '*.jar')
+    systemCompile files('src/system/libs/libacedes-v1.jar')
+    compile files('libs/aceimageloader.jar')
+    compile files('libs/android-support-v4.jar')
+    compile files('libs/commons-io-2.4.jar')
+    compile files('libs/gson-2.2.4.jar')
+    compile files('libs/httpmime-4.1.3.jar')
+    systemCompile files('src/libs/libacedes-v1.jar')
+    crosswalkCompile files('src/libs/libacedes_for_crosswalk.jar')
+    compile files('libs/wmqtt.jar')
+    x5Compile fileTree(dir: 'src/x5/libs', include: '*.jar')
+    compile files('libs/dynamicLoadLib.jar')
 }

@@ -1,0 +1,86 @@
+
+.uh .btn-l,.uf .btn-l {
+	position: absolute;
+	left: 10px;
+	top: .55em
+}
+
+.uh .btn-r,.uf .btn-r {
+	position: absolute;
+	right: 10px;
+	top: .55em
+}
+
+
+.uh .btn,.uf .btn{
+	display: inline-block;
+	font-size: .8125em;
+	margin: 0
+}
+
+.btn
+{
+	font-size: 0.8em;
+	text-align:center;
+}
+
+.testbtn
+{
+	font-size: 1.3em;
+	text-align:center;
+}
+
+.btn-act
+{
+	-webkit-box-shadow:inset 0 1px 4px rgba(0,0,0,0.6);
+	box-shadow:inset 0 1px 4px rgba(0,0,0,0.6);
+}
+
+.btn-act1
+{
+	opacity:0.4
+}
+
+
+.btn-a
+{
+	background-image:url('res-apple/app-btn-l.png'),url('res-apple/app-btn-c.png'),url('res-apple/app-btn-r.png');
+	background-repeat:no-repeat,repeat,no-repeat;
+	-webkit-background-clip: padding-box,content-box,padding-box;
+	background-clip: padding-box,content-box,padding-box;
+	-webkit-background-size:1.2em 100%,auto 100%,0.5em 100%;
+	background-size:1.2em 100%,auto 100%,0.5em 100%;
+	background-position:left,center,right;
+	padding:0 0.5em 0 1.2em;
+	min-height:2.2em;
+}
+
+.btn-n
+{
+	background-image:url('res-apple/app-rbt-l.png'),url('res-apple/app-rbt-c.png'),url('res-apple/app-rbt-r.png');
+	background-repeat:no-repeat,repeat,no-repeat;
+	-webkit-background-clip: padding-box,content-box,padding-box;
+	background-clip: padding-box,content-box,padding-box;
+	-webkit-background-size:0.4em 100%,auto 100%,0.4em 100%;
+	background-size:0.4em 100%,auto 100%,0.4em 100%;
+	background-position:left,center,right;
+	padding:0 0.4em;
+	min-height:2.2em;
+}
+.btn-top{
+	margin-top:3px;
+}
+.m_input{
+	background-image:url('images/input_left.png'),url('images/input_center.png'),url('images/input_right.png');
+	background-repeat:no-repeat,repeat,no-repeat;
+	-webkit-background-clip: padding-box,content-box,padding-box;
+	background-clip: padding-box,content-box,padding-box;
+	-webkit-background-size:1em 100%,auto 100%,1em 100%;
+	background-size:1em 100%,auto 100%,1em 100%;
+	background-position:left,center,right;
+	padding:0 1em;
+	min-height:2.2em;
+}
+#header{
+	background: #2294c3 !important;
+}

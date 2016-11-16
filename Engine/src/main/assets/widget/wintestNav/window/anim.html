@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="css/index.css">
+</head>
+
+<body style="background:#077333;">
+
+	<div class="tit">动画测试</div>
+		<div class="conbor">
+			<div class="consj">
+			<span class="tit">返回时动画id为-1,即与进入时相反。</span>
+				<br>
+				<input class="btn" type="button" value="返回" onclick="uexWindow.close('-1');">
+			</div>
+			<br><br>
+			<br><br>
+			<div class="consj">
+			<span class="tit">指定close专用动画返回。</span>
+			<br>
+			<span>13.LeftToRightReveal(对应LeftToRightMoveIn)</span>
+			<input class="btn" type="button" value="返回" onclick="uexWindow.close('13');"><br><br>
+
+			<span>14.RightToLeftReveal(对应RightToLeftMoveIn)</span>
+			<input class="btn" type="button" value="返回" onclick="uexWindow.close('14');"><br><br>
+			
+			<span>15.TopToBottomReveal(对应TopToBottomMoveIn)</span>
+			<input class="btn" type="button" value="返回" onclick="uexWindow.close('15');"><br><br>
+			
+			<span>16.BottomToTopReveal(对应BottomToTopMoveIn)</span>
+			<input class="btn" type="button" value="返回" onclick="uexWindow.close('16');"><br><br>
+			</div>
+		</div>
+
+</body>
+</html>

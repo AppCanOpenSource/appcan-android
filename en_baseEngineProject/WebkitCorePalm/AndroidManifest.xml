@@ -12,8 +12,7 @@
         android:debuggable="false"
         android:icon="@drawable/icon"
         android:label="@string/app_name" 
-		android:hardwareAccelerated="true"
-		android:vmSafeMode="true">
+		android:hardwareAccelerated="true">
         <activity
             android:name="org.zywx.wbpalmstar.engine.EBrowserActivity"
             android:alwaysRetainTaskState="true"
