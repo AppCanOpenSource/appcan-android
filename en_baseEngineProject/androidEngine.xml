@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <info>
     <version>$version$</version>
-	<package>$package$</package>
-	<kernel>$kernel$</kernel>
-	<description>引擎4.0</description>
+    <package>$package$</package>
+    <kernel>$kernel$</kernel>
+    <description>引擎4.0</description>
+    <dssVersion>4.0.0</dssVersion>
 </info>
