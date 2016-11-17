@@ -173,7 +173,7 @@ public class WindowJsonWrapper {
     }
 
     public static void alert(EUExWindow window, WindowAlertVO alertVO){
-        window.setSlidingWindow(new String[]{
+        window.alert(new String[]{
                 alertVO.title,
                 alertVO.message,
                 alertVO.buttonLabel
