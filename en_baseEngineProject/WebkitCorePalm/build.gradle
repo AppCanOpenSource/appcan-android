@@ -131,7 +131,16 @@ android {
           // but continue the build even when errors are found:
           abortOnError false
     }
+    aaptOptions {
+        cruncherEnabled = false //不检查PNG的合法性
+    }
     dexOptions {
         javaMaxHeapSize "2048M"
+    }
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 14 //
+        multiDexEnabled true
     }
 }

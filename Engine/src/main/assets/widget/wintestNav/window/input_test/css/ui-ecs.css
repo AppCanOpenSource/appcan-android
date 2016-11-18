@@ -1,0 +1,34 @@
+.ecs-body-bg{
+	background:#f2f2f2;
+}
+.ecs_txt_right
+{
+	text-align:right;
+}
+.ecs_txt_left
+{
+	text-align:left;
+}
+
+.ecs_txt_center
+{
+	text-align:center;
+}
+.ecs_txt_all
+{
+	white-space:normal;
+}
+.ecs_txt_color_red
+{
+	color:red;
+}
+
+
+.ecs_display_block
+{
+	display:block;
+}
+.dis_display_none
+{
+	display:none;
+}

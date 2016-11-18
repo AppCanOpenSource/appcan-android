@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <info>
-    <version>sdksuit_3.2_160202_01</version>
-	<package>android_Engine_3.2_160202_01</package>
-	<description>EBrowserActivity添加对onNewIntent生命周期的反射处理，插件可拦截该生命周期。</description>
+    <version>$version$</version>
+    <package>$package$</package>
+    <kernel>$kernel$</kernel>
+    <description>引擎4.0</description>
+    <dssVersion>4.0.0</dssVersion>
 </info>

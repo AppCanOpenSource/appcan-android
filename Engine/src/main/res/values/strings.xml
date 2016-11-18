@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+
+    <!-- common use通用字符串 -->
+    <string name="app_name">Engine</string>
+    <string name="back">返回</string>
+    <string name="confirm">确定</string>
+    <string name="cancel">取消</string>
+    <string name="prompt">提示</string>
+    <string name="complete">完成</string>
+    <string name="path_error">路径错误!</string>
+    <string name="settings">设置</string>
+    <string name="save">保存</string>
+    <string name="select_all">全选</string>
+    <string name="cancel_select_all">取消选定</string>
+    <string name="select">选择</string>
+    <string name="can_not_find_suitable_app_perform_this_operation">找不到适合的程序执行此操作!</string>
+    <string name="exit">退出</string>
+    <string name="confirm_delete">确定删除</string>
+    <string name="ma">吗?</string>
+    <string name="exit_message_server">该应用暂停服务</string>
+    <string name="exit_message_appid">当前应用ID非法</string>
+    <string name="error_parameter">参数错误</string>
+    <string name="no_have_read_limits_power">没有读取权限</string>
+    <string name="no_have_write_limits_power">没有写入权限</string>
+    <string name="error_sdcard_is_not_available">SD卡不可用</string>
+    <string name="error_file_does_not_exist">文件不存在</string>
+    <string name="error_no_permisson_RW">没有读写权限</string>
+    <string name="error_no_permisson_INTERNET">没有网络访问权限</string>
+    <string name="no_permisson_declare">没有申明相关权限</string>
+    <string name="info_update">发现新版本,是否升级?</string>
+
+    <!-- browser use -->
+    <string name="browser_exitdialog_app_text">确定要退出程序吗？</string>
+    <string name="browser_exitdialog_msg">退出提示</string>
+    <string name="browser_dialog_error">错误提示</string>
+    <string name="browser_init_error">程序不完整</string>
+    <!-- 3000.1.02.000.00.00.9999.000 -->
+	<!-- Analytics config -->
+    <string name="appkey" translatable="false">5af4f945-c60b-2757-f4c1-9287ab47a341</string>
+    <string name="appstatus" translatable="false">6E4E99740100CFB7447DAB9CCC55DD75F7D658</string>
+    <string name="push" translatable="false">true</string>
+    <string name="certificate_psw" translatable="false"/>
+    <string name="widget_startup_report_host" translatable="false">http://newdc.appcan.cn/</string>
+    <string name="push_host" translatable="false">newpush.appcan.cn:1883</string>
+    <string name="bindUser_host" translatable="false">http://newpush.appcan.cn/</string>
+    <string name="analytics_host" translatable="false">http://newdc.appcan.cn/</string>
+    <string name="mam_host" translatable="false">http://newdc.appcan.cn/</string>
+    <string name="mam_push_host_and_port" translatable="false">newpush.appcan.cn:1883</string>
+
+    <!-- platform myspace  use -->
+    <string name="platform_myspace_app_center">应用中心</string>
+    <string name="platform_myspace_recommend_apps">推荐应用</string>
+    <string name="platform_myspace_my_apps">我的应用</string>
+    <string name="platform_myspace_pull_to_refresh">下拉刷新推荐列表</string>
+    <string name="platform_myspace_release_to_refresh">释放刷新推荐列表</string>
+    <string name="platform_myspace_loading">加载中…</string>
+    <string name="platform_myspace_tap_to_refresh">点击刷新推荐列表</string>
+    <string name="widgetone_version" translatable="false">4030.1.02.001.00.00.9999.000</string>
+    <string name="platform_no_configuration_decryption_permissions">没有配置解密权限！</string>
+    <string name="platform_downloading_file">正在下载文件</string>
+    <string name="platform_connect_failed">连接失败,请重试!</string>
+    <string name="platform_download_failed">下载出错,请重试!</string>
+    <string name="platform_only_test">测试版本仅用于开发测试</string>
+    <string name="platform_choose_app">请选择:</string>
+    <string name="platform_widget_id_not_exist">AppId为 %1$s 的Widget不存在</string>
+    <string name="platform_widget_path_not_exist">路径为 %1$s 的Widget不存在</string>
+    <string name="platform_widget_search_failed">搜索Widget发生异常!请确认Widget是否损坏!</string>
+
+    <string name="warning">警告</string>
+    <string name="no_permission_to_open_window">没有打开%1$s窗口的权限</string>
+    <string name="load_uex_object_error">uex对象加载发生异常,请检查XML文件!</string>
+    <string name="install">安装…</string>
+    <string name="install_failed">安装失败</string>
+    <string name="get_open_login_list">尚未登录,正在获取开放平台登录列表</string>
+    <string name="operation_cancel">操作已取消!</string>
+    <string name="get_info_failed">获取信息失败!</string>
+    <string name="download_info_error">下载信息错误!</string>
+    <string name="app_has_download_please_run">应用已下载，请直接运行</string>
+    <string name="app_downloading">应用正在下载请稍候…</string>
+
+    <string name="get_user_info">正在获取用户登录信息…</string>
+    <string name="get_login_list">尚未登录,获取登录列表…</string>
+    <string name="app_is_download_please_wait">应用正在下载请稍候…</string>
+    <string name="get_user_info_failed">获取登录信息失败!</string>
+    <string name="delete">删除</string>
+    <string name="is_uninstalling">正在卸载…</string>
+    <string name="login_failed">登录失败…</string>
+    <string name="select_operation">请选择操作</string>
+    <string name="cannot_find_this_widget">未找到此widget，无法启动!</string>
+    <string name="refresh_success">更新成功!</string>
+    <string name="refresh_failed">刷新失败</string>
+    <string name="plugin_config_no_exist">插件配置文件不存在!</string>
+    <string name="more">更多</string>
+
+    <string name="widget_not_exist_id_path">在%1$s目录下的 appId 是%2$s的widget不存在</string>
+    <string name="not_any_widget">该应用下没有任何widget</string>
+    <string-array name="platform_close_hardware">
+        <!--<item>MI 2S</item>-->
+        <!--<item>Letv</item>-->
+        <!--<item>GEM-703L</item>-->
+    </string-array>
+    <string name="mbaas_host"></string>
+</resources>

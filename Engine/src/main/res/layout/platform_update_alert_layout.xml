@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="200dip"
+    android:layout_height="130dip"
+    android:background="@color/black"
+    android:padding="15dip" >
+
+    <TextView
+        android:id="@+id/platform_update_alert_title_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/white" />
+
+    <TextView
+        android:id="@+id/platform_update_alert_content_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/platform_update_alert_title_textview"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dip"
+        android:textColor="@color/white" />
+
+    <ProgressBar
+        android:id="@+id/platform_update_alert_progressbar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="150dip"
+        android:layout_height="10dip"
+        android:layout_below="@+id/platform_update_alert_content_textview"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="20dip"
+        android:max="100"
+        android:progress="0"
+        android:progressDrawable="@drawable/platform_update_alert_progressbar_style"
+        android:visibility="visible" />
+
+    <RelativeLayout
+        android:id="@+id/platform_update_alert_button_relativelayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/platform_update_alert_content_textview"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dip"
+        android:visibility="gone" >
+
+        <Button
+            android:id="@+id/platform_update_alert_left_button"
+            android:layout_width="80dip"
+            android:layout_height="40dip" />
+
+        <Button
+            android:id="@+id/platform_update_alert_right_button"
+            android:layout_width="80dip"
+            android:layout_height="40dip"
+            android:text="@string/cancel"
+            android:layout_toRightOf="@+id/platform_update_alert_left_button" />
+    </RelativeLayout>
+
+</RelativeLayout>
