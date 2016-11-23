@@ -129,22 +129,11 @@ public class CBrowserMainFrame extends XWalkUIClient {
             }
             mIsPageOnload = true;
             ESystemInfo info = ESystemInfo.getIntence();
-
-            int versionA = Build.VERSION.SDK_INT;
-
             if (!target.isWebApp()) { // 4.3及4.3以下手机
                 if (!info.mScaled) {
-                    float nowScale = 1.0f;
-
-//					if (versionA <= 18) {
-                    nowScale = target.getScale();
-//					}
-
-                    info.mDefaultFontSize = (int) (info.mDefaultFontSize / nowScale);
+                    info.mDefaultFontSize = (int) (info.mDefaultFontSize / target.getScaleWrap());
                     info.mScaled = true;
-
                 }
-
 //				target.setDefaultFontSize(48);
             }
             if (!info.mFinished) {

@@ -2982,8 +2982,8 @@ public class EUExWindow extends EUExBase {
         if (null == params || params.length < 1)
             return;
         boolean visible = Boolean.parseBoolean(params[0]);
-        mBrwView.setHorizontalScrollBarEnabled(visible);
-        mBrwView.setVerticalScrollBarEnabled(visible);
+        mBrwView.setHorizontalScrollBarEnabledWrap(visible);
+        mBrwView.setVerticalScrollBarEnabledWrap(visible);
     }
 
     public void actionSheet(String[] params) {

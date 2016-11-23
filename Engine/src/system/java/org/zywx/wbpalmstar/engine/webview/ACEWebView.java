@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.view.View;
 import android.webkit.DownloadListener;
 import android.webkit.WebView;
 
@@ -149,8 +150,36 @@ public class ACEWebView extends WebView implements DownloadListener {
         return getScrollY();
     }
 
+    public int getScrollXWrap() {
+        return getScrollX();
+    }
+
     public int getHeightWrap() {
         return getHeight();
+    }
+
+    public void addViewWrap(View child, android.widget.AbsoluteLayout.LayoutParams params) {
+        addView(child, params);
+    }
+
+    public void removeViewWrap(View child) {
+        removeView(child);
+    }
+
+    public int getChildCountWrap() {
+        return getChildCount();
+    }
+
+    public View getChildAtWrap(int index) {
+        return getChildAt(index);
+    }
+
+    public void setHorizontalScrollBarEnabledWrap(boolean visible) {
+        setHorizontalScrollBarEnabled(visible);
+    }
+
+    public void setVerticalScrollBarEnabledWrap(boolean visible) {
+        setVerticalScrollBarEnabled(visible);
     }
 
     public String getWebViewKernelInfo() {

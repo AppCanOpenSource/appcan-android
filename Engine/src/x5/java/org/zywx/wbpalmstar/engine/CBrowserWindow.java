@@ -169,18 +169,8 @@ public class CBrowserWindow extends EXWebViewClient {
 
         if (!target.isWebApp()) {
             if (!info.mScaled) {
-                float nowScale = 1.0f;
-
-                int versionA = Build.VERSION.SDK_INT;
-
-                if (versionA <= 18) {
-                    nowScale = target.getScale();
-                }
-
-                info.mDefaultFontSize = (int) (info.mDefaultFontSize / nowScale);
+                info.mDefaultFontSize = (int) (info.mDefaultFontSize / target.getScaleWrap());
                 info.mScaled = true;
-
-
             }
             target.setDefaultFontSize(info.mDefaultFontSize);
         }

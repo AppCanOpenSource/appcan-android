@@ -217,23 +217,11 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
         mIsPageOnload = true;
         ESystemInfo info = ESystemInfo.getIntence();
 
-        int versionA = Build.VERSION.SDK_INT;
-
         if (!target.isWebApp()) { //4.3及4.3以下手机
-
-            int defaultFontSize;
-            float nowScale = 1.0f;
-
-            if (versionA <= 18) {
-                nowScale = target.getScale();
-            }
-
-            defaultFontSize = (int) (info.mDefaultFontSize / nowScale);
+            int defaultFontSize = (int) (info.mDefaultFontSize / target.getScaleWrap());
             info.mScaled = true;
-
             target.setDefaultFontSize(defaultFontSize);
         }
-
 
         if (!info.mFinished) {
             if (WWidgetData.m_remove_loading == 1) {

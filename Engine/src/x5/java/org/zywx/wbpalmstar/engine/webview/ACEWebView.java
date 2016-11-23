@@ -25,6 +25,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Build;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.tencent.smtt.sdk.DownloadListener;
 import com.tencent.smtt.sdk.QbSdk;
@@ -53,6 +54,7 @@ public class ACEWebView extends WebView implements DownloadListener {
     private EXWebViewClient mEXWebViewClient;
     private EBrowserBaseSetting mBaSetting;
     private Context mContext;
+    private boolean mWebApp;
     private EBrowserView mBroView;
     private EBrowserWindow mBroWind;
     private int mDownloadCallback = 0;  // 0 下载不回调，使用引擎下载; 1 下载回调给主窗口，前端自己下载; 2 下载回调给当前窗口，前端自己下载;
@@ -96,6 +98,10 @@ public class ACEWebView extends WebView implements DownloadListener {
 
 
     public void init(EBrowserView eBrowserView,boolean webApp) {
+        if (getX5WebViewExtension() != null) {
+            webApp = true;
+        }
+        mWebApp = webApp;
         mBroView = eBrowserView;
         if (Build.VERSION.SDK_INT <= 7) {
             if (mBaSetting == null) {
@@ -146,6 +152,14 @@ public class ACEWebView extends WebView implements DownloadListener {
         }
     }
 
+    public void setWebApp(boolean flag) {
+        mWebApp = flag;
+    }
+
+    public boolean isWebApp() {
+        return mWebApp;
+    }
+
     @Override
     public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
         if (mDownloadCallback == 0) {
@@ -178,8 +192,17 @@ public class ACEWebView extends WebView implements DownloadListener {
         super.destroy();
     }
 
+    @Override
+    public void loadUrl(String url) {
+        if (url != null && url.startsWith("javascript:")) {
+            super.evaluateJavascript(url, null);
+        } else {
+            super.loadUrl(url);
+        }
+    }
+
     public float getScaleWrap() {
-        if (Build.VERSION.SDK_INT<=18){
+        if (Build.VERSION.SDK_INT <= 18 || getX5WebViewExtension() != null) {
             return getScale();
         }
         return 1.0f;
@@ -191,6 +214,34 @@ public class ACEWebView extends WebView implements DownloadListener {
 
     public int getScrollYWrap() {
         return getView().getScrollY();
+    }
+
+    public int getScrollXWrap() {
+        return getView().getScrollX();
+    }
+
+    public void addViewWrap(View child, android.widget.AbsoluteLayout.LayoutParams params) {
+        ((ViewGroup) getView()).addView(child, params);
+    }
+
+    public void removeViewWrap(View child) {
+        ((ViewGroup) getView()).removeView(child);
+    }
+
+    public int getChildCountWrap() {
+        return ((ViewGroup) getView()).getChildCount();
+    }
+
+    public View getChildAtWrap(int index) {
+        return ((ViewGroup) getView()).getChildAt(index);
+    }
+
+    public void setHorizontalScrollBarEnabledWrap(boolean visible) {
+        getView().setHorizontalScrollBarEnabled(visible);
+    }
+
+    public void setVerticalScrollBarEnabledWrap(boolean visible) {
+        getView().setVerticalScrollBarEnabled(visible);
     }
 
     public String getWebViewKernelInfo() {

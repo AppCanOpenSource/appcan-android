@@ -21,6 +21,7 @@ package org.zywx.wbpalmstar.engine.webview;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
+import android.view.View;
 
 import org.xwalk.core.XWalkDownloadListener;
 import org.xwalk.core.XWalkNavigationHistory;
@@ -256,6 +257,30 @@ public class ACEWebView extends XWalkView {
 	public int getHeightWrap() {
 		return getHeight();
 	}
+
+    public void addViewWrap(View child, android.widget.AbsoluteLayout.LayoutParams params) {
+        addView(child, params);
+    }
+
+    public void removeViewWrap(View child) {
+        removeView(child);
+    }
+
+    public int getChildCountWrap() {
+        return getChildCount();
+    }
+
+    public View getChildAtWrap(int index) {
+        return getChildAt(index);
+    }
+
+    public void setHorizontalScrollBarEnabledWrap(boolean visible) {
+        setHorizontalScrollBarEnabled(visible);
+    }
+
+    public void setVerticalScrollBarEnabledWrap(boolean visible) {
+        setVerticalScrollBarEnabled(visible);
+    }
 
     public int getDownloadCallback() {
         return mDownloadCallback;

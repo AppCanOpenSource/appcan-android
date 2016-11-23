@@ -374,12 +374,12 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
                 if (!isFocused()) {
                     strugglefoucs();
                 }
-                onScrollChanged(getScrollX(), getScrollY(), getScrollX(), getScrollY());
+                onScrollChanged(getScrollXWrap(), getScrollYWrap(), getScrollXWrap(), getScrollYWrap());
                 if (mIsNeedScroll) {
                     //modify no-response-for-onclick-event
-                    int temp_ScrollY = this.getScrollY();
-                    this.scrollTo(this.getScrollX(), this.getScrollY() + 1);
-                    this.scrollTo(this.getScrollX(), temp_ScrollY);
+                    int temp_ScrollY = this.getScrollYWrap();
+                    this.scrollTo(this.getScrollXWrap(), this.getScrollYWrap() + 1);
+                    this.scrollTo(this.getScrollXWrap(), temp_ScrollY);
                 }
                 setMultilPopoverFlippingEnbaled();
                 break;
@@ -1376,14 +1376,9 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
             isSlideCallback = isSupportSlideCallback && !EBrowserWindow.isShowDialog;
         }
         if (isSlideCallback) {
-            float nowScale = 1.0f;
-
-            if (versionA <= 18) {
-                nowScale = getScale();
-            }
-            float contentHeight = getContentHeight() * nowScale;
+            float contentHeight = getContentHeight() * getScaleWrap();
             boolean isSlipedDownEdge = t != oldt && t > 0
-                    && contentHeight <= t + getHeight() + mThreshold;
+                    && contentHeight <= t + getHeightWrap() + mThreshold;
             if (isSlipedDownEdge) {
                 callback.jsCallback(EUExWindow.function_cbslipedDownEdge, 0,
                         EUExCallback.F_C_INT, 0);
@@ -1391,7 +1386,7 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
                 callback.jsCallback(EUExWindow.function_onSlipedDownEdge, 0,
                         EUExCallback.F_C_INT, 0);
 
-            } else if (getScrollY() == 0) {
+            } else if (getScrollYWrap() == 0) {
                 callback.jsCallback(EUExWindow.function_cbslipedUpEdge, 0,
                         EUExCallback.F_C_INT, 0);
                 callback.jsCallback(EUExWindow.function_onSlipedUpEdge, 0,
@@ -1444,6 +1439,10 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
      */
     public int getScrollYWrap(){
         return super.getScrollYWrap();
+    }
+
+    public int getScrollXWrap(){
+        return super.getScrollXWrap();
     }
 
     public void setUserAgent(String userAgent) {
