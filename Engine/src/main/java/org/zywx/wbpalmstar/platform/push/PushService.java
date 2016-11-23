@@ -191,8 +191,19 @@ public class PushService extends Service implements PushDataCallback {
                 .optString(PushReportConstants.PUSH_DATA_JSON_KEY_APPID));
         dataInfo.setTaskId(data
                 .optString(PushReportConstants.PUSH_DATA_JSON_KEY_TASKID));
-        dataInfo.setTitle(data
-                .optString(PushReportConstants.PUSH_DATA_JSON_KEY_TITLE));
+
+        String title = data.optString(PushReportConstants.PUSH_DATA_JSON_KEY_TITLE);
+        if (TextUtils.isEmpty(title)) {
+            try {
+                PackageManager pm = getPackageManager();
+                PackageInfo pinfo = pm.getPackageInfo(getPackageName(), PackageManager.GET_CONFIGURATIONS);
+                title = pinfo.applicationInfo.loadLabel(pm).toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        dataInfo.setTitle(title);
+
         dataInfo.setAlert(data
                 .optString(PushReportConstants.PUSH_DATA_JSON_KEY_ALERT));
         dataInfo.setBadge(data
