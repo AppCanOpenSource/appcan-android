@@ -19,6 +19,8 @@
 package org.zywx.wbpalmstar.engine.webview;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Build;
@@ -30,10 +32,12 @@ import com.tencent.smtt.sdk.WebView;
 
 import org.zywx.wbpalmstar.acedes.EXWebViewClient;
 import org.zywx.wbpalmstar.base.BDebug;
+import org.zywx.wbpalmstar.base.vo.KernelInfoVO;
 import org.zywx.wbpalmstar.engine.CBrowserMainFrame;
 import org.zywx.wbpalmstar.engine.CBrowserMainFrame7;
 import org.zywx.wbpalmstar.engine.CBrowserWindow;
 import org.zywx.wbpalmstar.engine.CBrowserWindow7;
+import org.zywx.wbpalmstar.engine.DataHelper;
 import org.zywx.wbpalmstar.engine.EBrowserBaseSetting;
 import org.zywx.wbpalmstar.engine.EBrowserSetting;
 import org.zywx.wbpalmstar.engine.EBrowserSetting7;
@@ -187,5 +191,29 @@ public class ACEWebView extends WebView implements DownloadListener {
 
     public int getScrollYWrap() {
         return getView().getScrollY();
+    }
+
+    public String getWebViewKernelInfo() {
+        KernelInfoVO infoVO = new KernelInfoVO();
+        if (getX5WebViewExtension() != null) {
+            infoVO.setKernelType("X5");
+            infoVO.setKernelVersion(QbSdk.getTbsVersion(this.getContext()) + "");
+        } else {
+            if (Build.VERSION.SDK_INT > 18) {
+                infoVO.setKernelType("System(Blink)");
+                try {
+                    PackageManager pm = this.getContext().getPackageManager();
+                    PackageInfo pinfo = pm.getPackageInfo("com.google.android.webview",
+                            PackageManager.GET_CONFIGURATIONS);
+                    infoVO.setKernelVersion(pinfo.versionName);
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                infoVO.setKernelType("System(Webkit)");
+            }
+        }
+        String info = DataHelper.gson.toJson(infoVO);
+        return info;
     }
 }

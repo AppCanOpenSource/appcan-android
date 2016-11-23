@@ -27,6 +27,8 @@ import org.xwalk.core.XWalkNavigationHistory;
 import org.xwalk.core.XWalkPreferences;
 import org.xwalk.core.XWalkView;
 import org.zywx.wbpalmstar.acedes.EXWebViewClient;
+import org.zywx.wbpalmstar.base.vo.KernelInfoVO;
+import org.zywx.wbpalmstar.engine.DataHelper;
 import org.zywx.wbpalmstar.engine.EBrowserBaseSetting;
 import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.EBrowserWindow;
@@ -265,5 +267,13 @@ public class ACEWebView extends XWalkView {
 
     public void setEBrowserWindow(EBrowserWindow broWind) {
         this.mBroWind = broWind;
+    }
+
+    public String getWebViewKernelInfo() {
+        KernelInfoVO infoVO = new KernelInfoVO();
+        infoVO.setKernelType("CrossWalk");
+        infoVO.setKernelVersion(getXWalkVersion());
+        String info = DataHelper.gson.toJson(infoVO);
+        return info;
     }
 }

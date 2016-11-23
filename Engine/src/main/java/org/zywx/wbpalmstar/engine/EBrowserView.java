@@ -1463,4 +1463,8 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
         }
         super.setDownloadCallback(downloadCallback);
     }
+
+    public String getWebViewKernelInfo() {
+        return super.getWebViewKernelInfo();
+    }
 }

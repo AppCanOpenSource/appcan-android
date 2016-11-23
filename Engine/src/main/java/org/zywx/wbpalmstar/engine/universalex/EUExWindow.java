@@ -2558,6 +2558,11 @@ public class EUExWindow extends EUExBase {
         return mBrwView.getWindowName();
     }
 
+    @AppCanAPI
+    public String getWebViewKernelInfo(String[] params){
+        return mBrwView.getWebViewKernelInfo();
+    }
+
     public void showBounceView(String[] parm) {
         if (isJsonString(parm[0])){
             WindowJsonWrapper.showBounceView(this,DataHelper.gson.fromJson(parm[0],

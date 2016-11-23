@@ -294,6 +294,7 @@ public class EUExScript {
                 + "showPluginViewContainer:function(){uexDispatcher.dispatch('uexWindow','showPluginViewContainer',jo(arguments));},"
                 + "hidePluginViewContainer:function(){uexDispatcher.dispatch('uexWindow','hidePluginViewContainer',jo(arguments));},"
                 + "getUrlQuery:function(){return uexDispatcher.dispatch('uexWindow','getUrlQuery',jo(arguments));},"
+                + "getWebViewKernelInfo:function(){return uexDispatcher.dispatch('uexWindow','getWebViewKernelInfo',jo(arguments));},"
                 + "setAutorotateEnable:function(){return uexDispatcher.dispatch('uexWindow','setAutorotateEnable',jo(arguments))}};"
                 +
                 F_UEX_SECURE;
