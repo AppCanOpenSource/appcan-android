@@ -91,6 +91,7 @@ public class BUtility {
 
     public static boolean isDes = false;
     public static String g_desPath = "";
+    public static String widgetOneRootPath = "";
     /** 安装补丁包类型 1：网页包；2：插件包；3：网页和插件 */
     public final static int INSTALL_PATCH_WIDGET = 1;
     public final static int INSTALL_PATCH_PLUGIN = 2;
@@ -214,6 +215,13 @@ public class BUtility {
     }
 
     /**
+     * @return 沙箱目录路径
+     */
+    public static String getSBoxRootPath(Context context) {
+        return context.getFilesDir().getAbsolutePath() + "/";
+    }
+
+    /**
      * @return 增量更新开关
      */
     public static boolean getIsUpdateWidget() {
@@ -227,15 +235,25 @@ public class BUtility {
         return WDataManager.isCopyAssetsFinish;
     }
 
+    /**
+     * 得到widgetone的目录路径
+     * 
+     * @return ../widgetone/
+     */
+    public static String getWidgetOneRootPath() {
+        return widgetOneRootPath;
+    }
+
     // 初始化widget的文件夹
     public static void initWidgetOneFile(Context context, String appId) {
         String root = null;
         appId += "/";
-        if (sdCardIsWork()) {
+        if (!WDataManager.isWidgetOneSBox && sdCardIsWork()) {
             root = getSdCardRootPath();
         } else {
-            root = context.getFilesDir().getAbsolutePath() + "/";
+            root = getSBoxRootPath(context);
         }
+        widgetOneRootPath = root + F_BASE_WGT_PATH;
         String[] fileDir = {root + F_APP_PATH + appId, root + F_WIDGET_PATH,
                 root + F_APP_PATH + appId + F_APP_VIDEO,
                 root + F_APP_PATH + appId + F_APP_PHOTO,

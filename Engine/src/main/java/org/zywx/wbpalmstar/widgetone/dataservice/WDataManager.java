@@ -95,6 +95,7 @@ public class WDataManager {
     public static boolean isUpdateWidget = false;
     public static boolean isCopyAssetsFinish = false;
     public static String m_copyAssetsFinish = "copyAssetsFinish";
+    public static boolean isWidgetOneSBox = false;
     // private int m_count = 0;
 
     public WDataManager(Context context) {
@@ -300,6 +301,10 @@ public class WDataManager {
 
                 String developPath = BUtility.getSdCardRootPath()
                         + BUtility.F_WIDGET_APP_PATH + "hiAppcan/";
+                if (isWidgetOneSBox) {
+                    developPath = BUtility.getSBoxRootPath(m_context)
+                            + BUtility.F_WIDGET_APP_PATH + "hiAppcan/";
+                }
                 File test = new File(developPath);
                 if (!test.exists()) {
 
@@ -316,6 +321,10 @@ public class WDataManager {
             }
             String widgetlistPath = BUtility.getSdCardRootPath()
                     + BUtility.F_WIDGET_APP_PATH;
+            if (isWidgetOneSBox) {
+                widgetlistPath = BUtility.getSBoxRootPath(m_context)
+                        + BUtility.F_WIDGET_APP_PATH;
+            }
             File appFileDir = new File(widgetlistPath);
             if (!appFileDir.exists()) {
                 return;
@@ -1231,6 +1240,24 @@ public class WDataManager {
                 e.printStackTrace();
             }
 
+            try {
+                if (!isWidgetOneSBox) {
+                    String appstatus = ResoureFinder.getInstance().getString(
+                            m_context, "appstatus");
+                    String appstatusDecrypt = BUtility.decryptString(appstatus,
+                            widgetData.m_appId);
+                    String[] appstatuss = appstatusDecrypt.split(",");
+                    if (appstatuss != null && appstatuss.length > 16) {
+                        if ("1".equals(appstatuss[16])) {
+                            widgetData.m_widgetOneLocation = 1;
+                        }
+                    }
+                    isWidgetOneSBox = widgetData.m_widgetOneLocation == 1 ? true : false;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             widgetData.m_wgtType = type;
             if (type == 3) {
                 widgetData.m_widgetPath = widgetPath
@@ -1273,7 +1300,7 @@ public class WDataManager {
         } else {
             appIdPath = appId;
         }
-        if (BUtility.sdCardIsWork()) {
+        if (BUtility.sdCardIsWork() && !isWidgetOneSBox) {
 
             if (type == 1) {
                 return BUtility.getSdCardRootPath() + appPath + appIdPath + "/"
@@ -1456,6 +1483,16 @@ public class WDataManager {
                             String text = parser.nextText();
                             if (!widgetData.noHardwareList.contains(text)) {
                                 widgetData.noHardwareList.add(text);
+                            }
+                        } else if ("widgetonelocation".equals(localName)) {
+                            String value = parser.nextText();
+                            if (value == null || value.length() == 0) {
+                                widgetData.m_widgetOneLocation = 0;
+                            } else {
+                                widgetData.m_widgetOneLocation = Integer.parseInt(value);
+                            }
+                            if (!isWidgetOneSBox) {
+                                isWidgetOneSBox = widgetData.m_widgetOneLocation == 1 ? true : false;
                             }
                         }
                         break;
