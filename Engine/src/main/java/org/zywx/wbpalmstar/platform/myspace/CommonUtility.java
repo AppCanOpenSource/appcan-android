@@ -66,7 +66,7 @@ public class CommonUtility {
     public static final String URL_DELAY_UNISTALL_REPORT = "http://open.appcan.cn/myspace/delayUnInstallWidget.action";
 
     private static final String TAG = "NetUtility";
-    public static final String WIDGET_SAVE_PATH = "/sdcard/widgetone/widgetapp/";
+    public static final String WIDGET_SAVE_PATH = BUtility.getWidgetOneRootPath() + "widgetapp/";
 
     /**
      * 需要加入的权限android.permission.ACCESS_NETWORK_STATE
@@ -269,7 +269,7 @@ public class CommonUtility {
         File file = null;
         FileOutputStream fos = null;
         try {
-            File Folder = new File("/widgetone/tmp/");
+            File Folder = new File(BUtility.getWidgetOneRootPath() + "tmp/");
             if (!Folder.exists()) {
                 Folder.mkdirs();
             }

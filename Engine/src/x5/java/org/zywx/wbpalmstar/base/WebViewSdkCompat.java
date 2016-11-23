@@ -9,6 +9,7 @@ import com.tencent.smtt.sdk.CookieSyncManager;
 import com.tencent.smtt.sdk.QbSdk;
 import com.tencent.smtt.sdk.WebSettings;
 
+import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -32,14 +33,33 @@ public class WebViewSdkCompat {
 
         final CountDownLatch countDownLatch = new CountDownLatch(1);
 
-        if (!QbSdk.isTbsCoreInited()) {//preinit只需要调用一次，如果已经完成了初始化，那么就直接构造view
+        boolean noTencentX5 = false;
+        try {
+            String[] lists  = context.getAssets().list("widget");
+            for (int i = 0; i < lists.length; i++) {
+                if (lists[i].equalsIgnoreCase("notencentx5")) {
+                    noTencentX5 = true;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        int mTbsVersion = QbSdk.getTbsVersion(context);
+        if (noTencentX5 || (mTbsVersion > 0 && mTbsVersion < 30000)) {
+            BDebug.i("AppCanTBS", "QbSdk.forceSysWebView()");
+            QbSdk.forceSysWebView();
+        }
+
+        //preinit只需要调用一次，如果已经完成了初始化，那么就直接构造view
+        if (!QbSdk.isTbsCoreInited() && (mTbsVersion == 0 || mTbsVersion >= 30000) && !noTencentX5) {
             final long timerCounter = System.currentTimeMillis();
             QbSdk.preInit(context, new QbSdk.PreInitCallback() {
 
                 @Override
                 public void onViewInitFinished() {
-                    float deltaTime = (System.currentTimeMillis() - timerCounter) / 1000;
-                    BDebug.i("AppCanTBS", "x5初始化使用了" + deltaTime + "秒， 但是可能还没加载完~");
+                    float deltaTime = (System.currentTimeMillis() - timerCounter);
+                    BDebug.i("AppCanTBS", "x5初始化使用了" + deltaTime + "毫秒");
                     countDownLatch.countDown();
                 }
 

@@ -21,12 +21,12 @@ package org.zywx.wbpalmstar.platform.push;
 import android.content.Context;
 import android.util.Log;
 
+import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.vo.NameValuePairVO;
 import org.zywx.wbpalmstar.engine.EngineEventListener;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.platform.push.report.PushReportAgent;
 import org.zywx.wbpalmstar.platform.push.report.PushReportConstants;
-import org.zywx.wbpalmstar.platform.push.report.PushReportUtility;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
 import java.util.List;
@@ -43,7 +43,7 @@ public class PushEngineEventListener implements EngineEventListener {
         Log.i("push", "wgtType==" + wgtType);
         if (wgtType == WGT_TYPE_MAIN) {
             wgtData.m_appkey = EUExUtil.getString("appkey");
-            wgtData.m_appkey = PushReportUtility.decodeStr(wgtData.m_appkey);
+            wgtData.m_appkey = BUtility.decodeStr(wgtData.m_appkey);
             // PushReportAgent.m_appId = wgtData.m_appId;
             // PushReportAgent.m_appKey = wgtData.m_appkey;
             PushReportAgent.mCurWgt = wgtData;
@@ -124,8 +124,8 @@ public class PushEngineEventListener implements EngineEventListener {
     public void getPushInfo(Context context, String pushInfo, String occuredAt) {
         Log.i("push", "getPushInfo");
         String appKey = EUExUtil.getString("appkey");
-        appKey = PushReportUtility.decodeStr(appKey);
-        String softToken = PushReportUtility.getSoftToken(context, appKey);
+        appKey = BUtility.decodeStr(appKey);
+        String softToken = BUtility.getSoftToken(context, appKey);
         PushReportAgent.reportPush(pushInfo, occuredAt,
                 PushReportConstants.EVENT_TYPE_OPEN, softToken, context);
     }
@@ -136,4 +136,13 @@ public class PushEngineEventListener implements EngineEventListener {
         PushReportAgent.delPushInfo(context, nameValuePairs);
     }
 
+    @Override
+    public void deviceBind(String userId, String userName, Context context) {
+        PushReportAgent.deviceBind(userId, userName, context);
+    }
+
+    @Override
+    public void deviceUnBind(Context context) {
+        PushReportAgent.deviceUnBind(context);
+    }
 }

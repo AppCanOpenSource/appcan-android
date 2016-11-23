@@ -110,6 +110,12 @@ public class WDBAdapter {
             db.execSQL("DROP TABLE IF EXISTS " + F_WIDGET_TABLE_NAME);
             onCreate(db);
         }
+
+        @Override
+        public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            db.execSQL("DROP TABLE IF EXISTS " + F_WIDGET_TABLE_NAME);
+            onCreate(db);
+        }
     }
 
     // ---打开数据库---

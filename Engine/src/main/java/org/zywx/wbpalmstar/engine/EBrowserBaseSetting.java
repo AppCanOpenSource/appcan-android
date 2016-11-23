@@ -24,4 +24,6 @@ public interface EBrowserBaseSetting {
     void setDefaultFontSize(int size);
 
     void setSupportZoom();
+
+    void setUserAgent(String userAgent);
 }

@@ -39,7 +39,6 @@ import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.engine.EBrowserHistory.EHistoryEntry;
 import org.zywx.wbpalmstar.engine.universalex.EUExCallback;
 import org.zywx.wbpalmstar.engine.universalex.EUExManager;
-import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.engine.universalex.EUExWindow;
 import org.zywx.wbpalmstar.engine.webview.ACEWebView;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
@@ -113,6 +112,7 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
 
     public void init() {
         super.init(this,mWebApp);
+        setEBrowserWindow(mBroWind);
         setInitialScale(100);
         setVerticalScrollbarOverlay(true);
         setHorizontalScrollbarOverlay(true);
@@ -146,10 +146,10 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
     }
 
     private void closeHardwareForSpecificString() {
-        String[] strs = EUExUtil.getStringArray("platform_close_hardware");
-        if (strs != null) {
-            for (int i = 0; i < strs.length; i++) {
-                String str = strs[i].trim();
+        WWidgetData widgetData = getCurrentWidget();
+        if (widgetData != null) {
+            for (String noHardware : widgetData.noHardwareList) {
+                String str = noHardware.trim();
                 // 手机型号、Android系统定制商、硬件制造商
                 if (Build.MODEL.trim().equals(str)
                         || Build.BRAND.trim().equals(str)
@@ -374,12 +374,12 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
                 if (!isFocused()) {
                     strugglefoucs();
                 }
-                onScrollChanged(getScrollX(), getScrollY(), getScrollX(), getScrollY());
+                onScrollChanged(getScrollXWrap(), getScrollYWrap(), getScrollXWrap(), getScrollYWrap());
                 if (mIsNeedScroll) {
                     //modify no-response-for-onclick-event
-                    int temp_ScrollY = this.getScrollY();
-                    this.scrollTo(this.getScrollX(), this.getScrollY() + 1);
-                    this.scrollTo(this.getScrollX(), temp_ScrollY);
+                    int temp_ScrollY = this.getScrollYWrap();
+                    this.scrollTo(this.getScrollXWrap(), this.getScrollYWrap() + 1);
+                    this.scrollTo(this.getScrollXWrap(), temp_ScrollY);
                 }
                 setMultilPopoverFlippingEnbaled();
                 break;
@@ -1376,14 +1376,9 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
             isSlideCallback = isSupportSlideCallback && !EBrowserWindow.isShowDialog;
         }
         if (isSlideCallback) {
-            float nowScale = 1.0f;
-
-            if (versionA <= 18) {
-                nowScale = getScale();
-            }
-            float contentHeight = getContentHeight() * nowScale;
+            float contentHeight = getContentHeight() * getScaleWrap();
             boolean isSlipedDownEdge = t != oldt && t > 0
-                    && contentHeight <= t + getHeight() + mThreshold;
+                    && contentHeight <= t + getHeightWrap() + mThreshold;
             if (isSlipedDownEdge) {
                 callback.jsCallback(EUExWindow.function_cbslipedDownEdge, 0,
                         EUExCallback.F_C_INT, 0);
@@ -1391,7 +1386,7 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
                 callback.jsCallback(EUExWindow.function_onSlipedDownEdge, 0,
                         EUExCallback.F_C_INT, 0);
 
-            } else if (getScrollY() == 0) {
+            } else if (getScrollYWrap() == 0) {
                 callback.jsCallback(EUExWindow.function_cbslipedUpEdge, 0,
                         EUExCallback.F_C_INT, 0);
                 callback.jsCallback(EUExWindow.function_onSlipedUpEdge, 0,
@@ -1446,4 +1441,29 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
         return super.getScrollYWrap();
     }
 
+    public int getScrollXWrap(){
+        return super.getScrollXWrap();
+    }
+
+    public void setUserAgent(String userAgent) {
+        super.setUserAgent(userAgent);
+    }
+
+    public int getDownloadCallback() {
+        if (mDestroyed) {
+            return 0;
+        }
+        return super.getDownloadCallback();
+    }
+
+    public void setDownloadCallback(int downloadCallback) {
+        if (mDestroyed) {
+            return;
+        }
+        super.setDownloadCallback(downloadCallback);
+    }
+
+    public String getWebViewKernelInfo() {
+        return super.getWebViewKernelInfo();
+    }
 }

@@ -54,6 +54,7 @@ public class CBrowserWindow extends EXWebViewClient {
 
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
+        super.shouldOverrideUrlLoading(view, url);
         Activity activity = (Activity) view.getContext();
         if (url.startsWith("tel:")) {
             try {
@@ -106,8 +107,15 @@ public class CBrowserWindow extends EXWebViewClient {
             }
             return true;
         }
-        boolean isUrl = url.startsWith("file") || url.startsWith("http");
+        boolean isUrl = url.startsWith("file") || url.startsWith("http") || url.startsWith("content://");
+        boolean isCustomUrl = url.startsWith("alipay://") || url.startsWith("weixin://");
         if (!isUrl) {
+            if (isCustomUrl) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(url));
+                activity.startActivity(intent);
+                return true;
+            }
             return true;
         }
         EBrowserView target = (EBrowserView) view;
@@ -126,6 +134,7 @@ public class CBrowserWindow extends EXWebViewClient {
 
     @Override
     public void onPageStarted(WebView view, String url, Bitmap favicon) {
+        super.onPageStarted(view, url, favicon);
         if (view == null) {
             return;
         }
@@ -142,6 +151,7 @@ public class CBrowserWindow extends EXWebViewClient {
 
     @Override
     public void onPageFinished(WebView view, String url) {
+        super.onPageFinished(view, url);
         if (view == null) {
             return;
         }
@@ -159,18 +169,8 @@ public class CBrowserWindow extends EXWebViewClient {
 
         if (!target.isWebApp()) {
             if (!info.mScaled) {
-                float nowScale = 1.0f;
-
-                int versionA = Build.VERSION.SDK_INT;
-
-                if (versionA <= 18) {
-                    nowScale = target.getScale();
-                }
-
-                info.mDefaultFontSize = (int) (info.mDefaultFontSize / nowScale);
+                info.mDefaultFontSize = (int) (info.mDefaultFontSize / target.getScaleWrap());
                 info.mScaled = true;
-
-
             }
             target.setDefaultFontSize(info.mDefaultFontSize);
         }

@@ -84,6 +84,7 @@ public class CBrowserWindow extends ACEDESBrowserWindow7 {
 	
 	@Override
 	public boolean shouldOverrideUrlLoading(XWalkView view, String url) {
+        super.shouldOverrideUrlLoading(view, url);
 		BDebug.i(url);
 		Activity activity = (Activity) view.getContext();
 		if (url.startsWith("tel:")) {
@@ -138,7 +139,14 @@ public class CBrowserWindow extends ACEDESBrowserWindow7 {
 			return true;
 		}
 		boolean isUrl = url.startsWith("file") || url.startsWith("http")|| url.startsWith("content://");
+        boolean isCustomUrl = url.startsWith("alipay://") || url.startsWith("weixin://");
 		if (!isUrl) {
+            if (isCustomUrl) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(url));
+                activity.startActivity(intent);
+                return true;
+            }
 			return true;
 		}
 		if (view instanceof EBrowserView) {

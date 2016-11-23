@@ -286,13 +286,7 @@ public abstract class EUExBase {
             return;
         }
 
-        float nowScale = 1.0f;
-        int versionA = Build.VERSION.SDK_INT;
-
-        if (versionA <= 18) {
-            nowScale = mBrwView.getScale();
-        }
-        float sc = nowScale;
+        float sc = mBrwView.getScaleWrap();
         int l = (int) (parms.leftMargin * sc);
         int t = (int) (parms.topMargin * sc);
         int w = parms.width;
@@ -453,13 +447,7 @@ public abstract class EUExBase {
     public final void addViewToWebView(View child,
                                        android.widget.AbsoluteLayout.LayoutParams params,
                                        String id) {
-        float nowScale = 1.0f;
-        int versionA = Build.VERSION.SDK_INT;
-
-        if (versionA <= 18) {
-            nowScale = mBrwView.getScale();
-        }
-        float sc = nowScale;
+        float sc = mBrwView.getScaleWrap();
         int x = (int) (params.x * sc);
         int y = (int) (params.y * sc);
         int w = params.width;
@@ -481,7 +469,7 @@ public abstract class EUExBase {
         if (id != null) {
             child.setTag(id);
         }
-        mBrwView.addView(child, params);
+        mBrwView.addViewWrap(child, params);
     }
 
     /**
@@ -491,10 +479,10 @@ public abstract class EUExBase {
      */
     public final void removeViewFromWebView(String id) {
         if (!TextUtils.isEmpty(id)) {
-            int viewCount = mBrwView.getChildCount();
+            int viewCount = mBrwView.getChildCountWrap();
             for (int i = viewCount - 1; i >= 0; i--) {
-                if (id.equals(mBrwView.getChildAt(i).getTag())) {
-                    mBrwView.removeView(mBrwView.getChildAt(i));
+                if (id.equals(mBrwView.getChildAtWrap(i).getTag())) {
+                    mBrwView.removeViewWrap(mBrwView.getChildAtWrap(i));
                     break;
                 }
             }
@@ -629,7 +617,18 @@ public abstract class EUExBase {
         if (null == curWind) {
             return;
         }
-        curWind.getBrowser().finishWidget(inResultInfo, appId, isWgtBG);
+        curWind.getBrowser().finishWidget(inResultInfo, appId, isWgtBG, "");
+    }
+
+    public void finishWidget(String inResultInfo, String appId, boolean isWgtBG, String inAnimiId) {
+        if (null == mBrwView) {
+            return;
+        }
+        EBrowserWindow curWind = mBrwView.getBrowserWindow();
+        if (null == curWind) {
+            return;
+        }
+        curWind.getBrowser().finishWidget(inResultInfo, appId, isWgtBG, inAnimiId);
     }
 
     /**

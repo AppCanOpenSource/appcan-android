@@ -308,11 +308,11 @@ public class EBrowser {
         mBrwWindPol.exitMySpace();
     }
 
-    public void finishWidget(String inResultInfo, String appId, boolean isWgtBG) {
+    public void finishWidget(String inResultInfo, String appId, boolean isWgtBG, String inAnimiId) {
         if (null == mBrwWindPol) {
             return;
         }
-        mBrwWindPol.finishWidget(inResultInfo, appId, isWgtBG);
+        mBrwWindPol.finishWidget(inResultInfo, appId, isWgtBG, inAnimiId);
     }
 
     protected void showWidget() {

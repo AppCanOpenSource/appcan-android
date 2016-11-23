@@ -72,7 +72,8 @@ public class EBrwViewEntry {
     public Object mObj;
 
     public int mHardware = -1;//硬件加速，-1不处理，0关闭，1开启
-
+    public int mDownloadCallback = 0;// 0 下载不回调，使用引擎下载; 1 下载回调给主窗口，前端自己下载; 2 下载回调给当前窗口，前端自己下载;
+    public String mUserAgent = "";
 
     public EBrwViewEntry(int inType) {
         mType = inType;

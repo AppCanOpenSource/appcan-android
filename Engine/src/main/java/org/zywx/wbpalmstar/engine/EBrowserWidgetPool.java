@@ -263,11 +263,11 @@ public class EBrowserWidgetPool {
 
     public void goBack() {
         if (!mWgtStack.peek().goBack()) {
-            closeWidget("", null, false);
+            closeWidget("", null, false, "");
         }
     }
 
-    private void closeWidget(String inResultInfo, String appId, boolean isWdgBG) {
+    private void closeWidget(String inResultInfo, String appId, boolean isWdgBG, String inAnimiId) {
         EBrowserWidget target = null;
         if (null != appId) {
             target = getWidget(appId);
@@ -283,6 +283,7 @@ public class EBrowserWidgetPool {
             WgtEnty entry = new WgtEnty(null, null);
             entry.mObj = target;
             entry.mObj1 = inResultInfo;
+            entry.inAnimiId = inAnimiId;
             Message msg = mWidPoolLoop.obtainMessage();
             msg.what = F_WIDGET_POOL_LOOP_FINISH_WIDGET;
             msg.arg1 = 0;
@@ -293,16 +294,18 @@ public class EBrowserWidgetPool {
         }
     }
 
-    public void finishWidget(String inResultInfo, String appId, boolean isWdgBG) {
+    public void finishWidget(String inResultInfo, String appId, boolean isWdgBG, String inAnimiId) {
 
-        closeWidget(inResultInfo, appId, isWdgBG);
+        closeWidget(inResultInfo, appId, isWdgBG, inAnimiId);
     }
 
-    private void closeCurrentWidget(EBrowserWidget closeWgt,
-                                    final String inResultInfo) {
+    private void closeCurrentWidget(WgtEnty entry) {
         EBrowser.clearFlag();
         final EBrowserWidget outWidget;
         final EBrowserWidget inWidget;
+        final String inResultInfo = (String) entry.mObj1;
+        final String inAnimiId = (String) entry.inAnimiId;
+        EBrowserWidget closeWgt = (EBrowserWidget) entry.mObj;
         if (null != closeWgt) {
             outWidget = closeWgt;
             int outIndex = mWgtStack.indexOf(outWidget);
@@ -318,8 +321,16 @@ public class EBrowserWidgetPool {
         int animiId = 0;
         long duration = 0;
         if (null != reInfo) {
-            animiId = reInfo.getContraryAnimiId();
-            duration = reInfo.getDuration();
+            if (TextUtils.isEmpty(inAnimiId)) {
+                animiId = reInfo.getContraryAnimiId();
+                duration = reInfo.getDuration();
+            } else {
+                try {
+                    animiId = Integer.parseInt(inAnimiId);
+                    duration = reInfo.getDuration();
+                } catch (NumberFormatException e) {
+                }
+            }
         }
         Animation[] animPair = EBrowserAnimation.getAnimPair(animiId, duration);
         Animation inAnim = animPair[0];
@@ -476,8 +487,7 @@ public class EBrowserWidgetPool {
                             }
 
                         } else {
-                            closeCurrentWidget((EBrowserWidget) entry.mObj,
-                                    (String) entry.mObj1);
+                            closeCurrentWidget(entry);
                         }
 
                     }
@@ -523,6 +533,7 @@ public class EBrowserWidgetPool {
         public EWgtResultInfo m_resultInfo;
         public Object mObj;
         public Object mObj1;
+        public Object inAnimiId;
 
         public WgtEnty(WWidgetData data, EWgtResultInfo resultInfo) {
             m_data = data;

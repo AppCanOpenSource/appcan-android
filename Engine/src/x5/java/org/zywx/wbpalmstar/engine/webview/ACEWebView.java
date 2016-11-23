@@ -19,10 +19,13 @@
 package org.zywx.wbpalmstar.engine.webview;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Build;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.tencent.smtt.sdk.DownloadListener;
 import com.tencent.smtt.sdk.QbSdk;
@@ -30,14 +33,17 @@ import com.tencent.smtt.sdk.WebView;
 
 import org.zywx.wbpalmstar.acedes.EXWebViewClient;
 import org.zywx.wbpalmstar.base.BDebug;
+import org.zywx.wbpalmstar.base.vo.KernelInfoVO;
 import org.zywx.wbpalmstar.engine.CBrowserMainFrame;
 import org.zywx.wbpalmstar.engine.CBrowserMainFrame7;
 import org.zywx.wbpalmstar.engine.CBrowserWindow;
 import org.zywx.wbpalmstar.engine.CBrowserWindow7;
+import org.zywx.wbpalmstar.engine.DataHelper;
 import org.zywx.wbpalmstar.engine.EBrowserBaseSetting;
 import org.zywx.wbpalmstar.engine.EBrowserSetting;
 import org.zywx.wbpalmstar.engine.EBrowserSetting7;
 import org.zywx.wbpalmstar.engine.EBrowserView;
+import org.zywx.wbpalmstar.engine.EBrowserWindow;
 import org.zywx.wbpalmstar.widgetone.dataservice.WDataManager;
 
 
@@ -48,6 +54,10 @@ public class ACEWebView extends WebView implements DownloadListener {
     private EXWebViewClient mEXWebViewClient;
     private EBrowserBaseSetting mBaSetting;
     private Context mContext;
+    private boolean mWebApp;
+    private EBrowserView mBroView;
+    private EBrowserWindow mBroWind;
+    private int mDownloadCallback = 0;  // 0 下载不回调，使用引擎下载; 1 下载回调给主窗口，前端自己下载; 2 下载回调给当前窗口，前端自己下载;
 
     public ACEWebView(Context context) {
 		super(context);
@@ -88,6 +98,11 @@ public class ACEWebView extends WebView implements DownloadListener {
 
 
     public void init(EBrowserView eBrowserView,boolean webApp) {
+        if (getX5WebViewExtension() != null) {
+            webApp = true;
+        }
+        mWebApp = webApp;
+        mBroView = eBrowserView;
         if (Build.VERSION.SDK_INT <= 7) {
             if (mBaSetting == null) {
                 mBaSetting = new EBrowserSetting(eBrowserView);
@@ -131,10 +146,43 @@ public class ACEWebView extends WebView implements DownloadListener {
         }
     }
 
+    public void setUserAgent(String userAgent) {
+        if (mBaSetting!=null){
+            mBaSetting.setUserAgent(userAgent);
+        }
+    }
+
+    public void setWebApp(boolean flag) {
+        mWebApp = flag;
+    }
+
+    public boolean isWebApp() {
+        return mWebApp;
+    }
+
     @Override
     public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
-        mEXWebViewClient.onDownloadStart(mContext, url, userAgent,
-                contentDisposition, mimetype, contentLength);
+        if (mDownloadCallback == 0) {
+            mEXWebViewClient.onDownloadStart(mContext, url, userAgent,
+                    contentDisposition, mimetype, contentLength);
+        } else {
+            if (null != mBroWind && null != mBroView) {
+                mBroWind.executeCbDownloadCallbackJs(mBroView, mDownloadCallback,
+                        url, userAgent, contentDisposition, mimetype, contentLength);
+            }
+        }
+    }
+
+    public int getDownloadCallback() {
+        return mDownloadCallback;
+    }
+
+    public void setDownloadCallback(int downloadCallback) {
+        this.mDownloadCallback = downloadCallback;
+    }
+
+    public void setEBrowserWindow(EBrowserWindow broWind) {
+        this.mBroWind = broWind;
     }
 
     @Override
@@ -144,8 +192,17 @@ public class ACEWebView extends WebView implements DownloadListener {
         super.destroy();
     }
 
+    @Override
+    public void loadUrl(String url) {
+        if (url != null && url.startsWith("javascript:")) {
+            super.evaluateJavascript(url, null);
+        } else {
+            super.loadUrl(url);
+        }
+    }
+
     public float getScaleWrap() {
-        if (Build.VERSION.SDK_INT<=18){
+        if (Build.VERSION.SDK_INT <= 18 || getX5WebViewExtension() != null) {
             return getScale();
         }
         return 1.0f;
@@ -157,5 +214,57 @@ public class ACEWebView extends WebView implements DownloadListener {
 
     public int getScrollYWrap() {
         return getView().getScrollY();
+    }
+
+    public int getScrollXWrap() {
+        return getView().getScrollX();
+    }
+
+    public void addViewWrap(View child, android.widget.AbsoluteLayout.LayoutParams params) {
+        ((ViewGroup) getView()).addView(child, params);
+    }
+
+    public void removeViewWrap(View child) {
+        ((ViewGroup) getView()).removeView(child);
+    }
+
+    public int getChildCountWrap() {
+        return ((ViewGroup) getView()).getChildCount();
+    }
+
+    public View getChildAtWrap(int index) {
+        return ((ViewGroup) getView()).getChildAt(index);
+    }
+
+    public void setHorizontalScrollBarEnabledWrap(boolean visible) {
+        getView().setHorizontalScrollBarEnabled(visible);
+    }
+
+    public void setVerticalScrollBarEnabledWrap(boolean visible) {
+        getView().setVerticalScrollBarEnabled(visible);
+    }
+
+    public String getWebViewKernelInfo() {
+        KernelInfoVO infoVO = new KernelInfoVO();
+        if (getX5WebViewExtension() != null) {
+            infoVO.setKernelType("X5");
+            infoVO.setKernelVersion(QbSdk.getTbsVersion(this.getContext()) + "");
+        } else {
+            if (Build.VERSION.SDK_INT > 18) {
+                infoVO.setKernelType("System(Blink)");
+                try {
+                    PackageManager pm = this.getContext().getPackageManager();
+                    PackageInfo pinfo = pm.getPackageInfo("com.google.android.webview",
+                            PackageManager.GET_CONFIGURATIONS);
+                    infoVO.setKernelVersion(pinfo.versionName);
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                infoVO.setKernelType("System(Webkit)");
+            }
+        }
+        String info = DataHelper.gson.toJson(infoVO);
+        return info;
     }
 }

@@ -18,7 +18,6 @@
 
 package org.zywx.wbpalmstar.platform.push.report;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,7 +26,9 @@ import android.os.Process;
 import android.text.TextUtils;
 import android.util.Log;
 
+import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.ResoureFinder;
+import org.zywx.wbpalmstar.base.vo.PushDeviceBindVO;
 import org.zywx.wbpalmstar.platform.push.PushService;
 
 import java.util.List;
@@ -44,6 +45,7 @@ public class PushReportThread extends Thread implements PushReportConstants {
     // private PushReportAgent mPushAgent = null;
     private List mNameValuePairs = null;
     private boolean mIsRun;
+    private PushDeviceBindVO mPushDeviceBind = null;
 
     public PushReportThread(Context inActivity, int threadType) {
         m_activity = inActivity;
@@ -85,6 +87,13 @@ public class PushReportThread extends Thread implements PushReportConstants {
         pushReportThread.mTaskId = taskId;
         pushReportThread.mTenantId = tenantId;
         pushReportThread.mSoftToken = softToken;
+        return pushReportThread;
+    }
+
+    public static PushReportThread getDeviceBindThread(Context inActivity, int threadType, PushDeviceBindVO pushDeviceBind) {
+        PushReportThread pushReportThread = new PushReportThread(inActivity,
+                threadType);
+        pushReportThread.mPushDeviceBind = pushDeviceBind;
         return pushReportThread;
     }
 
@@ -133,6 +142,20 @@ public class PushReportThread extends Thread implements PushReportConstants {
                         }
                         newPushReportOpen();
                         break;
+                    case TYPE_PUSH_DEVICEBIND:
+                        if (TextUtils.isEmpty(host_pushBindUser)) {
+                            Log.w("PushReportThread", "host_pushBindUser is empty");
+                            break;
+                        }
+                        bindDeviceInfo();
+                        break;
+                    case TYPE_PUSH_DEVICEUNBIND:
+                        if (TextUtils.isEmpty(host_pushBindUser)) {
+                            Log.w("PushReportThread", "host_pushBindUser is empty");
+                            break;
+                        }
+                        unBindDeviceInfo();
+                        break;
                 }
                 mIsRun = false;
             }
@@ -142,8 +165,7 @@ public class PushReportThread extends Thread implements PushReportConstants {
     }
 
     private void unBindUserInfo() {
-        String softToken = PushReportUtility.getSoftToken((Activity) m_activity,
-                PushReportAgent.mCurWgt.m_appkey);
+        String softToken = BUtility.getSoftToken(m_activity, PushReportAgent.mCurWgt.m_appkey);
         String bu = PushReportHttpClient.sendPostDataByNameValuePair(
                 (host_pushBindUser + "msg/" + softToken + "/unBindUser"), mNameValuePairs,
                 m_activity);
@@ -204,4 +226,15 @@ public class PushReportThread extends Thread implements PushReportConstants {
         Log.i("PushReportThread", "pushReportArrive result======" + result);
     }
 
+    private void bindDeviceInfo() {
+        PushReportHttpClient.bindOrUnbindDeviceInfo(
+                (host_pushBindUser + url_push_bindDevice), mPushDeviceBind,
+                m_activity);
+    }
+
+    private void unBindDeviceInfo() {
+        PushReportHttpClient.bindOrUnbindDeviceInfo(
+                (host_pushBindUser + url_push_bindDevice), mPushDeviceBind,
+                m_activity);
+    }
 }

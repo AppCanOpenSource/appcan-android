@@ -111,6 +111,7 @@ public class WWidgetData implements Parcelable {
     public String[] disableSonWindows;
     public ArrayList<String> disableSonWindowsList = new ArrayList<String>();
 
+    public ArrayList<String> noHardwareList = new ArrayList<String>();
     public String m_appkey;
 
     public int m_appdebug = 0;//是否开启debug模式，0：关闭，1：开启
@@ -118,7 +119,7 @@ public class WWidgetData implements Parcelable {
     public String m_opaque = "";
 
     public String m_bgColor = "#00000000";
-
+    public int m_widgetOneLocation = 0;  //0:SD卡; 1:沙箱; 默认SD卡
     public static int m_remove_loading = 1;//1,引擎关闭loading页；0，web调接口关闭loading页
 
     public static boolean sFullScreen = false;//是否全屏
@@ -159,6 +160,7 @@ public class WWidgetData implements Parcelable {
             widget.m_appkey = source.readString();
             widget.mErrorPath=source.readString();
             widget.m_appdebug=source.readInt();
+            widget.m_widgetOneLocation = source.readInt();
             if (widget.disablePluginsList != null) {
                 source.readStringList(widget.disablePluginsList);
             }
@@ -167,6 +169,9 @@ public class WWidgetData implements Parcelable {
             }
             if (widget.disableSonWindowsList != null) {
                 source.readStringList(widget.disableSonWindowsList);
+            }
+            if (widget.noHardwareList != null) {
+                source.readStringList(widget.noHardwareList);
             }
             return widget;
         }
@@ -235,9 +240,11 @@ public class WWidgetData implements Parcelable {
         parcel.writeString(m_appkey);
         parcel.writeString(mErrorPath);
         parcel.writeInt(m_appdebug);
+        parcel.writeInt(m_widgetOneLocation);
         parcel.writeStringList(disablePluginsList);
         parcel.writeStringList(disableRootWindowsList);
         parcel.writeStringList(disableSonWindowsList);
+        parcel.writeStringList(noHardwareList);
     }
 
     @Override
@@ -306,6 +313,8 @@ public class WWidgetData implements Parcelable {
         sb.append("m_remove_loading:" + m_remove_loading);
         sb.append("\n");
         sb.append("mErrorPath:" + mErrorPath);
+        sb.append("\n");
+        sb.append("m_widgetOneLocation: " + m_widgetOneLocation);
         sb.append("\n");
         return sb.toString();
     }

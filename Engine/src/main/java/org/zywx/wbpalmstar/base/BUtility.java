@@ -31,8 +31,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.net.Uri;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.support.annotation.Keep;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Xml;
@@ -42,8 +45,10 @@ import org.zywx.wbpalmstar.acedes.ACEDes;
 import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.platform.encryption.PEncryption;
+import org.zywx.wbpalmstar.platform.push.report.PushReportConstants;
 import org.zywx.wbpalmstar.widgetone.dataservice.WDataManager;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
+import org.zywx.wbpalmstar.widgetone.dataservice.WidgetPackageMgr;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -56,6 +61,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -82,14 +89,23 @@ public class BUtility {
     public final static String F_APP_AUDIO = "audio/";
     public final static String F_APP_MYSPACE = "myspace/";
     public final static String F_Widget_RES_path = "widget/wgtRes/";
+    public final static String F_WIDGET_PLUGIN_PATH = "widget/plugin/";
     public final static String F_Widget_RES_SCHEMA = "res://";
     public final static String F_SBOX_SCHEMA = "box://";
+    public final static String F_EXTERBOX_SCHEMA = "exterbox://";
     public final static String m_loadingImageSp = "loadingImageSp";
     public final static String m_loadingImagePath = "loadingImagePath";
     public final static String m_loadingImageTime= "loadingImageTime";
 
     public static boolean isDes = false;
     public static String g_desPath = "";
+    public static String widgetOneRootPath = "";
+    /** 安装补丁包类型 1：网页包；2：插件包；3：网页和插件 */
+    public final static int INSTALL_PATCH_WIDGET = 1;
+    public final static int INSTALL_PATCH_PLUGIN = 2;
+    public final static int INSTALL_PATCH_ALL = 3;
+    public final static int PATCH_WIDGET_FLAG = 1;
+    public final static int PATCH_PLUGIN_FLAG = 2;
 
     // 缩放图片
     public static Bitmap imageScale(Bitmap bitmap, int dst_w, int dst_h) {
@@ -207,6 +223,13 @@ public class BUtility {
     }
 
     /**
+     * @return 沙箱目录路径
+     */
+    public static String getSBoxRootPath(Context context) {
+        return context.getFilesDir().getAbsolutePath() + "/";
+    }
+
+    /**
      * @return 增量更新开关
      */
     public static boolean getIsUpdateWidget() {
@@ -220,15 +243,25 @@ public class BUtility {
         return WDataManager.isCopyAssetsFinish;
     }
 
+    /**
+     * 得到widgetone的目录路径
+     * 
+     * @return ../widgetone/
+     */
+    public static String getWidgetOneRootPath() {
+        return widgetOneRootPath;
+    }
+
     // 初始化widget的文件夹
     public static void initWidgetOneFile(Context context, String appId) {
         String root = null;
         appId += "/";
-        if (sdCardIsWork()) {
+        if (!WDataManager.isWidgetOneSBox && sdCardIsWork()) {
             root = getSdCardRootPath();
         } else {
-            root = context.getFilesDir().getAbsolutePath() + "/";
+            root = getSBoxRootPath(context);
         }
+        widgetOneRootPath = root + F_BASE_WGT_PATH;
         String[] fileDir = {root + F_APP_PATH + appId, root + F_WIDGET_PATH,
                 root + F_APP_PATH + appId + F_APP_VIDEO,
                 root + F_APP_PATH + appId + F_APP_PHOTO,
@@ -563,6 +596,9 @@ public class BUtility {
         path = correctFilePath(path);
         if (path.startsWith(F_ASSET_PATH)) {
             return path.substring(F_ASSET_PATH.length());
+        } else if (path.startsWith(F_SDCARD_PATH)) {
+            return getSdCardRootPath()
+                    + path.substring(F_SDCARD_PATH.length());
         } else if (path.startsWith(F_FILE_SCHEMA)) {
             return path.substring(F_FILE_SCHEMA.length());
         }
@@ -589,6 +625,9 @@ public class BUtility {
         } else if (path.startsWith(F_SBOX_SCHEMA)) {
             return WDataManager.m_sboxPath
                     + path.substring(F_SBOX_SCHEMA.length());
+        } else if (path.startsWith(F_EXTERBOX_SCHEMA)) {
+            return WDataManager.m_exterboxPath
+                    + path.substring(F_EXTERBOX_SCHEMA.length());
         } else {
             return path;
         }
@@ -612,7 +651,54 @@ public class BUtility {
         }
         int wgtType = currentWidget.m_wgtType;
         String widgetPath = currentWidget.getWidgetPath();
-        return handleRelativePath(makeRealPath(path, widgetPath, wgtType));
+        String appId = currentWidget.m_appId;
+        if (path == null || path.length() == 0) {
+            return null;
+        }
+        if (path.startsWith(F_ASSET_PATH)) {
+            path = path.substring(F_ASSET_PATH.length());
+        } else if (path.startsWith(F_SDCARD_PATH)) {
+            path = getSdCardRootPath()
+                    + path.substring(F_SDCARD_PATH.length());
+        } else if (path.startsWith(F_FILE_SCHEMA)) {
+            path = path.substring(F_FILE_SCHEMA.length());
+        }
+        if (path.startsWith(F_APP_SCHEMA)) {
+            path = widgetPath + path.substring(F_APP_SCHEMA.length());
+        } else if (path.startsWith(F_WIDGET_SCHEMA)) {
+            path = WDataManager.m_wgtsPath
+                    + path.substring(F_WIDGET_SCHEMA.length());
+        } else if (path.startsWith(F_Widget_RES_SCHEMA)) {
+            if (wgtType == 0) {
+                if (WDataManager.isUpdateWidget
+                        && WDataManager.isCopyAssetsFinish) {
+                    path = WDataManager.m_sboxPath + F_Widget_RES_path
+                            + path.substring(F_Widget_RES_SCHEMA.length());
+                } else {
+                    path = F_Widget_RES_path
+                            + path.substring(F_Widget_RES_SCHEMA.length());
+                }
+            } else if (wgtType == 3) {
+                if (WDataManager.isUpdateWidget
+                        && WDataManager.isCopyAssetsFinish) {
+                    path = WDataManager.m_sboxPath + F_WIDGET_PLUGIN_PATH + appId
+                            + "/wgtRes/" + path.substring(F_Widget_RES_SCHEMA.length());
+                } else {
+                    path = F_WIDGET_PLUGIN_PATH + appId + "/wgtRes/"
+                            + path.substring(F_Widget_RES_SCHEMA.length());
+                }
+            } else {
+                path = widgetPath + "wgtRes/"
+                        + path.substring(F_Widget_RES_SCHEMA.length());
+            }
+        } else if (path.startsWith(F_SBOX_SCHEMA)) {
+            path = WDataManager.m_sboxPath
+                    + path.substring(F_SBOX_SCHEMA.length());
+        } else if (path.startsWith(F_EXTERBOX_SCHEMA)) {
+            path = WDataManager.m_exterboxPath
+                    + path.substring(F_EXTERBOX_SCHEMA.length());
+        }
+        return handleRelativePath(path);
     }
 
     /**
@@ -675,12 +761,90 @@ public class BUtility {
                 && fullPath.length() > 0
                 && (fullPath.startsWith(BUtility.F_FILE_SCHEMA)
                 || fullPath.startsWith(BUtility.F_APP_SCHEMA)
-                || fullPath.startsWith(BUtility.F_WIDGET_SCHEMA) || fullPath
-                .startsWith(BUtility.F_Widget_RES_SCHEMA))) {
+                || fullPath.startsWith(BUtility.F_WIDGET_SCHEMA)
+                || fullPath.startsWith(BUtility.F_Widget_RES_SCHEMA)
+                || fullPath.startsWith(BUtility.F_SDCARD_PATH)
+                || fullPath.startsWith(BUtility.F_EXTERBOX_SCHEMA))) {
             return true;
         } else {
             return false;
         }
+    }
+
+    /**
+     * 获取租户标示
+     * 
+     * @param context
+     * @return 租户标示
+     */
+    public static String getTenantAccount(Context context) {
+        String tenantAccountEncryption = getTenantAccountFromRes(context);
+        if (TextUtils.isEmpty(tenantAccountEncryption)) {
+            tenantAccountEncryption = getTenantAccountFromCache(context);
+        }
+        return tenantAccountEncryption;
+    }
+
+    /**
+     * 从资源文件中获取租户标示，打包服务器配置租户ID为“0”，也认为租户为空
+     * 
+     * @param context
+     * @return 租户标示
+     */
+    private static String getTenantAccountFromRes(Context context) {
+        String tenantAccountEncryption = "";
+        String tenantAccount = "";
+        try {
+            tenantAccount = EUExUtil.getString("tenant_id");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        tenantAccountEncryption = decryptTenantAccount(context, tenantAccount);
+        if ("0".equals(tenantAccountEncryption)) {
+            tenantAccountEncryption = "";
+        }
+        return tenantAccountEncryption;
+    }
+
+    /**
+     * 从本地缓存中获取租户标示
+     * 
+     * @param context
+     * @return 租户标示
+     */
+    private static String getTenantAccountFromCache(Context context) {
+        String tenantAccountEncryption = "";
+        String tenantAccount = "";
+        tenantAccount = getString(context, "app", "tenantAccount", "");
+        tenantAccountEncryption = decryptTenantAccount(context, tenantAccount);
+        return tenantAccountEncryption;
+    }
+
+    private static String decryptTenantAccount(Context context,
+            String taEncryption) {
+        String tenantAccount = "";
+        if (!TextUtils.isEmpty(taEncryption)) {
+            String mainAppId = getString(context, "app", "appid", "");
+            byte[] tenantAccountByte = HexStringToBinary(taEncryption);
+            tenantAccount = new String(PEncryption.os_decrypt(
+                    tenantAccountByte, tenantAccountByte.length, mainAppId));
+        }
+        return tenantAccount;
+    }
+
+    /**
+     * 从指定SharedPreferences（spName）中获取key对应的String
+     * 
+     * @param context
+     * @param spName
+     * @param key
+     * @param defValue
+     * @return key对应的value
+     */
+    public static String getString(Context context, String spName, String key,
+            String defValue) {
+        SharedPreferences sp = context.getSharedPreferences(spName, Context.MODE_PRIVATE);
+        return sp.getString(key, defValue);
     }
 
     /**
@@ -1136,5 +1300,233 @@ public class BUtility {
             e.printStackTrace();
             return inputStream;
         }
+    }
+
+    /**
+     * 安装主应用补丁包
+     * 
+     * @param context
+     * @param appId
+     * @param installType：安装补丁包类型1：网页包；2：插件包；3：网页和插件
+     * @return 安装成功，返回版本号；失败，返回空。
+     */
+    public static String installWidgetPatch(Context context, String appId,
+            int installType) {
+        return WidgetPackageMgr.installWidgetPatch(context, appId, installType);
+    }
+
+    /**
+     * 安装子应用（包括全量包、补丁包）,子应用的安装、升级，不区分全量包、补丁包。
+     * 
+     * @param appId
+     * @param filePath：压缩包位置
+     * @param desPath：安装位置
+     * @param encoding
+     * @return 安装路径
+     */
+    public static String installSubWidget(String appId, String filePath,
+            String desPath, String encoding) {
+        return WidgetPackageMgr.installSubWidget(appId, filePath, desPath,
+                encoding);
+    }
+
+    /**
+     * 获取主应用的softToken
+     *
+     * @param context
+     * @param appKey
+     * @return
+     */
+    public static String getSoftToken(Context context, String appKey) {
+        SharedPreferences preferences = context.getSharedPreferences(
+                PushReportConstants.SP_APP, Context.MODE_PRIVATE);
+        String softToken = preferences.getString("softToken", null);
+        if (softToken != null) {
+            return softToken;
+        }
+
+        String[] val = new String[4];
+        try {
+            val[0] = getMacAddress(context);
+            TelephonyManager telephonyManager = (TelephonyManager) context
+                    .getSystemService(Context.TELEPHONY_SERVICE);
+            val[1] = telephonyManager.getDeviceId();
+            val[2] = getCPUSerial();
+            val[3] = appKey;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        softToken = getMD5Code(val);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("softToken", softToken);
+        editor.commit();
+        return softToken;
+    }
+
+    /**
+     * 获取Mac地址
+     *
+     * @return Mac地址，带有'：'
+     */
+    public static String getMacAddress(Context context) {
+        String macSerial = null;
+        try {
+            WifiManager wifi = (WifiManager) context
+                    .getSystemService(Context.WIFI_SERVICE);
+            WifiInfo info = wifi.getConnectionInfo();
+            macSerial = info.getMacAddress();
+        } catch (Exception e) {
+        }
+        if (macSerial == null || "02:00:00:00:00:00".equals(macSerial)) {
+            macSerial = readFileContent("/sys/class/net/wlan0/address").trim();
+        }
+        return macSerial;
+    }
+
+    private static String readFileContent(String path) {
+        String content = "";
+        try {
+            if ((new File(path)).exists()) {
+                FileInputStream fis = new FileInputStream(path);
+                byte[] buffer = new byte[8192];
+                int byteCount = fis.read(buffer);
+                if (byteCount > 0) {
+                    content = new String(buffer, 0, byteCount, "utf-8");
+                }
+                fis.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return content;
+    }
+
+    public static String getMD5Code(String[] value) {
+        if (value == null || value.length == 0) {
+            return null;
+        }
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.reset();
+            for (String va : value) {
+                if (va == null) {
+                    va = "";
+                }
+                md.update(va.getBytes());
+            }
+            byte[] md5Bytes = md.digest();
+            StringBuffer hexValue = new StringBuffer();
+            for (int i = 0; i < md5Bytes.length; i++) {
+                int val = ((int) md5Bytes[i]) & 0xff;
+                if (val < 16)
+                    hexValue.append("0");
+                hexValue.append(Integer.toHexString(val));
+            }
+            return hexValue.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 获取CPU序列号
+     *
+     * @return CPU序列号(16位) 读取失败为"0000000000000000"
+     */
+    private static String getCPUSerial() {
+        String str = "", cpuAddress = "0000000000000000";
+        try {
+            // 读取CPU信息
+            str = readFileContent("/proc/cpuinfo");
+            if (str != null && str.length() > 0) {
+                String[] strs = str.split("\n");
+                for (int i = 0; i < strs.length; i++) {
+                    // 提取到序列号所在行的内容
+                    if (strs[i].startsWith("Serial")) {
+                        // 提取序列号
+                        cpuAddress = strs[i].substring(strs[i].indexOf(":") + 1,
+                                strs[i].length()).trim();
+                        break;
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            // 赋予默认值
+            ex.printStackTrace();
+        }
+        return cpuAddress;
+    }
+
+    public static String getAppIdAppKeyMD5(String appId, String appKey) {
+        String[] value = new String[]{appId + ":" + appKey};
+        return getMD5Code(value);
+    }
+
+    public static String decodeStr(String key) {
+        char map[] = {'d', 'b', 'e', 'a', 'f', 'c'};
+        char nmap[] = {'2', '4', '0', '9', '7', '1', '5', '8', '3', '6'};
+        String dest = "";
+        String swapstr = "";
+        String output = "";
+        for (int j = 0; j < key.length(); j++) {
+            if (key.charAt(j) == '-')
+                continue;
+            swapstr = swapstr + key.charAt(j);
+        }
+        for (int j = 0; j < swapstr.length(); j++) {
+            if (j == 8 || j == 12 || j == 16 || j == 20)
+                dest = dest + "-";
+            dest = dest + swapstr.charAt(swapstr.length() - j - 1);
+        }
+        for (int i = 0; i < dest.length(); i++) {
+            char t = dest.charAt(i);
+            if (t >= 'a' && t <= 'f') {
+                t = map[t - 'a'];
+            } else if (t >= '0' && t <= '9') {
+                t = nmap[t - '0'];
+            }
+            output = output + t;
+        }
+        return output;
+    }
+
+    /**
+     * 添加验证头
+     * 
+     * @param appid
+     * @param appkey
+     * @param timeStamp
+     *            当前时间戳
+     * @return
+     */
+    public static String getAppVerifyValue(String appid, String appkey, long timeStamp) {
+        String value = null;
+        String md5 = getMD5Code(appid + ":" + appkey + ":" + timeStamp);
+        value = "md5=" + md5 + ";ts=" + timeStamp;
+        return value;
+    }
+
+    public static String getMD5Code(String value) {
+        if (value == null) {
+            value = "";
+        }
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.reset();
+            md.update(value.getBytes());
+            byte[] md5Bytes = md.digest();
+            StringBuffer hexValue = new StringBuffer();
+            for (int i = 0; i < md5Bytes.length; i++) {
+                int val = ((int) md5Bytes[i]) & 0xff;
+                if (val < 16)
+                    hexValue.append("0");
+                hexValue.append(Integer.toHexString(val));
+            }
+            return hexValue.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

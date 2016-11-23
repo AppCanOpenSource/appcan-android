@@ -33,6 +33,7 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.zywx.wbpalmstar.base.BDebug;
+import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.ResoureFinder;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.platform.push.mqttpush.MQTTService;
@@ -79,8 +80,8 @@ public class PushService extends Service implements PushDataCallback {
     private void start() {
         EUExUtil.init(this.getApplicationContext());
         String appKey = EUExUtil.getString("appkey");
-        appKey = PushReportUtility.decodeStr(appKey);
-        softToken = PushReportUtility.getSoftToken(this, appKey);
+        appKey = BUtility.decodeStr(appKey);
+        softToken = BUtility.getSoftToken(this, appKey);
         preferences = this.getSharedPreferences(PushReportConstants.SP_APP,
                 Context.MODE_PRIVATE);
         url_push = ResoureFinder.getInstance().getString(this, "push_host");
@@ -191,8 +192,19 @@ public class PushService extends Service implements PushDataCallback {
                 .optString(PushReportConstants.PUSH_DATA_JSON_KEY_APPID));
         dataInfo.setTaskId(data
                 .optString(PushReportConstants.PUSH_DATA_JSON_KEY_TASKID));
-        dataInfo.setTitle(data
-                .optString(PushReportConstants.PUSH_DATA_JSON_KEY_TITLE));
+
+        String title = data.optString(PushReportConstants.PUSH_DATA_JSON_KEY_TITLE);
+        if (TextUtils.isEmpty(title)) {
+            try {
+                PackageManager pm = getPackageManager();
+                PackageInfo pinfo = pm.getPackageInfo(getPackageName(), PackageManager.GET_CONFIGURATIONS);
+                title = pinfo.applicationInfo.loadLabel(pm).toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        dataInfo.setTitle(title);
+
         dataInfo.setAlert(data
                 .optString(PushReportConstants.PUSH_DATA_JSON_KEY_ALERT));
         dataInfo.setBadge(data

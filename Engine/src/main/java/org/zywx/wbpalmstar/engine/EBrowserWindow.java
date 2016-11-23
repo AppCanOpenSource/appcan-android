@@ -45,6 +45,7 @@ import org.zywx.wbpalmstar.acedes.ACEDes;
 import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.view.SwipeView;
+import org.zywx.wbpalmstar.base.vo.DownloadCallbackInfoVO;
 import org.zywx.wbpalmstar.engine.EBrowserHistory.EHistoryEntry;
 import org.zywx.wbpalmstar.engine.external.Compat;
 import org.zywx.wbpalmstar.engine.multipop.MultiPopAdapter;
@@ -1814,6 +1815,8 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         }
         eView.setQuery(entity.mQuery);
         eView.init();
+        eView.setDownloadCallback(entity.mDownloadCallback);
+        eView.setUserAgent(entity.mUserAgent);
         if (entity.checkFlag(EBrwViewEntry.F_FLAG_GESTURE)) {
             eView.setSupportZoom();
         }
@@ -2269,6 +2272,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
                 parentBrowerview.setOpaque(false);
             }
         }
+        parentBrowerview.setDownloadCallback(mainEntry.mDownloadCallback);
         parentBrowerview.init();
 
         for (int i = 1; i < entitys.size(); i++) {
@@ -2352,6 +2356,8 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         }
         eView.setQuery(entity.mQuery);
         eView.init();
+        eView.setDownloadCallback(entity.mDownloadCallback);
+        eView.setUserAgent(entity.mUserAgent);
         if (entity.checkFlag(EBrwViewEntry.F_FLAG_GESTURE)) {
             eView.setSupportZoom();
         }
@@ -2909,5 +2915,47 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
     @Keep
     public Map<String, ViewPager> getMultiPopPagerMap(){
         return mMultiPopPager;
+    }
+
+    public void setUserAgent(String userAgent) {
+        mMainView.setUserAgent(userAgent);
+    }
+
+    /**
+     * 设置window是否进行下载回调
+     *
+     * @param flag
+     */
+    public void setDownloadCallback(int flag) {
+        mMainView.setDownloadCallback(flag);
+    }
+
+    public void executeCbDownloadCallbackJs(EBrowserView eBrwView, int callbackType, String url, String userAgent,
+                                            String contentDisposition, String mimetype, long contentLength) {
+        try {
+            DownloadCallbackInfoVO info = new DownloadCallbackInfoVO();
+            info.setUrl(url);
+            info.setUserAgent(userAgent);
+            info.setContentDisposition(contentDisposition);
+            info.setMimetype(mimetype);
+            info.setContentLength(contentLength);
+            if (callbackType == 1) {  // 1 下载回调给主窗口，前端自己下载
+                String name = eBrwView.checkType(EBrwViewEntry.VIEW_TYPE_MAIN) ? "" : eBrwView.getName();
+                info.setWindowName(name);
+                String js = EUExWindow.SCRIPT_HEADER + "if("
+                        + EUExWindow.function_cbDownloadCallback + "){"
+                        + EUExWindow.function_cbDownloadCallback + "("
+                        + DataHelper.gson.toJson(info) + ");}";
+                mMainView.loadUrl(js);
+            } else if (callbackType == 2) {  // 2 下载回调给当前窗口，前端自己下载;
+                String js = EUExWindow.SCRIPT_HEADER + "if("
+                        + EUExWindow.function_cbDownloadCallback + "){"
+                        + EUExWindow.function_cbDownloadCallback + "("
+                        + DataHelper.gson.toJson(info) + ");}";
+                eBrwView.loadUrl(js);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -24,7 +24,10 @@ import android.text.TextUtils;
 
 import org.json.JSONObject;
 import org.zywx.wbpalmstar.base.BDebug;
+import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.vo.NameValuePairVO;
+import org.zywx.wbpalmstar.base.vo.PushDeviceBindVO;
+import org.zywx.wbpalmstar.engine.DataHelper;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.platform.certificates.Http;
 
@@ -70,17 +73,18 @@ public class PushReportHttpClient {
                 appid = tenantId + ":" + appid;
             }
             String appkey = EUExUtil.getString("appkey");
-            appkey = PushReportUtility.decodeStr(appkey);
+            appkey = BUtility.decodeStr(appkey);
             PushReportUtility.log("appid ==" + appid + " appkey ==" + appkey);
             conn.setRequestProperty("Accept", "*/*");
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setRequestProperty("x-mas-app-id", appid);
             conn.setRequestProperty(PushReportUtility.KEY_APPVERIFY,
-                    PushReportUtility.getAppVerifyValue(appid, appkey,
+                    BUtility.getAppVerifyValue(appid, appkey,
                             System.currentTimeMillis()));
 
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("count", 1);
+            jsonObject.put("tenantMark", BUtility.getTenantAccount(mCtx));
             jsonObject.put("softToken", softToken);
 
             OutputStream outputStream = conn.getOutputStream();
@@ -115,6 +119,81 @@ public class PushReportHttpClient {
 
         } catch (Exception e) {
             PushReportUtility.oe("newPushOpenByNameValuePair: " + url, e);
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+        }
+        return null;
+    }
+
+    public static String bindOrUnbindDeviceInfo(String url, PushDeviceBindVO pushDeviceBind, Context mCtx) {
+        PushReportUtility.log(url);
+        HttpURLConnection conn = null;
+        String response = null;
+        try {
+            if (url.startsWith("https://")) {
+                conn = Http.getHttpsURLConnection(url);
+            } else {
+                conn = (HttpURLConnection) new URL(url).openConnection();
+            }
+            conn.setRequestMethod("POST");
+            conn.setReadTimeout(60 * 1000);
+            conn.setConnectTimeout(60 * 1000);
+            conn.setRequestProperty("Accept", "*/*");
+            conn.setRequestProperty("Content-Type", "text/plain;charset=UTF-8");
+            conn.setRequestProperty("x-push-verify-key", "push");
+            conn.setRequestProperty("x-push-verify-id", "push");
+            SharedPreferences preferences = mCtx.getSharedPreferences(
+                    "app", Context.MODE_PRIVATE);
+            String appid = preferences.getString("appid", null);
+            String appkey = EUExUtil.getString("appkey");
+            appkey = BUtility.decodeStr(appkey);
+            BDebug.d("appid ==" + appid + " appkey ==" + appkey);
+            conn.setRequestProperty("x-mas-app-id", appid);
+            conn.setRequestProperty("x-mas-verify",
+                    BUtility.getAppVerifyValue(appid, appkey,
+                            System.currentTimeMillis()));
+            conn.setDoInput(true);
+            conn.setDoOutput(true);
+
+            String param = DataHelper.gson.toJson(pushDeviceBind);
+            BDebug.d(param);
+            OutputStream outputStream = conn.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+            writer.write(param);
+            writer.flush();
+            writer.close();
+            outputStream.close();
+            conn.connect();
+            int responseCode = conn.getResponseCode();
+            if (responseCode == 200) {
+
+                InputStream is = null;
+                try {
+                    is = conn.getInputStream();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+                    StringBuilder sb = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line);
+                    }
+                    response = sb.toString();
+                    is.close();
+                } catch (Exception e) {
+                    if (BDebug.DEBUG) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            PushReportUtility.log("responseCode ==" + responseCode);
+            BDebug.d("response ==" + response);
+            return response;
+
+        } catch (Exception e) {
+            if (BDebug.DEBUG) {
+                e.printStackTrace();
+            }
         } finally {
             if (conn != null) {
                 conn.disconnect();

@@ -373,6 +373,18 @@ public class AppCan {
         }
     }
 
+    public final void deviceBind(String userId, String userNick, Context mContext, EBrowserView mBrwView) {
+        for (EngineEventListener Listener : mListenerQueue) {
+            Listener.deviceBind(userId, userNick, mContext);
+        }
+    }
+
+    public final void deviceUnBind(Context mContext, EBrowserView mBrwView) {
+        for (EngineEventListener Listener : mListenerQueue) {
+            Listener.deviceUnBind(mContext);
+        }
+    }
+
     public final void setPushState(int state) {
         for (EngineEventListener Listener : mListenerQueue) {
             Listener.setPushState(mContext, state);

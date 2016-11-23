@@ -90,11 +90,13 @@ public class WDataManager {
     // public static String m_wgtPath =null;
     public static String m_wgtsPath = null;
     public static String m_sboxPath = null;
+    public static String m_exterboxPath = null;
     // public static Map<String, WWidgetData> widgetMap = null;
     public static List<String> appIDList = null;
     public static boolean isUpdateWidget = false;
     public static boolean isCopyAssetsFinish = false;
     public static String m_copyAssetsFinish = "copyAssetsFinish";
+    public static boolean isWidgetOneSBox = false;
     // private int m_count = 0;
 
     public WDataManager(Context context) {
@@ -107,6 +109,7 @@ public class WDataManager {
                 Context.MODE_PRIVATE);
 
         m_sboxPath = context.getFilesDir().getPath() + "/";
+        m_exterboxPath = context.getExternalFilesDir(null).getPath() + "/";
     }
 
     public static WWidgetData getLoginListWgt(String mainAppId,
@@ -300,6 +303,10 @@ public class WDataManager {
 
                 String developPath = BUtility.getSdCardRootPath()
                         + BUtility.F_WIDGET_APP_PATH + "hiAppcan/";
+                if (isWidgetOneSBox) {
+                    developPath = BUtility.getSBoxRootPath(m_context)
+                            + BUtility.F_WIDGET_APP_PATH + "hiAppcan/";
+                }
                 File test = new File(developPath);
                 if (!test.exists()) {
 
@@ -316,6 +323,10 @@ public class WDataManager {
             }
             String widgetlistPath = BUtility.getSdCardRootPath()
                     + BUtility.F_WIDGET_APP_PATH;
+            if (isWidgetOneSBox) {
+                widgetlistPath = BUtility.getSBoxRootPath(m_context)
+                        + BUtility.F_WIDGET_APP_PATH;
+            }
             File appFileDir = new File(widgetlistPath);
             if (!appFileDir.exists()) {
                 return;
@@ -668,104 +679,104 @@ public class WDataManager {
         return widgetDBId;
     }
 
-    /**
-     * 判断是否有增量更新包，如果有，继续判断版本号是否大于当前APK的版本号
-     */
-    private boolean isHasUpdateZip(String zipPath) {
-        SharedPreferences preferences = m_context.getSharedPreferences(
-                "updateInfo", Context.MODE_PRIVATE);
-        int totalSize = preferences.getInt("totalSize", 0);
-        int downloaded = preferences.getInt("downloaded", 0);
-        if (totalSize == 0 || downloaded == 0 || totalSize != downloaded) {
-            return false;
-        }
-        String filePath = preferences.getString("filePath", null);
-        if (TextUtils.isEmpty(filePath)) {
-            return false;
-        }
+    // /**
+    // * 判断是否有增量更新包，如果有，继续判断版本号是否大于当前APK的版本号
+    // */
+    // private boolean isHasUpdateZip(String zipPath) {
+    // SharedPreferences preferences = m_context.getSharedPreferences(
+    // "updateInfo", Context.MODE_PRIVATE);
+    // int totalSize = preferences.getInt("totalSize", 0);
+    // int downloaded = preferences.getInt("downloaded", 0);
+    // if (totalSize == 0 || downloaded == 0 || totalSize != downloaded) {
+    // return false;
+    // }
+    // String filePath = preferences.getString("filePath", null);
+    // if (TextUtils.isEmpty(filePath)) {
+    // return false;
+    // }
+    //
+    // try {
+    // File dir = new File(zipPath);
+    // // 建立与目标文件的输入连接
+    // FileInputStream inputStream = new FileInputStream(filePath);
+    // CnZipInputStream in = new CnZipInputStream(inputStream, "UTF-8");
+    // ZipEntry entry = in.getNextEntry();
+    // byte[] c = new byte[1024];
+    // int slen;
+    // while (entry != null) {
+    // String zename = entry.getName();
+    // if (zename.toLowerCase().equals("config.xml")) {
+    // File files = new File(dir.getAbsolutePath() + "/" + zename)
+    // .getParentFile();// 当前文件所在目录
+    // if (!files.exists()) {// 如果目录文件夹不存在，则创建
+    // files.mkdirs();
+    // }
+    // //得到config.xml文件的内容
+    // FileOutputStream out = new FileOutputStream(
+    // dir.getAbsolutePath() + "/" + zename);
+    // while ((slen = in.read(c, 0, c.length)) != -1)
+    // out.write(c, 0, slen);
+    //
+    // //对config.xml文件进行XML解析
+    // File file = new File(dir.getAbsolutePath() + "/" + zename);
+    // if (!file.exists()) {
+    // return false;
+    // }
+    // FileInputStream input = new FileInputStream(file);
+    // //得到增量更新包config.xml文件中的版本号
+    // String m_verString = BUtility.parserXmlLabel(input,
+    // "config", "widget", "version");
+    // //比较增量更新包和当前APK的版本号大小
+    // String dbVerString = m_preferences.getString("dbVer", null);
+    // if (m_verString != null && dbVerString != null) {
+    // //格式化版本号内容，去掉"."
+    // m_verString = formatVerString(m_verString.split("\\."));
+    // dbVerString = formatVerString(dbVerString.split("\\."));
+    // //转换成long型
+    // long m_verLong = Long.parseLong(m_verString);
+    // long dbVerLong = Long.parseLong(dbVerString);
+    // if (m_verLong > dbVerLong) {
+    // return true;
+    // }
+    // }
+    // out.close();
+    // input.close();
+    // }
+    // entry = in.getNextEntry();
+    // }
+    // in.close();
+    // } catch (Exception i) {
+    // return false;
+    // }
+    // return false;
+    // }
 
-        try {
-            File dir = new File(zipPath);
-            // 建立与目标文件的输入连接
-            FileInputStream inputStream = new FileInputStream(filePath);
-            CnZipInputStream in = new CnZipInputStream(inputStream, "UTF-8");
-            ZipEntry entry = in.getNextEntry();
-            byte[] c = new byte[1024];
-            int slen;
-            while (entry != null) {
-                String zename = entry.getName();
-                if (zename.toLowerCase().equals("config.xml")) {
-                    File files = new File(dir.getAbsolutePath() + "/" + zename)
-                            .getParentFile();// 当前文件所在目录
-                    if (!files.exists()) {// 如果目录文件夹不存在，则创建
-                        files.mkdirs();
-                    }
-                    //得到config.xml文件的内容
-                    FileOutputStream out = new FileOutputStream(
-                            dir.getAbsolutePath() + "/" + zename);
-                    while ((slen = in.read(c, 0, c.length)) != -1)
-                        out.write(c, 0, slen);
-
-                    //对config.xml文件进行XML解析
-                    File file = new File(dir.getAbsolutePath() + "/" + zename);
-                    if (!file.exists()) {
-                        return false;
-                    }
-                    FileInputStream input = new FileInputStream(file);
-                    //得到增量更新包config.xml文件中的版本号
-                    String m_verString = BUtility.parserXmlLabel(input,
-                            "config", "widget", "version");
-                    //比较增量更新包和当前APK的版本号大小
-                    String dbVerString = m_preferences.getString("dbVer", null);
-                    if (m_verString != null && dbVerString != null) {
-                        //格式化版本号内容，去掉"."
-                        m_verString = formatVerString(m_verString.split("\\."));
-                        dbVerString = formatVerString(dbVerString.split("\\."));
-                        //转换成long型
-                        long m_verLong = Long.parseLong(m_verString);
-                        long dbVerLong = Long.parseLong(dbVerString);
-                        if (m_verLong > dbVerLong) {
-                            return true;
-                        }
-                    }
-                    out.close();
-                    input.close();
-                }
-                entry = in.getNextEntry();
-            }
-            in.close();
-        } catch (Exception i) {
-            return false;
-        }
-        return false;
-    }
-
-    private String formatVerString(String[] s) {
-        if (s.length == 1 && s[0].length() == 1) {
-            s[0] = 0 + s[0];
-        }
-        if (s.length == 2 && s[1].length() == 1) {
-            s[1] = "0" + s[1];
-        }
-        if (s.length == 3 && s[2].length() == 1) {
-            s[2] = "000" + s[2];
-        }
-        if (s.length == 3 && s[2].length() == 2) {
-            s[2] = "00" + s[2];
-        }
-        if (s.length == 3 && s[2].length() == 3) {
-            s[2] = "0" + s[2];
-        }
-        StringBuffer sbf = new StringBuffer("");
-        if (s.length == 1) {
-            sbf.append(s[0]).append("000000");
-        } else if (s.length == 2) {
-            sbf.append(s[0]).append(s[1]).append("0000");
-        } else if (s.length == 3) {
-            sbf.append(s[0]).append(s[1]).append(s[2]);
-        }
-        return sbf.toString();
-    }
+    // private String formatVerString(String[] s) {
+    // if (s.length == 1 && s[0].length() == 1) {
+    // s[0] = 0 + s[0];
+    // }
+    // if (s.length == 2 && s[1].length() == 1) {
+    // s[1] = "0" + s[1];
+    // }
+    // if (s.length == 3 && s[2].length() == 1) {
+    // s[2] = "000" + s[2];
+    // }
+    // if (s.length == 3 && s[2].length() == 2) {
+    // s[2] = "00" + s[2];
+    // }
+    // if (s.length == 3 && s[2].length() == 3) {
+    // s[2] = "0" + s[2];
+    // }
+    // StringBuffer sbf = new StringBuffer("");
+    // if (s.length == 1) {
+    // sbf.append(s[0]).append("000000");
+    // } else if (s.length == 2) {
+    // sbf.append(s[0]).append(s[1]).append("0000");
+    // } else if (s.length == 3) {
+    // sbf.append(s[0]).append(s[1]).append(s[2]);
+    // }
+    // return sbf.toString();
+    // }
 
     /**
      * 得到当前应用
@@ -801,7 +812,8 @@ public class WDataManager {
 //						deleteFile(flie);
                     }
                     //如果有增量更新包，且其版本号大于当前APK的版本号，则进行同步拷贝操作，防止再次弹出增量更新提示框，否则，才进行异步拷贝操作
-                    if (isHasUpdateZip(m_sboxPath + "widget/")) {
+                    if (WidgetPackageMgr.isHasUpdateZip(m_context,
+                            m_sboxPath, assetsData.m_appId)) {
                         BDebug.i("getWidgetData", "isHasUpdateZip CopyAssets");
                         CopyAssets("widget", m_sboxPath + "widget/");
                         isCopyAssetsFinish = true;
@@ -819,7 +831,8 @@ public class WDataManager {
         }
         long widgetDBId = m_preferences.getLong(m_rootWidgetDBId, -1);
         if (widgetDBId != -1) {
-            if (!isCopyAssetsFinish || !unZIP(m_sboxPath + "widget/")) {
+            if (!isCopyAssetsFinish || !WidgetPackageMgr.unZip(m_context,
+                    assetsData.m_appId, BUtility.INSTALL_PATCH_WIDGET)) {
                 int webapp = 0;
                 if (null != assetsData) {
                     webapp = assetsData.m_webapp;
@@ -895,6 +908,8 @@ public class WDataManager {
         widgetData.m_obfuscation = assetsData.m_obfuscation;
         widgetData.m_opaque = assetsData.m_opaque;
         widgetData.mErrorPath=assetsData.mErrorPath;
+        widgetData.noHardwareList=assetsData.noHardwareList;
+
         if (isUpdateWidget && isCopyAssetsFinish) {
             String matchAssetPath = BUtility.F_ASSET_PATH + "widget/";
             if (widgetData.m_indexUrl.startsWith(matchAssetPath)) {
@@ -980,40 +995,40 @@ public class WDataManager {
         return bytes;
     }
 
-    private boolean unZIP(String targetFile) {
-        SharedPreferences preferences = m_context.getSharedPreferences(
-                "updateInfo", Context.MODE_PRIVATE);
-        int totalSize = preferences.getInt("totalSize", 0);
-        int downloaded = preferences.getInt("downloaded", 0);
-
-        if (totalSize == 0 || downloaded == 0 || totalSize != downloaded) {
-            return false;
-        }
-        String filePath = preferences.getString("filePath", null);
-        if (TextUtils.isEmpty(filePath)) {
-            return false;
-        }
-        Editor editor = preferences.edit();
-        editor.clear();
-        editor.commit();
-        try {
-            FileInputStream inputStream = new FileInputStream(filePath);
-            if (unzip(inputStream, targetFile, null)) {
-                File file = new File(filePath);
-                if (file.exists()) {
-                    file.delete();
-                }
-                return true;
-            } else {
-                return false;
-            }
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        // unzip(,box,null);
-        return false;
-    }
+    // private boolean unZIP(String targetFile) {
+    // SharedPreferences preferences = m_context.getSharedPreferences(
+    // "updateInfo", Context.MODE_PRIVATE);
+    // int totalSize = preferences.getInt("totalSize", 0);
+    // int downloaded = preferences.getInt("downloaded", 0);
+    //
+    // if (totalSize == 0 || downloaded == 0 || totalSize != downloaded) {
+    // return false;
+    // }
+    // String filePath = preferences.getString("filePath", null);
+    // if (TextUtils.isEmpty(filePath)) {
+    // return false;
+    // }
+    // Editor editor = preferences.edit();
+    // editor.clear();
+    // editor.commit();
+    // try {
+    // FileInputStream inputStream = new FileInputStream(filePath);
+    // if (unzip(inputStream, targetFile, null)) {
+    // File file = new File(filePath);
+    // if (file.exists()) {
+    // file.delete();
+    // }
+    // return true;
+    // } else {
+    // return false;
+    // }
+    // } catch (FileNotFoundException e) {
+    // // TODO Auto-generated catch block
+    // e.printStackTrace();
+    // }
+    // // unzip(,box,null);
+    // return false;
+    // }
 
     private void copyAssetsThread(final String assetDir, final String dir) {
         Thread thread = new Thread("copyAssetsThread") {
@@ -1227,6 +1242,24 @@ public class WDataManager {
                 e.printStackTrace();
             }
 
+            try {
+                if (!isWidgetOneSBox) {
+                    String appstatus = ResoureFinder.getInstance().getString(
+                            m_context, "appstatus");
+                    String appstatusDecrypt = BUtility.decryptString(appstatus,
+                            widgetData.m_appId);
+                    String[] appstatuss = appstatusDecrypt.split(",");
+                    if (appstatuss != null && appstatuss.length > 16) {
+                        if ("1".equals(appstatuss[16])) {
+                            widgetData.m_widgetOneLocation = 1;
+                        }
+                    }
+                    isWidgetOneSBox = widgetData.m_widgetOneLocation == 1 ? true : false;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             widgetData.m_wgtType = type;
             if (type == 3) {
                 widgetData.m_widgetPath = widgetPath
@@ -1269,7 +1302,7 @@ public class WDataManager {
         } else {
             appIdPath = appId;
         }
-        if (BUtility.sdCardIsWork()) {
+        if (BUtility.sdCardIsWork() && !isWidgetOneSBox) {
 
             if (type == 1) {
                 return BUtility.getSdCardRootPath() + appPath + appIdPath + "/"
@@ -1448,6 +1481,21 @@ public class WDataManager {
                                     "src");
                         }else if("statusbar".equals(localName)){
                             WWidgetData.sStatusBarColor= Color.parseColor(parser.getAttributeValue(null,"color"));
+                        } else if ("deviceitem".equals(localName)) {
+                            String text = parser.nextText();
+                            if (!widgetData.noHardwareList.contains(text)) {
+                                widgetData.noHardwareList.add(text);
+                            }
+                        } else if ("widgetonelocation".equals(localName)) {
+                            String value = parser.nextText();
+                            if (value == null || value.length() == 0) {
+                                widgetData.m_widgetOneLocation = 0;
+                            } else {
+                                widgetData.m_widgetOneLocation = Integer.parseInt(value);
+                            }
+                            if (!isWidgetOneSBox) {
+                                isWidgetOneSBox = widgetData.m_widgetOneLocation == 1 ? true : false;
+                            }
                         }
                         break;
                     case XmlPullParser.END_DOCUMENT:
