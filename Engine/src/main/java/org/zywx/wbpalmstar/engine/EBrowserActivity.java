@@ -30,6 +30,7 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -49,6 +50,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.zywx.wbpalmstar.acedes.ACEDes;
 import org.zywx.wbpalmstar.base.BDebug;
+import org.zywx.wbpalmstar.base.ResoureFinder;
 import org.zywx.wbpalmstar.base.WebViewSdkCompat;
 import org.zywx.wbpalmstar.base.util.ConfigXmlUtil;
 import org.zywx.wbpalmstar.engine.external.Compat;
@@ -510,10 +512,11 @@ public final class EBrowserActivity extends BaseActivity {
 
     private final void loadResError() {
         AlertDialog.Builder dia = new AlertDialog.Builder(this);
-        dia.setTitle(EResources.display_dialog_error);
-        dia.setMessage(EResources.display_init_error);
+        ResoureFinder finder = ResoureFinder.getInstance();
+        dia.setTitle(finder.getString(this, "browser_dialog_error"));
+        dia.setMessage(finder.getString(this, "browser_init_error"));
         dia.setCancelable(false);
-        dia.setPositiveButton(EResources.display_confirm,
+        dia.setPositiveButton(finder.getString(this, "confirm"),
                 new OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         finish();
@@ -536,10 +539,11 @@ public final class EBrowserActivity extends BaseActivity {
         }
         try {
             AlertDialog.Builder tDialog = new AlertDialog.Builder(this);
-            tDialog.setTitle(EResources.display_exitdialog_msg);
-            tDialog.setNegativeButton(EResources.display_cancel, null);
-            tDialog.setMessage(EResources.display_exitdialog_app_text);
-            tDialog.setPositiveButton(EResources.display_confirm,
+            ResoureFinder finder = ResoureFinder.getInstance();
+            tDialog.setTitle(finder.getString(this, "browser_exitdialog_msg"));
+            tDialog.setNegativeButton(finder.getString(this, "cancel"), null);
+            tDialog.setMessage(finder.getString(this, "browser_exitdialog_app_text"));
+            tDialog.setPositiveButton(finder.getString(this, "confirm"),
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -635,11 +639,17 @@ public final class EBrowserActivity extends BaseActivity {
         } else if (flag == 8) {// reverse landscape
             or = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
         } else if (flag == 5) {// portrait and reverse portrait, Some devices only portrait effective
-            or = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT;
+            if (Build.VERSION.SDK_INT >= 18) {
+                or = ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT;
+            } else {
+                or = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT;
+            }
         } else if (flag == 10) {// landscape and reverse landscape
-            or = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
-        } else if (flag == 15) {// sensor
-            or = ActivityInfo.SCREEN_ORIENTATION_USER;
+            if (Build.VERSION.SDK_INT >= 18) {
+                or = ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE;
+            } else {
+                or = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
+            }
         }
         return or;
     }
