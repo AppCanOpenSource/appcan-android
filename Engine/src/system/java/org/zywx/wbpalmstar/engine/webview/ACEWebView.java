@@ -32,6 +32,7 @@ import org.zywx.wbpalmstar.engine.EBrowserBaseSetting;
 import org.zywx.wbpalmstar.engine.EBrowserSetting;
 import org.zywx.wbpalmstar.engine.EBrowserSetting7;
 import org.zywx.wbpalmstar.engine.EBrowserView;
+import org.zywx.wbpalmstar.engine.EBrowserWindow;
 
 
 /**
@@ -41,6 +42,9 @@ public class ACEWebView extends WebView implements DownloadListener {
     private EXWebViewClient mEXWebViewClient;
     private EBrowserBaseSetting mBaSetting;
     private Context mContext;
+    private EBrowserView mBroView;
+    private EBrowserWindow mBroWind;
+    private int mDownloadCallback = 0;  // 0 下载不回调，使用引擎下载; 1 下载回调给主窗口，前端自己下载; 2 下载回调给当前窗口，前端自己下载;
 
     public ACEWebView(Context context) {
 		super(context);
@@ -48,6 +52,7 @@ public class ACEWebView extends WebView implements DownloadListener {
 	}
 
     public void init(EBrowserView eBrowserView,boolean webApp) {
+        mBroView = eBrowserView;
         if (Build.VERSION.SDK_INT <= 7) {
             if (mBaSetting == null) {
                 mBaSetting = new EBrowserSetting(eBrowserView);
@@ -99,10 +104,28 @@ public class ACEWebView extends WebView implements DownloadListener {
 
     @Override
     public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
-        mEXWebViewClient.onDownloadStart(mContext, url, userAgent,
-                contentDisposition, mimetype, contentLength);
+        if (mDownloadCallback == 0) {
+            mEXWebViewClient.onDownloadStart(mContext, url, userAgent,
+                    contentDisposition, mimetype, contentLength);
+        } else {
+            if (null != mBroWind && null != mBroView) {
+                mBroWind.executeCbDownloadCallbackJs(mBroView, mDownloadCallback,
+                        url, userAgent, contentDisposition, mimetype, contentLength);
+            }
+        }
     }
 
+    public int getDownloadCallback() {
+        return mDownloadCallback;
+    }
+
+    public void setDownloadCallback(int downloadCallback) {
+        this.mDownloadCallback = downloadCallback;
+    }
+
+    public void setEBrowserWindow(EBrowserWindow broWind) {
+        this.mBroWind = broWind;
+    }
 
     @Override
     public void destroy() {

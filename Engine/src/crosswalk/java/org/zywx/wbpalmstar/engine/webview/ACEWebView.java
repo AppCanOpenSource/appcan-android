@@ -29,6 +29,7 @@ import org.xwalk.core.XWalkView;
 import org.zywx.wbpalmstar.acedes.EXWebViewClient;
 import org.zywx.wbpalmstar.engine.EBrowserBaseSetting;
 import org.zywx.wbpalmstar.engine.EBrowserView;
+import org.zywx.wbpalmstar.engine.EBrowserWindow;
 import org.zywx.wbpalmstar.engine.ESystemInfo;
 
 import java.lang.reflect.Method;
@@ -51,6 +52,8 @@ public class ACEWebView extends XWalkView {
 	private EXWebViewClient mEXWebViewClient;
 
 	private CBrowserWindow mCBrowserWindow;
+    private EBrowserWindow mBroWind;
+    private int mDownloadCallback = 0;  // 0 下载不回调，使用引擎下载; 1 下载回调给主窗口，前端自己下载; 2 下载回调给当前窗口，前端自己下载;
 	
 	public ACEWebView(Context context) {
 		super(context);
@@ -64,12 +67,20 @@ public class ACEWebView extends XWalkView {
 		setFadingEdgeLength(0);
 		setWebViewClient();
 		setWebChromeClient();
+        final EBrowserView eBroView = eBrowserView;
 		setDownloadListener(new XWalkDownloadListener(getContext()) {
 
 			@Override
 			public void onDownloadStart(String arg0, String arg1, String arg2,
 					String arg3, long arg4) {
-				mCBrowserWindow.onDownloadStart(getContext(), arg0, arg1, arg2, arg3, arg4);
+                if (mDownloadCallback == 0) {
+                    mCBrowserWindow.onDownloadStart(getContext(), arg0, arg1, arg2, arg3, arg4);
+                } else {
+                    if (null != mBroWind) {
+                        mBroWind.executeCbDownloadCallbackJs(eBroView, mDownloadCallback,
+                                arg0, arg1, arg2, arg3, arg4);
+                    }
+                }
 			}
 			
 		});
@@ -244,4 +255,15 @@ public class ACEWebView extends XWalkView {
 		return getHeight();
 	}
 
+    public int getDownloadCallback() {
+        return mDownloadCallback;
+    }
+
+    public void setDownloadCallback(int downloadCallback) {
+        this.mDownloadCallback = downloadCallback;
+    }
+
+    public void setEBrowserWindow(EBrowserWindow broWind) {
+        this.mBroWind = broWind;
+    }
 }

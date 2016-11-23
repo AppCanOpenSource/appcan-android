@@ -112,6 +112,7 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
 
     public void init() {
         super.init(this,mWebApp);
+        setEBrowserWindow(mBroWind);
         setInitialScale(100);
         setVerticalScrollbarOverlay(true);
         setHorizontalScrollbarOverlay(true);
@@ -1449,4 +1450,17 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
         super.setUserAgent(userAgent);
     }
 
+    public int getDownloadCallback() {
+        if (mDestroyed) {
+            return 0;
+        }
+        return super.getDownloadCallback();
+    }
+
+    public void setDownloadCallback(int downloadCallback) {
+        if (mDestroyed) {
+            return;
+        }
+        super.setDownloadCallback(downloadCallback);
+    }
 }
