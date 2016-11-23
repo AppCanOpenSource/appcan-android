@@ -131,6 +131,12 @@ public class ACEWebView extends WebView implements DownloadListener {
         }
     }
 
+    public void setUserAgent(String userAgent) {
+        if (mBaSetting!=null){
+            mBaSetting.setUserAgent(userAgent);
+        }
+    }
+
     @Override
     public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
         mEXWebViewClient.onDownloadStart(mContext, url, userAgent,

@@ -99,6 +99,10 @@ public class ACEWebView extends XWalkView {
 
 	}
 
+    public void setUserAgent(String userAgent) {
+        getSettings().setUserAgentString(userAgent);
+    }
+
 	/**
 	 * XWalkView 用load()方法load 比较长的js会有问题
 	 * @param url

@@ -203,6 +203,7 @@ public class EUExWindow extends EUExBase {
     private ResoureFinder finder;
 
     public static final String KEY_HARDWARE = "hardware";//硬件加速
+    public static final String KEY_USER_AGENT = "userAgent";
 
     public EUExWindow(Context context, EBrowserView inParent) {
         super(context, inParent);
@@ -242,6 +243,7 @@ public class EUExWindow extends EUExBase {
         String bgColor = "#00000000";
         boolean hasExtraInfo = false;
         int hardware = -1;
+        String userAgent = "";
         if (parm.length > 7&&parm[7]!=null) {
             animDuration = parm[7];
         }
@@ -263,6 +265,7 @@ public class EUExWindow extends EUExBase {
                 if (hardware != -1) {
                     hasExtraInfo = true;
                 }
+                userAgent = data.optString(KEY_USER_AGENT, "");
             } catch (JSONException ignored) {
             }
         }
@@ -340,6 +343,7 @@ public class EUExWindow extends EUExBase {
         windEntry.mOpaque = opaque;
         windEntry.mBgColor = bgColor;
         windEntry.mHardware = hardware;
+        windEntry.mUserAgent = userAgent;
         windEntry.hasExtraInfo = hasExtraInfo;
         curWind.createWindow(mBrwView, windEntry);
     }
@@ -1103,6 +1107,7 @@ public class EUExWindow extends EUExBase {
         String bgColor = "#00000000";
         boolean hasExtraInfo = false;
         int hardware = -1;
+        String userAgent = "";
         if (parm.length > 11) {
             String jsonData = parm[11];
             try {
@@ -1121,6 +1126,7 @@ public class EUExWindow extends EUExBase {
                 if (hardware != -1) {
                     hasExtraInfo = true;
                 }
+                userAgent = data.optString(KEY_USER_AGENT, "");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -1200,6 +1206,7 @@ public class EUExWindow extends EUExBase {
         popEntry.mBottom = bottom;
         popEntry.mOpaque = opaque;
         popEntry.mBgColor = bgColor;
+        popEntry.mUserAgent = userAgent;
         popEntry.mHardware = hardware;
         popEntry.hasExtraInfo = hasExtraInfo;
         String query = null;
@@ -1477,6 +1484,7 @@ public class EUExWindow extends EUExBase {
                 /**赋初值，避免不传bgColor崩溃*/
                 String bgColor1 = "#00000000";
                 boolean hasExtraInfo1 = false;
+                String userAgent = "";
                 if (jsonContent.getJSONObject(i).has(EBrwViewEntry.TAG_EXTRAINFO)) {
                     try {
                         String extraInfo = jsonContent.getJSONObject(i).getString(EBrwViewEntry.TAG_EXTRAINFO);
@@ -1489,6 +1497,7 @@ public class EUExWindow extends EUExBase {
                             bgColor1 = data.getString(WWidgetData.TAG_WIN_BG_COLOR);
                             hasExtraInfo1 = true;
                         }
+                        userAgent = data.optString(KEY_USER_AGENT, "");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -1496,6 +1505,7 @@ public class EUExWindow extends EUExBase {
                 popEntry.mOpaque = opaque1;
                 popEntry.mBgColor = bgColor1;
                 popEntry.hasExtraInfo = hasExtraInfo1;
+                popEntry.mUserAgent = userAgent;
                 popEntry.mViewName = jsonContent.getJSONObject(i).getString(
                         "inPageName");
 

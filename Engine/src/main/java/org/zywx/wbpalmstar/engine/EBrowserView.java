@@ -1445,4 +1445,8 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
         return super.getScrollYWrap();
     }
 
+    public void setUserAgent(String userAgent) {
+        super.setUserAgent(userAgent);
+    }
+
 }

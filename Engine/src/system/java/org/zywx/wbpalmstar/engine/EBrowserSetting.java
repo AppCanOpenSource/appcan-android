@@ -19,6 +19,7 @@
 package org.zywx.wbpalmstar.engine;
 
 import android.os.Build;
+import android.text.TextUtils;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.RenderPriority;
 
@@ -117,6 +118,15 @@ public class EBrowserSetting implements EBrowserBaseSetting {
     public void setSupportZoom() {
         mWebSetting.setSupportZoom(true);
         mWebSetting.setBuiltInZoomControls(true);
+    }
+
+    @Override
+    public void setUserAgent(String userAgent) {
+        if (TextUtils.isEmpty(userAgent)) {
+            mWebSetting.setUserAgentString(USERAGENT_NEW);
+        } else {
+            mWebSetting.setUserAgentString(userAgent);
+        }
     }
 
     @SuppressWarnings("rawtypes")

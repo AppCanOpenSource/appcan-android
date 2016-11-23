@@ -1814,6 +1814,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         }
         eView.setQuery(entity.mQuery);
         eView.init();
+        eView.setUserAgent(entity.mUserAgent);
         if (entity.checkFlag(EBrwViewEntry.F_FLAG_GESTURE)) {
             eView.setSupportZoom();
         }
@@ -2352,6 +2353,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         }
         eView.setQuery(entity.mQuery);
         eView.init();
+        eView.setUserAgent(entity.mUserAgent);
         if (entity.checkFlag(EBrwViewEntry.F_FLAG_GESTURE)) {
             eView.setSupportZoom();
         }
@@ -2909,5 +2911,9 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
     @Keep
     public Map<String, ViewPager> getMultiPopPagerMap(){
         return mMultiPopPager;
+    }
+
+    public void setUserAgent(String userAgent) {
+        mMainView.setUserAgent(userAgent);
     }
 }

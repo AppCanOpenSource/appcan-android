@@ -73,6 +73,7 @@ public class EBrwViewEntry {
 
     public int mHardware = -1;//硬件加速，-1不处理，0关闭，1开启
 
+    public String mUserAgent = "";
 
     public EBrwViewEntry(int inType) {
         mType = inType;
