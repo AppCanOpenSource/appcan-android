@@ -233,15 +233,21 @@ public class EUExWidget extends EUExBase {
     }
 
     public void delPushInfo(String[] params) {
-        String uId = "";
-        String uNickName = "";
-        if (params.length > 0) {
-            uId = params[0];
+        String host_pushBindUser = ResoureFinder.getInstance().getString(mContext,
+                "bindUser_host");
+        if (host_pushBindUser.indexOf("push") > 0) {
+            String uId = "";
+            String uNickName = "";
+            if (params.length > 0) {
+                uId = params[0];
+            }
+            if (params.length > 1) {
+                uNickName = params[1];
+            }
+            AppCan.getInstance().delPushInfo(uId, uNickName, mContext, mBrwView);
+        } else {
+            AppCan.getInstance().deviceUnBind(mContext, mBrwView);
         }
-        if (params.length > 1) {
-            uNickName = params[1];
-        }
-        AppCan.getInstance().delPushInfo(uId, uNickName, mContext, mBrwView);
     }
 
     @AppCanAPI
@@ -772,7 +778,13 @@ public class EUExWidget extends EUExBase {
         }
         final String userId = parm[0];
         final String userNick = parm[1];
-        AppCan.getInstance().setPushInfo(userId, userNick, mContext, mBrwView);
+        String host_pushBindUser = ResoureFinder.getInstance().getString(mContext,
+                "bindUser_host");
+        if (host_pushBindUser.indexOf("push") > 0) {
+            AppCan.getInstance().setPushInfo(userId, userNick, mContext, mBrwView);
+        } else {
+            AppCan.getInstance().deviceBind(userId, userNick, mContext, mBrwView);
+        }
     }
 
     public void setPushState(String[] parm) {

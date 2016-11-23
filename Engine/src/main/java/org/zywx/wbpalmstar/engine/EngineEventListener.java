@@ -147,4 +147,8 @@ public interface EngineEventListener {
     public void setPushState(Context context, int state);
 
     public void getPushInfo(Context context, String userInfo, String occuredAt);
+
+    public void deviceBind(String userId, String userName, Context mContext);
+
+    public void deviceUnBind(Context mContext);
 }

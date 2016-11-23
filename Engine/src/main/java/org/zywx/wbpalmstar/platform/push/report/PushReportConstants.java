@@ -21,6 +21,7 @@ package org.zywx.wbpalmstar.platform.push.report;
 public interface PushReportConstants {
     public static final String url_push_report = "report";
     public static final String url_push_bindUser = "msg/bindUser";
+    public static final String url_push_bindDevice = "4.0/installations";
 
     public static final String KEY_PUSH_BINDUSER_HOST = "bindUser_host";
     public static final String KEY_PUSH_REPORT_HOST = "bindUser_host";
@@ -62,6 +63,8 @@ public interface PushReportConstants {
     public final static int TYPE_PUSH_REPORT_ARRIVED = 3;
     public final static int TYPE_PUSH_UNBINDUSER = 4;
     public final static int TYPE_NEW_PUSH_REPORT_OPEN = 5;
+    public final static int TYPE_PUSH_DEVICEBIND = 6;
+    public final static int TYPE_PUSH_DEVICEUNBIND = 7;
 
     public static final int NETWORK_TYPE_UNKNOWN = 0;
     /**

@@ -136,4 +136,13 @@ public class PushEngineEventListener implements EngineEventListener {
         PushReportAgent.delPushInfo(context, nameValuePairs);
     }
 
+    @Override
+    public void deviceBind(String userId, String userName, Context context) {
+        PushReportAgent.deviceBind(userId, userName, context);
+    }
+
+    @Override
+    public void deviceUnBind(Context context) {
+        PushReportAgent.deviceUnBind(context);
+    }
 }

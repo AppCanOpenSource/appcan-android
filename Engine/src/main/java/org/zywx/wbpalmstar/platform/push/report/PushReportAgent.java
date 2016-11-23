@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -29,6 +30,8 @@ import org.json.JSONObject;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.ResoureFinder;
 import org.zywx.wbpalmstar.base.vo.NameValuePairVO;
+import org.zywx.wbpalmstar.base.vo.PushDeviceBindUserVO;
+import org.zywx.wbpalmstar.base.vo.PushDeviceBindVO;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.platform.encryption.PEncryption;
 import org.zywx.wbpalmstar.platform.push.PushService;
@@ -36,6 +39,7 @@ import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 public class PushReportAgent implements PushReportConstants {
 
@@ -257,6 +261,48 @@ public class PushReportAgent implements PushReportConstants {
                 TYPE_PUSH_UNBINDUSER, nameValuePairs).start();
     }
 
+    public static void deviceBind(String userId, String userName, Context context) {
+        try {
+            String softToken = BUtility.getSoftToken(context, mCurWgt.m_appkey);
+            PushDeviceBindVO pushDeviceBind = new PushDeviceBindVO();
+            pushDeviceBind.setDeviceName(Build.MODEL);
+            pushDeviceBind.setDeviceVersion(Build.VERSION.RELEASE);
+            pushDeviceBind.setDeviceType("android");
+            pushDeviceBind.setValid(true);
+            pushDeviceBind.setTimeZone(TimeZone.getDefault().getDisplayName());
+            pushDeviceBind.setDeviceToken(softToken);
+            pushDeviceBind.setSoftToken(softToken);
+            pushDeviceBind.setDeviceOwner("");
+            pushDeviceBind.setTags("");
+            pushDeviceBind.setClientId("");
+            pushDeviceBind.setChannelId("");
+            pushDeviceBind.setVersionId("");
+            pushDeviceBind.setOrg("");
+
+            PushDeviceBindUserVO pushDeviceBindUser = new PushDeviceBindUserVO();
+            pushDeviceBindUser.setUserId(userId);
+            pushDeviceBindUser.setUsername(userName);
+            pushDeviceBindUser.setTags("");
+            pushDeviceBindUser.setSessionStatus("");
+            pushDeviceBind.setUser(pushDeviceBindUser);
+            PushReportThread.getDeviceBindThread(context, TYPE_PUSH_DEVICEBIND, pushDeviceBind).start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void deviceUnBind(Context context) {
+        try {
+            String softToken = BUtility.getSoftToken(context, mCurWgt.m_appkey);
+            PushDeviceBindVO pushDeviceBind = new PushDeviceBindVO();
+            pushDeviceBind.setSoftToken(softToken);
+            PushDeviceBindUserVO pushDeviceBindUser = new PushDeviceBindUserVO();
+            pushDeviceBind.setUser(pushDeviceBindUser);
+            PushReportThread.getDeviceBindThread(context, TYPE_PUSH_DEVICEUNBIND, pushDeviceBind).start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     // public static void insertPush(String appId, String title, String body) {
     // PushDBAdapter pushDB = new PushDBAdapter(mContext);
     // pushDB.open();
