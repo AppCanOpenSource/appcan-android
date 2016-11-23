@@ -123,6 +123,7 @@ public class EUExWindow extends EUExBase {
     public static final String function_cbClosePluginViewContainer = "uexWindow.cbClosePluginViewContainer";
     public static final String function_cbShowPluginViewContainer = "uexWindow.cbShowPluginViewContainer";
     public static final String function_cbHidePluginViewContainer = "uexWindow.cbHidePluginViewContainer";
+    public static final String function_cbClearPluginViewContainer = "uexWindow.cbClearPluginViewContainer";
     public static final String function_onPluginContainerPageChange = "uexWindow.onPluginContainerPageChange";
 
     public static final String function_onSlipedUpward = "uexWindow.onSlipedUpward";
@@ -3515,6 +3516,52 @@ public class EUExWindow extends EUExBase {
                         pager = null;
                         String js = SCRIPT_HEADER + "if(" + function_cbClosePluginViewContainer + "){"
                                 + function_cbClosePluginViewContainer + "(" + opid + "," + EUExCallback.F_C_TEXT + ",'"
+                                + "success" + "'" + SCRIPT_TAIL;
+                        onCallback(js);
+                        return true;
+                    }
+                }//end instance
+            }//end for
+        } catch (Exception e) {
+            if (BDebug.DEBUG) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+        return false;
+    }
+
+    /**
+     * 移除并清除一个容器
+     *
+     * @param params
+     */
+    @AppCanAPI
+    public boolean clearPluginViewContainer(String[] params) {
+        if (params == null || params.length < 1) {
+            errorCallback(0, 0, "error params!");
+            return false;
+        }
+        try {
+            JSONObject json = new JSONObject(params[0].toString());
+            String opid = json.getString("id");
+
+            EBrowserWindow mWindow = mBrwView.getBrowserWindow();
+            int count = mWindow.getChildCount();
+            for (int i = 0; i < count; i++) {
+                View view = mWindow.getChildAt(i);
+                if (view instanceof ContainerViewPager) {
+                    ContainerViewPager pager = (ContainerViewPager) view;
+                    if (opid.equals((String) pager.getContainerVO().getId())) {
+                        ContainerAdapter adapter = (ContainerAdapter) pager.getAdapter();
+                        Vector<FrameLayout> views = adapter.getViewList();
+                        int size = views.size();
+                        for (int j = 0; j < size; j++) {
+                            views.get(j).removeAllViews();
+                        }
+                        views.clear();
+                        String js = SCRIPT_HEADER + "if(" + function_cbClearPluginViewContainer + "){"
+                                + function_cbClearPluginViewContainer + "(" + opid + "," + EUExCallback.F_C_TEXT + ",'"
                                 + "success" + "'" + SCRIPT_TAIL;
                         onCallback(js);
                         return true;

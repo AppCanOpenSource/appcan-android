@@ -289,6 +289,8 @@ public class EUExScript {
                 "'closePluginViewContainer',jo(arguments));},"
                 + "createPluginViewContainer:function(){return uexDispatcher.dispatch('uexWindow'," +
                 "'createPluginViewContainer',jo(arguments));},"
+                + "clearPluginViewContainer:function(){return uexDispatcher.dispatch('uexWindow'," +
+                "'clearPluginViewContainer',jo(arguments));},"
                 + "showPluginViewContainer:function(){uexDispatcher.dispatch('uexWindow','showPluginViewContainer',jo(arguments));},"
                 + "hidePluginViewContainer:function(){uexDispatcher.dispatch('uexWindow','hidePluginViewContainer',jo(arguments));},"
                 + "getUrlQuery:function(){return uexDispatcher.dispatch('uexWindow','getUrlQuery',jo(arguments));},"
