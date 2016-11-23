@@ -709,6 +709,82 @@ public class BUtility {
     }
 
     /**
+     * 获取租户标示
+     * 
+     * @param context
+     * @return 租户标示
+     */
+    public static String getTenantAccount(Context context) {
+        String tenantAccountEncryption = getTenantAccountFromRes(context);
+        if (TextUtils.isEmpty(tenantAccountEncryption)) {
+            tenantAccountEncryption = getTenantAccountFromCache(context);
+        }
+        return tenantAccountEncryption;
+    }
+
+    /**
+     * 从资源文件中获取租户标示，打包服务器配置租户ID为“0”，也认为租户为空
+     * 
+     * @param context
+     * @return 租户标示
+     */
+    private static String getTenantAccountFromRes(Context context) {
+        String tenantAccountEncryption = "";
+        String tenantAccount = "";
+        try {
+            tenantAccount = EUExUtil.getString("tenant_id");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        tenantAccountEncryption = decryptTenantAccount(context, tenantAccount);
+        if ("0".equals(tenantAccountEncryption)) {
+            tenantAccountEncryption = "";
+        }
+        return tenantAccountEncryption;
+    }
+
+    /**
+     * 从本地缓存中获取租户标示
+     * 
+     * @param context
+     * @return 租户标示
+     */
+    private static String getTenantAccountFromCache(Context context) {
+        String tenantAccountEncryption = "";
+        String tenantAccount = "";
+        tenantAccount = getString(context, "app", "tenantAccount", "");
+        tenantAccountEncryption = decryptTenantAccount(context, tenantAccount);
+        return tenantAccountEncryption;
+    }
+
+    private static String decryptTenantAccount(Context context,
+            String taEncryption) {
+        String tenantAccount = "";
+        if (!TextUtils.isEmpty(taEncryption)) {
+            String mainAppId = getString(context, "app", "appid", "");
+            byte[] tenantAccountByte = HexStringToBinary(taEncryption);
+            tenantAccount = new String(PEncryption.os_decrypt(
+                    tenantAccountByte, tenantAccountByte.length, mainAppId));
+        }
+        return tenantAccount;
+    }
+
+    /**
+     * 从指定SharedPreferences（spName）中获取key对应的String
+     * 
+     * @param context
+     * @param spName
+     * @param key
+     * @param defValue
+     * @return key对应的value
+     */
+    public static String getString(Context context, String spName, String key,
+            String defValue) {
+        SharedPreferences sp = context.getSharedPreferences(spName, Context.MODE_PRIVATE);
+        return sp.getString(key, defValue);
+    }
+
+    /**
      * 转码
      */
     public static String transcoding(String text) {

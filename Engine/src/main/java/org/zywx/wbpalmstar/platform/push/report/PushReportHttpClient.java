@@ -24,6 +24,7 @@ import android.text.TextUtils;
 
 import org.json.JSONObject;
 import org.zywx.wbpalmstar.base.BDebug;
+import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.vo.NameValuePairVO;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.platform.certificates.Http;
@@ -81,6 +82,7 @@ public class PushReportHttpClient {
 
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("count", 1);
+            jsonObject.put("tenantMark", BUtility.getTenantAccount(mCtx));
             jsonObject.put("softToken", softToken);
 
             OutputStream outputStream = conn.getOutputStream();
