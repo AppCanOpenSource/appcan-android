@@ -629,7 +629,18 @@ public abstract class EUExBase {
         if (null == curWind) {
             return;
         }
-        curWind.getBrowser().finishWidget(inResultInfo, appId, isWgtBG);
+        curWind.getBrowser().finishWidget(inResultInfo, appId, isWgtBG, "");
+    }
+
+    public void finishWidget(String inResultInfo, String appId, boolean isWgtBG, String inAnimiId) {
+        if (null == mBrwView) {
+            return;
+        }
+        EBrowserWindow curWind = mBrwView.getBrowserWindow();
+        if (null == curWind) {
+            return;
+        }
+        curWind.getBrowser().finishWidget(inResultInfo, appId, isWgtBG, inAnimiId);
     }
 
     /**

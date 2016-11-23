@@ -494,6 +494,7 @@ public class EUExWidget extends EUExBase {
         String inResultInfo = parm[0];
         String appId = null;
         boolean isWgtBG = false;
+        String inAnimiId = "";
         if (parm.length > 1) {
             if (!TextUtils.isEmpty(parm[1]) && parm[1].trim().length() != 0) {
                 appId = parm[1];
@@ -504,7 +505,12 @@ public class EUExWidget extends EUExBase {
                 isWgtBG = "1".equals(parm[2]);
             }
         }
-        finishWidget(inResultInfo, appId, isWgtBG);
+        if (parm.length > 3) {
+            if (!TextUtils.isEmpty(parm[3]) && parm[3].trim().length() != 0) {
+                inAnimiId = parm[3];
+            }
+        }
+        finishWidget(inResultInfo, appId, isWgtBG, inAnimiId);
     }
 
     @AppCanAPI

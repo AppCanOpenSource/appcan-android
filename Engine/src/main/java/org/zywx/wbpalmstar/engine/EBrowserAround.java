@@ -194,7 +194,7 @@ public class EBrowserAround implements android.view.View.OnClickListener {
             return;
         }
         if (ESystemInfo.getIntence().mIsDevelop || mInSubWidget) {
-            mBrwWidPool.finishWidget(null, null, true);
+            mBrwWidPool.finishWidget(null, null, true, "");
             return;
         }
         if (mSpaceShow) {
