@@ -83,8 +83,10 @@ public class BUtility {
     public final static String F_APP_AUDIO = "audio/";
     public final static String F_APP_MYSPACE = "myspace/";
     public final static String F_Widget_RES_path = "widget/wgtRes/";
+    public final static String F_WIDGET_PLUGIN_PATH = "widget/plugin/";
     public final static String F_Widget_RES_SCHEMA = "res://";
     public final static String F_SBOX_SCHEMA = "box://";
+    public final static String F_EXTERBOX_SCHEMA = "exterbox://";
     public final static String m_loadingImageSp = "loadingImageSp";
     public final static String m_loadingImagePath = "loadingImagePath";
     public final static String m_loadingImageTime= "loadingImageTime";
@@ -588,6 +590,9 @@ public class BUtility {
         path = correctFilePath(path);
         if (path.startsWith(F_ASSET_PATH)) {
             return path.substring(F_ASSET_PATH.length());
+        } else if (path.startsWith(F_SDCARD_PATH)) {
+            return getSdCardRootPath()
+                    + path.substring(F_SDCARD_PATH.length());
         } else if (path.startsWith(F_FILE_SCHEMA)) {
             return path.substring(F_FILE_SCHEMA.length());
         }
@@ -614,6 +619,9 @@ public class BUtility {
         } else if (path.startsWith(F_SBOX_SCHEMA)) {
             return WDataManager.m_sboxPath
                     + path.substring(F_SBOX_SCHEMA.length());
+        } else if (path.startsWith(F_EXTERBOX_SCHEMA)) {
+            return WDataManager.m_exterboxPath
+                    + path.substring(F_EXTERBOX_SCHEMA.length());
         } else {
             return path;
         }
@@ -637,7 +645,54 @@ public class BUtility {
         }
         int wgtType = currentWidget.m_wgtType;
         String widgetPath = currentWidget.getWidgetPath();
-        return handleRelativePath(makeRealPath(path, widgetPath, wgtType));
+        String appId = currentWidget.m_appId;
+        if (path == null || path.length() == 0) {
+            return null;
+        }
+        if (path.startsWith(F_ASSET_PATH)) {
+            path = path.substring(F_ASSET_PATH.length());
+        } else if (path.startsWith(F_SDCARD_PATH)) {
+            path = getSdCardRootPath()
+                    + path.substring(F_SDCARD_PATH.length());
+        } else if (path.startsWith(F_FILE_SCHEMA)) {
+            path = path.substring(F_FILE_SCHEMA.length());
+        }
+        if (path.startsWith(F_APP_SCHEMA)) {
+            path = widgetPath + path.substring(F_APP_SCHEMA.length());
+        } else if (path.startsWith(F_WIDGET_SCHEMA)) {
+            path = WDataManager.m_wgtsPath
+                    + path.substring(F_WIDGET_SCHEMA.length());
+        } else if (path.startsWith(F_Widget_RES_SCHEMA)) {
+            if (wgtType == 0) {
+                if (WDataManager.isUpdateWidget
+                        && WDataManager.isCopyAssetsFinish) {
+                    path = WDataManager.m_sboxPath + F_Widget_RES_path
+                            + path.substring(F_Widget_RES_SCHEMA.length());
+                } else {
+                    path = F_Widget_RES_path
+                            + path.substring(F_Widget_RES_SCHEMA.length());
+                }
+            } else if (wgtType == 3) {
+                if (WDataManager.isUpdateWidget
+                        && WDataManager.isCopyAssetsFinish) {
+                    path = WDataManager.m_sboxPath + F_WIDGET_PLUGIN_PATH + appId
+                            + "/wgtRes/" + path.substring(F_Widget_RES_SCHEMA.length());
+                } else {
+                    path = F_WIDGET_PLUGIN_PATH + appId + "/wgtRes/"
+                            + path.substring(F_Widget_RES_SCHEMA.length());
+                }
+            } else {
+                path = widgetPath + "wgtRes/"
+                        + path.substring(F_Widget_RES_SCHEMA.length());
+            }
+        } else if (path.startsWith(F_SBOX_SCHEMA)) {
+            path = WDataManager.m_sboxPath
+                    + path.substring(F_SBOX_SCHEMA.length());
+        } else if (path.startsWith(F_EXTERBOX_SCHEMA)) {
+            path = WDataManager.m_exterboxPath
+                    + path.substring(F_EXTERBOX_SCHEMA.length());
+        }
+        return handleRelativePath(path);
     }
 
     /**
@@ -700,8 +755,10 @@ public class BUtility {
                 && fullPath.length() > 0
                 && (fullPath.startsWith(BUtility.F_FILE_SCHEMA)
                 || fullPath.startsWith(BUtility.F_APP_SCHEMA)
-                || fullPath.startsWith(BUtility.F_WIDGET_SCHEMA) || fullPath
-                .startsWith(BUtility.F_Widget_RES_SCHEMA))) {
+                || fullPath.startsWith(BUtility.F_WIDGET_SCHEMA)
+                || fullPath.startsWith(BUtility.F_Widget_RES_SCHEMA)
+                || fullPath.startsWith(BUtility.F_SDCARD_PATH)
+                || fullPath.startsWith(BUtility.F_EXTERBOX_SCHEMA))) {
             return true;
         } else {
             return false;

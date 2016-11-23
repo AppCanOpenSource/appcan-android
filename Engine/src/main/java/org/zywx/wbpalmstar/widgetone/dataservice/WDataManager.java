@@ -90,6 +90,7 @@ public class WDataManager {
     // public static String m_wgtPath =null;
     public static String m_wgtsPath = null;
     public static String m_sboxPath = null;
+    public static String m_exterboxPath = null;
     // public static Map<String, WWidgetData> widgetMap = null;
     public static List<String> appIDList = null;
     public static boolean isUpdateWidget = false;
@@ -108,6 +109,7 @@ public class WDataManager {
                 Context.MODE_PRIVATE);
 
         m_sboxPath = context.getFilesDir().getPath() + "/";
+        m_exterboxPath = context.getExternalFilesDir(null).getPath() + "/";
     }
 
     public static WWidgetData getLoginListWgt(String mainAppId,
