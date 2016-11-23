@@ -69,6 +69,7 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
     @SuppressLint("NewApi")
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
+        super.shouldOverrideUrlLoading(view, url);
         Activity activity = (Activity) view.getContext();
         if (url.startsWith("tel:")) {
             try {
@@ -123,7 +124,14 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
         }
         boolean isUrl = url.startsWith("file") || url.startsWith("http")
                 || url.startsWith("content://");
+        boolean isCustomUrl = url.startsWith("alipay://") || url.startsWith("weixin://");
         if (!isUrl) {
+            if (isCustomUrl) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(url));
+                activity.startActivity(intent);
+                return true;
+            }
             return true;
         }
         EBrowserView target = (EBrowserView) view;
@@ -162,6 +170,7 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
 
     @Override
     public void onPageStarted(WebView view, String url, Bitmap favicon) {
+        super.onPageStarted(view, url, favicon);
         mIsPageOnload = false;
         if (view == null) {
             return;
@@ -189,6 +198,7 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
 
     @Override
     public void onPageFinished(WebView view, String url) {
+        super.onPageFinished(view, url);
         if (view == null) {
             return;
         }
