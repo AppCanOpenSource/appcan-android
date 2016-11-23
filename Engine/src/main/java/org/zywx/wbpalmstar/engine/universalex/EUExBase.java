@@ -731,6 +731,7 @@ public abstract class EUExBase {
      *                    0等等.
      * @param data        目标Activity finish时返回的数据.
      */
+    @Keep
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         ;
     }
