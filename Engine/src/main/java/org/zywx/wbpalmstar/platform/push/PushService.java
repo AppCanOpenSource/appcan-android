@@ -33,6 +33,7 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.zywx.wbpalmstar.base.BDebug;
+import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.ResoureFinder;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.platform.push.mqttpush.MQTTService;
@@ -79,8 +80,8 @@ public class PushService extends Service implements PushDataCallback {
     private void start() {
         EUExUtil.init(this.getApplicationContext());
         String appKey = EUExUtil.getString("appkey");
-        appKey = PushReportUtility.decodeStr(appKey);
-        softToken = PushReportUtility.getSoftToken(this, appKey);
+        appKey = BUtility.decodeStr(appKey);
+        softToken = BUtility.getSoftToken(this, appKey);
         preferences = this.getSharedPreferences(PushReportConstants.SP_APP,
                 Context.MODE_PRIVATE);
         url_push = ResoureFinder.getInstance().getString(this, "push_host");

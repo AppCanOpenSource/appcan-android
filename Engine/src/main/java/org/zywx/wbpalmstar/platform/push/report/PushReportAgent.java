@@ -18,7 +18,6 @@
 
 package org.zywx.wbpalmstar.platform.push.report;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,6 +26,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import org.json.JSONObject;
+import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.ResoureFinder;
 import org.zywx.wbpalmstar.base.vo.NameValuePairVO;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
@@ -74,9 +74,9 @@ public class PushReportAgent implements PushReportConstants {
     public void initPush(WWidgetData wData, Context context) {
         // mContext = inActivity;
         String appkey = EUExUtil.getString("appkey");
-        appkey = PushReportUtility.decodeStr(appkey);
+        appkey = BUtility.decodeStr(appkey);
         checkAppStatus(context, wData.m_appId);
-        PushReportUtility.getSoftToken(context, appkey);// 初始化将softToken保存在sp中
+        BUtility.getSoftToken(context, appkey);// 初始化将softToken保存在sp中
         SharedPreferences sp = context.getSharedPreferences(SP_APP,
                 Context.MODE_PRIVATE);
         Editor editor = sp.edit();
@@ -244,8 +244,7 @@ public class PushReportAgent implements PushReportConstants {
      */
     @SuppressWarnings("rawtypes")
     public static void setPushInfo(Context context, List nameValuePairs) {
-        String softToken = PushReportUtility.getSoftToken((Activity) context,
-                mCurWgt.m_appkey);
+        String softToken = BUtility.getSoftToken(context, mCurWgt.m_appkey);
         nameValuePairs.add(new NameValuePairVO("softToken", softToken));
         nameValuePairs.add(new NameValuePairVO("deviceToken", softToken));
         PushReportThread.getPushBindUserThread(context, sAgent,

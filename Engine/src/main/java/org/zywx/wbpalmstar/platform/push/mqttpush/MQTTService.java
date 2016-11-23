@@ -1,8 +1,5 @@
 package org.zywx.wbpalmstar.platform.push.mqttpush;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
 import java.lang.ref.WeakReference;
 import java.util.Calendar;
 import java.util.Enumeration;
@@ -10,9 +7,9 @@ import java.util.Hashtable;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.platform.push.report.PushReportUtility;
 
-import android.R.integer;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -23,9 +20,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
@@ -684,46 +678,6 @@ public class MQTTService implements MqttSimpleCallback {
         }
     }
 
-    private String getMacAddress() {
-        String macSerial = null;
-        try {
-            WifiManager wifi = (WifiManager) _context
-                    .getSystemService(Context.WIFI_SERVICE);
-            WifiInfo info = wifi.getConnectionInfo();
-            macSerial = info.getMacAddress().replaceAll(":", "");
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
-        if (macSerial == null) {
-            macSerial = getMac().replaceAll(":", "");
-            ;
-        }
-        return macSerial;
-    }
-
-    private String getMac() {
-        String macSerial = "";
-        String str = "";
-        try {
-            Process pp = Runtime.getRuntime().exec(
-                    "cat /sys/class/net/wlan0/address ");
-            InputStreamReader ir = new InputStreamReader(pp.getInputStream());
-            LineNumberReader input = new LineNumberReader(ir);
-
-            for (; null != str; ) {
-                str = input.readLine();
-                if (str != null) {
-                    macSerial = str.trim();// 去空格
-                    break;
-                }
-            }
-        } catch (IOException ex) {
-            // 赋予默认值
-            ex.printStackTrace();
-        }
-        return macSerial;
-    }
-
     private void connectToBrokerThread() {
         new Thread(new Runnable() {
             @Override
@@ -751,8 +705,9 @@ public class MQTTService implements MqttSimpleCallback {
             SharedPreferences sp = _context.getSharedPreferences("app",
                     Context.MODE_PRIVATE);
             String mAppId = sp.getString("appid", null);
-            mqttClient.connect(getMacAddress() + mAppId, cleanStart,
-                    keepAliveSeconds);
+            String macAddress = BUtility.getMacAddress(_context).replaceAll(":", "");
+            String clientId = macAddress + mAppId;
+            mqttClient.connect(clientId, cleanStart, keepAliveSeconds);
 
             //
             // inform the app that the app has successfully connected
@@ -1010,9 +965,10 @@ public class MQTTService implements MqttSimpleCallback {
         // (e.g. we receive an MQTT message), then we start a new keep alive
         // period, postponing the next ping.
 
+        Intent intent = new Intent(MQTT_PING_ACTION);
+        intent.setPackage(_context.getPackageName());
         PendingIntent pendingIntent = PendingIntent
-                .getBroadcast(_context, 0, new Intent(MQTT_PING_ACTION),
-                        PendingIntent.FLAG_UPDATE_CURRENT);
+                .getBroadcast(_context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // in case it takes us a little while to do this, we try and do it
         // shortly before the keep alive period expires
@@ -1046,11 +1002,13 @@ public class MQTTService implements MqttSimpleCallback {
                 // This is good enough for our needs.
 
                 try {
-                    PushReportUtility.log("PingSender mqttClient.ping() keepAliveSeconds = "
-                            + keepAliveSeconds);
-                    mqttClient.ping();
-                    keepAliveSeconds = mHeartKeepAliveMgr
-                            .calcHeartSucceed(keepAliveSeconds);
+                    if (null != mqttClient) {
+                        PushReportUtility.log("PingSender mqttClient.ping() keepAliveSeconds = "
+                                + keepAliveSeconds);
+                        mqttClient.ping();
+                        keepAliveSeconds = mHeartKeepAliveMgr
+                                .calcHeartSucceed(keepAliveSeconds);
+                    }
                 } catch (MqttException e) {
                     // if something goes wrong, it should result in connectionLost
                     // being called, so we will handle it there

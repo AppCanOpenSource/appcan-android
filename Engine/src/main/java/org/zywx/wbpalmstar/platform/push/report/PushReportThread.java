@@ -18,7 +18,6 @@
 
 package org.zywx.wbpalmstar.platform.push.report;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,6 +26,7 @@ import android.os.Process;
 import android.text.TextUtils;
 import android.util.Log;
 
+import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.ResoureFinder;
 import org.zywx.wbpalmstar.platform.push.PushService;
 
@@ -142,8 +142,7 @@ public class PushReportThread extends Thread implements PushReportConstants {
     }
 
     private void unBindUserInfo() {
-        String softToken = PushReportUtility.getSoftToken((Activity) m_activity,
-                PushReportAgent.mCurWgt.m_appkey);
+        String softToken = BUtility.getSoftToken(m_activity, PushReportAgent.mCurWgt.m_appkey);
         String bu = PushReportHttpClient.sendPostDataByNameValuePair(
                 (host_pushBindUser + "msg/" + softToken + "/unBindUser"), mNameValuePairs,
                 m_activity);

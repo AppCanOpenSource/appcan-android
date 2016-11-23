@@ -71,13 +71,13 @@ public class PushReportHttpClient {
                 appid = tenantId + ":" + appid;
             }
             String appkey = EUExUtil.getString("appkey");
-            appkey = PushReportUtility.decodeStr(appkey);
+            appkey = BUtility.decodeStr(appkey);
             PushReportUtility.log("appid ==" + appid + " appkey ==" + appkey);
             conn.setRequestProperty("Accept", "*/*");
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setRequestProperty("x-mas-app-id", appid);
             conn.setRequestProperty(PushReportUtility.KEY_APPVERIFY,
-                    PushReportUtility.getAppVerifyValue(appid, appkey,
+                    BUtility.getAppVerifyValue(appid, appkey,
                             System.currentTimeMillis()));
 
             JSONObject jsonObject = new JSONObject();

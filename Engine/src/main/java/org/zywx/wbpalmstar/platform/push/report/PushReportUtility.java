@@ -24,8 +24,6 @@ import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.text.format.Time;
@@ -35,11 +33,8 @@ import org.zywx.wbpalmstar.base.BUtility;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.lang.reflect.Method;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 public class PushReportUtility {
     private static boolean isLog = true;
@@ -86,189 +81,6 @@ public class PushReportUtility {
 
         return null;
 
-    }
-
-    /**
-     * 获取主应用的softToken
-     *
-     * @param activity
-     * @param appKey
-     * @return
-     */
-    public static String getSoftToken(Context activity, String appKey) {
-        SharedPreferences preferences = activity.getSharedPreferences(
-                PushReportConstants.SP_APP, Context.MODE_PRIVATE);
-        String softToken = preferences.getString("softToken", null);
-        if (softToken != null) {
-            return softToken;
-        }
-
-        String[] val = new String[4];
-        try {
-
-            val[0] = getMacAddress(activity);
-            TelephonyManager telephonyManager = (TelephonyManager) activity
-                    .getSystemService(Context.TELEPHONY_SERVICE);
-            val[1] = telephonyManager.getDeviceId();
-            val[2] = getCPUSerial();
-            val[3] = appKey;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        softToken = getMD5Code(val);
-        Editor editor = preferences.edit();
-        editor.putString("softToken", softToken);
-        editor.commit();
-        return softToken;
-    }
-
-    /**
-     * 获取当前应用的softToken
-     *
-     * @param activity
-     * @param appKey
-     * @return
-     */
-    public static String getWidgetSoftToken(Context activity, String appKey) {
-        String[] val = new String[4];
-        try {
-
-            val[0] = getMacAddress(activity);
-            TelephonyManager telephonyManager = (TelephonyManager) activity
-                    .getSystemService(Context.TELEPHONY_SERVICE);
-            val[1] = telephonyManager.getDeviceId();
-            val[2] = getCPUSerial();
-            val[3] = appKey;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        String softToken = getMD5Code(val);
-        return softToken;
-    }
-
-    public static String getMacAddress(Context activity) {
-        String macSerial = null;
-        try {
-            WifiManager wifi = (WifiManager) activity
-                    .getSystemService(Context.WIFI_SERVICE);
-            WifiInfo info = wifi.getConnectionInfo();
-            macSerial = info.getMacAddress();
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
-        if (macSerial == null) {
-            macSerial = readFileContent("/sys/class/net/wlan0/address").trim();
-        }
-        return macSerial;
-    }
-
-    private static String readFileContent(String path) {
-        String content = "";
-        try {
-            if ((new File(path)).exists()) {
-                FileInputStream fis = new FileInputStream(path);
-                byte[] buffer = new byte[8192];
-                int byteCount = fis.read(buffer);
-                if (byteCount > 0) {
-                    content = new String(buffer, 0, byteCount, "utf-8");
-                }
-                fis.close();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return content;
-    }
-
-    public static String getMD5Code(String[] value) {
-        if (value == null || value.length == 0) {
-            return null;
-        }
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            md.reset();
-            for (String va : value) {
-                if (va == null) {
-                    va = "";
-                }
-                md.update(va.getBytes());
-            }
-            byte[] md5Bytes = md.digest();
-            StringBuffer hexValue = new StringBuffer();
-            for (int i = 0; i < md5Bytes.length; i++) {
-                int val = ((int) md5Bytes[i]) & 0xff;
-                if (val < 16)
-                    hexValue.append("0");
-                hexValue.append(Integer.toHexString(val));
-            }
-            return hexValue.toString();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    /**
-     * 获取CPU序列号
-     *
-     * @return CPU序列号(16位) 读取失败为"0000000000000000"
-     */
-    private static String getCPUSerial() {
-        String str = "", cpuAddress = "0000000000000000";
-        try {
-            // 读取CPU信息
-            str = readFileContent("/proc/cpuinfo");
-            if (str != null && str.length() > 0) {
-                String[] strs = str.split("\n");
-                for (int i = 0; i < strs.length; i++) {
-                    // 提取到序列号所在行的内容
-                    if (strs[i].startsWith("Serial")) {
-                        // 提取序列号
-                        cpuAddress = strs[i].substring(strs[i].indexOf(":") + 1,
-                                strs[i].length()).trim();
-                        break;
-                    }
-                }
-            }
-        } catch (Exception ex) {
-            // 赋予默认值
-            ex.printStackTrace();
-        }
-        return cpuAddress;
-    }
-
-    public static String getAppIdAppKeyMD5(String appId, String appKey) {
-        String[] value = new String[]{appId + ":" + appKey};
-        return getMD5Code(value);
-    }
-
-    public static String decodeStr(String key) {
-        char map[] = {'d', 'b', 'e', 'a', 'f', 'c'};
-        char nmap[] = {'2', '4', '0', '9', '7', '1', '5', '8', '3', '6'};
-        String dest = "";
-        String swapstr = "";
-        String output = "";
-        for (int j = 0; j < key.length(); j++) {
-            if (key.charAt(j) == '-')
-                continue;
-            swapstr = swapstr + key.charAt(j);
-        }
-        for (int j = 0; j < swapstr.length(); j++) {
-            if (j == 8 || j == 12 || j == 16 || j == 20)
-                dest = dest + "-";
-            dest = dest + swapstr.charAt(swapstr.length() - j - 1);
-        }
-        for (int i = 0; i < dest.length(); i++) {
-            char t = dest.charAt(i);
-            if (t >= 'a' && t <= 'f') {
-                t = map[t - 'a'];
-            } else if (t >= '0' && t <= '9') {
-                t = nmap[t - '0'];
-            }
-            output = output + t;
-        }
-        return output;
     }
 
     public static String getMobileOperatorName(Context mContext) {
@@ -388,44 +200,5 @@ public class PushReportUtility {
 
         return serial;
 
-    }
-
-    /**
-     * 添加验证头
-     * 
-     * @param appid
-     * @param appkey
-     * @param timeStamp
-     *            当前时间戳
-     * @return
-     */
-    public static String getAppVerifyValue(String appid, String appkey, long timeStamp) {
-        String value = null;
-        String md5 = getMD5Code(appid + ":" + appkey + ":" + timeStamp);
-        value = "md5=" + md5 + ";ts=" + timeStamp;
-        return value;
-    }
-
-    public static String getMD5Code(String value) {
-        if (value == null) {
-            value = "";
-        }
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            md.reset();
-            md.update(value.getBytes());
-            byte[] md5Bytes = md.digest();
-            StringBuffer hexValue = new StringBuffer();
-            for (int i = 0; i < md5Bytes.length; i++) {
-                int val = ((int) md5Bytes[i]) & 0xff;
-                if (val < 16)
-                    hexValue.append("0");
-                hexValue.append(Integer.toHexString(val));
-            }
-            return hexValue.toString();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 }
