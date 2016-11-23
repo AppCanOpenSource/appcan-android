@@ -39,7 +39,6 @@ import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.engine.EBrowserHistory.EHistoryEntry;
 import org.zywx.wbpalmstar.engine.universalex.EUExCallback;
 import org.zywx.wbpalmstar.engine.universalex.EUExManager;
-import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.engine.universalex.EUExWindow;
 import org.zywx.wbpalmstar.engine.webview.ACEWebView;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
@@ -146,10 +145,10 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
     }
 
     private void closeHardwareForSpecificString() {
-        String[] strs = EUExUtil.getStringArray("platform_close_hardware");
-        if (strs != null) {
-            for (int i = 0; i < strs.length; i++) {
-                String str = strs[i].trim();
+        WWidgetData widgetData = getCurrentWidget();
+        if (widgetData != null) {
+            for (String noHardware : widgetData.noHardwareList) {
+                String str = noHardware.trim();
                 // 手机型号、Android系统定制商、硬件制造商
                 if (Build.MODEL.trim().equals(str)
                         || Build.BRAND.trim().equals(str)

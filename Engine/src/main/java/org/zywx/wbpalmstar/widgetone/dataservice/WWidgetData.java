@@ -111,6 +111,7 @@ public class WWidgetData implements Parcelable {
     public String[] disableSonWindows;
     public ArrayList<String> disableSonWindowsList = new ArrayList<String>();
 
+    public ArrayList<String> noHardwareList = new ArrayList<String>();
     public String m_appkey;
 
     public int m_appdebug = 0;//是否开启debug模式，0：关闭，1：开启
@@ -167,6 +168,9 @@ public class WWidgetData implements Parcelable {
             }
             if (widget.disableSonWindowsList != null) {
                 source.readStringList(widget.disableSonWindowsList);
+            }
+            if (widget.noHardwareList != null) {
+                source.readStringList(widget.noHardwareList);
             }
             return widget;
         }
@@ -238,6 +242,7 @@ public class WWidgetData implements Parcelable {
         parcel.writeStringList(disablePluginsList);
         parcel.writeStringList(disableRootWindowsList);
         parcel.writeStringList(disableSonWindowsList);
+        parcel.writeStringList(noHardwareList);
     }
 
     @Override
