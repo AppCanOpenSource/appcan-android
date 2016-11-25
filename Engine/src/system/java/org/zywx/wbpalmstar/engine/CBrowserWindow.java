@@ -19,14 +19,15 @@
 package org.zywx.wbpalmstar.engine;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
-import android.os.Build;
 import android.os.Message;
 import android.webkit.CookieSyncManager;
 import android.webkit.SslErrorHandler;
@@ -254,8 +255,25 @@ public class CBrowserWindow extends EXWebViewClient {
     }
 
     @Override
-    public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-        super.onReceivedSslError(view,handler,error);
+    public void onReceivedSslError(WebView view, final SslErrorHandler handler, SslError error) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+        builder.setMessage("SSL证书错误，是否继续？");
+        builder.setPositiveButton("继续", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                handler.proceed();
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                handler.cancel();
+                dialog.dismiss();
+            }
+        });
+        final AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 	/*
