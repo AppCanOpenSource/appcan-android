@@ -161,5 +161,7 @@ public class ACEImageLoader {
         });
     }
 
-
+    public <T extends ImageView> void displayImageWithOptions(String imgUrl, T imageView, DisplayImageOptions options) {
+        ImageLoader.getInstance().displayImage(imgUrl, imageView, options);
+    }
 }
