@@ -2935,7 +2935,7 @@ public class EUExWindow extends EUExBase {
         resultVO.data=data;
         resultVO.index=index;
         if (callbackId!=-1){
-            callbackToJs(callbackId,false,DataHelper.gson.toJsonTree(resultVO));
+            callbackToJs(callbackId,false,resultVO.index,resultVO.data);
         }else{
             jsCallback(function_prompt, 0, EUExCallback.F_C_JSON, DataHelper.gson.toJson(resultVO));
         }
