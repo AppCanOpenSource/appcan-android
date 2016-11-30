@@ -194,7 +194,7 @@ public class WindowJsonWrapper {
                 promptVO.title,
                 promptVO.message,
                 promptVO.defaultValue,
-                promptVO.buttonLabel,
+                promptVO.buttonLabels,
                 promptVO.hint,
                 callbackId
         });

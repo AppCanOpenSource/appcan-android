@@ -14,7 +14,7 @@ public class WindowPromptVO implements Serializable {
 
     public String defaultValue;
 
-    public String buttonLabel;
+    public String buttonLabels;
 
     public String hint;
 
