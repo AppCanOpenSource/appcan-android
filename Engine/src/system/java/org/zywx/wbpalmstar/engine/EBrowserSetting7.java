@@ -39,6 +39,11 @@ public class EBrowserSetting7 extends EBrowserSetting {
         mWebSetting.setDatabaseEnabled(true);
         mWebSetting.setDomStorageEnabled(true);
         mWebSetting.setLoadWithOverviewMode(false);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            mWebSetting.setAllowFileAccessFromFileURLs(true);
+            mWebSetting.setAllowUniversalAccessFromFileURLs(true);
+        }
+
         mWebSetting.setDatabasePath(mBrwView.getContext().getDir("database", 0).getPath());
         if (Build.VERSION.SDK_INT >= 8) {
             try {
