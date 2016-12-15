@@ -23,16 +23,20 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
 
+import com.tencent.smtt.export.external.interfaces.ConsoleMessage;
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient.CustomViewCallback;
 import com.tencent.smtt.sdk.WebStorage.QuotaUpdater;
 
+import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.WebViewSdkCompat;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
+import org.zywx.wbpalmstar.widgetone.dataservice.WDataManager;
 
 public class CBrowserMainFrame7 extends CBrowserMainFrame {
 
@@ -147,4 +151,39 @@ public class CBrowserMainFrame7 extends CBrowserMainFrame {
 //		mFile = null;
 //	}
 
+
+    @Override
+    public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
+        if (WDataManager.sRootWgt!=null&&WDataManager.sRootWgt.m_appdebug==1 && !TextUtils.isEmpty(WDataManager.sRootWgt.m_logServerIp)) {
+            if (consoleMessage.messageLevel() != ConsoleMessage.MessageLevel.WARNING) {//过滤掉warning
+                BDebug.sendUDPLog(formatConsole(consoleMessage));
+            }
+        }
+        return super.onConsoleMessage(consoleMessage);
+    }
+
+    private static String formatConsole(ConsoleMessage consoleMessage){
+        StringBuilder stringBuilder=new StringBuilder();
+        stringBuilder.append("[ ")
+                .append(simpleSourceInfo(consoleMessage.sourceId()))
+                .append(" line : ")
+                .append(consoleMessage.lineNumber())
+                .append(" ")
+                .append(consoleMessage.messageLevel().toString().toLowerCase())
+                .append(" ]\n")
+                .append(consoleMessage.message())
+                .append("\n");
+        return stringBuilder.toString();
+    }
+
+
+    private static String simpleSourceInfo(String source){
+        if (TextUtils.isEmpty(source)){
+            return "";
+        }
+        if (source.contains("/")){
+            return source.substring(source.lastIndexOf("/")+1);
+        }
+        return source;
+    }
 }

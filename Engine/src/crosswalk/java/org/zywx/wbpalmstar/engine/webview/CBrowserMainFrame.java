@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.webkit.ValueCallback;
 import android.widget.EditText;
@@ -23,6 +24,7 @@ import org.zywx.wbpalmstar.engine.ESystemInfo;
 import org.zywx.wbpalmstar.engine.universalex.EUExManager;
 import org.zywx.wbpalmstar.engine.universalex.EUExScript;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
+import org.zywx.wbpalmstar.widgetone.dataservice.WDataManager;
 
 public class CBrowserMainFrame extends XWalkUIClient {
     protected String mParms;
@@ -37,8 +39,40 @@ public class CBrowserMainFrame extends XWalkUIClient {
     @Override
     public boolean onConsoleMessage(XWalkView view, String message,
                                     int lineNumber, String sourceId, ConsoleMessageType messageType) {
+        if (WDataManager.sRootWgt!=null&&WDataManager.sRootWgt.m_appdebug==1 && !TextUtils.isEmpty(WDataManager.sRootWgt.m_logServerIp)) {
+            if (messageType !=ConsoleMessageType.WARNING) {//过滤掉warning
+                BDebug.sendUDPLog(formatConsole(message,lineNumber,sourceId,messageType));
+            }
+        }
         return super.onConsoleMessage(view, message, lineNumber, sourceId,
                 messageType);
+    }
+
+
+    private static String formatConsole( String message,
+                                         int lineNumber, String sourceId, ConsoleMessageType messageType){
+        StringBuilder stringBuilder=new StringBuilder();
+        stringBuilder.append("[ ")
+                .append(simpleSourceInfo(sourceId))
+                .append(" line : ")
+                .append(lineNumber)
+                .append(" ")
+                .append(messageType.toString().toLowerCase())
+                .append(" ]\n")
+                .append(message)
+                .append("\n");
+        return stringBuilder.toString();
+    }
+
+
+    private static String simpleSourceInfo(String source){
+        if (TextUtils.isEmpty(source)){
+            return "";
+        }
+        if (source.contains("/")){
+            return source.substring(source.lastIndexOf("/")+1);
+        }
+        return source;
     }
 
     @Override
