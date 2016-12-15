@@ -239,11 +239,11 @@ public class BDebug {
     }
 
     @Keep
-    public static void sendUDPLog(String consoleMessage){
+    public static void sendUDPLog(String log){
         if (WDataManager.sRootWgt==null||WDataManager.sRootWgt.m_appdebug==0|| TextUtils.isEmpty(WDataManager.sRootWgt.m_logServerIp)){
             return;
         }
-        sendLogOnThread(consoleMessage);
+        sendLogOnThread(log);
     }
 
     private static void sendLogOnThread(final String inLog){
