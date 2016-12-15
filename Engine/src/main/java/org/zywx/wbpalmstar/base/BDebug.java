@@ -19,16 +19,25 @@
 package org.zywx.wbpalmstar.base;
 
 import android.os.Environment;
+import android.support.annotation.Keep;
 import android.text.TextUtils;
 import android.util.Log;
 
 import org.zywx.wbpalmstar.engine.DataHelper;
 import org.zywx.wbpalmstar.platform.push.report.PushReportUtility;
+import org.zywx.wbpalmstar.widgetone.dataservice.WDataManager;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * SD卡根目录新建文件“appcandebug.txt”，即打开debug开关，删除文件即关闭
@@ -43,6 +52,13 @@ public class BDebug {
     public static boolean DEBUG = false;
 
     public static final String TAG = "appcan";
+
+    private static final int logServerPort = 30050; //AppCan IDE接收log 的端口号
+
+
+    private static DatagramSocket m_udp;
+    private static ExecutorService mExecutorService;
+
 
     public static void init() {
         if (Environment.MEDIA_MOUNTED.equals(Environment
@@ -221,5 +237,64 @@ public class BDebug {
         }
         return str.toString();
     }
+
+    @Keep
+    public static void sendUDPLog(String consoleMessage){
+        if (WDataManager.sRootWgt==null||WDataManager.sRootWgt.m_appdebug==0|| TextUtils.isEmpty(WDataManager.sRootWgt.m_logServerIp)){
+            return;
+        }
+        sendLogOnThread(consoleMessage);
+    }
+
+    private static void sendLogOnThread(final String inLog){
+        if (mExecutorService==null){
+            mExecutorService= Executors.newSingleThreadExecutor();
+        }
+         mExecutorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                createUDP();
+                byte[] data = inLog.getBytes();
+                InetAddress inetAddress;
+                try {
+                    if (m_udp==null){
+                        return;
+                    }
+                    inetAddress = InetAddress.getByName(WDataManager.sRootWgt.m_logServerIp);
+                    DatagramPacket sendPacket = new DatagramPacket(data, data.length,
+                            inetAddress, logServerPort);
+                    m_udp.send(sendPacket);
+                } catch (IOException e) {
+                    closeUDP();
+                    e.printStackTrace();
+                } catch (SecurityException e) {
+                    closeUDP();
+                    e.printStackTrace();
+                }
+                closeUDP();
+            }
+        });
+    }
+
+    private static void createUDP() {
+        try {
+            if (m_udp == null) {
+                m_udp = new DatagramSocket();
+                m_udp.setBroadcast(true);
+            }
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void closeUDP() {
+        if (m_udp != null) {
+            m_udp.close();
+            m_udp = null;
+        }
+    }
+
 
 }
