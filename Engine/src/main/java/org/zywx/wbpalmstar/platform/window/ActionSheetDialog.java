@@ -22,11 +22,22 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import android.view.*;
+import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
+import android.widget.BaseAdapter;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import org.zywx.wbpalmstar.base.ResoureFinder;
 
 import java.util.ArrayList;
@@ -36,7 +47,7 @@ public class ActionSheetDialog extends Dialog implements OnClickListener, OnItem
     private LayoutInflater inflater;
     private TextView tvTitle;
     private ListView lvBtnList;
-    private Button btnCancel;
+    private TextView btnCancel;
     private ListAdapter lisAdapter;
     private boolean mCloseByBackKey;
     private ActionSheetDialogItemClickListener listener;
@@ -79,7 +90,7 @@ public class ActionSheetDialog extends Dialog implements OnClickListener, OnItem
         params.dimAmount = 0.5f;
         setContentView(finder.getLayoutId("platform_window_action_sheet_dialog_layout"));
         tvTitle = (TextView) findViewById(finder.getId("dialog_title"));
-        btnCancel = (Button) findViewById(finder.getId("dialog_cancel_button"));
+        btnCancel = (TextView) findViewById(finder.getId("dialog_cancel_button"));
         btnCancel.setOnClickListener(this);
         lvBtnList = (ListView) findViewById(finder.getId("dialog_button_list"));
         lvBtnList.setOnItemClickListener(this);
@@ -114,11 +125,19 @@ public class ActionSheetDialog extends Dialog implements OnClickListener, OnItem
 
     @Override
     public void setTitle(CharSequence title) {
-        tvTitle.setText(title);
-    }
+        if (!TextUtils.isEmpty(title)){
+            tvTitle.setText(title);
+        }else {
+            tvTitle.setVisibility(View.GONE);
+        }
+     }
 
     public void setButtonLabel(String label) {
-        btnCancel.setText(label);
+        if (!TextUtils.isEmpty(label)) {
+            btnCancel.setText(label);
+        }else{
+            btnCancel.setVisibility(View.GONE);
+        }
     }
 
     @Override
