@@ -3,6 +3,6 @@
     <version>$version$</version>
     <package>$package$</package>
     <kernel>$kernel$</kernel>
-    <description>IDE支持显示console.log()</description>
+    <description>IDE支持显示console.log();actionSheet优化</description>
     <dssVersion>4.0.0</dssVersion>
 </info>
