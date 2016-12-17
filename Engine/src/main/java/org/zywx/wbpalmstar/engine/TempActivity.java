@@ -43,7 +43,7 @@ public class TempActivity extends Activity {
         FrameLayout rootLayout = new FrameLayout(this);
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
         rootLayout.setLayoutParams(layoutParams);
-        ConfigXmlUtil.setStatusBarColor(this, Color.TRANSPARENT);
+        ConfigXmlUtil.setStatusBarColorWithAddView(this, Color.TRANSPARENT);
         if (EBrowserActivity.develop) {
             TextView worn = new TextView(this);
             worn.setText(EUExUtil.getString("platform_only_test"));
