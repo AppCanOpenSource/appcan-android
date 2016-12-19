@@ -247,7 +247,15 @@ public class FileHelper {
         BufferedReader in = null;
         try {
             StringBuilder buf = new StringBuilder();
+            InputStream isTemp = context.getAssets().open(name);
             InputStream is = context.getAssets().open(name);
+            boolean isEncrypted=ACEDes.isEncrypted(isTemp);
+            if (isEncrypted){
+                byte[] data = BUtility.transStreamToBytes(is, is.available());
+                String fileName = BUtility.getFileNameWithNoSuffix(name);
+                return ACEDes.htmlDecode(data, fileName);
+            }
+
             in = new BufferedReader(new InputStreamReader(is));
 
             String str;
