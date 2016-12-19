@@ -21,8 +21,18 @@ package org.zywx.wbpalmstar.base;
 import android.content.Context;
 import android.os.Environment;
 import android.os.StatFs;
+import org.zywx.wbpalmstar.acedes.ACEDes;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class FileHelper {
     public static final String SDCARD = Environment
