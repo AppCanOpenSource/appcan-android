@@ -50,6 +50,8 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
 
+        <service android:name="org.zywx.wbpalmstar.base.DebugService"/>
+
         <!-- push -->
         <service
             android:name="org.zywx.wbpalmstar.platform.push.PushService"
