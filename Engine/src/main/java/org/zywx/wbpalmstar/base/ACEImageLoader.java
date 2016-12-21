@@ -49,7 +49,6 @@ public class ACEImageLoader {
         if (BConstant.app == null) {
             return;
         }
-        DiskCache.initDiskCache(BConstant.app);
         ImageLoaderConfiguration config = new ImageLoaderConfiguration
                 .Builder(BConstant.app)
                 .threadPriority(Thread.NORM_PRIORITY - 2)

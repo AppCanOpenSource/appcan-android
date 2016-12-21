@@ -16,6 +16,7 @@ import org.zywx.wbpalmstar.base.BConstant;
 import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.WebViewSdkCompat;
+import org.zywx.wbpalmstar.base.cache.DiskCache;
 import org.zywx.wbpalmstar.base.listener.OnAppCanFinishListener;
 import org.zywx.wbpalmstar.base.listener.OnAppCanInitListener;
 import org.zywx.wbpalmstar.base.util.SpManager;
@@ -78,6 +79,7 @@ public class AppCan {
         mListenerQueue.add(pushlistener);
         BDebug.init();
         BConstant.app = (Application) mContext;
+        DiskCache.initDiskCache(mContext);
         ACEDes.setContext(mContext);
         EUExUtil.init(mContext);
         WebViewSdkCompat.initInApplication(mContext);
