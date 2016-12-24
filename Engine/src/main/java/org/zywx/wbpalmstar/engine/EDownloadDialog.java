@@ -41,6 +41,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.Locale;
 import java.util.zip.DeflaterInputStream;
 import java.util.zip.GZIPInputStream;
@@ -208,6 +209,7 @@ public class EDownloadDialog extends ProgressDialog implements Runnable {
             extension = mtm.getExtensionFromMimeType(mimetype);
         }
         if (extension == null) {
+            contentDisposition = URLDecoder.decode(contentDisposition, "UTF-8");
             String fileName = URLUtil.guessFileName(url, contentDisposition,
                     mimetype);
             if (!TextUtils.isEmpty(fileName)) {
