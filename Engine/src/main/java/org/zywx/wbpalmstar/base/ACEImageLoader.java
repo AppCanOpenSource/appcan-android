@@ -33,6 +33,7 @@ import com.ace.universalimageloader.core.assist.FailReason;
 import com.ace.universalimageloader.core.assist.QueueProcessingType;
 import com.ace.universalimageloader.core.download.BaseImageDownloader;
 import com.ace.universalimageloader.core.listener.ImageLoadingListener;
+import com.ace.universalimageloader.core.listener.ImageLoadingProgressListener;
 
 import org.zywx.wbpalmstar.base.cache.DiskCache;
 import org.zywx.wbpalmstar.base.listener.ImageLoaderListener;
@@ -48,7 +49,6 @@ public class ACEImageLoader {
         if (BConstant.app == null) {
             return;
         }
-        DiskCache.initDiskCache(BConstant.app);
         ImageLoaderConfiguration config = new ImageLoaderConfiguration
                 .Builder(BConstant.app)
                 .threadPriority(Thread.NORM_PRIORITY - 2)
@@ -161,5 +161,14 @@ public class ACEImageLoader {
         });
     }
 
+    public <T extends ImageView> void displayImageWithOptions(String imgUrl, T imageView, DisplayImageOptions options) {
+        ImageLoader.getInstance().displayImage(imgUrl, imageView, options);
+    }
 
+    public <T extends ImageView> void displayImageWithOptions(String imgUrl, T imageView, DisplayImageOptions options, ImageLoadingListener listener) {
+        ImageLoader.getInstance().displayImage(imgUrl, imageView, options, listener);
+    }
+    public <T extends ImageView> void displayImageWithOptions(String imgUrl, T imageView, DisplayImageOptions options, ImageLoadingListener listener, ImageLoadingProgressListener progressListener) {
+        ImageLoader.getInstance().displayImage(imgUrl, imageView, options, listener, progressListener);
+    }
 }

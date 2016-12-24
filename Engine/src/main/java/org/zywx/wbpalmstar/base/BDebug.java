@@ -18,17 +18,27 @@
 
 package org.zywx.wbpalmstar.base;
 
+import android.content.Intent;
 import android.os.Environment;
+import android.support.annotation.Keep;
 import android.text.TextUtils;
 import android.util.Log;
 
 import org.zywx.wbpalmstar.engine.DataHelper;
 import org.zywx.wbpalmstar.platform.push.report.PushReportUtility;
+import org.zywx.wbpalmstar.widgetone.dataservice.WDataManager;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * SD卡根目录新建文件“appcandebug.txt”，即打开debug开关，删除文件即关闭
@@ -43,6 +53,9 @@ public class BDebug {
     public static boolean DEBUG = false;
 
     public static final String TAG = "appcan";
+
+    private static ExecutorService mExecutorService;
+
 
     public static void init() {
         if (Environment.MEDIA_MOUNTED.equals(Environment
@@ -221,5 +234,17 @@ public class BDebug {
         }
         return str.toString();
     }
+
+    @Keep
+    public static void sendUDPLog(String log){
+        if (WDataManager.sRootWgt==null||WDataManager.sRootWgt.m_appdebug==0|| TextUtils.isEmpty(WDataManager.sRootWgt.m_logServerIp)){
+            return;
+        }
+        Intent intent=new Intent(BConstant.app,DebugService.class);
+        intent.putExtra(DebugService.KEY_TYPE_DEBUG,DebugService.TYPE_LOG);
+        intent.putExtra(DebugService.KEY_LOG_DATA,log);
+        BConstant.app.startService(intent);
+    }
+
 
 }

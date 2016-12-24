@@ -25,15 +25,21 @@ import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.webkit.ConsoleMessage;
 import android.webkit.GeolocationPermissions;
 import android.webkit.WebStorage.QuotaUpdater;
 import android.widget.FrameLayout;
 
+import org.zywx.wbpalmstar.base.BConstant;
+import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.WebViewSdkCompat;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
+import org.zywx.wbpalmstar.widgetone.dataservice.WDataManager;
+import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
 public class CBrowserMainFrame7 extends CBrowserMainFrame {
 
@@ -171,5 +177,41 @@ public class CBrowserMainFrame7 extends CBrowserMainFrame {
         builder.setNegativeButton("拒绝", dialogButtonOnClickListener);
         builder.show();
         super.onGeolocationPermissionsShowPrompt(origin, callback);
+    }
+
+
+    @Override
+    public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
+        if (WDataManager.sRootWgt!=null&&WDataManager.sRootWgt.m_appdebug==1 && !TextUtils.isEmpty(WDataManager.sRootWgt.m_logServerIp)) {
+            if (consoleMessage.messageLevel() != ConsoleMessage.MessageLevel.WARNING) {//过滤掉warning
+                BDebug.sendUDPLog(formatConsole(consoleMessage));
+            }
+        }
+        return super.onConsoleMessage(consoleMessage);
+    }
+
+    private static String formatConsole(ConsoleMessage consoleMessage){
+        StringBuilder stringBuilder=new StringBuilder();
+        stringBuilder.append("[ ")
+                .append(simpleSourceInfo(consoleMessage.sourceId()))
+                .append(" line : ")
+                .append(consoleMessage.lineNumber())
+                .append(" ")
+                .append(consoleMessage.messageLevel().toString().toLowerCase())
+                .append(" ]\n")
+                .append(consoleMessage.message())
+                .append("\n");
+        return stringBuilder.toString();
+    }
+
+
+    private static String simpleSourceInfo(String source){
+        if (TextUtils.isEmpty(source)){
+            return "";
+        }
+        if (source.contains("/")){
+            return source.substring(source.lastIndexOf("/")+1);
+        }
+        return source;
     }
 }

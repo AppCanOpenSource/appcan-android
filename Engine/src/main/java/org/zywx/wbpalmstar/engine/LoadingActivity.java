@@ -52,7 +52,7 @@ public class LoadingActivity extends Activity {
         mHandler=new LoadingHandler(this);
         handleIntent();
         initRootView();
-        ConfigXmlUtil.setStatusBarColor(this, Color.TRANSPARENT);
+        ConfigXmlUtil.setStatusBarColorWithAddView(this, Color.TRANSPARENT);
         setContentView(mRootLayout);
         registerFinishReceiver();
         addDevelopInfo();

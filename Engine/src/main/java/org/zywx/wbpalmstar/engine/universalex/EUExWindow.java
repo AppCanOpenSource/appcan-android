@@ -2935,7 +2935,7 @@ public class EUExWindow extends EUExBase {
         resultVO.data=data;
         resultVO.index=index;
         if (callbackId!=-1){
-            callbackToJs(callbackId,false,DataHelper.gson.toJsonTree(resultVO));
+            callbackToJs(callbackId,false,resultVO.index,resultVO.data);
         }else{
             jsCallback(function_prompt, 0, EUExCallback.F_C_JSON, DataHelper.gson.toJson(resultVO));
         }
@@ -3001,7 +3001,6 @@ public class EUExWindow extends EUExBase {
         if (length < 3 || op) {
             return;
         }
-        EBrowser.setFlag(EBrowser.F_BRW_FLAG_OPENING);
         String inTitle = params[0];
         String inCancel = params[1];
         final String[] btnLabels = params[2].split(",");
@@ -3015,13 +3014,11 @@ public class EUExWindow extends EUExBase {
             @Override
             public void onItemClicked(ActionSheetDialog dialog, int postion) {
                 resultActionSheet(postion,finalCallbackId);
-                EBrowser.clearFlag();
             }
 
             @Override
             public void onCanceled(ActionSheetDialog dialog) {
                 resultActionSheet(btnLabels.length, finalCallbackId);
-                EBrowser.clearFlag();
             }
         });
     }
