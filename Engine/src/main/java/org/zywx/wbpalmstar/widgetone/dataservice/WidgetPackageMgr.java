@@ -204,17 +204,20 @@ public class WidgetPackageMgr {
                                 files.mkdirs();
                             }
                             // 得到config.xml文件的内容
-                            FileOutputStream out = new FileOutputStream(
-                                    dir.getAbsolutePath() + "/" + zename);
+                            String configPathTmp = dir.getAbsolutePath() + "/tmp/" + zename;
+                            File configDirTmp = new File(configPathTmp).getParentFile();
+                            if (!configDirTmp.exists()) {// 如果目录文件夹不存在，则创建
+                                configDirTmp.mkdirs();
+                            }
+                            File configFileTmp = new File(configPathTmp);
+                            FileOutputStream out = new FileOutputStream(configFileTmp);
                             while ((slen = in.read(c, 0, c.length)) != -1)
                                 out.write(c, 0, slen);
 
                             // 对config.xml文件进行XML解析
-                            File file = new File(
-                                    dir.getAbsolutePath() + "/" + zename);
-                            if (file.exists()) {
+                            if (configFileTmp.exists()) {
                                 FileInputStream input = new FileInputStream(
-                                        file);
+                                        configFileTmp);
                                 // 得到增量更新包config.xml文件中的版本号
                                 String m_verString = BUtility.parserXmlLabel(
                                         input, "config", "widget", "version");
@@ -239,15 +242,16 @@ public class WidgetPackageMgr {
                                             .parseLong(dbVerString);
                                     if (m_verLong > dbVerLong) {
                                         wConfig.hasZip = true;
-                                        break;
                                     }
                                 }
-                                out.close();
                                 input.close();
+                                configFileTmp.delete();
                             } else {
                                 wConfig.hasZip = false;
                             }
-
+                            out.close();
+                            configDirTmp.delete();
+                            break;
                         }
                         entry = in.getNextEntry();
                     }
@@ -314,9 +318,11 @@ public class WidgetPackageMgr {
         if (TextUtils.isEmpty(filePath)) {
             return false;
         }
-        Editor editor = preferences.edit();
-        editor.clear();
-        editor.commit();
+        if (BUtility.PATCH_PLUGIN_FLAG != installType) {
+            Editor editor = preferences.edit();
+            editor.clear();
+            editor.commit();
+        }
         String widgetPath = WDataManager.m_sboxPath + "widget/";
         if (!isDynamic) {
             unZip = (!TextUtils.isEmpty(unZip(filePath, widgetPath, null)));
@@ -327,7 +333,7 @@ public class WidgetPackageMgr {
                     widgetPath, pluginPath, null, installType)));
         }
 
-        if (unZip) {
+        if (unZip && (BUtility.PATCH_PLUGIN_FLAG != installType)) {
             File file = new File(filePath);
             if (file.exists()) {
                 file.delete();

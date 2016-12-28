@@ -50,18 +50,19 @@ public class ACEWebView extends WebView implements DownloadListener {
     private EBrowserView mBroView;
     private EBrowserWindow mBroWind;
     private int mDownloadCallback = 0;  // 0 下载不回调，使用引擎下载; 1 下载回调给主窗口，前端自己下载; 2 下载回调给当前窗口，前端自己下载;
+    private boolean mWebApp;
 
     public ACEWebView(Context context) {
 		super(context);
         this.mContext=context;
 	}
 
-    public void init(EBrowserView eBrowserView,boolean webApp) {
+    public void init(EBrowserView eBrowserView) {
         mBroView = eBrowserView;
         if (Build.VERSION.SDK_INT <= 7) {
             if (mBaSetting == null) {
                 mBaSetting = new EBrowserSetting(eBrowserView);
-                mBaSetting.initBaseSetting(webApp);
+                mBaSetting.initBaseSetting(mWebApp);
                 setWebViewClient(mEXWebViewClient = new CBrowserWindow());
                 setWebChromeClient(new CBrowserMainFrame(eBrowserView.getContext()));
             }
@@ -70,7 +71,7 @@ public class ACEWebView extends WebView implements DownloadListener {
 
             if (mBaSetting == null) {
                 mBaSetting = new EBrowserSetting7(eBrowserView);
-                mBaSetting.initBaseSetting(webApp);
+                mBaSetting.initBaseSetting(mWebApp);
                 setWebViewClient(mEXWebViewClient = new CBrowserWindow7());
                 setWebChromeClient(new CBrowserMainFrame7(eBrowserView.getContext()));
             }
@@ -78,6 +79,13 @@ public class ACEWebView extends WebView implements DownloadListener {
         }
     }
 
+    public void setWebApp(boolean flag) {
+        mWebApp = flag;
+    }
+
+    public boolean isWebApp() {
+        return mWebApp;
+    }
 
     public void setDownloadListener() {
         setDownloadListener(this);

@@ -57,12 +57,13 @@ public class ACEWebView extends XWalkView {
 	private CBrowserWindow mCBrowserWindow;
     private EBrowserWindow mBroWind;
     private int mDownloadCallback = 0;  // 0 下载不回调，使用引擎下载; 1 下载回调给主窗口，前端自己下载; 2 下载回调给当前窗口，前端自己下载;
+    private boolean mWebApp;
 	
 	public ACEWebView(Context context) {
 		super(context);
 	}
 
-	protected void init(EBrowserView eBrowserView, boolean webApp) {
+	protected void init(EBrowserView eBrowserView) {
 		setBackgroundColor(0);
 		setAlpha(0.99f);
 		setDrawingCacheBackgroundColor(Color.TRANSPARENT);
@@ -87,10 +88,18 @@ public class ACEWebView extends XWalkView {
 			}
 			
 		});
-		if (webApp) {
+		if (mWebApp) {
 			return;
 		}
 	}
+
+    public void setWebApp(boolean flag) {
+        mWebApp = flag;
+    }
+
+    public boolean isWebApp() {
+        return mWebApp;
+    }
 
 	@SuppressLint("NewApi")
 	public void pauseCore() {

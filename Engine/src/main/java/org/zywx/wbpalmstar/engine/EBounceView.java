@@ -57,7 +57,7 @@ public class EBounceView extends LinearLayout {
     private boolean mTopNotify;
     private boolean mBottomNotify;
     private boolean mTopAutoRefresh = false;
-    private boolean isSupportSwipeCallback = false;//is need callback,set by API interface.
+    private boolean isSupportSwipeCallback = true;// 兼容旧引擎，把默认值从false改为true，要防止与多浮动窗口的手势冲突需要调用接口设置为false
     private int mTopState;
     private int mBottomState;
     private int mTopBund;

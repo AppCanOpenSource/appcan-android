@@ -61,7 +61,6 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
     private boolean mShouldOpenInSystem;
     private boolean mOpaque;
     private boolean mOAuth;
-    private boolean mWebApp;
     private boolean mSupportZoom;
     private int mDateType;
     private boolean mDestroyed;
@@ -111,7 +110,7 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
     }
 
     public void init() {
-        super.init(this,mWebApp);
+        super.init(this);
         setEBrowserWindow(mBroWind);
         setInitialScale(100);
         setVerticalScrollbarOverlay(true);
@@ -981,12 +980,11 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
 //    }
 
     public void setWebApp(boolean flag) {
-        mWebApp = flag;
+        super.setWebApp(flag);
     }
 
     public boolean isWebApp() {
-
-        return mWebApp;
+        return super.isWebApp();
     }
 
     public int getDateType() {
@@ -1303,7 +1301,7 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
         mShouldOpenInSystem = false;
         mOpaque = false;
         mOAuth = false;
-        mWebApp = false;
+        setWebApp(false);
         mSupportZoom = false;
         isSupportSlideCallback = false;
         disturbLongPressGesture = false;
