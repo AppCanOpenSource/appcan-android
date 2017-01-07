@@ -9,6 +9,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.Keep;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.zywx.wbpalmstar.acedes.ACEDes;
@@ -35,8 +36,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.zywx.wbpalmstar.engine.LoadingActivity.KEY_INTENT_WIDGET_DATA;
-
 /**
  * Created by ylt on 16/9/1.
  */
@@ -62,6 +61,7 @@ public class AppCan {
         return sAppCan;
     }
 
+    @Keep
     public WWidgetData getRootWidgetData(){
         return mWidgetData;
     }
@@ -147,9 +147,6 @@ public class AppCan {
                 }
                 if (null != bundle) {
                     intent.putExtras(bundle);
-                }
-                if (mWidgetData != null) {
-                    intent.putExtra(KEY_INTENT_WIDGET_DATA, mWidgetData);
                 }
                 activity.startActivity(intent);
                 activity.overridePendingTransition(EUExUtil.getResAnimID("platform_myspace_no_anim")

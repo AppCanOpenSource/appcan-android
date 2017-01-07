@@ -130,8 +130,8 @@ public final class EBrowserActivity extends BaseActivity {
             delay = 1000L;
         }
         mEHandler.sendMessageDelayed(loadDelayMsg, delay);
-        initEngine((WWidgetData) getIntent().getParcelableExtra(LoadingActivity.KEY_INTENT_WIDGET_DATA));
-        getIntent().removeExtra(LoadingActivity.KEY_INTENT_WIDGET_DATA);
+
+        initEngine(AppCan.getInstance().getRootWidgetData());
 
         EUtil.printeBackup(savedInstanceState, "onCreate");
         // EUtil.checkAndroidProxy(getBaseContext());
