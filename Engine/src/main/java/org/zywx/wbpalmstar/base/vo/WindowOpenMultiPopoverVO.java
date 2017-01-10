@@ -12,21 +12,21 @@ public class WindowOpenMultiPopoverVO implements Serializable {
 
     public String name;
 
-    public String dataType;
+    public int dataType;
 
     public int x;
 
     public int y;
 
-    public int w;
+    public int w=-1;
 
-    public int h;
+    public int h=-1;
 
     public int fontSize;
 
     public int flag;
 
-    public String indexSelected;
+    public int indexSelected;
 
     public WindowMultiPopoverExtraVO extras;
 

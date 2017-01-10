@@ -114,7 +114,7 @@ public class WindowJsonWrapper {
                                    WindowOpenPopoverVO popoverVO){
         window.openPopoverMsg(new String[]{
                 popoverVO.name,
-                popoverVO.dataType,
+                String.valueOf(popoverVO.dataType),
                 popoverVO.url,
                 popoverVO.data,
                 String.valueOf(popoverVO.x),
@@ -142,14 +142,14 @@ public class WindowJsonWrapper {
         window.openMultiPopoverMsg(new String[]{
                 DataHelper.gson.toJson(multiPopoverVO.content),
                 multiPopoverVO.name,
-                multiPopoverVO.dataType,
+                String.valueOf(multiPopoverVO.dataType),
                 String.valueOf(multiPopoverVO.x),
                 String.valueOf(multiPopoverVO.y),
                 String.valueOf(multiPopoverVO.w),
                 String.valueOf(multiPopoverVO.h),
                 String.valueOf(multiPopoverVO.fontSize),
                 String.valueOf(multiPopoverVO.flag),
-                multiPopoverVO.indexSelected,
+                String.valueOf(multiPopoverVO.indexSelected),
                 multiPopoverVO.extras==null?null:DataHelper.gson.toJson(multiPopoverVO.extras)
         });
     }

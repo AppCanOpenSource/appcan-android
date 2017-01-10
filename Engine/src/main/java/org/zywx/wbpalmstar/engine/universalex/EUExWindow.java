@@ -1398,7 +1398,7 @@ public class EUExWindow extends EUExBase {
         String bgColor = "#00000000";
         boolean hasExtraInfo = false;
         int mainDownloadCallback = 0;
-        if (parm.length > 10) {
+        if (parm.length > 10&&parm[10]!=null) {
             String jsonData = parm[10];
             try {
                 JSONObject json = new JSONObject(jsonData);

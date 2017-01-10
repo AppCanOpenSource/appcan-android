@@ -1,6 +1,7 @@
 package org.zywx.wbpalmstar.base.vo;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by ylt on 16/8/4.
@@ -8,11 +9,5 @@ import java.io.Serializable;
 
 public class WindowMultiPopoverContentVO implements Serializable {
 
-    public String inPageName;
-
-    public String inUrl;
-
-    public String inData;
-
-
+    public List<WindowMultiPopoverContentItemVO> content;
 }
