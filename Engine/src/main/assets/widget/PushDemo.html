@@ -1,66 +1,67 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-   <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
-   <link rel="stylesheet" type="text/css" href="css/index.css">
-<title>PUSH测试</title>
-<script type="text/javascript">
-	
-    function setPushState(state){
-		//设置推送开关
-		uexWidget.setPushState(state);
-	  }
-      function getPushState(){
-		//获取开关状态
-		uexWidget.getPushState();
-	  }
-      function setPushInfo(){
-		//这里写的是用户id和昵称，供服务端某些定制逻辑使用；大部分情况下都传空也不影响推送接收。
-		uexWidget.setPushInfo('123','zyp');
-	  }
-      function getPushInfo(){
-		uexWidget.getPushInfo();
-	  }
-      function setPushNotifiCallback(){
-		//设置推送回调，设置之后，对应的这个方法要有定义。收到推送消息时如果程序正在运行，就可以收到这个回调提醒
-		//回调参数并不是推送内容，推送内容需要调用uexWidget.getPushInfo来获取
-		uexWidget.setPushNotifyCallback("pushNotifyCallback");
-	  }
-      function pushNotifyCallback(data){
-			//alert("pushNotifyCallback==="+data);
-			uexWidget.getPushInfo();
-	  }
-	window.uexOnload = function() {
-		uexWidget.cbGetPushInfo = function(opCode,dataType,data){
-			//从这个回调得到推送消息内容
-			alert("cbGetPushInfo: "+data);	
-		}
-		uexWidget.cbGetPushState = function(opId, dataType, data){
-			alert("cbGetPushState: "+data);
-		}
-		
-	}
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport"
+          content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <title>PUSH测试</title>
+    <script type="text/javascript">
 
-</script>
+        function setPushState(state) {
+            //设置推送开关
+            uexWidget.setPushState(state);
+        }
+        function getPushState() {
+            //获取开关状态
+            uexWidget.getPushState();
+        }
+        function setPushInfo() {
+            //这里写的是用户id和昵称，供服务端某些定制逻辑使用；大部分情况下都传空也不影响推送接收。
+            uexWidget.setPushInfo('123', 'zyp');
+        }
+        function getPushInfo() {
+            uexWidget.getPushInfo();
+        }
+        function setPushNotifiCallback() {
+            //设置推送回调，设置之后，对应的这个方法要有定义。收到推送消息时如果程序正在运行，就可以收到这个回调提醒
+            //回调参数并不是推送内容，推送内容需要调用uexWidget.getPushInfo来获取
+            uexWidget.setPushNotifyCallback("pushNotifyCallback");
+        }
+        function pushNotifyCallback(data) {
+            //alert("pushNotifyCallback==="+data);
+            uexWidget.getPushInfo();
+        }
+        window.uexOnload = function () {
+            uexWidget.cbGetPushInfo = function (opCode, dataType, data) {
+                //从这个回调得到推送消息内容
+                alert("cbGetPushInfo: " + data);
+            }
+            uexWidget.cbGetPushState = function (opId, dataType, data) {
+                alert("cbGetPushState: " + data);
+            }
+
+        }
+
+    </script>
 </head>
 
 <body>
-	<div class="tit">PUSH API测试</div>
-	<div class="conbor">
-		<div class="consj">
+<div class="tit">PUSH API测试</div>
+<div class="conbor">
+    <div class="consj">
 
-			<span>6.推送相关接口</span>
-			<input class="btn" type="button" value="开启推送" onclick=setPushState("1")><br>
-			<input class="btn" type="button" value="关闭推送" onclick=setPushState("0")><br>
-			<input class="btn" type="button" value="设置推送监听" onclick=setPushNotifiCallback()><br>
-			<input class="btn" type="button" value="获取开关状态" onclick=getPushState()><br>
-			<input class="btn" type="button" value="绑定推送信息" onclick=setPushInfo()><br>
-			<input class="btn" type="button" value="获取推送信息" onclick=getPushInfo()><br>
-			
-			<input class="btn" type="button" value="返回" onclick="uexWindow.back();">
+        <span>6.推送相关接口</span>
+        <input class="btn" type="button" value="开启推送" onclick=setPushState("1")><br>
+        <input class="btn" type="button" value="关闭推送" onclick=setPushState("0")><br>
+        <input class="btn" type="button" value="设置推送监听" onclick=setPushNotifiCallback()><br>
+        <input class="btn" type="button" value="获取开关状态" onclick=getPushState()><br>
+        <input class="btn" type="button" value="绑定推送信息" onclick=setPushInfo()><br>
+        <input class="btn" type="button" value="获取推送信息" onclick=getPushInfo()><br>
 
-		</div>
-	</div>
+        <input class="btn" type="button" value="返回" onclick="uexWindow.back();">
+
+    </div>
+</div>
 </body>
 </html>

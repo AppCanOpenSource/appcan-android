@@ -4,7 +4,8 @@
     <title>
     </title>
     <meta charset="utf-8">
-    <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="viewport"
+          content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     <link rel="stylesheet" href="../css/ui-base.css">
     <link rel="stylesheet" href="../css/ui-box.css">
     <link rel="stylesheet" href="../css/ui-color.css">
@@ -16,65 +17,65 @@
     <script src="../js/zy_click.js">
     </script>
     <script type="text/javascript">
-		function showConfirm(){
-		var value = document.getElementById('confirmbutton').value;
-		if(value == null || value.length == 0){
-			alert("参数不能为空");
-			return;
-		}
-		var mycars=value.split(";");
-		uexWindow.confirm(document.getElementById('confirmTitle').value,document.getElementById('confirmMsg').value,mycars);
-	}
-	window.uexOnload = function(type){
-		if(type == 0){
+        function showConfirm() {
+            var value = document.getElementById('confirmbutton').value;
+            if (value == null || value.length == 0) {
+                alert("参数不能为空");
+                return;
+            }
+            var mycars = value.split(";");
+            uexWindow.confirm(document.getElementById('confirmTitle').value, document.getElementById('confirmMsg').value, mycars);
+        }
+        window.uexOnload = function (type) {
+            if (type == 0) {
 
-		}
-	}
+            }
+        }
 
-	function winBack(){
-		uexWindow.evaluateScript("uexWindow","0", "winBack()");
-	}
+        function winBack() {
+            uexWindow.evaluateScript("uexWindow", "0", "winBack()");
+        }
 
-    function share() {
-       var imgs=new Array("res://1_1.jpg");
-       var params  = {
-            type:0,
-            text:"test text...text",
-            title:"title",
-            desc:"desc",
-            imgPaths:imgs
-        };
-        uexWindow.share(params);
-    }
-
-
-    function testForwardWin() {
-
-        //打开一个窗口
-
-        var name = "uexWindow_Forward";
-
-        uexWindow.open(name, '0', name+".html", '2', '', '', 0);
-    }
+        function share() {
+            var imgs = new Array("res://1_1.jpg");
+            var params = {
+                type: 0,
+                text: "test text...text",
+                title: "title",
+                desc: "desc",
+                imgPaths: imgs
+            };
+            uexWindow.share(params);
+        }
 
 
-    function winOpenPop2() {
-        uexWindow.evaluateScript("wintestNormal/uexWindow","0", "winPopOpen2()");
-    }
+        function testForwardWin() {
 
-    function closeOpenPop2() {
-        uexWindow.evaluateScript("wintestNormal/uexWindow","0", "closeOpenPop2()");
-    }
+            //打开一个窗口
 
-    function winOpenMultiPop() {
-        uexWindow.evaluateScript("wintestNormal/uexWindow","0", "winOpenMultiPop()");
-    }
+            var name = "uexWindow_Forward";
 
-    function winCloseMultiPop() {
-        uexWindow.evaluateScript("wintestNormal/uexWindow","0", "winCloseMultiPop()");
-    }
+            uexWindow.open(name, '0', name + ".html", '2', '', '', 0);
+        }
 
-</script>
+
+        function winOpenPop2() {
+            uexWindow.evaluateScript("wintestNormal/uexWindow", "0", "winPopOpen2()");
+        }
+
+        function closeOpenPop2() {
+            uexWindow.evaluateScript("wintestNormal/uexWindow", "0", "closeOpenPop2()");
+        }
+
+        function winOpenMultiPop() {
+            uexWindow.evaluateScript("wintestNormal/uexWindow", "0", "winOpenMultiPop()");
+        }
+
+        function winCloseMultiPop() {
+            uexWindow.evaluateScript("wintestNormal/uexWindow", "0", "winCloseMultiPop()");
+        }
+
+    </script>
 </head>
 <body class="um-vp" ontouchstart bgcolor="#03A9F4">
 <div class="conbor">
