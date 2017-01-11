@@ -8,10 +8,10 @@ import java.io.Serializable;
 
 public class WindowSetFrameVO implements Serializable {
 
-    public String x;
+    public int x;
 
-    public String y;
+    public int y;
 
-    public String animDuration;
+    public long animDuration;
 
 }

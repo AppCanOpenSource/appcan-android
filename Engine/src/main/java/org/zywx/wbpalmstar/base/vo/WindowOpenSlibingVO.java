@@ -8,16 +8,16 @@ import java.io.Serializable;
 
 public class WindowOpenSlibingVO implements Serializable {
 
-    public String type;
+    public int type;
 
-    public String dataType;
+    public int dataType;
 
     public String url;
 
     public String data;
 
-    public String w;
+    public int w;
 
-    public String h;
+    public int h;
 
 }

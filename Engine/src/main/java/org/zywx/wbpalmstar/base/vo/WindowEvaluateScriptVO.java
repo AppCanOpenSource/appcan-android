@@ -10,7 +10,7 @@ public class WindowEvaluateScriptVO implements Serializable {
 
     public String name;
 
-    public String type;
+    public int type;
 
     public String js;
 

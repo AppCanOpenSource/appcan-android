@@ -102,10 +102,10 @@ public class EUExWidget extends EUExBase {
             WidgetStartVO startVO= DataHelper.gson.fromJson(parm[0], WidgetStartVO.class);
             parm=new String[]{
                     startVO.appId,
-                    startVO.animId,
+                    String.valueOf(startVO.animId),
                     startVO.funcName,
                     startVO.info,
-                    startVO.animDuration
+                    String.valueOf(startVO.animDuration)
             };
         }
 

@@ -8,8 +8,8 @@ import java.io.Serializable;
 
 public class WindowAnimVO implements Serializable {
 
-    public String animID;
+    public int animID;
 
-    public String animDuration;
+    public int animDuration;
 
 }

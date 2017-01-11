@@ -46,48 +46,48 @@ public class WindowJsonWrapper {
 
     public static void close(EUExWindow window, WindowAnimVO closeVO) {
         window.closeMsg(new String[]{
-                closeVO.animID,
-                closeVO.animDuration
+                String.valueOf(closeVO.animID),
+                String.valueOf(closeVO.animDuration)
         });
     }
 
     public static void windowForward(EUExWindow window,WindowAnimVO animVO){
         window.windowForwardMsg(new String[]{
-                animVO.animID,
-                animVO.animDuration
+                String.valueOf(animVO.animID),
+                String.valueOf(animVO.animDuration)
         });
     }
 
     public static void windowBack(EUExWindow window,WindowAnimVO animVO){
         window.windowBackMsg(new String[]{
-                animVO.animID,
-                animVO.animDuration
+                String.valueOf(animVO.animID),
+                String.valueOf(animVO.animDuration)
         });
     }
 
     public static void setWindowFrame(EUExWindow window, WindowSetFrameVO frameVO){
         window.setWindowFrameMsg(new String[]{
-                frameVO.x,
-                frameVO.y,
-                frameVO.animDuration
+                String.valueOf(frameVO.x),
+                String.valueOf(frameVO.y),
+                String.valueOf(frameVO.animDuration)
         });
     }
 
     public static void openSlibing(EUExWindow window, WindowOpenSlibingVO slibingVO){
         window.openSlibingMsg(new String[]{
-                slibingVO.type,
-                slibingVO.dataType,
+                String.valueOf(slibingVO.type),
+                String.valueOf(slibingVO.dataType),
                 slibingVO.url,
                 slibingVO.data,
-                slibingVO.w,
-                slibingVO.h
+                String.valueOf(slibingVO.w),
+                String.valueOf(slibingVO.h)
         });
     }
 
     public static void evaluateScript(EUExWindow window, WindowEvaluateScriptVO scriptVO){
         window.evaluateScriptMsg(new String[]{
                 scriptVO.name,
-                scriptVO.type,
+                String.valueOf(scriptVO.type),
                 scriptVO.js
         });
     }
@@ -131,10 +131,10 @@ public class WindowJsonWrapper {
     public static void setPopoverFrame(EUExWindow window, WindowSetPopoverFrameVO frameVO){
         window.setPopoverFrameMsg(new String[]{
                 frameVO.name,
-                frameVO.x,
-                frameVO.y,
-                frameVO.w,
-                frameVO.h
+                String.valueOf(frameVO.x),
+                String.valueOf(frameVO.y),
+                String.valueOf(frameVO.w),
+                String.valueOf(frameVO.h)
         });
     }
 
@@ -158,17 +158,17 @@ public class WindowJsonWrapper {
                                                        WindowSetMultiPopoverSelectedVO selectedVO){
         window.setSelectedPopOverInMultiWindowMsg(new String[]{
                 selectedVO.name,
-                selectedVO.index
+                String.valueOf(selectedVO.index)
         });
     }
 
     public static void setMultiPopoverFrame(EUExWindow window, WindowSetMultiPopoverFrameVO frameVO){
         window.setMultiPopoverFrameMsg(new String[]{
                 frameVO.name,
-                frameVO.x,
-                frameVO.y,
-                frameVO.w,
-                frameVO.h
+                String.valueOf(frameVO.x),
+                String.valueOf(frameVO.y),
+                String.valueOf(frameVO.w),
+                String.valueOf(frameVO.h)
         });
     }
 
@@ -202,10 +202,10 @@ public class WindowJsonWrapper {
 
     public static void toast(EUExWindow window, WindowToastVO toastVO){
         window.toastMsg(new String[] {
-                toastVO.type,
+                String.valueOf(toastVO.type),
                 toastVO.location,
                 toastVO.msg,
-                toastVO.duration
+                String.valueOf(toastVO.duration)
         });
     }
 
@@ -229,9 +229,9 @@ public class WindowJsonWrapper {
 
     public static void showBounceView(EUExWindow window, WindowShowBounceViewVO bounceViewVO){
         window.showBounceView(new String[]{
-                bounceViewVO.type,
+                String.valueOf(bounceViewVO.type),
                 bounceViewVO.color,
-                bounceViewVO.flag
+                String.valueOf(bounceViewVO.flag)
         });
     }
 
