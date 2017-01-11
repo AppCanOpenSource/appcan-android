@@ -10,19 +10,19 @@ public class WindowOpenVO implements Serializable {
 
     public String name;
 
-    public String dataType="0";
+    public int dataType=0;
 
     public String data;
 
-    public String animID;
+    public int animID;
 
-    public String w;
+    public int w;
 
-    public String h;
+    public int h;
 
     public int flag;
 
-    public String animDuration;
+    public int animDuration;
 
     public WindowOpenExtrasVO extras;
 

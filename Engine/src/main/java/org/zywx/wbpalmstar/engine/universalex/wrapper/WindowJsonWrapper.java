@@ -33,13 +33,13 @@ public class WindowJsonWrapper {
     public static void open(EUExWindow window, WindowOpenVO openVO) {
         window.openMsg(new String[]{
                 openVO.name,
-                openVO.dataType,
+                String.valueOf(openVO.dataType),
                 openVO.data,
-                openVO.animID,
-                openVO.w,
-                openVO.h,
+                String.valueOf(openVO.animID),
+                String.valueOf(openVO.w),
+                String.valueOf(openVO.h),
                 String.valueOf(openVO.flag),
-                openVO.animDuration,
+                String.valueOf(openVO.animDuration),
                 openVO.extras == null ? null : DataHelper.gson.toJson(openVO.extras)
         });
     }
