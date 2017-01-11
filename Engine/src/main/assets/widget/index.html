@@ -32,25 +32,19 @@
 
             }
 
-            var params = {
-
-                leftSliding: {
-                    width: w_1,
-                    url: "wintestNav/uexWindow_left.html"
+            uexWindow.setSlidingWindow({
+                leftSliding:{
+                    width:w_1,
+                    url:"wintestNav/uexWindow_left.html"
                 },
-                rightSliding: {
-                    width: w_1,
-                    url: "wintestNav/uexWindow_right.html"
+                rightSliding:{
+                    width:w_1,
+                    url:"wintestNav/uexWindow_right.html"
                 },
-                animationId: '1', //仿QQ侧滑
-                bg: 'res://1_1.jpg' //仿QQ侧滑
-
-            };
-
-            var paramStr = JSON.stringify(params);
-
-            uexWindow.setSlidingWindow(paramStr);
-        }
+                animationId:1,
+                bg:"res://girl.jpg"
+            });
+        };
 
         function onLoadByOtherApp(data) {
             var last = JSON.stringify(data);
@@ -65,11 +59,15 @@
 
         function openTestController(name) {
             uexWindow.openWithController("ssss", '0', "system/system.html");
-
         }
 
         function openTest1(name) {
-            uexWindow.open(name, '0', name + ".html", '2', '', '', 1024);
+            uexWindow.open({
+                name: name,
+                data: name + ".html",
+                animID: 2,
+                flag: 1024
+            });
         }
 
         function openWinInMainWithSliding() {
@@ -109,7 +107,7 @@
 </head>
 
 <body>
-<div class="tit">平台插件汇总</div>
+<div class="tit">引擎接口测试</div>
 <div class="conbor">
     <div class="consj">
 

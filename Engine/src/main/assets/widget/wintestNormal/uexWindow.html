@@ -64,6 +64,16 @@
         var w = 700;
         var h = 800;
         uexWindow.openPopover("pop2", "0", "window/pop.html", "", x, y, w, h, "5", "130");
+
+        uexWindow.openPopover({
+            name:"pop2",
+            url:"window/pop.html",
+            x:0,
+            y:0,
+            w:700,
+            h:800,
+            bottomMargin:130
+        });
     }
 
     function closeOpenPop2() {
@@ -72,26 +82,33 @@
 
     function winOpenMultiPop() {
 
-
-        var params = {
-            content: [
-                {
-                    inPageName: "p1",
-                    inUrl: "window/popoverPage.html",
-                    inData: ""
-                },
-                {
-                    inPageName: "p2",
-                    inUrl: "window/multipop.html",
-                    inData: ""
-                }
-            ]
-        };
-
-        var paramStr = JSON.stringify(params);
-
-        uexWindow.openMultiPopover(paramStr, "multipop", 0, 0, 0, 500, 500, '', 0, 0);
-        uexWindow.setSelectedPopOverInMultiWindow("multipop", 1);
+        uexWindow.openMultiPopover({
+            content: {
+                "content": [
+                    {
+                        "inPageName": "p1",
+                        "inUrl": "window/popoverPage.html",
+                        "inData": ""
+                    },
+                    {
+                        "inPageName": "p2",
+                        "inUrl": "window/multipop.html",
+                        "inData": ""
+                    }
+                ]
+            },
+            name: "multipop",
+            dataType: 0,
+            y: 0,
+            w:800,
+            h:800,
+            flag: 0,
+            indexSelected: 1
+        });
+        uexWindow.setSelectedPopOverInMultiWindow({
+            name:'multipop',
+            index:1
+        });
     }
 
     function winCloseMultiPop() {

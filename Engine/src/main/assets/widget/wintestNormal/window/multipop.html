@@ -11,6 +11,16 @@
             var w = document.getElementById("ww").value;
             var h = document.getElementById("hh").value;
             uexWindow.setMultiPopoverFrame("multipop", x, y, w, h);
+
+            uexWindow.setMultiPopoverFrame(
+                {
+                    name: "multipop",
+                    x: x,
+                    y: y,
+                    w: w,
+                    h: h
+                }
+            );
         }
         function evas() {
             var value = document.getElementById("tit").innerHTML;
