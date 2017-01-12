@@ -235,7 +235,11 @@ window.uexOnload = function (type) {
 }
 
 function winBack() {
-    uexWindow.evaluateScript("uexWindow", "0", "winBack()");
+    uexWindow.evaluateScript({
+        name:"uexWindow",
+        type:0,
+        js:"winBack()"
+    });
 }
 
 
@@ -266,17 +270,40 @@ function testForwardWin() {
 
 
 function winOpenPop2() {
-    uexWindow.evaluateScript("wintestNormal/uexWindow", "0", "winPopOpen2()");
+
+    uexWindow.evaluateScript({
+        name:"wintestNormal/uexWindow",
+        type:0,
+        js:"winPopOpen2()"
+    });
+
 }
 
 function closeOpenPop2() {
-    uexWindow.evaluateScript("wintestNormal/uexWindow", "0", "closeOpenPop2()");
+
+    uexWindow.evaluateScript({
+        name:"wintestNormal/uexWindow",
+        type:0,
+        js:"closeOpenPop2()"
+    });
+
 }
 
 function winOpenMultiPop() {
-    uexWindow.evaluateScript("wintestNormal/uexWindow", "0", "winOpenMultiPop()");
+
+    uexWindow.evaluateScript({
+        name:"wintestNormal/uexWindow",
+        type:0,
+        js:"winOpenMultiPop()"
+    });
 }
 
 function winCloseMultiPop() {
-    uexWindow.evaluateScript("wintestNormal/uexWindow", "0", "winCloseMultiPop()");
+
+    uexWindow.evaluateScript({
+        name:"wintestNormal/uexWindow",
+        type:0,
+        js:"winCloseMultiPop()"
+    });
+
 }
