@@ -21,7 +21,7 @@
 <body class="um-vp c-wh" ontouchstart>
 <div id="page_0" class="up ub ub-ver" tabindex="0">
     <!--header开始-->
-    <div id="header" class="uh t-wh ub" style="background: #27A73F;">
+    <div id="header" class="uh t-wh ub" style="background: #03A9F4;">
         <div class="umw4 ub ub-ac ub-pc" ontouchstart="zy_touch()" onclick="winBack()">
             <div ontouchstart="zy_touch('btn-act')" class="btn uba b-bla uinn5 c-blu c-m1 uc-a t-wh"
                  style="background: -webkit-gradient(linear,0 0,0 100%,from(#FFCD00),color-stop(50%,#FFBC00),color-stop(50%,orange));border: 1px solid #FFA700;-webkit-border-radius: 8px;  text-align: center;color: #712000;  display: block; font-size: 1em; padding: 0.2em;">
@@ -47,10 +47,8 @@
         }
         window.onorientationchange = window.onresize = function () {
             zy_resize("content", 0, $$("header").offsetHeight);
-        }
-
-        uexWindow.setSlidingWindowEnabled(0);
-        uexWindow.setSwipeCloseEnable('{enable:0}')
+        };
+         uexWindow.setSwipeCloseEnable('{enable:0}')
     }
     function winBack() {
 //			uexWindow.back();	//同一个页面使用<a>标签的href跳转，之后可以用back()返回
