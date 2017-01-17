@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-color.css">
+    <link rel="stylesheet" href="css/appcan.icon.css">
+    <link rel="stylesheet" href="css/appcan.control.css">
+</head>
+<body class="um-vp" ontouchstart>
+<div id="page_0" class="up ub ub-ver bc-bg" tabindex="0">
+    <!--header开始-->
+    <div id="header" class="uh bc-text-head ub bc-head">
+        <div class="nav-btn" id="nav-left">
+            返回
+        </div>
+        <h1 class="ut ub-f1 ulev-3 ut-s tx-c" tabindex="0">子应用</h1>
+        <div class="nav-btn" id="nav-right">
+
+        </div>
+    </div>
+    <!--header结束--><!--content开始-->
+    <div id="content" class="ub-f1 tx-l ">
+        <div class="btn ub ub-ac bc-text-head ub-pc bc-btn" id="btn">
+            发送消息
+        </div>
+        <div class="btn ub ub-ac bc-text-head ub-pc bc-btn" id="getOpenerInfo" onclick="getOpenerInfo()">
+            getOpenerInfo
+        </div>
+    </div>
+    <!--content结束-->
+
+</div>
+<script src="js/appcan.js"></script>
+<script src="js/appcan.control.js"></script>
+</body>
+<script>
+    appcan.ready(function () {
+        var titHeight = $('#header').offset().height;
+        //appcan.frame.open("content", "widget_content.html", 0, titHeight);
+        window.onorientationchange = window.onresize = function () {
+            appcan.frame.resize("content", 0, titHeight);
+        }
+    });
+    appcan.button("#btn", "ani-act", function () {
+        uexWindow.publishChannelNotification("emailFresh", "");
+    });
+    appcan.button("#nav-left", "ani-act", function () {
+        uexWidget.finishWidget('');
+    });
+    function getOpenerInfo() {
+        var result=uexWidget.getOpenerInfo();
+        alert(result);
+    };
+
+
+</script>
+</html>

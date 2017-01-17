@@ -1,0 +1,441 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+/**
+ * 1. Avoid the WebKit bug in Android 4.0.* where (2) destroys native `audio`
+ *    and `video` controls.
+ * 2. Correct inability to style clickable `input` types in iOS.
+ * 3. Improve usability and consistency of cursor style between image-type
+ *    `input` and others.
+ */
+
+button, html input[type="button"], /* 1 */
+input[type="reset"], input[type="submit"] {
+    -webkit-appearance: button; /* 2 */
+    cursor: pointer
+}
+
+div {
+    outline: 0 !important;
+    -webkit-text-size-adjust: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    position: relative;
+}
+
+ul, li {
+    list-style: none;
+}
+
+.uc-tl {
+    -webkit-border-top-left-radius: .6em;
+    border-top-left-radius: .6em
+}
+
+.uc-tr {
+    -webkit-border-top-right-radius: .6em;
+    border-top-right-radius: .6em
+}
+
+.uc-bl {
+    -webkit-border-bottom-left-radius: .6em;
+    border-bottom-left-radius: .6em
+}
+
+.uc-br {
+    -webkit-border-bottom-right-radius: .6em;
+    border-bottom-right-radius: .6em
+}
+
+.uc-t {
+    -webkit-border-top-left-radius: .6em;
+    border-top-left-radius: .6em;
+    -webkit-border-top-right-radius: .6em;
+    border-top-right-radius: .6em
+}
+
+.uc-b {
+    -webkit-border-bottom-left-radius: .6em;
+    border-bottom-left-radius: .6em;
+    -webkit-border-bottom-right-radius: .6em;
+    border-bottom-right-radius: .6em
+}
+
+.uc-r {
+    -webkit-border-top-right-radius: .6em;
+    border-top-right-radius: .6em;
+    -webkit-border-bottom-right-radius: .6em;
+    border-bottom-right-radius: .6em
+}
+
+.uc-l {
+    -webkit-border-top-left-radius: .6em;
+    border-top-left-radius: .6em;
+    -webkit-border-bottom-left-radius: .6em;
+    border-bottom-left-radius: .6em
+}
+
+.uc-a {
+    -webkit-border-radius: .6em;
+    border-radius: .6em
+}
+
+.uc-n {
+    -webkit-border-radius: 0;
+    border-radius: 0
+}
+
+.uc-tl1 {
+    -webkit-border-top-left-radius: 0.3em;
+    border-top-left-radius: 0.3em
+}
+
+.uc-tr1 {
+    -webkit-border-top-right-radius: 0.3em;
+    border-top-right-radius: 0.3em
+}
+
+.uc-bl1 {
+    -webkit-border-bottom-left-radius: 0.3em;
+    border-bottom-left-radius: 0.3em
+}
+
+.uc-br1 {
+    -webkit-border-bottom-right-radius: 0.3em;
+    border-bottom-right-radius: 0.3em
+}
+
+.uc-t1 {
+    -webkit-border-top-left-radius: 0.3em;
+    border-top-left-radius: 0.3em;
+    -webkit-border-top-right-radius: 0.3em;
+    border-top-right-radius: 0.3em
+}
+
+.uc-b1 {
+    -webkit-border-bottom-left-radius: 0.3em;
+    border-bottom-left-radius: 0.3em;
+    -webkit-border-bottom-right-radius: 0.3em;
+    border-bottom-right-radius: 0.3em
+}
+
+.uc-r1 {
+    -webkit-border-top-right-radius: 0.3em;
+    border-top-right-radius: 0.3em;
+    -webkit-border-bottom-right-radius: 0.3em;
+    border-bottom-right-radius: 0.3em
+}
+
+.uc-l1 {
+    -webkit-border-top-left-radius: 0.3em;
+    border-top-left-radius: 0.3em;
+    -webkit-border-bottom-left-radius: 0.3em;
+    border-bottom-left-radius: 0.3em
+}
+
+.uc-a1 {
+    -webkit-border-radius: 0.3em;
+    border-radius: 0.3em
+}
+.uc-a3 {
+    -webkit-border-radius: 0.4em;
+    border-radius: 0.4em
+}
+.uc-a2 {
+    -webkit-border-radius: 1.2em;
+    border-radius: 1.2em
+}
+.uc-tl, .uc-tr, .uc-bl, .uc-br, .uc-t, .uc-b, .uc-r, .uc-l, .uc-a, .uc-n, .uc-tl1, .uc-tr1, .uc-bl1, .uc-br1, .uc-t1, .uc-b1, .uc-r1, .uc-l1, .uc-a1, .uc-a2,     , .uc-a3 {
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box
+}
+
+.us {
+    -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .3)
+}
+.us1 {
+    -webkit-box-shadow: 0 1px 4px rgba(120, 120, 120, .3);
+    box-shadow: 0 1px 4px rgba(120, 120, 120, .3)
+}
+.us-i {
+    -webkit-box-shadow: inset 0px 2px 3px rgba(0, 0, 0, .4);
+    box-shadow: inset 0px 2px 3px rgba(0, 0, 0, .4)
+}
+
+.uts {
+    text-shadow: 0px 2px 2px #000;
+}
+
+.um, .um body {
+    height: 100%;
+    padding: 0px;
+    margin: 0px;
+    font-family: "Helvetica Neue", Helvetica;
+}
+
+.um-vp {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    -webkit-text-size-adjust: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-user-select: none
+}
+
+.um-vp .up {
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 100%;
+    max-height: 100%;
+    position: absolute;
+    border: 0
+}
+
+.uh, .uf {
+    display: block;
+    width: 100%;
+    font-size: 1em;
+}
+
+.up .uh, .up .uf, .pos_re {
+    position: relative
+}
+
+.uh .ut, .uf .ut {
+    padding: .72em 1em .72em;
+    margin: 0;
+}
+
+.ufl {
+    float: left !important;
+}
+.ufr {
+    float: right !important;
+}
+
+.ulev2 {
+    font-size: 1.5em !important;
+}
+
+.ulev1 {
+    font-size: 1.2em !important;
+}
+
+.ulev0 {
+    font-size: 1.0em !important;
+}
+
+.ulev-1 {
+    font-size: 0.8125em !important;
+}
+
+.ulev-2 {
+    font-size: 0.625em !important;
+}
+.ulev-3 {
+    font-size: 1.0625em !important;
+}
+.ulev-4 {
+    font-size: 0.75em !important;
+}
+.ulim {
+    max-width: 5em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.uinl {
+    display: inline-block;
+    position: relative;
+}
+
+.uinn {
+    padding: 0.5em;
+    margin: 0;
+}
+.uinn1 {
+    padding: 0 0.5em;
+    margin: 0;
+}
+.uinn2 {
+    padding: 0.5em 1em;
+    margin: 0;
+}
+.uinn3 {
+    padding: 0.2em;
+    margin: 0;
+}
+.uinn4 {
+    padding: 0 0.2em;
+    margin: 0;
+}
+.uinn5 {
+    padding: 0.75em 0.5em;
+    margin: 0;
+}
+.uinn7 {
+    padding: 0.66em 0.375em;
+    margin: 0;
+}
+.umh1 {
+    min-height: 1em;
+}
+
+.umh2 {
+    min-height: 1.2em;
+}
+
+.umh3 {
+    min-height: 1.5em;
+}
+
+.umh4 {
+    min-height: 2em;
+}
+.umh5 {
+    min-height: 3em;
+}
+.umh6 {
+    min-height: 4em;
+}
+.umh7 {
+    min-height: 1.8em;
+}
+.umw1 {
+    min-width: 1em;
+}
+.umw1-5 {
+    min-width: 1.5em;
+}
+
+.umw2 {
+    min-width: 2em;
+}
+
+.umw3 {
+    min-width: 3em;
+}
+
+.umw4 {
+    min-width: 4em;
+}
+
+.tx-l {
+    text-align: left;
+}
+.tx-r {
+    text-align: right;
+}
+.tx-c {
+    text-align: center;
+}
+
+.ut-s {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap !important;
+    outline: 0 !important
+}
+
+.ut-m {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: normal !important;
+    outline: 0 !important
+}
+
+.uba {
+    border: 1px solid;
+}
+.uba1 {
+    border: 2px solid;
+}
+.uba2 {
+    border: 3px solid;
+}
+
+.ubt {
+    border-top: 1px solid;
+}
+.ubb {
+    border-bottom: 1px solid;
+}
+
+.ubl {
+    border-left: 1px solid;
+}
+
+.ubr {
+    border-right: 1px solid;
+}
+
+.uhide {
+    display: none !important;
+}
+
+.umar-b {
+    margin-bottom: 0.4em;
+}
+.umar-t {
+    margin-top: 0.4em;
+}
+.umar-l {
+    margin-left: 0.4em;
+}
+.umar-r {
+    margin-right: 0.4em;
+}
+.umar-a {
+    margin: 0.4em;
+}
+
+.uof {
+    overflow: hidden;
+}
+.uof-x {
+    overflow-x: hidden;
+}
+.uof-y {
+    overflow-y: hidden;
+}
+
+.uabs {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.uabs-r {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.utra {
+    -webkit-transition: all 300ms ease-in 100ms
+}
+.line1 {
+    -webkit-line-clamp: 1;
+}
+.line2 {
+    -webkit-line-clamp: 2;
+}
+
+.line3 {
+    -webkit-line-clamp: 3;
+}
+
+.ani-act {
+    transform: scale(0.95,0.97);
+    -webkit-transform: scale(0.95,0.97);
+    -webkit-transition-duration: 300ms;
+    opacity: .7;
+}
+
+.uh_ios7 .uh {
+    padding: 1em 0 0;
+}

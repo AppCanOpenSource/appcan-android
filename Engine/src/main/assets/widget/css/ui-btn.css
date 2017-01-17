@@ -65,7 +65,6 @@
 }
 
 .m_input {
-    background-image: url('images/input_left.png'), url('images/input_center.png'), url('images/input_right.png');
     background-repeat: no-repeat, repeat, no-repeat;
     -webkit-background-clip: padding-box, content-box, padding-box;
     background-clip: padding-box, content-box, padding-box;

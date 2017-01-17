@@ -20,6 +20,7 @@ window.uexOnload = function (type) {
     if (type == 0) {
         uexWidget.cbIsAppInstalled = cbIsAppInstalled;
         uexWidget.cbStartApp = cbStartApp;
+        uexWindow.onNotification = onNotification;
     }
 }
 function cbIsAppInstalled(info) {
@@ -45,5 +46,23 @@ function openQQBrowser() {
 }
 
 function startWidget() {
+    uexWindow.subscribeChannelNotification("emailFresh","onNotification");
 
+    uexWidget.startWidget({
+            appId:"123456",
+            animId:"10",
+            info:"这是从主widget传过来的info",
+            animDuration:300
+        }
+    ,function (error) {
+        if(!error){
+            alert("加载成功");
+        }else{
+            alert("加载失败");
+        }
+    });
+}
+
+function onNotification() {
+    alert("发送成功！！!!!!！");
 }
