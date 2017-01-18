@@ -1485,7 +1485,10 @@ public class EUExWindow extends EUExBase {
             JSONArray jsonContent = content.getJSONArray("content");
             int j = jsonContent.length();
             Log.d("multi", "jsonContent num:" + j);
-
+            if (indexSelect < 0 || indexSelect >= j) {
+                indexSelect = 0;
+                Log.e("multi", "indexSelect is " + indexSelect + ", jsonContent num:" + j);
+            }
             childUrl = new String[j];
 
             for (int i = 0; i < jsonContent.length(); i++) {

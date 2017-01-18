@@ -108,8 +108,8 @@ public class WDataManager {
         m_preferences = m_context.getSharedPreferences(m_widgetOneConfig,
                 Context.MODE_PRIVATE);
 
-        m_sboxPath = context.getFilesDir().getPath() + "/";
-        m_exterboxPath = context.getExternalFilesDir(null).getPath() + "/";
+        m_sboxPath = BUtility.getSBoxRootPath(context);
+        m_exterboxPath = BUtility.getExterBoxPath(context);
     }
 
     public static WWidgetData getLoginListWgt(String mainAppId,
