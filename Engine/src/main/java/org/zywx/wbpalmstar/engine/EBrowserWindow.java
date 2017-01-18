@@ -128,6 +128,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
 
     public static String rootLeftSlidingWinName = "rootLeftSlidingWinName";
     public static String rootRightSlidingWinName = "rootRightSlidingWinName";
+    private List<View> viewList = new ArrayList<View>();
 
     public EBrowserWindow(Context context, EBrowserWidget inParent) {
         super(context);
@@ -218,6 +219,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         //msg.what = F_WHANDLER_ADD_VIEW;
         //msg.obj = child;
         //mWindLoop.sendMessage(msg);
+        viewList.add(child);
         child.setTag(EViewEntry.F_PLUGIN_VIEW_TAG);
         Animation anim = child.getAnimation();
         addView(child);
@@ -228,15 +230,15 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
     }
 
     public void removeViewFromCurrentWindow(View child) {
-        //Message msg = mWindLoop.obtainMessage();
-        //msg.what = F_WHANDLER_REMOVE_VIEW;
-        //msg.obj = child;
-        //mWindLoop.sendMessage(msg);
-        Animation removeAnim = child.getAnimation();
-        if (null != removeAnim) {
-            removeAnim.start();
-        }
-        removeView(child);
+        Message msg = mWindLoop.obtainMessage();
+        msg.what = F_WHANDLER_REMOVE_VIEW;
+        msg.obj = child;
+        mWindLoop.sendMessage(msg);
+        // Animation removeAnim = child.getAnimation();
+        // if (null != removeAnim) {
+        // removeAnim.start();
+        // }
+        // removeView(child);
     }
 
 
@@ -1549,6 +1551,21 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
             mResumeJs.clear();
             mResumeJs = null;
         }
+        clearViewList();
+    }
+
+    private void clearViewList() {
+        for (View view : viewList) {
+            if (view != null) {
+                removeViewList(view);
+            }
+        }
+        viewList.clear();
+    }
+
+    private void removeViewList(View view) {
+        viewList.remove(view);
+        removeView(view);
     }
 
     public void destory() {
@@ -2126,12 +2143,12 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
                     bringChildToFront(childAdd);
                     break;
                 case F_WHANDLER_REMOVE_VIEW:
-                    View childrem = (View) msg.obj;
-                    Animation removeAnim = childrem.getAnimation();
+                    View children = (View) msg.obj;
+                    Animation removeAnim = children.getAnimation();
                     if (null != removeAnim) {
                         removeAnim.start();
                     }
-                    removeView(childrem);
+                    removeViewList(children);
                     msg.obj = null;
                     break;
                 case F_WHANDLER_BOUNCE_TASK:
