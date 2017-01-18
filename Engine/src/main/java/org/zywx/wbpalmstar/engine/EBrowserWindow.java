@@ -193,6 +193,10 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
                 mBounceView.setBounceViewBackground(inEntry.mOpaque,
                         inEntry.mBgColor, inEntry.mData, mMainView);
             }
+            if (inEntry.mWindName.equals(EBrowserWindow.rootLeftSlidingWinName)
+                    || inEntry.mWindName.equals(EBrowserWindow.rootRightSlidingWinName)) {
+                mMainView.getSettings().setUseWideViewPort(false);
+            }
         }
     }
 
