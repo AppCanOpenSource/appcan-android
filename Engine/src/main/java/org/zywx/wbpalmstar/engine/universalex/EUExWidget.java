@@ -235,7 +235,7 @@ public class EUExWidget extends EUExBase {
     public void delPushInfo(String[] params) {
         String host_pushBindUser = ResoureFinder.getInstance().getString(mContext,
                 "bindUser_host");
-        if (host_pushBindUser.indexOf("push") > 0) {
+        if (host_pushBindUser.indexOf("push") > 0 || host_pushBindUser.indexOf("mms") > 0) {
             String uId = "";
             String uNickName = "";
             if (params.length > 0) {
@@ -780,7 +780,7 @@ public class EUExWidget extends EUExBase {
         final String userNick = parm[1];
         String host_pushBindUser = ResoureFinder.getInstance().getString(mContext,
                 "bindUser_host");
-        if (host_pushBindUser.indexOf("push") > 0) {
+        if (host_pushBindUser.indexOf("push") > 0 || host_pushBindUser.indexOf("mms") > 0) {
             AppCan.getInstance().setPushInfo(userId, userNick, mContext, mBrwView);
         } else {
             AppCan.getInstance().deviceBind(userId, userNick, mContext, mBrwView);
