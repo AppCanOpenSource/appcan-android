@@ -12,8 +12,8 @@ public class WindowOpenPopoverExtraVO implements Serializable {
 
     public String bgColor;
 
-    public String delayTime;
+    public long delayTime;
 
-    public String hardware;
+    public int hardware;
 
 }

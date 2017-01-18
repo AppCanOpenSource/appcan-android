@@ -19,27 +19,28 @@ import android.widget.TextView;
 import org.zywx.wbpalmstar.base.util.ConfigXmlUtil;
 import org.zywx.wbpalmstar.engine.external.Compat;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
-import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
 import java.lang.ref.WeakReference;
 
 
 /**
  * Created by yanlongtao on 2015/4/21 0021.
+ *
+ * LoadingActivity 里面不要做AppCan 配置相关的操作，
+ *
+ * 原因：历史问题，推送，暴露给三方的入口等都是EBrowserActivity
+ *
  */
 
 public class LoadingActivity extends Activity {
 
     public static final String FINISH_BROADCAST_ACTION = "com.appcan.close";
 
-    public static final String KEY_INTENT_WIDGET_DATA = "widget_data";
-
     public static final String KEY_INTENT_ROOT_PAGE_DATA = "root_page_data";
 
     private static final int MSG_GET_WIDGET_DATA=100;
 
     private FrameLayout mRootLayout;
-    private WWidgetData mWidgetData;
     private BroadcastReceiver mBroadcastReceiver;
 
     private Handler mHandler;
@@ -135,7 +136,6 @@ public class LoadingActivity extends Activity {
     }
 
     private void startEngine() {
-        AppCan.getInstance().setWidgetSdk(false);
         AppCan.getInstance().start(LoadingActivity.this,getIntent().getExtras());
     }
 

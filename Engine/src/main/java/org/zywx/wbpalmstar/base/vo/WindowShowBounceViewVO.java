@@ -8,10 +8,10 @@ import java.io.Serializable;
 
 public class WindowShowBounceViewVO implements Serializable {
 
-    public String type;
+    public int type;
 
     public String color;
 
-    public String flag;
+    public int flag;
 
 }

@@ -10,12 +10,12 @@ public class WindowSetMultiPopoverFrameVO implements Serializable {
 
     public String name;
 
-    public String x;
+    public int x;
 
-    public String y;
+    public int y;
 
-    public String w;
+    public int w;
 
-    public String h;
+    public int h;
 
 }

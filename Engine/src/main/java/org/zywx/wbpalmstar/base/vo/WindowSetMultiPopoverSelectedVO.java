@@ -10,6 +10,6 @@ public class WindowSetMultiPopoverSelectedVO implements Serializable {
 
     public String name;
 
-    public String index;
+    public int index;
 
 }

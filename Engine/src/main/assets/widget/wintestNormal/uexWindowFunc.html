@@ -4,7 +4,8 @@
     <title>
     </title>
     <meta charset="utf-8">
-    <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="viewport"
+          content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     <link rel="stylesheet" href="../css/ui-base.css">
     <link rel="stylesheet" href="../css/ui-box.css">
     <link rel="stylesheet" href="../css/ui-color.css">
@@ -15,66 +16,8 @@
     </script>
     <script src="../js/zy_click.js">
     </script>
-    <script type="text/javascript">
-		function showConfirm(){
-		var value = document.getElementById('confirmbutton').value;
-		if(value == null || value.length == 0){
-			alert("参数不能为空");
-			return;
-		}
-		var mycars=value.split(";");
-		uexWindow.confirm(document.getElementById('confirmTitle').value,document.getElementById('confirmMsg').value,mycars);
-	}
-	window.uexOnload = function(type){
-		if(type == 0){
-
-		}
-	}
-
-	function winBack(){
-		uexWindow.evaluateScript("uexWindow","0", "winBack()");
-	}
-
-    function share() {
-       var imgs=new Array("res://1_1.jpg");
-       var params  = {
-            type:0,
-            text:"test text...text",
-            title:"title",
-            desc:"desc",
-            imgPaths:imgs
-        };
-        uexWindow.share(params);
-    }
-
-
-    function testForwardWin() {
-
-        //打开一个窗口
-
-        var name = "uexWindow_Forward";
-
-        uexWindow.open(name, '0', name+".html", '2', '', '', 0);
-    }
-
-
-    function winOpenPop2() {
-        uexWindow.evaluateScript("wintestNormal/uexWindow","0", "winPopOpen2()");
-    }
-
-    function closeOpenPop2() {
-        uexWindow.evaluateScript("wintestNormal/uexWindow","0", "closeOpenPop2()");
-    }
-
-    function winOpenMultiPop() {
-        uexWindow.evaluateScript("wintestNormal/uexWindow","0", "winOpenMultiPop()");
-    }
-
-    function winCloseMultiPop() {
-        uexWindow.evaluateScript("wintestNormal/uexWindow","0", "winCloseMultiPop()");
-    }
-
-</script>
+    <script src="../js/window_func.js">
+    </script>
 </head>
 <body class="um-vp" ontouchstart bgcolor="#03A9F4">
 <div class="conbor">
@@ -84,17 +27,18 @@
         <input class="btn" type="button" value="分享" onclick="share()"><br>
 
 
-        <span>2.窗口前进后退(windowForward, windowBack forward, back, pageForward, pageBack)</span>
-        <input class="btn" type="button" value="窗口前进后退" onclick="testForwardWin()"><br>
+        <span>2.数据持久化测试:putLocalData,getLocalData</span>
+        <input class="textbox" type="text" id="putLocalData" value="给我存去吧...">
 
-        <span>5.打开浮动窗口2(测试closePopover)</span>
-        <input class="btn" type="button" value="打开浮动窗2" onclick="winOpenPop2()"><br>
-        <input class="btn" type="button" value="关闭浮动窗2" onclick="closeOpenPop2()"><br>
+        <input class="btn" type="button" value="存储数据" onclick="putLocalData(document.getElementById('putLocalData').value)"><br>
 
-        <span>6.打开多页面浮动窗口(openMultiPopover)</span>
-        <input class="btn" type="button" value="打开多页面浮动窗口" onclick="winOpenMultiPop()"><br>
-        <input class="btn" type="button" value="关闭多页面浮动窗口" onclick="winCloseMultiPop()"><br>
-    </div>
+        <input class="btn" type="button" value="获取数据" onclick="getLocalData()"><br>
+
+        <span>3.显示隐藏状态栏</span>
+        <input class="btn" type="button" value="隐藏状态栏（仅iOS）" onclick="hideStatusBar()"><br>
+        <input class="btn" type="button" value="显示状态栏（仅iOS）" onclick="showStatusBar()"><br>
+
+      </div>
 </div>
 </body>
 </html>

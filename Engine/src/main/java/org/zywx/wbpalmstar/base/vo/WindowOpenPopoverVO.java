@@ -10,7 +10,7 @@ public class WindowOpenPopoverVO implements Serializable {
 
     public String name;
 
-    public String dataType;
+    public int dataType;
 
     public String url;
 
@@ -20,9 +20,9 @@ public class WindowOpenPopoverVO implements Serializable {
 
     public int y;
 
-    public int w;
+    public int w=-1;
 
-    public int h;
+    public int h=-1;
 
     public int fontSize;
 

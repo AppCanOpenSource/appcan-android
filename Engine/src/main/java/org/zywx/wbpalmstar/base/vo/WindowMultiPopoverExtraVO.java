@@ -12,6 +12,6 @@ public class WindowMultiPopoverExtraVO implements Serializable {
 
     public String bgColor;
 
-    public String delayTime;
+    public long delayTime;
 
 }

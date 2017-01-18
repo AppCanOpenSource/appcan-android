@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 public class WindowSlidingItemVO implements Serializable {
 
-    public String width;
+    public int width;
 
     public String url;
 

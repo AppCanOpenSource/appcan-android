@@ -21,7 +21,6 @@ package org.zywx.wbpalmstar.engine;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
@@ -2222,7 +2221,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         final ArrayList<EBounceView> viewList = new ArrayList<EBounceView>();
         EBrwViewEntry mainEntry = entitys.get(0);
         Log.d("multi", "entitys num:" + entitys.size());
-        if (checkMultiPop(entitys)) {
+        if (checkMultiPop(entitys)){
             return;
         }
         EBrowserView parentBrowerview = new EBrowserView(mContext,

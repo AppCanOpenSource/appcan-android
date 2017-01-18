@@ -10,12 +10,12 @@ public class WidgetStartVO implements Serializable {
 
     public String appId;
 
-    public String animId;
+    public int animId;
 
     public String funcName;
 
     public String info;
 
-    public String animDuration;
+    public int animDuration;
 
 }

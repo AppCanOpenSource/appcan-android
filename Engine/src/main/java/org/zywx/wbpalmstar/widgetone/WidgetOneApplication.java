@@ -36,6 +36,7 @@ public class WidgetOneApplication extends Application {
         super.onCreate();
         long startTime=System.currentTimeMillis();
         AppCan.getInstance().initSync(this.getApplicationContext());//有些插件需要在别的进程初始化,因此最好在Application.onCreate()里面初始化引擎,或者将反射调用部分抽离出来
+        AppCan.getInstance().setWidgetSdk(false);
         init=true;
         BDebug.d("appcan","init time ",(System.currentTimeMillis()-startTime));
     }

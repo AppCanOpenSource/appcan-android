@@ -908,7 +908,7 @@ public class EUExWindow extends EUExBase {
         }
         if (slidingWindowVO.leftSliding != null) {
             slidingMode = SlidingMenu.LEFT;
-            with = Integer.parseInt(slidingWindowVO.leftSliding.width);
+            with = slidingWindowVO.leftSliding.width;
             url = slidingWindowVO.leftSliding.url;
             if (with > 0) {
                 activity.globalSlidingMenu.setBehindWidth(with);
@@ -921,7 +921,7 @@ public class EUExWindow extends EUExBase {
 
         if (slidingWindowVO.rightSliding != null) {
             slidingMode = SlidingMenu.RIGHT;
-            with = Integer.parseInt(slidingWindowVO.rightSliding.width);
+            with = slidingWindowVO.rightSliding.width;
             url = slidingWindowVO.rightSliding.url;
             if (with > 0) {
                 activity.globalSlidingMenu.setBehindWidth(with);
@@ -1398,7 +1398,7 @@ public class EUExWindow extends EUExBase {
         String bgColor = "#00000000";
         boolean hasExtraInfo = false;
         int mainDownloadCallback = 0;
-        if (parm.length > 10) {
+        if (parm.length > 10&&parm[10]!=null) {
             String jsonData = parm[10];
             try {
                 JSONObject json = new JSONObject(jsonData);

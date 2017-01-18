@@ -1,133 +1,40 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport"
-	content="target-densitydpi=device-dpi,width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-	<link rel="stylesheet" type="text/css" href="css/index.css">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport"
+          content="target-densitydpi=device-dpi,width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
     <script type="text/javascript" src="js/main.js"></script>
-	<script type="text/javascript">
-        window.uexOnload = function(type){
+    <script type="text/javascript" src="js/index.js">
 
-            uexWidget.onLoadByOtherApp = onLoadByOtherApp;
-
-            var name = uexWidgetOne.platformName;
-
-//            alert(name);
-
-            var w_1 = 240;      /// just for testing
-
-            if (name == "android") {
-
-                var ratio = window.devicePixelRatio;
-
-//                alert(ratio);
-
-                if (ratio >= 3) {
-                    w_1 = 720;    /// just for testing
-                } else if (ratio >= 2) {
-                    w_1 = 360;
-                }
-
-
-
-            }
-            
-            var params  = {
-                
-                leftSliding:{
-                    width:w_1,
-                    url:"wintestNav/uexWindow_left.html"
-                },
-                rightSliding:{
-                    width:w_1,
-                    url:"wintestNav/uexWindow_right.html"
-                },
-                animationId:'1', //仿QQ侧滑
-                bg:'res://1_1.jpg' //仿QQ侧滑
-                
-            };
-            
-            var paramStr = JSON.stringify(params);
-
-            uexWindow.setSlidingWindow(paramStr);
-        }
-
-        function onLoadByOtherApp(data){
-            var last=JSON.stringify(data);
-            alert("onLoadByOtherApp:" + last);
-        }
-		
-		function openTest(name){
-        var optInfo = "{'key1':'value1'},{'key2':'value1'}";
-        var extra='{data:"http://www.cnblogs.com"}';
-        uexWidget.startApp(0, "com.tencent.mtt","com.tencent.mtt.MainActivity",optInfo,extra);
-		}
-    
-        function openTestController(name){
-            uexWindow.openWithController("ssss", '0', "system/system.html");
-
-        }
-    
-        function openTest1(name){
-            uexWindow.open(name, '0', name+".html", '2', '', '', 1024);
-        }
-    
-    function openWinInMainWithSliding() {
-        var params  = {
-            mark:0
-            
-        };
-        
-        var paramStr = JSON.stringify(params);
-        uexWindow.toggleSlidingWindow(paramStr);
-        openTest('wintestNav/uexWindow');
-    }
-    
-    function openWinInMainWithRightSliding() {
-        alert('aaaaa');
-        
-        var params  = {
-            mark:1
-
-        };
-        
-        var paramStr = JSON.stringify(params);
-        uexWindow.toggleSlidingWindow(paramStr);
-        openTest('wintestNav/uexWindow');
-    }
-    
-    function openLeftSlidingWin() {
-        var params  = {
-            mark:0
-            
-        };
-        
-        var paramStr = JSON.stringify(params);
-        uexWindow.toggleSlidingWindow(paramStr);
-    }
-	</script>
+    </script>
 </head>
 
 <body>
-	<div class="tit">平台插件汇总</div>
-		<div class="conbor">
-			<div class="consj">
-			     
-<!--			<div onclick="openTest('system/system')" class="testbtn">系统插件</div><br>-->
-<!--                <div onclick="openTest('UI/UI')" class="testbtn">UI界面插件</div><br>-->
-<!--                <div onclick="openTest('network/network')" class="testbtn">网络插件</div><br>-->
-<!--                <div onclick="openTest('media/media')" class="testbtn">多媒体插件</div><br>-->
-<!--                <div onclick="openTest('other/other')" class="testbtn">第三方插件</div><br>-->
-                <div onclick="openTest1('wintestNormal/uexWindow')" class="testbtn">打开普通窗口</div><br>
-				<div onclick="openTest1('wintestNormal/uexWindowFunc')" class="testbtn">window接口测试</div><br>
-				<div onclick="openLeftSlidingWin()" class="testbtn">打开侧边栏窗口</div><br>
-                <div onclick="openTest('wintestNav/uexWindow')" class="testbtn">打开导航视图窗口(iOS)</div><br>
-                <div onclick="openTest('uexWidget')" class="testbtn">uexWidget</div><br>
-                
-<!--                <div onclick="openTest('wintestNav/uexWindow')" class="testbtn">打开导航视图窗口</div><br>-->
+<div class="tit">引擎接口测试</div>
+<div class="conbor">
+    <div class="consj">
 
-			</div>
-		</div>
+        <!--			<div onclick="openTest('system/system')" class="testbtn">系统插件</div><br>-->
+        <!--                <div onclick="openTest('UI/UI')" class="testbtn">UI界面插件</div><br>-->
+        <!--                <div onclick="openTest('network/network')" class="testbtn">网络插件</div><br>-->
+        <!--                <div onclick="openTest('media/media')" class="testbtn">多媒体插件</div><br>-->
+        <!--                <div onclick="openTest('other/other')" class="testbtn">第三方插件</div><br>-->
+        <div onclick="openWindow('wintestNormal/uexWindow')" class="testbtn">打开普通窗口</div>
+        <br>
+        <div onclick="openWindow('wintestNormal/uexWindowFunc')" class="testbtn">window接口测试</div>
+        <br>
+        <div onclick="openLeftSlidingWin()" class="testbtn">打开侧边栏窗口</div>
+        <br>
+        <div onclick="openWindow('wintestNav/uexWindow')" class="testbtn">打开导航视图窗口(iOS)</div>
+        <br>
+        <div onclick="openWindow('uexWidget')" class="testbtn">uexWidget</div>
+        <br>
+
+        <!--                <div onclick="openTest('wintestNav/uexWindow')" class="testbtn">打开导航视图窗口</div><br>-->
+
+    </div>
+</div>
 </body>
 </html>

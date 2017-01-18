@@ -8,13 +8,13 @@ import java.io.Serializable;
 
 public class WindowToastVO implements Serializable {
 
-    public String type;
+    public int type;
 
     public String location;
 
     public String msg;
 
-    public String duration;
+    public int duration;
 
 
 }
