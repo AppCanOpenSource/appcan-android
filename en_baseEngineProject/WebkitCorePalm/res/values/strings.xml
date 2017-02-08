@@ -95,10 +95,6 @@
 
     <string name="widget_not_exist_id_path">在%1$s目录下的 appId 是%2$s的widget不存在</string>
     <string name="not_any_widget">该应用下没有任何widget</string>
-    <string-array name="platform_close_hardware">
-        <!--<item>MI 2S</item>-->
-        <!--<item>Letv</item>-->
-        <!--<item>GEM-703L</item>-->
-    </string-array>
+    <string name="tenant_id"></string>
     <string name="mbaas_host"></string>
 </resources>

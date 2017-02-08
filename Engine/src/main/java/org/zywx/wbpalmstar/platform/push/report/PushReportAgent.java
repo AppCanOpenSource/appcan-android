@@ -164,6 +164,10 @@ public class PushReportAgent implements PushReportConstants {
         String taskId = sp.getString(
                 PushReportConstants.PUSH_DATA_SHAREPRE_TASKID, "");
         PushReportUtility.log("reportPush===taskId " + taskId);
+        Editor editor = sp.edit();
+        editor.putString(PushReportConstants.PUSH_DATA_SHAREPRE_DATA, "");
+        editor.putString(PushReportConstants.PUSH_DATA_SHAREPRE_MESSAGE, "");
+        editor.commit();
         if (TextUtils.isEmpty(taskId)) {
             String msgId = parsePushInfo2MsgId(pushInfo);
             if (msgId != null) {
@@ -190,9 +194,6 @@ public class PushReportAgent implements PushReportConstants {
             String tenantId = sp.getString(
                     PushReportConstants.PUSH_DATA_SHAREPRE_TENANTID, "");
             PushReportUtility.log("reportPush===tenantId " + tenantId);
-            Editor editor = sp.edit();
-            editor.putString(PushReportConstants.PUSH_DATA_SHAREPRE_DATA, "");
-            editor.putString(PushReportConstants.PUSH_DATA_SHAREPRE_MESSAGE, "");
             editor.putString(PushReportConstants.PUSH_DATA_SHAREPRE_TASKID, "");
             editor.putString(PushReportConstants.PUSH_DATA_SHAREPRE_TENANTID, "");
             editor.commit();

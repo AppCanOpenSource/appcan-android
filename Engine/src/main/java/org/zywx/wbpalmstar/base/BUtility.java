@@ -223,6 +223,21 @@ public class BUtility {
     }
 
     /**
+     * @return sdcard沙箱目录路径
+     */
+    public static String getExterBoxPath(Context context) {
+        String exterBoxPath;
+        File file = context.getExternalFilesDir(null);
+        if (file != null) {
+            exterBoxPath = file.getAbsolutePath() + "/";
+        } else {
+            exterBoxPath = getSdCardRootPath() + "Android/data/"
+                    + context.getPackageName() + "/files/";
+        }
+        return exterBoxPath;
+    }
+
+    /**
      * @return 沙箱目录路径
      */
     public static String getSBoxRootPath(Context context) {

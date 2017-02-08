@@ -30,9 +30,11 @@ public class WebViewSdkCompat {
         CookieManager.getInstance().setAcceptCookie(true);
         CookieManager.getInstance().removeSessionCookie();
         CookieManager.getInstance().removeExpiredCookie();
+        initTencentX5(context);
+    }
 
-        final CountDownLatch countDownLatch = new CountDownLatch(1);
-
+    private static void initTencentX5(Context context) {
+        int tbsVersion = 0;
         boolean noTencentX5 = false;
         try {
             String[] lists  = context.getAssets().list("widget");
@@ -44,38 +46,30 @@ public class WebViewSdkCompat {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        int mTbsVersion = QbSdk.getTbsVersion(context);
-        if (noTencentX5 || (mTbsVersion > 0 && mTbsVersion < 30000)) {
+        //初始化X5引擎SDK
+        tbsVersion = QbSdk.getTbsVersion(context);
+        if (noTencentX5 || (tbsVersion > 0 && tbsVersion < 30000)) {
             BDebug.i("AppCanTBS", "QbSdk.forceSysWebView()");
             QbSdk.forceSysWebView();
         }
 
-        //preinit只需要调用一次，如果已经完成了初始化，那么就直接构造view
-        if (!QbSdk.isTbsCoreInited() && (mTbsVersion == 0 || mTbsVersion >= 30000) && !noTencentX5) {
+        if(!QbSdk.isTbsCoreInited() && (tbsVersion == 0 || tbsVersion >= 30000) && !noTencentX5){
             final long timerCounter = System.currentTimeMillis();
-            QbSdk.preInit(context, new QbSdk.PreInitCallback() {
-
+            // 如果手机没有可以共享的X5内核，会先下载并安装，首次启动不会使用X5，再次启动才会使用X5；
+            // 如果手机有可以共享的X5内核，但未安装，会先安装，首次启动不会使用X5，再次启动才会使用X5；
+            // 如果手机有可以共享的X5内核，已经安装，首次启动会使用X5；
+            QbSdk.initX5Environment(context, new QbSdk.PreInitCallback(){
                 @Override
-                public void onViewInitFinished() {
+                public void onViewInitFinished(boolean success) {
                     float deltaTime = (System.currentTimeMillis() - timerCounter);
-                    BDebug.i("AppCanTBS", "x5初始化使用了" + deltaTime + "毫秒");
-                    countDownLatch.countDown();
+                    BDebug.i("AppCanTBS", "success " + success + " x5初始化使用了" + deltaTime + "毫秒");
                 }
 
                 @Override
                 public void onCoreInitFinished() {
                     BDebug.i("AppCanTBS", "onX5CoreInitFinished!!!!");
                 }
-            });//设置X5初始化完成的回调接口  第三个参数为true：如果首次加载失败则继续尝试加载；
-
-            try {
-                countDownLatch.await(2, TimeUnit.SECONDS);//最多等待两秒
-            } catch (InterruptedException e) {
-                if (BDebug.DEBUG) {
-                    e.printStackTrace();
-                }
-            }
+            });
         }
     }
 
