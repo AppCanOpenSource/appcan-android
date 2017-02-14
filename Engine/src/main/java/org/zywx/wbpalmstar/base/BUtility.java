@@ -22,6 +22,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
@@ -1544,4 +1545,22 @@ public class BUtility {
         }
         return null;
     }
+
+    /**
+     * 重启整个APP
+     * @param context
+     * @param delayTime 延迟多少毫秒重新启动
+     */
+    public static void restartAPP(Context context, long delayTime){
+
+        /**开启一个新的服务，用来重启本APP*/
+        Intent intent=new Intent(context,killSelfService.class);
+        intent.putExtra(killSelfService.KEY_STOP_PACKAGE_NAME,context.getPackageName());
+        intent.putExtra(killSelfService.KEY_STOP_DELAY,delayTime);
+        context.startService(intent);
+
+        /**杀死整个进程**/
+        android.os.Process.killProcess(android.os.Process.myPid());
+    }
+
 }
