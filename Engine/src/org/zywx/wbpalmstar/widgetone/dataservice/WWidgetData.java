@@ -158,6 +158,7 @@ public class WWidgetData implements Parcelable {
             widget.m_bgColor = source.readString();
             widget.m_appkey = source.readString();
             widget.mErrorPath = source.readString();
+            widget.m_appdebug=source.readInt();
             if (widget.disablePluginsList != null) {
                 source.readStringList(widget.disablePluginsList);
             }
@@ -233,6 +234,7 @@ public class WWidgetData implements Parcelable {
         parcel.writeString(m_bgColor);
         parcel.writeString(m_appkey);
         parcel.writeString(mErrorPath);
+        parcel.writeInt(m_appdebug);
         parcel.writeStringList(disablePluginsList);
         parcel.writeStringList(disableRootWindowsList);
         parcel.writeStringList(disableSonWindowsList);
