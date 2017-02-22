@@ -134,6 +134,7 @@ public class EUExScript {
                 + "getVersion:function(){uexDispatcher.dispatch('uexWidgetOne','getVersion',jo(arguments));},"
                 + "getPlatform:function(){return uexDispatcher.dispatch('uexWidgetOne','getPlatform',jo(arguments));},"
                 + "exit:function(){uexDispatcher.dispatch('uexWidgetOne','exit',jo(arguments));},"
+                + "restart:function(){uexDispatcher.dispatch('uexWidgetOne','restart',jo(arguments));},"
                 + "getWidgetNumber:function(){uexDispatcher.dispatch('uexWidgetOne','getWidgetNumber',jo(arguments));},"
                 + "getWidgetInfo:function(){return uexDispatcher.dispatch('uexWidgetOne','getWidgetInfo',jo" +
                 "(arguments)" +
