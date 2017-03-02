@@ -797,10 +797,11 @@ public class EBrowserWidget extends AbsoluteLayout {
     }
 
     public void putInvalid(EBrowserWindow view) {
-        if (null == mGarbViewHeap) {
-            mGarbViewHeap = new EWindGarbHeap();
-        }
-        mGarbViewHeap.put(view);
+//        if (null == mGarbViewHeap) {
+//            mGarbViewHeap = new EWindGarbHeap();
+//        }
+//        mGarbViewHeap.put(view);
+        view.destory();
     }
 
     private EBrowserWindow getInvalid() {
