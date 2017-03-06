@@ -308,7 +308,7 @@ public class EUExScript {
         F_UEX_SCRIPT_BOTTOM_SHOW = "javascript:if(window.uexOnshow){window.uexOnshow(2);}";
         F_UEX_SCRIPT_OC_LANDSCAPE = "javascript:if(window.uexDevice && uexDevice.onOrientationChange){uexDevice.onOrientationChange(2);}";
         F_UEX_SCRIPT_OC_PORTRAIT = "javascript:if(window.uexDevice && uexDevice.onOrientationChange){uexDevice.onOrientationChange(1);}";
-        F_UEX_SCRIPT_APPPAUSE = "javascript:if(uexWidget.onSuspend){uexWidget.onSuspend();}";
+        F_UEX_SCRIPT_APPPAUSE = "javascript:if(typeof(uexWidget)!='undefined'&&uexWidget.onSuspend){uexWidget.onSuspend();}";
         F_UEX_SCRIPT_APPSTOP = "javascript:if(uexWidget.onTerminate){uexWidget.onTerminate();}";
         F_UEX_SCRIPT_APPRESUME = "javascript:if(typeof(uexWidget)!='undefined'&&uexWidget.onResume){uexWidget.onResume();}";
         F_UEX_SCRIPT_ANIMATIONEND = "javascript:if(uexWindow.onAnimationFinish){uexWindow.onAnimationFinish();}";
