@@ -114,12 +114,12 @@ public class ACEWebView extends XWalkView {
 	}
 
 	public void setDefaultFontSize(int size) {
-//        getSettings().setDefaultFontSize(size);
-//        getSettings().setDefaultFixedFontSize(size);
+		getSettings().setDefaultFontSize(size);
+		getSettings().setDefaultFixedFontSize(size);
 	}
 
 	public void setSupportZoom() {
-
+        getSettings().setSupportZoom(true);
 	}
 
     public void setUserAgent(String userAgent) {
@@ -176,12 +176,12 @@ public class ACEWebView extends XWalkView {
 	}
 
 	public float getScale() {
-		float density= ESystemInfo.getIntence().mDensity;
-		return super.getScaleX()*density;
+//		float density= ESystemInfo.getIntence().mDensity;
+		return super.getScaleX();
 	}
 
 	public int getContentHeight() {
-		return super.getMeasuredHeight();
+		return super.getContentHeight();
 	}
 
 	public void setWebViewClient() {

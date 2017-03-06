@@ -64,7 +64,7 @@ repositories {
 }
 
 dependencies {
-    crosswalkCompile(name: 'crosswalk-19.49.514.0', ext: 'aar')
+    crosswalkCompile(name: 'crosswalk-23.53.589.4', ext: 'aar')
     crosswalkCompile fileTree(dir: 'src/crosswalk/libs', include: '*.jar')
     systemCompile files('src/system/libs/libacedes-v1.jar')
     compile files('libs/aceimageloader.jar')

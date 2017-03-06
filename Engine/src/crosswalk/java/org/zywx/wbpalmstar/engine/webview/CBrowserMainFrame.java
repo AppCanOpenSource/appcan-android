@@ -5,13 +5,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.webkit.ValueCallback;
 import android.widget.EditText;
-
 import org.xwalk.core.XWalkJavascriptResult;
 import org.xwalk.core.XWalkUIClient;
 import org.xwalk.core.XWalkView;
@@ -164,11 +162,9 @@ public class CBrowserMainFrame extends XWalkUIClient {
             mIsPageOnload = true;
             ESystemInfo info = ESystemInfo.getIntence();
             if (!target.isWebApp()) { // 4.3及4.3以下手机
-                if (!info.mScaled) {
-                    info.mDefaultFontSize = (int) (info.mDefaultFontSize / target.getScaleWrap());
-                    info.mScaled = true;
-                }
-//				target.setDefaultFontSize(48);
+                info.mDefaultFontSize = (int) (info.mDefaultFontSize / target.getScaleWrap());
+                info.mScaled = true;
+                target.setDefaultFontSize(info.mDefaultFontSize);
             }
             if (!info.mFinished) {
                 ((EBrowserActivity) target.getContext())
