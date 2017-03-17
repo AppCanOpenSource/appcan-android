@@ -2911,7 +2911,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         if (null == mMainView) {
             return;
         }
-        String js = "javascript:if(uexWindow.onSlidingWindowStateChanged){uexWindow.onSlidingWindowStateChanged("
+        String js = "javascript:if(typeof(uexWindow)!='undefined'&&uexWindow.onSlidingWindowStateChanged){uexWindow.onSlidingWindowStateChanged("
                 + position + ");}";
         mMainView.loadUrl(js);
     }

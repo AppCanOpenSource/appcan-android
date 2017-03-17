@@ -51,7 +51,10 @@
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
 
         <service android:name="org.zywx.wbpalmstar.base.DebugService"/>
-
+        <service android:name="org.zywx.wbpalmstar.base.killSelfService"
+                 android:process=":temp"
+                 android:exported="false"
+                 android:enabled="true"/>
         <!-- push -->
         <service
             android:name="org.zywx.wbpalmstar.platform.push.PushService"

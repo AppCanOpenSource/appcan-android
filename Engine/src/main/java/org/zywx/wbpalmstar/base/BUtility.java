@@ -22,6 +22,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
@@ -95,12 +96,14 @@ public class BUtility {
     public final static String F_EXTERBOX_SCHEMA = "exterbox://";
     public final static String m_loadingImageSp = "loadingImageSp";
     public final static String m_loadingImagePath = "loadingImagePath";
-    public final static String m_loadingImageTime= "loadingImageTime";
+    public final static String m_loadingImageTime = "loadingImageTime";
 
     public static boolean isDes = false;
     public static String g_desPath = "";
     public static String widgetOneRootPath = "";
-    /** 安装补丁包类型 1：网页包；2：插件包；3：网页和插件 */
+    /**
+     * 安装补丁包类型 1：网页包；2：插件包；3：网页和插件
+     */
     public final static int INSTALL_PATCH_WIDGET = 1;
     public final static int INSTALL_PATCH_PLUGIN = 2;
     public final static int INSTALL_PATCH_ALL = 3;
@@ -260,7 +263,7 @@ public class BUtility {
 
     /**
      * 得到widgetone的目录路径
-     * 
+     *
      * @return ../widgetone/
      */
     public static String getWidgetOneRootPath() {
@@ -467,13 +470,13 @@ public class BUtility {
         try {
             int index = inUrl.indexOf("../");
             while (index != -1) {
-                String beforeStr=inUrl.substring(0,index-1);
-                String afterStr=inUrl.substring(index + 3, inUrl.length());
-                inUrl = beforeStr.substring(0,beforeStr.lastIndexOf("/")+1).concat(afterStr);
+                String beforeStr = inUrl.substring(0, index - 1);
+                String afterStr = inUrl.substring(index + 3, inUrl.length());
+                inUrl = beforeStr.substring(0, beforeStr.lastIndexOf("/") + 1).concat(afterStr);
                 index = inUrl.indexOf("../");
             }
             return inUrl;
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
         return inUrl;
@@ -656,11 +659,11 @@ public class BUtility {
     @Keep
     public static String makeRealPath(String path, EBrowserView browserView) {
         path = makeUrl(browserView.getCurrentUrl(), path);
-        WWidgetData currentWidget=browserView.getCurrentWidget();
-        if (currentWidget==null){//当前没有widget时,取rootWidget
-            currentWidget=WDataManager.sRootWgt;
+        WWidgetData currentWidget = browserView.getCurrentWidget();
+        if (currentWidget == null) {//当前没有widget时,取rootWidget
+            currentWidget = WDataManager.sRootWgt;
         }
-        if (currentWidget==null){
+        if (currentWidget == null) {
             BDebug.e("currentWidget is null");
             return null;
         }
@@ -719,13 +722,13 @@ public class BUtility {
     /**
      * 纠正文件路径，兼容css url()规范：
      * url(a.png)等价于url( a.png )，等价于url('a.png)，等价于url("a.png"),等价于url( "a.png" )。
-     * 
+     *
      * @param path
      * @return
      */
     private static String correctFilePath(String path) {
         String correctPath = path.trim();
-        String[] errorChar = { "\'", "\"" };
+        String[] errorChar = {"\'", "\""};
         for (int i = 0; i < errorChar.length; i++) {
             if (correctPath.startsWith(errorChar[i])) {
                 correctPath = correctPath.substring(1);
@@ -788,7 +791,7 @@ public class BUtility {
 
     /**
      * 获取租户标示
-     * 
+     *
      * @param context
      * @return 租户标示
      */
@@ -802,7 +805,7 @@ public class BUtility {
 
     /**
      * 从资源文件中获取租户标示，打包服务器配置租户ID为“0”，也认为租户为空
-     * 
+     *
      * @param context
      * @return 租户标示
      */
@@ -823,7 +826,7 @@ public class BUtility {
 
     /**
      * 从本地缓存中获取租户标示
-     * 
+     *
      * @param context
      * @return 租户标示
      */
@@ -836,7 +839,7 @@ public class BUtility {
     }
 
     private static String decryptTenantAccount(Context context,
-            String taEncryption) {
+                                               String taEncryption) {
         String tenantAccount = "";
         if (!TextUtils.isEmpty(taEncryption)) {
             String mainAppId = getString(context, "app", "appid", "");
@@ -849,7 +852,7 @@ public class BUtility {
 
     /**
      * 从指定SharedPreferences（spName）中获取key对应的String
-     * 
+     *
      * @param context
      * @param spName
      * @param key
@@ -857,7 +860,7 @@ public class BUtility {
      * @return key对应的value
      */
     public static String getString(Context context, String spName, String key,
-            String defValue) {
+                                   String defValue) {
         SharedPreferences sp = context.getSharedPreferences(spName, Context.MODE_PRIVATE);
         return sp.getString(key, defValue);
     }
@@ -966,48 +969,50 @@ public class BUtility {
 
     /**
      * 获取真实的路径，同时拷贝res协议文件到sd卡缓存目录
+     *
      * @param mBrwView
-     * @param url AppCan协议路径
+     * @param url      AppCan协议路径
      * @return
      */
     @Keep
-    public static String getRealPathWithCopyRes(EBrowserView mBrwView,String url){
-        String realPath=makeRealPath(url,mBrwView);
-        if (realPath.startsWith("/") && !realPath.startsWith ("/data")) {
+    public static String getRealPathWithCopyRes(EBrowserView mBrwView, String url) {
+        String realPath = makeRealPath(url, mBrwView);
+        if (realPath.startsWith("/") && !realPath.startsWith("/data")) {
             return realPath;
         }
-        return getResLocalPath(mBrwView.getContext(),realPath);
+        return getResLocalPath(mBrwView.getContext(), realPath);
     }
 
     /**
      * 根据res协议获取本地路径（将文件拷贝到sd卡缓存目录）
+     *
      * @param context
-     * @param url Android assets路径，或者开启增量更新时的/data 开头路径
+     * @param url     Android assets路径，或者开启增量更新时的/data 开头路径
      * @return
      */
-    public static String getResLocalPath(Context context,String url){
+    public static String getResLocalPath(Context context, String url) {
         String resPath = url;// 获取的为assets路径
         InputStream inputStream = null;
         OutputStream out = null;
         String tempPath = url;
         try {
-            if(resPath.startsWith("/data")){
+            if (resPath.startsWith("/data")) {
                 inputStream = new FileInputStream(new File(resPath));
-            }else{
+            } else {
                 inputStream = context.getResources().getAssets()
                         .open(resPath);
             }
-            File cacheDir=context.getExternalCacheDir();
-            if (cacheDir==null){
+            File cacheDir = context.getExternalCacheDir();
+            if (cacheDir == null) {
                 return null;
             }
-            String cachePath =cacheDir.getAbsolutePath();
+            String cachePath = cacheDir.getAbsolutePath();
             tempPath = cachePath + File.separator + resPath;
             File file = new File(tempPath);
-            if(!file.getParentFile().exists()){
+            if (!file.getParentFile().exists()) {
                 file.getParentFile().mkdirs();
             }
-            if(file.exists()){
+            if (file.exists()) {
                 file.delete();
             }
             out = new FileOutputStream(file);
@@ -1021,8 +1026,8 @@ public class BUtility {
             e.printStackTrace();
         } finally {
             try {
-                if(inputStream != null) inputStream.close();
-                if(out != null) out.close();
+                if (inputStream != null) inputStream.close();
+                if (out != null) out.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -1131,7 +1136,7 @@ public class BUtility {
     }
 
     public static Bitmap createBitmapWithPath(String pathName, int reqWidth,
-            int reqHeight) {
+                                              int reqHeight) {
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(pathName, opts);
@@ -1180,10 +1185,8 @@ public class BUtility {
     }
 
     /**
-     * @param encrypt
-     *            加密或解密的字符串
-     * @param pKey
-     *            加密解密的key
+     * @param encrypt 加密或解密的字符串
+     * @param pKey    加密解密的key
      * @return 加密或解密后的字符串
      */
     public static String decryptString(String encrypt, String pKey) {
@@ -1215,18 +1218,14 @@ public class BUtility {
     }
 
     /**
-     * @param inputStream
-     *            xml文件输入流
-     * @param fileName
-     *            xml文件名，不带后缀
-     * @param label
-     *            标签名
-     * @param attribute
-     *            属性名，获取标签时此值传空即可，获取属性时必须传值
+     * @param inputStream xml文件输入流
+     * @param fileName    xml文件名，不带后缀
+     * @param label       标签名
+     * @param attribute   属性名，获取标签时此值传空即可，获取属性时必须传值
      * @return xml文件中指定标签或者标签中属性的值
      */
     public static String parserXmlLabel(InputStream inputStream,
-            String fileName, String label, String attribute) {
+                                        String fileName, String label, String attribute) {
         String value = "";
         // 如果标签不为空并且输入流不为空
         if (!TextUtils.isEmpty(label) && inputStream != null) {
@@ -1241,24 +1240,24 @@ public class BUtility {
                 while (needContinue) {
                     eventType = parser.next();
                     switch (eventType) {
-                    case XmlPullParser.START_TAG:
-                        String localName = (parser.getName())
-                                .toLowerCase();
-                        // 如果该标签是传入的标签，获取该标签的值或者其属性的值
-                        if (localName.equals(label.toLowerCase())) {
-                            if (!TextUtils.isEmpty(attribute)) {
-                                value = parser.getAttributeValue(null, attribute);
-                            } else {
-                                value = parser.nextText();
+                        case XmlPullParser.START_TAG:
+                            String localName = (parser.getName())
+                                    .toLowerCase();
+                            // 如果该标签是传入的标签，获取该标签的值或者其属性的值
+                            if (localName.equals(label.toLowerCase())) {
+                                if (!TextUtils.isEmpty(attribute)) {
+                                    value = parser.getAttributeValue(null, attribute);
+                                } else {
+                                    value = parser.nextText();
+                                }
+                                needContinue = false;
                             }
+                            break;
+                        case XmlPullParser.END_DOCUMENT:
                             needContinue = false;
-                        }
-                        break;
-                    case XmlPullParser.END_DOCUMENT:
-                        needContinue = false;
-                        break;
-                    default:
-                        break;
+                            break;
+                        default:
+                            break;
                     }
                 }
             } catch (Exception e) {
@@ -1279,14 +1278,12 @@ public class BUtility {
     }
 
     /**
-     * @param inputStream
-     *            文件输入流
-     * @param fileName
-     *            文件名，不带后缀
+     * @param inputStream 文件输入流
+     * @param fileName    文件名，不带后缀
      * @return 解密后的文件流
      */
     public static InputStream decodeInputStream(InputStream inputStream,
-            String fileName) {
+                                                String fileName) {
         try {
             // 先判断是否加密,如果是加密了才解密
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -1319,20 +1316,20 @@ public class BUtility {
 
     /**
      * 安装主应用补丁包
-     * 
+     *
      * @param context
      * @param appId
      * @param installType：安装补丁包类型1：网页包；2：插件包；3：网页和插件
      * @return 安装成功，返回版本号；失败，返回空。
      */
     public static String installWidgetPatch(Context context, String appId,
-            int installType) {
+                                            int installType) {
         return WidgetPackageMgr.installWidgetPatch(context, appId, installType);
     }
 
     /**
      * 安装子应用（包括全量包、补丁包）,子应用的安装、升级，不区分全量包、补丁包。
-     * 
+     *
      * @param appId
      * @param filePath：压缩包位置
      * @param desPath：安装位置
@@ -1340,7 +1337,7 @@ public class BUtility {
      * @return 安装路径
      */
     public static String installSubWidget(String appId, String filePath,
-            String desPath, String encoding) {
+                                          String desPath, String encoding) {
         return WidgetPackageMgr.installSubWidget(appId, filePath, desPath,
                 encoding);
     }
@@ -1508,11 +1505,10 @@ public class BUtility {
 
     /**
      * 添加验证头
-     * 
+     *
      * @param appid
      * @param appkey
-     * @param timeStamp
-     *            当前时间戳
+     * @param timeStamp 当前时间戳
      * @return
      */
     public static String getAppVerifyValue(String appid, String appkey, long timeStamp) {
@@ -1544,4 +1540,23 @@ public class BUtility {
         }
         return null;
     }
+
+    /**
+     * 重启整个APP
+     *
+     * @param context
+     * @param delayTime 延迟多少毫秒重新启动
+     */
+    public static void restartAPP(final Context context, final long delayTime) {
+        /**开启一个新的服务，用来重启本APP*/
+        Intent intent = new Intent(context, killSelfService.class);
+        intent.putExtra(killSelfService.KEY_STOP_PACKAGE_NAME, context.getPackageName());
+        intent.putExtra(killSelfService.KEY_STOP_DELAY, delayTime);
+        context.startService(intent);
+
+        /**杀死整个进程**/
+        android.os.Process.killProcess(android.os.Process.myPid());
+
+    }
+
 }

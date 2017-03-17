@@ -1576,6 +1576,9 @@ public class EUExWindow extends EUExBase {
             }
             Log.d("multi", "popEntrys num:" + popEntrys.size());
         } catch (Exception e) {
+            if (BDebug.DEBUG){
+                e.printStackTrace();
+            }
             errorCallback(0, EUExCallback.F_E_UEXWINDOW_EVAL, "Illegal parameter");
             return;
         }

@@ -20,6 +20,7 @@ package org.zywx.wbpalmstar.engine.universalex;
 
 import org.json.JSONObject;
 import org.zywx.wbpalmstar.base.BConstant;
+import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.util.AppCanAPI;
 import org.zywx.wbpalmstar.engine.EBrowserActivity;
 import org.zywx.wbpalmstar.engine.EBrowserView;
@@ -185,6 +186,11 @@ public class EUExWidgetOne extends EUExBase {
             jsCallback(function_getMainWidgetId, 0, EUExCallback.F_C_TEXT, -1);
         }
         return appId;
+    }
+
+    @AppCanAPI
+    public void restart(String[] params){
+        BUtility.restartAPP(mContext,500);
     }
 
     @AppCanAPI

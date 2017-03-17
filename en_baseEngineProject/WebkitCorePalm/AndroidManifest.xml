@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.zywx.wbpalmstar.widgetone.uex"
-    android:versionCode="190"
-    android:versionName="2.2.41" 
-    android:installLocation="internalOnly" >
+<manifest package="org.zywx.wbpalmstar.widgetone.uex"
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          android:installLocation="internalOnly"
+          android:versionCode="190"
+          android:versionName="2.2.41">
 
     <application
         android:name="org.zywx.wbpalmstar.widgetone.WidgetOneApplication"
         android:allowBackup="false"
         android:allowClearUserData="false"
         android:debuggable="false"
+        android:hardwareAccelerated="true"
         android:icon="@drawable/icon"
-        android:label="@string/app_name" 
-		android:hardwareAccelerated="true">
+        android:label="@string/app_name">
         <activity
             android:name="org.zywx.wbpalmstar.engine.EBrowserActivity"
             android:alwaysRetainTaskState="true"
@@ -20,66 +20,70 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/browser_main_theme"
-            android:windowSoftInputMode="stateHidden|adjustPan" >
-			<intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+            android:windowSoftInputMode="stateHidden|adjustPan">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
                 <data android:scheme="appcanscheme"/>
             </intent-filter>
         </activity>
-         <activity
+        <activity
             android:name="org.zywx.wbpalmstar.platform.mam.PolicyActivity"
             android:configChanges="orientation|keyboardHidden|navigation" android:windowSoftInputMode="adjustPan"/>
-         <activity
+        <activity
             android:name="org.zywx.wbpalmstar.platform.mam.PolicyInfoActivity"
             android:configChanges="orientation|keyboardHidden|navigation" android:windowSoftInputMode="adjustPan"/>
         <activity android:name="org.zywx.wbpalmstar.engine.TempActivity"
-            android:launchMode="standard"
-            android:screenOrientation="portrait"
-            android:theme="@style/browser_loading_theme"/>
+                  android:launchMode="standard"
+                  android:screenOrientation="portrait"
+                  android:theme="@style/browser_loading_theme"/>
         <activity android:name="org.zywx.wbpalmstar.engine.LoadingActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:theme="@style/browser_loading_theme"
-            android:screenOrientation="portrait"
-            android:launchMode="standard"
-            >
+                  android:configChanges="keyboardHidden|orientation"
+                  android:launchMode="standard"
+                  android:screenOrientation="portrait"
+                  android:theme="@style/browser_loading_theme"
+        >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <receiver
             android:name="org.zywx.wbpalmstar.platform.push.PushRecieveMsgReceiver"
-			android:exported="false">
+            android:exported="false">
             <intent-filter>
-                <action android:name="org.zywx.push.receive" />
+                <action android:name="org.zywx.push.receive"/>
             </intent-filter>
         </receiver>
 
         <service android:name="org.zywx.wbpalmstar.base.DebugService"/>
+        <service android:name="org.zywx.wbpalmstar.base.killSelfService"
+                 android:process=":temp"
+                 android:exported="false"
+                 android:enabled="true"/>
 
     </application>
 
-		<uses-sdk android:minSdkVersion="4"/>
+    <uses-sdk android:minSdkVersion="4"/>
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.READ_LOGS"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
-        android:xlargeScreens="true"
         android:normalScreens="true"
         android:resizeable="true"
-        android:smallScreens="true" />
+        android:smallScreens="true"
+        android:xlargeScreens="true"/>
 
 </manifest>
