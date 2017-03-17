@@ -1,5 +1,6 @@
 package org.zywx.wbpalmstar.engine;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -38,6 +39,21 @@ public class BaseActivity extends FragmentActivity implements Handler.Callback{
         startActivity(intent);
         overridePendingTransition(EUExUtil.getResAnimID("platform_myspace_no_anim")
                 , EUExUtil.getResAnimID("platform_myspace_no_anim"));
+    }
+
+    /**
+     * 添加自定义遮罩，等待webView加载完毕后关闭
+     */
+    protected void startCustomMaskActivity(Intent intent) {
+        if (intent.hasExtra(AppCan.INTENT_APPCAN_SDK_CUSTOM_MASK_CLASSNAME)){
+            ComponentName componentName = new ComponentName(getPackageName(),
+                    intent.getStringExtra(AppCan.INTENT_APPCAN_SDK_CUSTOM_MASK_CLASSNAME));
+            intent.setComponent(componentName);
+            intent.removeExtra(AppCan.INTENT_APPCAN_SDK_CUSTOM_MASK_CLASSNAME);
+            startActivity(intent);
+            overridePendingTransition(EUExUtil.getResAnimID("platform_myspace_no_anim")
+                    , EUExUtil.getResAnimID("platform_myspace_no_anim"));
+        }
     }
 
     /**

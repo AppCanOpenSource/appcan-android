@@ -112,6 +112,8 @@ public final class EBrowserActivity extends BaseActivity {
         }
         if (!AppCan.ACTION_APPCAN_SDK.equals(getIntent().getAction())) {
             startMaskActivity();
+        } else {
+            startCustomMaskActivity(getIntent());
         }
         mVisable = true;
         Window activityWindow = getWindow();

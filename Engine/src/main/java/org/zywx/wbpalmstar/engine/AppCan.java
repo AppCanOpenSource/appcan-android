@@ -42,6 +42,7 @@ import java.util.Set;
 public class AppCan {
 
     public static final String ACTION_APPCAN_SDK="action.appcan.sdk";
+    public static final String INTENT_APPCAN_SDK_CUSTOM_MASK_CLASSNAME ="intent.appcan.sdk.custom.mask.className";
     private static AppCan sAppCan;
     private ThirdPluginMgr mThirdPluginMgr;
     private ELinkedList<EngineEventListener> mListenerQueue;
