@@ -49,6 +49,7 @@ import org.zywx.wbpalmstar.base.ResoureFinder;
 import org.zywx.wbpalmstar.base.util.AppCanAPI;
 import org.zywx.wbpalmstar.base.vo.AppInstalledVO;
 import org.zywx.wbpalmstar.base.vo.ErrorResultVO;
+import org.zywx.wbpalmstar.base.vo.PushHostVO;
 import org.zywx.wbpalmstar.base.vo.StartAppVO;
 import org.zywx.wbpalmstar.base.vo.WidgetCheckUpdateResultVO;
 import org.zywx.wbpalmstar.base.vo.WidgetFinishVO;
@@ -82,6 +83,8 @@ public class EUExWidget extends EUExBase {
     public static final String function_onSpaceClick = "uexWidget.onSpaceClick";
     public static final String function_loadApp = "uexWidget.cbLoadApp";
     public static final String function_getMBaaSHost = "uexWidget.cbGetMBaaSHost";
+    public static final String function_setPushHost = "uexWidget.cbSetPushHost";
+    public static final String function_getPushHost = "uexWidget.cbGetPushHost";
     private static final String BUNDLE_DATA = "data";
     private static final String BUNDLE_MESSAGE = "message";
     private static final String PUSH_MSG_BODY = "0";
@@ -234,8 +237,7 @@ public class EUExWidget extends EUExBase {
     }
 
     public void delPushInfo(String[] params) {
-        String host_pushBindUser = ResoureFinder.getInstance().getString(mContext,
-                "bindUser_host");
+        String host_pushBindUser = BUtility.getBindUserHost(mContext);
         if (host_pushBindUser.indexOf("push") > 0 || host_pushBindUser.indexOf("mms") > 0) {
             String uId = "";
             String uNickName = "";
@@ -773,14 +775,52 @@ public class EUExWidget extends EUExBase {
         }.start();
     }
 
+    @AppCanAPI
+    public void setPushHost(String[] param) {
+        if (param.length < 1) {
+            return;
+        }
+        int callbackId = -1;
+        if (param.length > 1){
+            callbackId = valueOfCallbackId(param[1]);
+        }
+
+        PushHostVO pushHostVO = DataHelper.gson.fromJson(param[0], PushHostVO.class);
+        String bindUserHost = pushHostVO.getBindUserHost();
+        String pushHost = pushHostVO.getPushHost();
+        if (TextUtils.isEmpty(bindUserHost) && TextUtils.isEmpty(pushHost)) {
+            pushHostVO.setStatus(1);
+        } else {
+            BUtility.setPushAndBindUserHost(mContext, bindUserHost, pushHost);
+            pushHostVO.setStatus(0);
+        }
+        if (callbackId == -1){
+            String js = SCRIPT_HEADER + "if(" + function_setPushHost + "){"
+                    + function_setPushHost + "(" + DataHelper.gson.toJson(pushHostVO) + ");}";
+            onCallback(js);
+        }else{
+            callbackToJs(callbackId, false, DataHelper.gson.toJsonTree(pushHostVO));
+        }
+    }
+
+    @AppCanAPI
+    public String getPushHost(String[] param) {
+        PushHostVO pushHostVO = new PushHostVO();
+        pushHostVO.setBindUserHost(BUtility.getBindUserHost(mContext));
+        pushHostVO.setPushHost(BUtility.getPushHost(mContext));
+        String js = SCRIPT_HEADER + "if(" + function_getPushHost + "){"
+                + function_getPushHost + "(" + DataHelper.gson.toJson(pushHostVO) + ");}";
+        onCallback(js);
+        return DataHelper.gson.toJson(pushHostVO);
+    }
+
     public void setPushInfo(String[] parm) {
         if (parm.length != 2) {
             parm = new String[]{"", ""};
         }
         final String userId = parm[0];
         final String userNick = parm[1];
-        String host_pushBindUser = ResoureFinder.getInstance().getString(mContext,
-                "bindUser_host");
+        String host_pushBindUser = BUtility.getBindUserHost(mContext);
         if (host_pushBindUser.indexOf("push") > 0 || host_pushBindUser.indexOf("mms") > 0) {
             AppCan.getInstance().setPushInfo(userId, userNick, mContext, mBrwView);
         } else {

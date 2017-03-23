@@ -170,6 +170,8 @@ public class EUExScript {
                 ";},"
                 + "getPushInfo:function(){return uexDispatcher.dispatch('uexWidget','getPushInfo',jo(arguments));},"
                 + "getMBaaSHost:function(){return uexDispatcher.dispatch('uexWidget','getMBaaSHost',jo(arguments));},"
+                + "setPushHost:function(){uexDispatcher.dispatch('uexWidget','setPushHost',jo(arguments));},"
+                + "getPushHost:function(){return uexDispatcher.dispatch('uexWidget','getPushHost',jo(arguments));},"
                 + "reloadWidgetByAppId:function(){uexDispatcher.dispatch('uexWidget','reloadWidgetByAppId',jo(arguments));},"
                 + "closeLoading:function(){uexDispatcher.dispatch('uexWidget','closeLoading',jo(arguments));},"
                 + "moveToBack:function(){uexDispatcher.dispatch('uexWidget','moveToBack',jo(arguments));},"

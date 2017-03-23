@@ -23,11 +23,9 @@ public interface PushReportConstants {
     public static final String url_push_bindUser = "msg/bindUser";
     public static final String url_push_bindDevice = "4.0/installations";
 
-    public static final String KEY_PUSH_BINDUSER_HOST = "bindUser_host";
-    public static final String KEY_PUSH_REPORT_HOST = "bindUser_host";
-
-    public static final String SP_PUSH_BINDUSER_HOST = "bindUser_host";
-    public static final String SP_PUSH_REPORT_HOST = "bindUser_host";
+    public static final String KEY_BINDUSER_HOST = "bindUser_host";
+    public static final String KEY_PUSH_HOST = "push_host";
+    public static final String SP_PUSH_HOST = "spPushHost";
     public static String SP_APP = "app";
 
     public static final String EVENT_TYPE_OPEN = "open";
