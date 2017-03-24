@@ -1017,26 +1017,28 @@ public class MQTTService implements MqttSimpleCallback {
                         mqttClient.ping();
                         keepAliveSeconds = mHeartKeepAliveMgr
                                 .calcHeartSucceed(keepAliveSeconds);
+
+                        // start the next keep alive period
+                        scheduleNextPing();
                     }
                 } catch (MqttException e) {
                     // if something goes wrong, it should result in connectionLost
                     // being called, so we will handle it there
                     PushReportUtility.oe("PingSender ping failed", e);
 
-                    // assume the client connection is broken - trash it
-                    try {
-                        mqttClient.disconnect();
-                    } catch (MqttPersistenceException e1) {
-                        PushReportUtility.oe("PingSender disconnect failed", e);
+                    if (null != mqttClient) {
+                        // assume the client connection is broken - trash it
+                        try {
+                            mqttClient.disconnect();
+                        } catch (MqttPersistenceException e1) {
+                            PushReportUtility.oe("PingSender disconnect failed", e);
+                        }
+                        keepAliveSeconds = mHeartKeepAliveMgr
+                                .calcHeartFailed(keepAliveSeconds);
+                        // reconnect
+                        connectToBrokerThread();
                     }
-                    keepAliveSeconds = mHeartKeepAliveMgr
-                            .calcHeartFailed(keepAliveSeconds);
-                    // reconnect
-                    connectToBrokerThread();
                 }
-
-                // start the next keep alive period
-                scheduleNextPing();
             }
         }).start();
     }

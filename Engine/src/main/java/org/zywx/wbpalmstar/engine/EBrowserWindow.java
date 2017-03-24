@@ -1557,7 +1557,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
     private void clearViewList() {
         for (View view : viewList) {
             if (view != null) {
-                removeViewList(view);
+                removeView(view);
             }
         }
         viewList.clear();

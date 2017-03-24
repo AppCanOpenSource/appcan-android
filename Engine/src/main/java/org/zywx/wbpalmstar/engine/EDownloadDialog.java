@@ -43,6 +43,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Locale;
+import java.util.UUID;
 import java.util.zip.DeflaterInputStream;
 import java.util.zip.GZIPInputStream;
 
@@ -217,7 +218,7 @@ public class EDownloadDialog extends ProgressDialog implements Runnable {
                 mTmpFile = new File(target, fileName);
             }
         } else {
-            mTmpFile = File.createTempFile("/Download/", "." + extension, tm);
+            mTmpFile = new File(target, UUID.randomUUID() + "." + extension);
         }
 
         OutputStream outStream = new FileOutputStream(mTmpFile);
