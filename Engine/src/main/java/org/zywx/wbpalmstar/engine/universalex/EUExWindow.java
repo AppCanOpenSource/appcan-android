@@ -1400,7 +1400,7 @@ public class EUExWindow extends EUExBase {
         String inIndexSelect = parm[9];
 
         boolean opaque = false;
-        /**赋初值，避免不传bgColor崩溃*/
+        /*赋初值，避免不传bgColor崩溃*/
         String bgColor = "#00000000";
         boolean hasExtraInfo = false;
         int mainDownloadCallback = 0;
