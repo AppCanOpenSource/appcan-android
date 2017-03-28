@@ -2674,12 +2674,16 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         for (int i = 0; i < eBrwWins.size(); i++) {
             EBrowserWindow eBrwWin = eBrwWins.get(i);
             eBrwWin.addUriTask(eBrwWin.mMainView, js);
+            Collection<EBrowserView> eBrwViews = eBrwWin.mPopTable.values();
+            for (EBrowserView entry : eBrwViews) {
+                entry.addUriTask(js);
+            }
         }
 
-        Collection<EBrowserView> eBrwViews = mPopTable.values();
+        /*Collection<EBrowserView> eBrwViews = mPopTable.values();
         for (EBrowserView entry : eBrwViews) {
             entry.addUriTask(js);
-        }
+        }*/
     }
 
     public void subscribeChannelNotification(String channelId,
