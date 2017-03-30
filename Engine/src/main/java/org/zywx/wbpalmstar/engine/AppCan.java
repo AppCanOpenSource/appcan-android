@@ -22,6 +22,7 @@ import org.zywx.wbpalmstar.base.listener.OnAppCanFinishListener;
 import org.zywx.wbpalmstar.base.listener.OnAppCanInitListener;
 import org.zywx.wbpalmstar.base.util.SpManager;
 import org.zywx.wbpalmstar.base.vo.NameValuePairVO;
+import org.zywx.wbpalmstar.base.vo.SubWidgetToStartVO;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.engine.universalex.ThirdPluginMgr;
 import org.zywx.wbpalmstar.engine.universalex.ThirdPluginObject;
@@ -52,6 +53,10 @@ public class AppCan {
     private WWidgetData mWidgetData;
     private boolean mIsWidgetSdk =true;
     OnAppCanFinishListener mFinishListener;
+
+    SubWidgetToStartVO mSubWidgetToStartVO =null;
+
+
     private AppCan(){
     }
 
@@ -137,7 +142,7 @@ public class AppCan {
      * @param activity
      * @param bundle 传递给网页的数据
      */
-    public void start(final Activity activity, final Bundle bundle){
+    public void start(final Activity activity, final WWidgetData widgetData, final Bundle bundle){
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -149,12 +154,25 @@ public class AppCan {
                 if (null != bundle) {
                     intent.putExtras(bundle);
                 }
+                intent.putExtra(EBrowserActivity.KET_WIDGET_DATE,widgetData);
                 activity.startActivity(intent);
                 activity.overridePendingTransition(EUExUtil.getResAnimID("platform_myspace_no_anim")
                         , EUExUtil.getResAnimID("platform_myspace_no_anim"));
             }
         });
 
+    }
+
+    public SubWidgetToStartVO getSubWidgetToStart(){
+        return mSubWidgetToStartVO;
+    }
+
+    public void setSubWidgetToStart(SubWidgetToStartVO subWidgetToStartVO){
+        this.mSubWidgetToStartVO = subWidgetToStartVO;
+    }
+    public void start(Activity activity, SubWidgetToStartVO startVO, Bundle bundle){
+        mSubWidgetToStartVO =startVO;
+        start(activity,mWidgetData,bundle);
     }
 
     public void registerFinishCallback(OnAppCanFinishListener listener){
@@ -170,10 +188,9 @@ public class AppCan {
      * @param bundle 传递给网页的数据
      */
     public void start(Activity activity,String indexUrl,Bundle bundle){
-        if (mWidgetData!=null){
-            mWidgetData.m_indexUrl=indexUrl;
-        }
-        start(activity,bundle);
+        WWidgetData tempWidgetData=mWidgetData.clone();
+        tempWidgetData.m_indexUrl=indexUrl;
+        start(activity,tempWidgetData,bundle);
     }
 
     private void reflectionPluginMethod(String method) {

@@ -136,7 +136,7 @@ public class LoadingActivity extends Activity {
     }
 
     private void startEngine() {
-        AppCan.getInstance().start(LoadingActivity.this,getIntent().getExtras());
+        AppCan.getInstance().start(LoadingActivity.this,AppCan.getInstance().getRootWidgetData(),getIntent().getExtras());
     }
 
     private static class LoadingHandler extends Handler{
