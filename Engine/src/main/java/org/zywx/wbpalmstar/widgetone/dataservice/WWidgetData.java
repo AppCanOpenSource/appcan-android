@@ -21,9 +21,11 @@ package org.zywx.wbpalmstar.widgetone.dataservice;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.zywx.wbpalmstar.base.BDebug;
+
 import java.util.ArrayList;
 
-public class WWidgetData implements Parcelable {
+public class WWidgetData implements Parcelable,Cloneable {
 
     // 表示我的空间按钮显示，单击按钮进入我的空间
     public static final int F_SPACESTATUS_OPEN = 0x1;
@@ -319,5 +321,16 @@ public class WWidgetData implements Parcelable {
         return sb.toString();
     }
 
+    @Override
+    public WWidgetData clone() {
+        try {
+            return (WWidgetData) super.clone();
+        } catch (CloneNotSupportedException e) {
+            if (BDebug.DEBUG){
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
 
 }
