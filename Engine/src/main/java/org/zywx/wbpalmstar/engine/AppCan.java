@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Keep;
+import android.text.TextUtils;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.zywx.wbpalmstar.acedes.ACEDes;
@@ -173,6 +174,17 @@ public class AppCan {
     public void start(Activity activity, SubWidgetToStartVO startVO, Bundle bundle){
         mSubWidgetToStartVO =startVO;
         start(activity,mWidgetData,bundle);
+    }
+
+    public void startSubWidget(Activity activity,Bundle bundle,String appId,String appKey){
+        WDataManager widgetData = new WDataManager(mContext);
+        WWidgetData data = widgetData.getWidgetDataByAppId(appId,
+                mWidgetData);
+        if (!TextUtils.isEmpty(appKey)) {
+            data.m_appkey = appKey;
+        }
+        start(activity,data,bundle);
+
     }
 
     public void registerFinishCallback(OnAppCanFinishListener listener){
