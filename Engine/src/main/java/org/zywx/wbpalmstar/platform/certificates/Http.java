@@ -101,8 +101,7 @@ public class Http {
         return ssSocketFactory;
     }
 
-    public static HttpsURLConnection getHttpsURLConnection(String urlString) throws Exception {
-        URL url=new URL(urlString);
+    public static HttpsURLConnection getHttpsURLConnection(URL url) throws Exception {
         HttpsURLConnection mConnection = null;
         mConnection = (HttpsURLConnection) url.openConnection();
         javax.net.ssl.SSLSocketFactory ssFact = null;
@@ -115,6 +114,12 @@ public class Http {
             ((HttpsURLConnection) mConnection)
                     .setHostnameVerifier(SSLSocketFactory.STRICT_HOSTNAME_VERIFIER);
         }
+        return mConnection;
+    }
+
+    public static HttpsURLConnection getHttpsURLConnection(String urlString) throws Exception {
+        URL url=new URL(urlString);
+        HttpsURLConnection mConnection = getHttpsURLConnection(url);
         return mConnection;
     }
 
