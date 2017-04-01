@@ -37,6 +37,7 @@ import org.json.JSONObject;
 import org.zywx.wbpalmstar.acedes.ACEDes;
 import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.engine.EBrowserHistory.EHistoryEntry;
+import org.zywx.wbpalmstar.engine.universalex.EUExBase;
 import org.zywx.wbpalmstar.engine.universalex.EUExCallback;
 import org.zywx.wbpalmstar.engine.universalex.EUExManager;
 import org.zywx.wbpalmstar.engine.universalex.EUExWindow;
@@ -510,6 +511,12 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
         }
         if (mBrowserViewChangeListener != null) {
             mBrowserViewChangeListener.onPageFinish();
+        }
+        if (AppCan.getInstance().getSubWidgetToStart()!=null){
+            EUExBase.callBackJsObject(this,"uexWidgetOne.OnSubWidgetToStart",DataHelper.gson.toJsonTree(AppCan
+                    .getInstance()
+                    .getSubWidgetToStart()));
+            AppCan.getInstance().setSubWidgetToStart(null);
         }
     }
 

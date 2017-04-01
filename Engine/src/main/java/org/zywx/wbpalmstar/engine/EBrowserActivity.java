@@ -75,6 +75,8 @@ import java.util.Set;
 
 public final class EBrowserActivity extends BaseActivity {
 
+    public static final String KET_WIDGET_DATE="key_widget_data";
+
     public static final int F_OAUTH_CODE = 100001;
     public final static int FILECHOOSER_RESULTCODE = 233;
     public final static String APP_TYPE_NOT_START = "0";
@@ -133,7 +135,9 @@ public final class EBrowserActivity extends BaseActivity {
         }
         mEHandler.sendMessageDelayed(loadDelayMsg, delay);
 
-        initEngine(AppCan.getInstance().getRootWidgetData());
+        WWidgetData wWidgetData=getIntent().getParcelableExtra(KET_WIDGET_DATE);
+        getIntent().removeExtra(KET_WIDGET_DATE);//删除intent中的数据，避免传递给网页
+        initEngine(wWidgetData);
 
         EUtil.printeBackup(savedInstanceState, "onCreate");
         // EUtil.checkAndroidProxy(getBaseContext());

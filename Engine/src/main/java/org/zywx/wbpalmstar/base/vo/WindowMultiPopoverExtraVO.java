@@ -8,10 +8,6 @@ import java.io.Serializable;
 
 public class WindowMultiPopoverExtraVO implements Serializable {
 
-    public String opaque;
-
-    public String bgColor;
-
-    public long delayTime;
+    public WindowMultiPopoverExtraInfoVO extraInfo;
 
 }

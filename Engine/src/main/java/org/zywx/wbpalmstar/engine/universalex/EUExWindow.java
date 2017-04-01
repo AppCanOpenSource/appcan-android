@@ -65,6 +65,7 @@ import org.zywx.wbpalmstar.base.vo.WindowEvaluateMultiPopoverScriptVO;
 import org.zywx.wbpalmstar.base.vo.WindowEvaluatePopoverScriptVO;
 import org.zywx.wbpalmstar.base.vo.WindowEvaluateScriptVO;
 import org.zywx.wbpalmstar.base.vo.WindowOpenMultiPopoverVO;
+import org.zywx.wbpalmstar.base.vo.WindowOpenPopoverVO;
 import org.zywx.wbpalmstar.base.vo.WindowOpenSlibingVO;
 import org.zywx.wbpalmstar.base.vo.WindowOpenVO;
 import org.zywx.wbpalmstar.base.vo.WindowPromptResultVO;
@@ -1055,29 +1056,34 @@ public class EUExWindow extends EUExBase {
 
 
     public void openPopover(String[] parm) {
-        if (parm.length < 10) {
-            return;
-        }
-        Message msg = new Message();
-        msg.obj = this;
-        msg.what = MSG_FUNCTION_OPEN_POP;
-        Bundle bd = new Bundle();
-        bd.putStringArray(TAG_BUNDLE_PARAM, parm);
-        msg.setData(bd);
-        if (parm.length > 11) {
-            //取第12个参数的延迟加载字段
-            long delay = 0l;
-            try {
-                JSONObject json = new JSONObject(parm[11]);
-                JSONObject data = new JSONObject(json.getString(EBrwViewEntry.TAG_EXTRAINFO));
-                if (data.has(EBrwViewEntry.TAG_DELAYTIME)) {
-                    delay = Long.valueOf(data.getString(EBrwViewEntry.TAG_DELAYTIME));
-                }
-            } catch (Exception e) {
+        if (isJsonString(parm[0])){
+            WindowOpenPopoverVO openVO=DataHelper.gson.fromJson(parm[0],WindowOpenPopoverVO.class);
+            WindowJsonWrapper.openPopover(this,openVO);
+        }else{
+            if (parm.length < 10) {
+                return;
             }
-            mHandler.sendMessageDelayed(msg, delay);
-        } else {
-            mHandler.sendMessage(msg);
+            Message msg = new Message();
+            msg.obj = this;
+            msg.what = MSG_FUNCTION_OPEN_POP;
+            Bundle bd = new Bundle();
+            bd.putStringArray(TAG_BUNDLE_PARAM, parm);
+            msg.setData(bd);
+            if (parm.length > 11) {
+                //取第12个参数的延迟加载字段
+                long delay = 0l;
+                try {
+                    JSONObject json = new JSONObject(parm[11]);
+                    JSONObject data = new JSONObject(json.getString(EBrwViewEntry.TAG_EXTRAINFO));
+                    if (data.has(EBrwViewEntry.TAG_DELAYTIME)) {
+                        delay = Long.valueOf(data.getString(EBrwViewEntry.TAG_DELAYTIME));
+                    }
+                } catch (Exception e) {
+                }
+                mHandler.sendMessageDelayed(msg, delay);
+            } else {
+                mHandler.sendMessage(msg);
+            }
         }
     }
 
@@ -1108,13 +1114,13 @@ public class EUExWindow extends EUExBase {
             marginBottom = parm[10];
         }
         boolean opaque = false;
-        /**赋初值，避免不传bgColor崩溃*/
+        /*赋初值，避免不传bgColor崩溃*/
         String bgColor = "#00000000";
         boolean hasExtraInfo = false;
         int hardware = -1;
         int downloadCallback = 0;
         String userAgent = "";
-        if (parm.length > 11) {
+        if (parm.length > 11 && parm[11] != null) {
             String jsonData = parm[11];
             try {
                 JSONObject json = new JSONObject(jsonData);
@@ -1394,7 +1400,7 @@ public class EUExWindow extends EUExBase {
         String inIndexSelect = parm[9];
 
         boolean opaque = false;
-        /**赋初值，避免不传bgColor崩溃*/
+        /*赋初值，避免不传bgColor崩溃*/
         String bgColor = "#00000000";
         boolean hasExtraInfo = false;
         int mainDownloadCallback = 0;

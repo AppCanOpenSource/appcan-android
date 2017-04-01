@@ -3,6 +3,6 @@
     <version>$version$</version>
     <package>$package$</package>
     <kernel>$kernel$</kernel>
-    <description>添加uexWidgetOne.restart()接口</description>
+    <description>修复openPopover接口传入json对象调用无效的问题</description>
     <dssVersion>4.0.0</dssVersion>
 </info>
