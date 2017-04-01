@@ -778,6 +778,27 @@ public class WDataManager {
     // return sbf.toString();
     // }
 
+    public boolean isHasAssetsWidget() {
+        try {
+            InputStream in = m_context.getAssets().open(m_rootWidgetConfigPath);
+            if (in != null) {
+                in.close();
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return false;
+    }
+
+    public WWidgetData getDefaultWidgetData() {
+        WWidgetData widgetData = new WWidgetData();
+        widgetData.m_appId = "default";
+        widgetData.m_indexUrl = "index.html";
+        return widgetData;
+    }
+
     /**
      * 得到当前应用
      *
@@ -1186,7 +1207,7 @@ public class WDataManager {
         return "0";
     }
 
-    private WWidgetData getWidgetDataByXML(String path, int type) {
+    public WWidgetData getWidgetDataByXML(String path, int type) {
         WWidgetData widgetData = null;
         InputStream inputStream = null;
         try {
