@@ -104,7 +104,11 @@ public class AppCan {
         //清除上次运行的Session 数据
         SpManager.getInstance().clearSession();
         WDataManager wDataManager = new WDataManager(mContext);
-        mWidgetData = wDataManager.getWidgetData();
+        if (wDataManager.isHasAssetsWidget()) {
+            mWidgetData = wDataManager.getWidgetData();
+        } else {
+            mWidgetData = wDataManager.getDefaultWidgetData();
+        }
         boolean success=isInitSuccess();
         if (success) {
             BUtility.initWidgetOneFile(mContext, mWidgetData.m_appId);
@@ -162,6 +166,30 @@ public class AppCan {
             }
         });
 
+    }
+
+    /**
+     *
+     * @param activity
+     * @param bundle 传递给网页的数据
+     * @param path 需要打开的widget目录路径
+     */
+    public void startCustomWidget(Activity activity, Bundle bundle, String path){
+        if (!path.endsWith("/")) {
+            path = path + "/";
+        }
+        WDataManager wDataManager = new WDataManager(mContext);
+        WWidgetData data = wDataManager.getWidgetDataByXML(path + "config.xml", 0);
+        if (data != null) {
+            BUtility.initWidgetOneFile(mContext, data.m_appId);
+        }
+        if (data.m_obfuscation == 1) {
+            String packg = mContext.getPackageName();
+            String contentPrefix = "content://" + packg + ".sp/android_asset/";
+            data.m_indexUrl = contentPrefix + data.m_indexUrl.substring("file:///".length());
+            data.m_obfuscation = 0;
+        }
+        start(activity, data, bundle);
     }
 
     public SubWidgetToStartVO getSubWidgetToStart(){
