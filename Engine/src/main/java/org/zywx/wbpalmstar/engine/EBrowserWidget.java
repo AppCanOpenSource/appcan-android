@@ -670,7 +670,7 @@ public class EBrowserWidget extends AbsoluteLayout {
                         mBroWindow.setVisibility(GONE);
                     }
                 }
-
+                inWhich.requestFocus();
                 inWhich.notifyVisibilityChanged(0);
                 inWhich.clearFlag();
                 mBroWindow.notifyVisibilityChanged(1);
