@@ -18,4 +18,6 @@ public class WindowPromptVO implements Serializable {
 
     public String hint;
 
+    public int mode;
+
 }

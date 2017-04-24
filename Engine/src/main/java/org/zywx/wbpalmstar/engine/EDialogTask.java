@@ -33,7 +33,7 @@ public class EDialogTask {
     public int type;
     public EUExWindow mUexWind;
     public String hint;
-
+    public int mode;
     public String callbackId;
 
     public EDialogTask() {
@@ -57,7 +57,7 @@ public class EDialogTask {
                 mUexWind.private_confirm(title, msg, buttonLables,callbackId);
                 break;
             case F_TYPE_PROMPT:
-                mUexWind.private_prompt(title, msg, defaultValue, buttonLables,hint,callbackId);
+                mUexWind.private_prompt(title, msg, defaultValue, buttonLables,hint,callbackId,mode);
                 break;
         }
         mUexWind = null;
