@@ -2868,7 +2868,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         } else {
             setVisibility(GONE);
             if (null != mBroWidget) {
-                mBroWidget.putInvalid(this);
+                mBroWidget.destoryWindow(this);
             }
         }
 
@@ -2887,7 +2887,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
             public void run() {
                 setVisibility(GONE);
                 if (null != mBroWidget) {
-                    mBroWidget.putInvalid(EBrowserWindow.this);
+                    mBroWidget.destoryWindow(EBrowserWindow.this);
                 }
             }
         });
