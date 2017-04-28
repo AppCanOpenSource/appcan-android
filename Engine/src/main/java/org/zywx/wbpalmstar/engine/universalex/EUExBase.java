@@ -380,9 +380,9 @@ public abstract class EUExBase {
             @Override
             public void onGlobalLayout() {
                 if (Build.VERSION.SDK_INT < 16) {
-                    observer.removeGlobalOnLayoutListener(this);
+                    child.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 } else {
-                    observer.removeOnGlobalLayoutListener(this);
+                    child.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
                 EBrowserAnimation.animFromRight(child, width, pager.getContainerVO().getAnimTime(),
                         pager.getContainerVO().getAnimDelayTime(),

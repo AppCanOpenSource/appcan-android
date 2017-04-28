@@ -399,14 +399,23 @@ public class EBrowserWidgetPool {
     }
 
     public void onAppPause() {
+        if (!mWgtStack.curIsFirstWidget()) {
+            mWgtStack.first().onAppPause();
+        }
         mWgtStack.peek().onAppPause();
     }
 
     public void onAppStop() {
+        if (!mWgtStack.curIsFirstWidget()) {
+            mWgtStack.first().onAppStop();
+        }
         mWgtStack.peek().onAppStop();
     }
 
     public void onAppResume() {
+        if (!mWgtStack.curIsFirstWidget()) {
+            mWgtStack.first().onAppResume();
+        }
         mWgtStack.peek().onAppResume();
     }
 

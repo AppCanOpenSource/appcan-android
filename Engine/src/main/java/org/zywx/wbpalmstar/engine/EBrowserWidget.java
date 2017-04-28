@@ -67,7 +67,6 @@ public class EBrowserWidget extends AbsoluteLayout {
     private EBrowserWindow mBroWindow;
     private Context mContext;
     private EWindowStack mEWindowStack;
-    private EWindGarbHeap mGarbViewHeap;
     private String mPushNotifyWindName;
     private String mPushNotifyFunctionName;
     private SharedPreferences mPres;
@@ -173,13 +172,8 @@ public class EBrowserWidget extends AbsoluteLayout {
         if (checkWindow(entry)) {
             return;
         }
-        EBrowserWindow newWindow = getInvalid();
-        if (null != newWindow) {
-            newWindow.setEBrowserWidget(EBrowserWidget.this);
-        } else {
-            newWindow = new EBrowserWindow(mContext,
+        EBrowserWindow newWindow = new EBrowserWindow(mContext,
                     EBrowserWidget.this);
-        }
         if (entry.checkFlag(EBrwViewEntry.F_FLAG_NAV_TYPE)) {
             EBrowserWindow.sNavFlag = true;
         }
@@ -328,10 +322,8 @@ public class EBrowserWidget extends AbsoluteLayout {
         if (window == mBroWindow) {
             showOnly(window, SHOW_TYPE_CLOSE);
         } else {
-            putInvalid(window);
+            destoryWindow(window);
         }
-        mEWindowStack.remove(window);
-//		putInvalid(window);
         EBrowser.clearFlag();
     }
 
@@ -796,26 +788,13 @@ public class EBrowserWidget extends AbsoluteLayout {
         mEWindowStack.add(inWindow);
     }
 
-    public void putInvalid(EBrowserWindow view) {
-//        if (null == mGarbViewHeap) {
-//            mGarbViewHeap = new EWindGarbHeap();
-//        }
-//        mGarbViewHeap.put(view);
-        view.destory();
-    }
-
-    private EBrowserWindow getInvalid() {
-        if (null != mGarbViewHeap) {
-            return mGarbViewHeap.get();
-        }
-        return null;
+    public void destoryWindow(EBrowserWindow window) {
+        mEWindowStack.remove(window);
+        window.destory();
     }
 
     public void destroy() {
         mWidgetLoop.clean();
-        if (null != mGarbViewHeap) {
-            mGarbViewHeap.destroy();
-        }
         mEWindowStack.destroy();
         mResultInfo = null;
         EBrowser.clearFlag();
@@ -1009,13 +988,8 @@ public class EBrowserWidget extends AbsoluteLayout {
                     if (checkWindow(entry)) {
                         break;
                     }
-                    EBrowserWindow newWindow = getInvalid();
-                    if (null != newWindow) {
-                        newWindow.setEBrowserWidget(EBrowserWidget.this);
-                    } else {
-                        newWindow = new EBrowserWindow(mContext,
+                    EBrowserWindow newWindow = new EBrowserWindow(mContext,
                                 EBrowserWidget.this);
-                    }
                     boolean prevHidden = entry
                             .checkFlag(EBrwViewEntry.F_FLAG_NOT_HIDDEN);
                     newWindow.setPrevWindowWillHidden(prevHidden);

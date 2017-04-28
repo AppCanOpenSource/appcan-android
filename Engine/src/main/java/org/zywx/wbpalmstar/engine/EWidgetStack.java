@@ -93,4 +93,8 @@ public class EWidgetStack {
         mWidgetList.add(inBrwWidget);
         m_curWidgetIndex++;
     }
+
+    public boolean curIsFirstWidget() {
+        return m_curWidgetIndex == 0;
+    }
 }
