@@ -2702,33 +2702,49 @@ public class EUExWindow extends EUExBase {
     }
 
     public void prompt(String[] parm) {
+        WindowPromptVO promptVO=null;
+        int mode=0;
+        String inTitle ;
+        String inMessage ;
+        String inDefaultValue ;
+        String[] inButtonLables;
+        String hint = null;
+        String callbackId = null;
         if (isFirstParamExistAndIsJson(parm)){
-            WindowJsonWrapper.prompt(this,DataHelper.gson.fromJson(
+            promptVO=DataHelper.gson.fromJson(
                     parm[0], WindowPromptVO.class
-            ),parm.length>1?parm[1]:null);
-            return;
-        }
-        if (parm.length < 4) {
-            return;
+            );
+            inTitle=promptVO.title;
+            inMessage=promptVO.message;
+            inDefaultValue=promptVO.defaultValue;
+            inButtonLables=promptVO.buttonLabels.split(",");
+            hint=promptVO.hint;
+            mode=promptVO.mode;
+            if (parm.length>1) {
+                callbackId = parm[1];
+            }
+        }else{
+            inTitle = parm[0];
+            inMessage = parm[1];
+            inDefaultValue = parm[2];
+            inButtonLables = parm[3].split(",");
+            if (parm.length>4) {
+                hint =parm[4];
+            }
         }
         EBrowserWindow curWind = mBrwView.getBrowserWindow();
         if (null == curWind) {
             return;
         }
-        String inTitle = parm[0];
-        String inMessage = parm[1];
-        String inDefaultValue = parm[2];
-        String[] inButtonLables = parm[3].split(",");
         EDialogTask task = new EDialogTask();
         task.type = EDialogTask.F_TYPE_PROMPT;
         task.title = inTitle;
         task.msg = inMessage;
+        task.mode=mode;
         task.defaultValue = inDefaultValue;
         task.buttonLables = inButtonLables;
-        if (parm.length>4) {
-            task.hint =parm[4];
-        }
-        task.callbackId=parm.length>5?parm[5]:null;
+        task.hint =hint;
+        task.callbackId=callbackId;
         task.mUexWind = this;
         curWind.addDialogTask(task);
     }
@@ -2912,7 +2928,7 @@ public class EUExWindow extends EUExBase {
     }
 
     public void private_prompt(String inTitle, String inMessage, String inDefaultValue, String[] inButtonLables,
-                               String hint, final String callbackIdStr) {
+                               String hint, final String callbackIdStr, int mode) {
 		/*if (!((EBrowserActivity) mContext).isVisable()) {
 			return;
 		}*/
@@ -2921,7 +2937,7 @@ public class EUExWindow extends EUExBase {
         }
         final int callbackId=valueOfCallbackId(callbackIdStr);
         if (inButtonLables != null && inButtonLables.length == 2) {
-            mPrompt = PromptDialog.show(mContext, inTitle, inMessage, inDefaultValue,hint, inButtonLables[0], new
+            mPrompt = PromptDialog.show(mContext, inTitle, inMessage, inDefaultValue,hint, inButtonLables[0],mode, new
                     OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {

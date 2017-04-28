@@ -42,7 +42,8 @@ function showPrompt() {
         title:document.getElementById('promptTitle').value,
         message:document.getElementById('promptMsg').value,
         defaultValue:document.getElementById('defaultMsg').value,
-        buttonLabels:value
+        buttonLabels:value,
+        mode:0
     },function(index,data){
         alert("用户的输入：" +data + ",点击了第" + index + "个按钮");
     });

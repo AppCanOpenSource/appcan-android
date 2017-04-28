@@ -21,7 +21,10 @@ package org.zywx.wbpalmstar.platform.window;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.IBinder;
+import android.text.InputType;
 import android.text.TextUtils;
+import android.text.method.PasswordTransformationMethod;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -35,6 +38,8 @@ public class PromptDialog extends AlertDialog {
     private EditText etInput;
 
     private ResoureFinder finder;
+
+    private int mode=0;
 
     public PromptDialog(Context context) {
         super(context);
@@ -75,7 +80,7 @@ public class PromptDialog extends AlertDialog {
 
     public static PromptDialog show(Context context, String title, String desc, String defalutValue,
                                     String hint,
-                                    String confirmLabel, OnClickListener confirmListener, String cancelLabel, OnClickListener cancelListener) {
+                                    String confirmLabel,int mode, OnClickListener confirmListener, String cancelLabel, OnClickListener cancelListener) {
         final PromptDialog dialog = new PromptDialog(context);
         dialog.setCancelable(false);
         if (title != null) {
@@ -90,6 +95,7 @@ public class PromptDialog extends AlertDialog {
         if (!TextUtils.isEmpty(hint)){
             dialog.setHint(hint);
         }
+        dialog.setMode(mode);
         if (confirmLabel != null) {
             dialog.setButton(confirmLabel, confirmListener);
         }
@@ -100,4 +106,10 @@ public class PromptDialog extends AlertDialog {
         return dialog;
     }
 
+    public void setMode(int mode) {
+        this.mode = mode;
+        if (mode==1){
+            etInput.setTransformationMethod(PasswordTransformationMethod.getInstance());
+        }
+    }
 }
