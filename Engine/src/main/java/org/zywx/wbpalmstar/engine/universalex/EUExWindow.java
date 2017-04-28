@@ -2782,10 +2782,7 @@ public class EUExWindow extends EUExBase {
         if (null == curWind) {
             return;
         }
-        Message msg = new Message();
-        msg.obj = this;
-        msg.what = MSG_FUNCTION_CLOSETOAST;
-        mHandler.sendMessage(msg);
+        curWind.closeToast();
     }
 
     @AppCanAPI
@@ -3149,13 +3146,7 @@ public class EUExWindow extends EUExBase {
     }
 
     public void destroyProgressDialog(String[] params) {
-        Message msg = new Message();
-        msg.obj = this;
-        msg.what = MSG_DESTROY_PROGRESS_DIALOG;
-        Bundle bd = new Bundle();
-        bd.putStringArray(TAG_BUNDLE_PARAM, params);
-        msg.setData(bd);
-        mHandler.sendMessage(msg);
+        destroyProgressDialogMsg();
     }
 
     public void destroyProgressDialogMsg() {
