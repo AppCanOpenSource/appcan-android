@@ -517,16 +517,17 @@ public class EUExWindow extends EUExBase {
         if (null == curWind) {
             return;
         }
+        float scale = mBrwView.getScaleWrap();
         String inX = parm[0];
         String inY = parm[1];
         String animDuration = parm[2];
         int x = 0, y = 0, duration = 250;
         try {
             if (null != inX && inX.length() != 0) {
-                x = Integer.parseInt(inX);
+                x = (int) (Integer.valueOf(inX) * scale);
             }
             if (null != inY && inY.length() != 0) {
-                y = Integer.parseInt(inY);
+                y = (int) (Integer.valueOf(inY) * scale);
             }
             if (null != animDuration && animDuration.length() != 0) {
                 duration = Integer.valueOf(animDuration);
