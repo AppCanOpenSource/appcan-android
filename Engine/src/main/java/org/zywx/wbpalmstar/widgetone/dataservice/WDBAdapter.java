@@ -175,9 +175,8 @@ public class WDBAdapter {
     /**
      * 查询
      */
-    public Cursor select(String sql) {
-        return db.rawQuery(sql, null);
-
+    public Cursor select(String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy) {
+        return db.query(table, columns, selection, selectionArgs, groupBy, having, orderBy);
     }
 
 }

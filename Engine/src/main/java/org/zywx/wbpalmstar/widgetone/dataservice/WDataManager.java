@@ -385,9 +385,7 @@ public class WDataManager {
         WWidgetData widgetData = null;
         WDBAdapter db = new WDBAdapter(m_context);
         db.open();
-        String sql = "select * from " + tableName + " where "
-                + WDBAdapter.F_COLUMN_ID + " = " + id;
-        Cursor cursor = db.select(sql);
+        Cursor cursor = db.select(tableName, null, WDBAdapter.F_COLUMN_ID + "=?", new String[]{String.valueOf(id)}, null, null, null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 widgetData = new WWidgetData();
@@ -429,9 +427,7 @@ public class WDataManager {
         // ArrayList<WWidgetData> list = new ArrayList<WWidgetData>();
         WDBAdapter db = new WDBAdapter(m_context);
         db.open();
-        String sql = "select * from " + WDBAdapter.F_WIDGET_TABLE_NAME
-                + " where " + WDBAdapter.F_COLUMN_APPID + " = '" + appId + "'";
-        Cursor cursor = db.select(sql);
+        Cursor cursor = db.select(WDBAdapter.F_WIDGET_TABLE_NAME, null, WDBAdapter.F_COLUMN_APPID + "=?", new String[]{appId}, null, null, null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 widgetData = new WWidgetData();
@@ -586,8 +582,7 @@ public class WDataManager {
 
         WDBAdapter db = new WDBAdapter(m_context);
         db.open();
-        String sql = "select * from " + tableName;
-        Cursor cursor = db.select(sql);
+        Cursor cursor = db.select(tableName, null, null, null, null, null, null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 WWidgetData widgetData = new WWidgetData();
