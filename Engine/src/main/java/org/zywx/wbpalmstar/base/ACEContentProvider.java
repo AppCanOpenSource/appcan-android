@@ -113,6 +113,15 @@ public class ACEContentProvider extends ContentProvider {
                 fileName = BUtility.getFileNameWithNoSuffix(path);
                 result = ACEDes.htmlDecode(data, fileName);
                 localCopy = new ByteArrayInputStream(result.getBytes());
+
+                InputStream tempIn = new ByteArrayInputStream(result.getBytes());
+                BOMInputStream bomIn = new BOMInputStream(tempIn);
+                if (bomIn.hasBOM()) {
+                    localCopy = bomIn;
+                } else {
+                    tempIn.close();
+                    bomIn.close();
+                }
             } else {
                 localCopy = is2;
             }

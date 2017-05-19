@@ -299,7 +299,7 @@ public class EBrowserWidget extends AbsoluteLayout {
                 mBrw.hiddenShelter();
                 if (mBrw.isFromPush()) {
                     mBrw.setFromPush(false);
-                    mBrw.pushNotify(EBrowserActivity.APP_TYPE_START_FORGROUND);
+                    mBrw.pushNotify(EBrowserActivity.APP_TYPE_NOT_START);
                 }
             }
             clearFlag();
