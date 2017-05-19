@@ -279,6 +279,13 @@ public class PushReportAgent implements PushReportConstants {
             pushDeviceBind.setChannelId("");
             pushDeviceBind.setVersionId("");
             pushDeviceBind.setOrg("");
+            pushDeviceBind.setTenantMark(BUtility.getTenantAccount(context));
+            pushDeviceBind.setFrom("Android-Engine");
+            if (TextUtils.isEmpty(userId) && TextUtils.isEmpty(userName)) {
+                pushDeviceBind.setRequestType("startUp");
+            } else {
+                pushDeviceBind.setRequestType("bindUser");
+            }
 
             PushDeviceBindUserVO pushDeviceBindUser = new PushDeviceBindUserVO();
             pushDeviceBindUser.setUserId(userId);
@@ -297,6 +304,10 @@ public class PushReportAgent implements PushReportConstants {
             String softToken = BUtility.getSoftToken(context, mCurWgt.m_appkey);
             PushDeviceBindVO pushDeviceBind = new PushDeviceBindVO();
             pushDeviceBind.setSoftToken(softToken);
+            pushDeviceBind.setDeviceToken(softToken);
+            pushDeviceBind.setFrom("Android-Engine");
+            pushDeviceBind.setRequestType("unbind");
+            pushDeviceBind.setTenantMark(BUtility.getTenantAccount(context));
             PushDeviceBindUserVO pushDeviceBindUser = new PushDeviceBindUserVO();
             pushDeviceBind.setUser(pushDeviceBindUser);
             PushReportThread.getDeviceBindThread(context, TYPE_PUSH_DEVICEUNBIND, pushDeviceBind).start();

@@ -227,14 +227,14 @@ public class PushReportThread extends Thread implements PushReportConstants {
     }
 
     private void bindDeviceInfo() {
+        String host = host_pushBindUser.replace("gateway", "access");
         PushReportHttpClient.bindOrUnbindDeviceInfo(
-                (host_pushBindUser + url_push_bindDevice), mPushDeviceBind,
-                m_activity);
+                (host + url_push_bindDevice), mPushDeviceBind, m_activity);
     }
 
     private void unBindDeviceInfo() {
+        String host = host_pushBindUser.replace("gateway", "access");
         PushReportHttpClient.bindOrUnbindDeviceInfo(
-                (host_pushBindUser + url_push_bindDevice), mPushDeviceBind,
-                m_activity);
+                (host + url_push_bindDevice), mPushDeviceBind, m_activity);
     }
 }

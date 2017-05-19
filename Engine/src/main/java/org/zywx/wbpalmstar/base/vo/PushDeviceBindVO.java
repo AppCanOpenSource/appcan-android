@@ -18,6 +18,9 @@ public class PushDeviceBindVO implements Serializable {
     private String timeZone;  //时区
     private String org;  //部门
     private String tags;  //标签下的设备
+    private String from;  //请求来源，尽量加入服务与功能标识，名称自定义成能区分不同来源即可，方便排查问题，例：Android-Engine、emm-bindUser
+    private String requestType;  //请求类型，定义如下：1、启动上报：startUp 2、用户绑定：bindUser 3、用户解绑：unbind
+    private String tenantMark;   //租户标示
 
     public String getDeviceName() {
         return deviceName;
@@ -129,5 +132,29 @@ public class PushDeviceBindVO implements Serializable {
 
     public void setTags(String tags) {
         this.tags = tags;
+    }
+
+    public String getFrom() {
+        return from;
+    }
+
+    public void setFrom(String from) {
+        this.from = from;
+    }
+
+    public String getRequestType() {
+        return requestType;
+    }
+
+    public void setRequestType(String requestType) {
+        this.requestType = requestType;
+    }
+
+    public String getTenantMark() {
+        return tenantMark;
+    }
+
+    public void setTenantMark(String tenantMark) {
+        this.tenantMark = tenantMark;
     }
 }
