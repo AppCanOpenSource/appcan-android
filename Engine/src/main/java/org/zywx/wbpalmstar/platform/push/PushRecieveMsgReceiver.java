@@ -37,6 +37,7 @@ import android.widget.RemoteViews;
 import org.json.JSONObject;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.WebViewSdkCompat;
+import org.zywx.wbpalmstar.engine.AppCan;
 import org.zywx.wbpalmstar.engine.EBrowserActivity;
 import org.zywx.wbpalmstar.engine.ENotification;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
@@ -187,6 +188,7 @@ public class PushRecieveMsgReceiver extends BroadcastReceiver {
         notiIntent.putExtra("ntype", F_TYPE_PUSH);
         notiIntent.putExtra("data", body);
         notiIntent.putExtra("message", message);
+        notiIntent.putExtra(EBrowserActivity.KET_WIDGET_DATE, AppCan.getInstance().getRootWidgetData());
         Bundle bundle = new Bundle();
         bundle.putSerializable(PushReportConstants.PUSH_DATA_INFO_KEY, dataInfo);
         notiIntent.putExtras(bundle);
@@ -293,6 +295,7 @@ public class PushRecieveMsgReceiver extends BroadcastReceiver {
             notificationIntent.putExtra("data", value);
             notificationIntent.putExtra("message", pushMessage);
             notificationIntent.putExtra("ntype", F_TYPE_PUSH);
+            notificationIntent.putExtra(EBrowserActivity.KET_WIDGET_DATE, AppCan.getInstance().getRootWidgetData());
             String ns = Context.NOTIFICATION_SERVICE;
             NotificationManager mNotificationManager = (NotificationManager) context
                     .getSystemService(ns);
