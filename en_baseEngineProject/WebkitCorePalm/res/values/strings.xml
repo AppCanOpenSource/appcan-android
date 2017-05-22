@@ -100,5 +100,6 @@
         <item>Letv</item>
         <item>GEM-703L</item>
     </string-array>
+    <string name="tenant_id"></string>
     <string name="mbaas_host"></string>
 </resources>
