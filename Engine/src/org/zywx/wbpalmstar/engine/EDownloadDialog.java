@@ -204,21 +204,20 @@ public class EDownloadDialog extends ProgressDialog implements Runnable {
             target.mkdirs();
         }
         String extension = null;
+        String fileName = null;
         if (mimetype != null) {
             MimeTypeMap mtm = MimeTypeMap.getSingleton();
             extension = mtm.getExtensionFromMimeType(mimetype);
-        }
-        if (extension == null) {
-            String fileName = URLUtil.guessFileName(url, contentDisposition,
+            fileName = URLUtil.guessFileName(url, contentDisposition,
                     mimetype);
             if (!TextUtils.isEmpty(fileName)) {
                 fileName.replaceAll("/", "");
                 mTmpFile = new File(target, fileName);
             }
-        } else {
-            mTmpFile = File.createTempFile("/Download/", "." + extension, tm);
         }
-
+        if (mTmpFile == null) {
+            mTmpFile = File.createTempFile("Download", "." + extension, target);
+        }
         OutputStream outStream = new FileOutputStream(mTmpFile);
         byte buffer[] = new byte[1024 * 3];
         while (true) {
