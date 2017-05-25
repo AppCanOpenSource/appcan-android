@@ -3,6 +3,6 @@
     <version>$version$</version>
     <package>$package$</package>
     <kernel>$kernel$</kernel>
-    <description>prompt支持输入密码</description>
+    <description>修复addFragment方法崩溃的问题</description>
     <dssVersion>4.0.0</dssVersion>
 </info>
