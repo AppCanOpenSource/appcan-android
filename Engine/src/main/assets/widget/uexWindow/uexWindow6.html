@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    
+    <head>
+        <title>
+        </title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="../css/fonts/font-awesome.min.css">
+        <link rel="stylesheet" href="../css/ui-box.css">
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <link rel="stylesheet" href="../css/ui-color.css">
+        <link rel="stylesheet" href="../css/appcan.icon.css">
+        <link rel="stylesheet" href="../css/appcan.control.css">
+        <link rel="stylesheet" href="../css/index.css">
+    </head>
+    
+    <body class="" ontouchstart>
+        <div class="bc-bg" tabindex="0" data-control="PAGE" id="Page">
+            <div class="" data-control="CONTENT">
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <input class = "button-go" type="button" value = "返回" onclick="closeCurrentWin()"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>1.alert //弹出只有一个确定按钮的对话框<br></span>
+                        <span class = "result_display" id = "alert_result_display"></span>
+                    </div>
+                    <input id= "alert" class = "button-go" type="button" value = "alert"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>2.confirm //弹出至少包含一个至多包含3个按钮的对话框<br></span>
+                        <span class = "result_display" id = "confirm_result_display"></span>
+                    </div>
+                    <input id= "confirm" class = "button-go" type="button" value = "confirm"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>3.prompt //弹出包含两个按钮且带输入框的对话框<br></span>
+                        <span class = "result_display" id = "prompt_result_display"></span>
+                    </div>
+                    <input id= "prompt" class = "button-go" type="button" value = "prompt"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>4.actionSheet //从界面底部弹出按钮列表<br></span>
+                        <span class = "result_display" id = "actionSheet_result_display"></span>
+                    </div>
+                    <input id= "actionSheet" class = "button-go" type="button" value = "actionSheet"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>5.toast //弹出消息提示框<br></span>
+                        <span class = "result_display" id = "toast_result_display"></span>
+                    </div>
+                    <input id= "toast" class = "button-go" type="button" value = "toast"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>6.closeToast //关闭消息提示框<br></span>
+                        <span class = "result_display" id = "closeToast_result_display"></span>
+                    </div>
+                    <input id= "closeToast" class = "button-go" type="button" value = "closeToast"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>7.createProgressDialog //创建一个全局对话框<br></span>
+                        <span class = "result_display" id = "createProgressDialog_result_display"></span>
+                    </div>
+                    <input id= "createProgressDialog" class = "button-go" type="button" value = "createProgressDialog"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>8.destroyProgressDialog //销毁全局对话框<br></span>
+                        <span class = "result_display" id = "destroyProgressDialog_result_display">该接口不能手动调用，点击下面按钮会先打开一个不能取消的全局对话框，2秒钟后会自动调用该接口关闭该对话框</span>
+                    </div>
+                    <input id= "destroyProgressDialog" class = "button-go" type="button" value = "destroyProgressDialog"/>
+                </div>
+            </div>
+        </div>
+        <script src="../js/appcan.js">
+        </script>
+        <script src="../js/appcan.control.js">
+        </script>
+        <script src="../js/appcan.scrollbox.js">
+        </script>
+        <script src="../js/template.import.js">
+        </script>
+        <script src="../js/index.js">
+        </script>
+        <script src="../js/uexWindow6.js">
+        </script>
+        <script type="text/javascript">
+            function funEvaluate(param){
+                $("#evaluateScript_result_display").html("evaluateScript方法调用成功，传回参数为:" + param);
+            }
+        </script>
+    </body>
+
+</html>

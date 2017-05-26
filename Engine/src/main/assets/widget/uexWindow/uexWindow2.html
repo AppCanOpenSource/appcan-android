@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    
+    <head>
+        <title>
+        </title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="../css/fonts/font-awesome.min.css">
+        <link rel="stylesheet" href="../css/ui-box.css">
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <link rel="stylesheet" href="../css/ui-color.css">
+        <link rel="stylesheet" href="../css/appcan.icon.css">
+        <link rel="stylesheet" href="../css/appcan.control.css">
+        <link rel="stylesheet" href="../css/index.css">
+    </head>
+    
+    <body class="" ontouchstart>
+        <div class="bc-bg" tabindex="0" data-control="PAGE" id="Page">
+            <div class="" data-control="CONTENT">
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <input class = "button-go" type="button" value = "返回" onclick="closeCurrentWin()"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>1.openPopover //打开浮动窗口<br></span>
+                        <span class = "result_display" id = "openPopover_result_display"></span>
+                    </div>
+                    <input id= "openPopover" class = "button-go" type="button" value = "openPopover"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>2.setPopoverVisibility //设置浮动窗口是否显示<br></span>
+                        <span class = "result_display" id = "setPopoverVisibility_result_display"></span>
+                    </div>
+                    <input id= "setPopoverVisibility1" class = "button-go" type="button" value = "显示"/>
+                    <input id= "setPopoverVisibility2" class = "button-go" type="button" value = "隐藏"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>3.evaluatePopoverScript //在浮动窗口中执行js脚本<br></span>
+                        <span class = "result_display" id = "evaluatePopoverScript_result_display"></span>
+                    </div>
+                    <input id= "evaluatePopoverScript" class = "button-go" type="button" value = "evaluatePopoverScript"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>4.setPopoverFrame //更改浮动窗口的位置和大小<br></span>
+                        <span class = "result_display" id = "setPopoverFrame_result_display"></span>
+                    </div>
+                    <input id= "setPopoverFrame" class = "button-go" type="button" value = "setPopoverFrame"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>5.closePopover //关闭浮动窗口<br></span>
+                        <span class = "result_display" id = "closePopover_result_display"></span>
+                    </div>
+                    <input id= "closePopover" class = "button-go" type="button" value = "closePopover"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>6.openMultiPopover //在当前window打开一个多页面浮动窗口<br></span>
+                        <span class = "result_display" id = "openMultiPopover_result_display"></span>
+                    </div>
+                    <input id= "openMultiPopover" class = "button-go" type="button" value = "openMultiPopover"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>7.setSelectedPopOverInMultiWindow //设置多页面浮动窗口跳转到的子页面窗口的索引<br></span>
+                        <span class = "result_display" id = "setSelectedPopOverInMultiWindow_result_display"></span>
+                    </div>
+                    <input id= "setSelectedPopOverInMultiWindow" class = "button-go" type="button" value = "setSelectedPopOverInMultiWindow"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>8.setMultiPopoverFrame //更改多页面浮动窗口的位置和大小<br></span>
+                        <span class = "result_display" id = "setMultiPopoverFrame_result_display"></span>
+                    </div>
+                    <input id= "setMultiPopoverFrame" class = "button-go" type="button" value = "setMultiPopoverFrame"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>9.evaluateMultiPopoverScript //在多页面浮动窗口中执行js脚本<br></span>
+                        <span class = "result_display" id = "evaluateMultiPopoverScript_result_display"></span>
+                    </div>
+                    <input id= "evaluateMultiPopoverScript" class = "button-go" type="button" value = "evaluateMultiPopoverScript"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>10.closeMultiPopover //关闭多页面浮动窗口<br></span>
+                        <span class = "result_display" id = "closeMultiPopover_result_display"></span>
+                    </div>
+                    <input id= "closeMultiPopover" class = "button-go" type="button" value = "closeMultiPopover"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc result_display">打开三个浮动窗口A,B,C用以测试插入或置顶等接口</div>
+                    <input class = "button-go" type="button" value = "打开" onclick="openSomePop();"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>11.insertPopoverAbovePopover //将浮动窗口A插入到浮动窗口C之上<br/></span>
+                        <span class = "result_display" id = "insertPopoverAbovePopover_result_display"></span>
+                    </div>
+                    <input id= "insertPopoverAbovePopover" class = "button-go" type="button" value = "insertPopoverAbovePopover"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>12.insertPopoverBelowPopover //将浮动窗口A插入到浮动窗口C之下<br></span>
+                        <span class = "result_display" id = "insertPopoverBelowPopover_result_display"></span>
+                    </div>
+                    <input id= "insertPopoverBelowPopover" class = "button-go" type="button" value = "insertPopoverBelowPopover"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>13.bringPopoverToFront //置顶浮动窗口A<br></span>
+                        <span class = "result_display" id = "bringPopoverToFront_result_display"></span>
+                    </div>
+                    <input id= "bringPopoverToFront" class = "button-go" type="button" value = "bringPopoverToFront"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>14.sendPopoverToBack //置底浮动窗口A<br></span>
+                        <span class = "result_display" id = "sendPopoverToBack_result_display"></span>
+                    </div>
+                    <input id= "sendPopoverToBack" class = "button-go" type="button" value = "sendPopoverToBack"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc result_display">插入和置顶等接口测试完成，关闭A,B,C三个浮动窗口</div>
+                    <input class = "button-go" type="button" value = "关闭" onclick="closeSomePop();"/>
+                </div>
+            </div>
+        </div>
+        <script src="../js/appcan.js">
+        </script>
+        <script src="../js/appcan.control.js">
+        </script>
+        <script src="../js/appcan.scrollbox.js">
+        </script>
+        <script src="../js/template.import.js">
+        </script>
+        <script src="../js/index.js">
+        </script>
+        <script src="../js/uexWindow2.js">
+        </script>
+        <script type="text/javascript">
+            function funEvaluate(param){
+                $("#evaluateScript_result_display").html("evaluateScript方法调用成功，传回参数为:" + param);
+            }
+            function openSomePop(){
+                var height = appcan.locStorage.getVal("screenHeight");
+                var width = appcan.locStorage.getVal("screenWidth");
+                uexWindow.openPopover({
+                    name:"win_popover_A",
+                    url:"win_popover_A.html",
+                    w:Math.floor(width),
+                    h:Math.floor(height/2)
+                });
+                uexWindow.openPopover({
+                    name:"win_popover_B",
+                    url:"win_popover_B.html",
+                    w:Math.floor(width),
+                    h:Math.floor(height/2)
+                });
+                uexWindow.openPopover({
+                    name:"win_popover_C",
+                    url:"win_popover_C.html",
+                    w:Math.floor(width),
+                    h:Math.floor(height/2)
+                });
+            }
+
+            function closeSomePop(){
+                uexWindow.closePopover('win_popover_A');
+                uexWindow.closePopover('win_popover_B');
+                uexWindow.closePopover('win_popover_C');
+            }
+        </script>
+    </body>
+
+</html>

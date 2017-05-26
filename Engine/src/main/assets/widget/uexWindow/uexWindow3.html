@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    
+    <head>
+        <title>
+        </title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="../css/fonts/font-awesome.min.css">
+        <link rel="stylesheet" href="../css/ui-box.css">
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <link rel="stylesheet" href="../css/ui-color.css">
+        <link rel="stylesheet" href="../css/appcan.icon.css">
+        <link rel="stylesheet" href="../css/appcan.control.css">
+        <link rel="stylesheet" href="../css/index.css">
+    </head>
+    
+    <body class="" ontouchstart>
+        <div class="bc-bg" tabindex="0" data-control="PAGE" id="Page">
+            <div class="" data-control="CONTENT">
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <input class = "button-go" type="button" value = "返回" onclick="closeCurrentWin()"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>1.showSoftKeyboard //弹出Android设备软键盘<br></span>
+                        <span class = "result_display" id = "showSoftKeyboard_result_display"></span>
+                    </div>
+                    <input id= "showSoftKeyboard" class = "button-go" type="button" value = "showSoftKeyboard"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>2.hideSoftKeyboard //关闭Android设备软键盘<br></span>
+                        <span class = "result_display" id = "hideSoftKeyboard_result_display"></span>
+                    </div>
+                    <input id= "hideSoftKeyboard" class = "button-go" type="button" value = "hideSoftKeyboard"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>3.getHeight //获取window的高度<br></span>
+                        <span class = "result_display" id = "getHeight_result_display"></span>
+                    </div>
+                    <input id= "getHeight" class = "button-go" type="button" value = "getHeight"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>4.getWidth //获取window的宽度<br></span>
+                        <span class = "result_display" id = "getWidth_result_display"></span>
+                    </div>
+                    <input id= "getWidth" class = "button-go" type="button" value = "getWidth"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>5.setReportKey //设置当前页面是否拦截某个按键<br></span>
+                        <span class = "result_display" id = "setReportKey_result_display">调用该方法之后，可点击返回键或者菜单键</span>
+                    </div>
+                    <input id= "setReportKey" class = "button-go" type="button" value = "setReportKey"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>6.onKeyPressed //按键事件的监听方法<br></span>
+                        <span class = "result_display" id = "onKeyPressed_result_display"></span>
+                    </div>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>7.share //调用系统的分享框<br></span>
+                        <span class = "result_display" id = "share_result_display"></span>
+                    </div>
+                    <input id= "share" class = "button-go" type="button" value = "share"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>8.putLocalData //存放本地数据<br></span>
+                        <span class = "result_display" id = "putLocalData_result_display">key:platform,value:appcan</span>
+                    </div>
+                    <input id= "putLocalData" class = "button-go" type="button" value = "putLocalData"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>9.getLocalData //获取本地存储的数据<br></span>
+                        <span class = "result_display" id = "getLocalData_result_display"></span>
+                    </div>
+                    <input id= "getLocalData" class = "button-go" type="button" value = "getLocalData"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>全局消息相关接口<br></span>
+                        <span class = "result_display">测试全局消息相关接口需要打开多个主窗口及浮动窗口</span>
+                    </div>
+                    <input class = "button-go" type="button" value = "打开" onclick="openWindow('notification1')"/>
+                </div>
+            </div>
+        </div>
+        <script src="../js/appcan.js">
+        </script>
+        <script src="../js/appcan.control.js">
+        </script>
+        <script src="../js/appcan.scrollbox.js">
+        </script>
+        <script src="../js/template.import.js">
+        </script>
+        <script src="../js/index.js">
+        </script>
+        <script src="../js/uexWindow3.js">
+        </script>
+        <script type="text/javascript">
+            appcan.ready(function(){
+                uexWindow.onKeyPressed = function(keyCode){
+                    if(keyCode == 0){
+                        $("#onKeyPressed_result_display").html("点击了返回键！");
+                    }else if (keyCode == 1){
+                        $("#onKeyPressed_result_display").html("点击了菜单键！");
+                    }
+                }
+            });
+        </script>
+    </body>
+
+</html>

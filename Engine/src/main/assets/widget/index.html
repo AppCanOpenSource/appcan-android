@@ -1,40 +1,92 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta name="viewport"
-          content="target-densitydpi=device-dpi,width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="css/index.css">
-    <script type="text/javascript" src="js/main.js"></script>
-    <script type="text/javascript" src="js/index.js">
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    
+    <head>
+        <title>
+        </title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="css/fonts/font-awesome.min.css">
+        <link rel="stylesheet" href="css/ui-box.css">
+        <link rel="stylesheet" href="css/ui-base.css">
+        <link rel="stylesheet" href="css/ui-color.css">
+        <link rel="stylesheet" href="css/appcan.icon.css">
+        <link rel="stylesheet" href="css/appcan.control.css">
+        <link rel="stylesheet" href="css/index.css">
+    </head>
+    
+    <body class="" ontouchstart>
+        <div class="bc-bg" tabindex="0" data-control="PAGE" id="Page">
+            <div class="uh bc-head  ubb bc-border" data-control="HEADER" id="Header">
+                <div class="ub">
+                    <div class="nav-btn" id="nav-left">
+                        <div class="fa fa-1g ub-img1">
+                        </div>
+                    </div>
+                    <h1 class="ut ub-f1 ulev-3 ut-s tx-c" tabindex="0">引擎测试系统</h1>
+                    <div class="nav-btn" id="nav-right">
+                        <div class="fa  fa-1g  ub-img1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="" data-control="CONTENT" id="ScrollContent">
+                <div class="btncss" data-control="BOX">
+                    <div class="button ub ub-ac bc-text-head ub-pc bc-btn" onclick="openModulePage('uexWindow')">uexWindow</div>
+                </div>
+                <div class="btncss" data-control="BOX">
+                    <div class="button ub ub-ac bc-text-head ub-pc bc-btn" onclick="openModulePage('uexWidget')">uexWidget</div>
+                </div>
+                <div class="btncss" data-control="BOX">
+                    <div class="button ub ub-ac bc-text-head ub-pc bc-btn" onclick="openModulePage('uexWidgetOne')">uexWidgetOne</div>
+                </div>
+            </div>
+        </div>
+        <script src="js/appcan.js">
+        </script>
+        <script src="js/appcan.control.js">
+        </script>
+        <script src="js/appcan.scrollbox.js">
+        </script>
+        <script src="js/template.import.js">
+        </script>
+        <script src="js/index.js">
+        </script>
+        <script type="text/javascript">
+            appcan.ready(function () {
+                uexWidget.onLoadByOtherApp = function(json){
+                    alert("被第三方应用启动传递的数据为:" + json);
+                }
+                uexWidget.onSuspend = function(){
+                    //程序挂起
+                    uexWindow.evaluatePopoverScript({
+                        windowName:"uexWidget",
+                        popName:"content",
+                        js:"setOnSuspend();"
+                    });
+                };
+                uexWidget.onResume = function(){
+                    //程序恢复
+                    uexWindow.evaluatePopoverScript({
+                        windowName:"uexWidget",
+                        popName:"content",
+                        js:"setOnResume();"
+                    });
+                }
+            });
+            function openModulePage(moduleName){
+                var h = uexWindow.getHeight();
+                var w = uexWindow.getWidth();
+                appcan.locStorage.setVal("screenWidth", w);
+                appcan.locStorage.setVal("screenHeight", h);
+                uexWindow.open({
+                    name:moduleName,
+                    data:moduleName + "/" + moduleName + ".html",
+                    animID:2,
+                    flag:1024
+                });
+            }
+        </script>
+    </body>
 
-    </script>
-</head>
-
-<body>
-<div class="tit">引擎接口测试</div>
-<div class="conbor">
-    <div class="consj">
-
-        <!--			<div onclick="openTest('system/system')" class="testbtn">系统插件</div><br>-->
-        <!--                <div onclick="openTest('UI/UI')" class="testbtn">UI界面插件</div><br>-->
-        <!--                <div onclick="openTest('network/network')" class="testbtn">网络插件</div><br>-->
-        <!--                <div onclick="openTest('media/media')" class="testbtn">多媒体插件</div><br>-->
-        <!--                <div onclick="openTest('other/other')" class="testbtn">第三方插件</div><br>-->
-        <div onclick="openWindow('wintestNormal/uexWindow')" class="testbtn">打开普通窗口</div>
-        <br>
-        <div onclick="openWindow('wintestNormal/uexWindowFunc')" class="testbtn">window接口测试</div>
-        <br>
-        <div onclick="openLeftSlidingWin()" class="testbtn">打开侧边栏窗口</div>
-        <br>
-        <div onclick="openWindow('wintestNav/uexWindow')" class="testbtn">打开导航视图窗口(iOS)</div>
-        <br>
-        <div onclick="openWindow('uexWidget')" class="testbtn">uexWidget</div>
-        <br>
-
-        <!--                <div onclick="openTest('wintestNav/uexWindow')" class="testbtn">打开导航视图窗口</div><br>-->
-
-    </div>
-</div>
-</body>
 </html>
