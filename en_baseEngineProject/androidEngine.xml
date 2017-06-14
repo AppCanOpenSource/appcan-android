@@ -3,6 +3,6 @@
     <version>$version$</version>
     <package>$package$</package>
     <kernel>$kernel$</kernel>
-    <description>添加getWindowName接口</description>
+    <description>修改混淆文件，升级打包sdk版本至25</description>
     <dssVersion>4.0.0</dssVersion>
 </info>
