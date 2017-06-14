@@ -29,7 +29,91 @@
                     </div>
                 </div>
             </div>
-            <div id="content">
+            <div data-control="CONTENT" id="ScrollContent">
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>1.startWidget //在当前widget加载一个子widget<br></span>
+                        <span class = "result_display" id = "startWidget_result_display"></span>
+                    </div>
+                    <input id = "startWidget" class = "button-go" type="button" value = "startWidget" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>2.removeWidget //删除一个widget<br></span>
+                        <span class = "result_display" id = "removeWidget_result_display"></span>
+                    </div>
+                    <input id = "removeWidget" class = "button-go" type="button" value = "removeWidget" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>3.checkUpdate //检查当前widget是否有更新<br></span>
+                        <span class = "result_display" id = "checkUpdate_result_display"></span>
+                    </div>
+                    <input id = "checkUpdate" class = "button-go" type="button" value = "checkUpdate" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>4.loadApp //启动第三方应用(iOS)<br></span>
+                        <span class = "result_display" id = "loadApp_result_display"></span>
+                    </div>
+                    <input id = "loadApp" class = "button-go" type="button" value = "loadApp" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>5.installApp //安装apk<br></span>
+                        <span class = "result_display" id = "installApp_result_display"></span>
+                    </div>
+                    <input id = "installApp" class = "button-go" type="button" value = "installApp" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>6.startApp //启动第三方应用(Android)调用该方法，请先执行installApp方法<br></span>
+                        <span class = "result_display" id = "startApp_result_display"></span>
+                    </div>
+                    <input id = "startApp0" class = "button-go" type="button" value = "startApp0" />
+                    <input id = "startApp1" class = "button-go" type="button" value = "startApp1" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>7.isAppInstalled //检测是否安装QQ应用<br></span>
+                        <span class = "result_display" id = "isAppInstalled_result_display"></span>
+                    </div>
+                    <input id = "isAppInstalled" class = "button-go" type="button" value = "isAppInstalled" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>8.moveToBack //运行到后台,不退出程序(Android)<br></span>
+                        <span class = "result_display" id = "moveToBack_result_display"></span>
+                    </div>
+                    <input id = "moveToBack" class = "button-go" type="button" value = "moveToBack" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>9.setKeyboardMode //设置键盘模式(Android)<br></span>
+                        <span class = "result_display" id = "setKeyboardMode_result_display"></span>
+                    </div>
+                    <input id = "setKeyboardMode" class = "button-go" type="button" value = "setKeyboardMode" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>11.onSuspend //程序挂起的监听方法,按主页键使程序进入后台<br></span>
+                        <span class = "result_display" id = "onSuspend_result_display"></span>
+                    </div>
+                    <input id = "onSuspend" class = "button-go" type="button" value = "onSuspend" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>12.onResume //程序恢复的监听方法<br></span>
+                        <span class = "result_display" id = "onResume_result_display"></span>
+                    </div>
+                    <input id = "onResume" class = "button-go" type="button" value = "onResume" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>推送相关<br></span>
+                    </div>
+                    <input onclick = "push_start()" class = "button-go" type="button" value = "推送相关" />
+                </div>
             </div>
         </div>
         <script src="../js/appcan.js">
@@ -48,15 +132,19 @@
         </script>
         <script type="text/javascript">
             appcan.ready(function () {
-                var titHeight = $('#Header').offset().height;
-                appcan.frame.open("content", "uexWidget_content.html", 0, titHeight);
-                window.onorientationchange = window.onresize = function () {
-                    appcan.frame.resize("content", 0, titHeight);
-                }
                 platform = uexWidgetOne.getPlatform();
             });
             function widgetStartFinish(data){
                 alert("子widget传回来的消息:" + data);
+            }
+            function setOnSuspend(){
+               $("#onSuspend_result_display").html("程序挂起");
+            }
+            function setOnResume(){
+               $("#onResume_result_display").html("程序恢复");
+            }
+            function push_start(){
+                openWindow("PushDemo");
             }
         </script>
     </body>

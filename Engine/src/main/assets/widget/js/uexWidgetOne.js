@@ -9,11 +9,15 @@ appcan.button("#platformVersion","btn-act", function(){
     $("#platformVersion_result_display").html(result);
 });
 appcan.button("#isFullScreen","btn-act", function(){
-    var result = uexWidgetOne.isFullScreen;
-    if(result == 0){
-        $("#isFullScreen_result_display").html("非全屏(显示状态栏)");
-    }else{
-        $("#isFullScreen_result_display").html("全屏(不显示状态栏)");
+    if(platform == 0){//iOS
+        var result = uexWidgetOne.isFullScreen;
+        if(result == 0){
+            $("#isFullScreen_result_display").html("非全屏(显示状态栏)");
+        }else{
+            $("#isFullScreen_result_display").html("全屏(不显示状态栏)");
+        }
+    }else{//Android
+        alert("该方法为iOS专用");
     }
 });
 appcan.button("#getPlatform","btn-act", function(){

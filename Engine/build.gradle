@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'com.android.tools.build:gradle:2.2.0'
         classpath fileTree(dir: '../gradle-plugin', include: '*.jar')
     }
 }
@@ -13,8 +13,8 @@ apply plugin: 'appcan'
 
 android {
 
-    compileSdkVersion 24
-    buildToolsVersion '24.0.0'
+    compileSdkVersion 25
+    buildToolsVersion '25.0.3'
     packagingOptions {
         exclude 'META-INF/MANIFEST.MF'
         exclude 'META-INF/LICENSE.txt'
@@ -31,7 +31,7 @@ android {
     defaultConfig {
         applicationId 'org.zywx.wbpalmstar.widgetone.uex'
         minSdkVersion 14
-        targetSdkVersion 14 //
+        targetSdkVersion 25 //
         multiDexEnabled true
     }
     productFlavors {
@@ -77,4 +77,5 @@ dependencies {
     compile files('libs/wmqtt.jar')
     x5Compile fileTree(dir: 'src/x5/libs', include: '*.jar')
     compile files('libs/dynamicLoadLib.jar')
+    compile(name: "uexFileMgr-debug", ext: 'aar')
 }

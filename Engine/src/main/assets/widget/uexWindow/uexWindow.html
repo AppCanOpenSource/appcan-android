@@ -29,7 +29,66 @@
                     </div>
                 </div>
             </div>
-            <div id="content">
+            <div class="" data-control="CONTENT" id="ScrollContent">
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>1.主窗口相关接口，包括open，close，windowForward，forward，pageForward，openSlibing，showSlibing，closeSlibing，
+                            evaluateScript，setWindowHidden，insertWindowAboveWindow，insertWindowBelowWindow，setWindowScrollbarVisible，
+                            openPresentWindow，closeAboveWndByName，setWindowFrame<br></span>
+                        <span class = "result_display"></span>
+                    </div>
+                    <input class = "button-go" type="button" value = "点击进入" onclick="openWindow('uexWindow1')" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>2.浮动窗口相关接口，包括openPopover，setPopoverVisibility，evaluatePopoverScript，setPopoverFrame，
+                            closePopover，openMultiPopover，setSelectedPopOverInMultiWindow，setMultiPopoverFrame，evaluateMultiPopoverScript，
+                            closeMultiPopover，insertPopoverAbovePopover，insertPopoverBelowPopover，bringPopoverToFront，
+                            sendPopoverToBack，sendToBack，insertAbove，insertBelow<br></span>
+                        <span class = "result_display"></span>
+                    </div>
+                    <input class = "button-go" type="button" value = "点击进入" onclick="openWindow('uexWindow2')" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>3.系统控制类接口，包括showSoftKeyboard，hideSoftKeyboard，getHeight，getWidth，setReportKey，
+                            onKeyPressed，share，putLocalData，getLocalData，subscribeChannelNotification，
+                            postGlobalNotification，publishChannelNotification，publishChannelNotificationForJson<br></span>
+                        <span class = "result_display"></span>
+                    </div>
+                    <input class = "button-go" type="button" value = "点击进入" onclick="openWindow('uexWindow3')" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>4.侧滑窗口，包括setSlidingWindowEnabled，setSlidingWindow，toggleSlidingWindow，
+                            getSlidingWindowState<br></span>
+                        <span class = "result_display"></span>
+                    </div>
+                    <input class = "button-go" type="button" value = "点击进入" onclick="openWindow('uexWindow4')" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>5.页面弹动，包括setBounce，getBounce，notifyBounceEvent，showBounceView，resetBounceView，
+                            setBounceParams，hiddenBounceView，topBounceViewRefresh<br></span>
+                        <span class = "result_display"></span>
+                    </div>
+                    <input class = "button-go" type="button" value = "点击进入" onclick="openWindow('uexWindow5')" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>6.界面UI，包括alert，confirm，prompt，actionSheet，toast，closeToast，createProgressDialog，destroyProgressDialog<br></span>
+                        <span class = "result_display"></span>
+                    </div>
+                    <input class = "button-go" type="button" value = "点击进入" onclick="openWindow('uexWindow6')" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>7.动画相关，包括beginAnimition，setAnimitionDelay，setAnimitionDuration，setAnimitionCurve，setAnimitionRepeatCount，
+                            setAnimitionAutoReverse，makeTranslation，makeScale，makeRotate，makeAlpha，commitAnimition<br></span>
+                        <span class = "result_display"></span>
+                    </div>
+                    <input class = "button-go" type="button" value = "点击进入" onclick="openWindow('uexWindow7')" />
+                </div>
             </div>
         </div>
         <script src="../js/appcan.js">
@@ -46,11 +105,6 @@
         </script>
         <script type="text/javascript">
             appcan.ready(function () {
-                var titHeight = $('#Header').offset().height;
-                appcan.frame.open("content", "uexWindow_content.html", 0, titHeight);
-                window.onorientationchange = window.onresize = function () {
-                    appcan.frame.resize("content", 0, titHeight);
-                }
                 platform = uexWidgetOne.getPlatform();
             });
 

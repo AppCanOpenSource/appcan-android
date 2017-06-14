@@ -41,7 +41,7 @@ appcan.button("#checkUpdate","btn-act", function(){
 appcan.button("#loadApp","btn-act", function(){
     if(platform == 0){
         alert("即将打开微信应用");
-        uexWidget.loadApp("weixin");
+        uexWidget.loadApp("weixin://");
     }else{
         alert("该方法为iOS专用");
     }
@@ -72,7 +72,7 @@ appcan.button("#startApp1","btn-act", function(){
 appcan.button("#isAppInstalled","btn-act", function(){
     var appData = "";
     if(platform == 0){//iOS
-        appData = "mqq";
+        appData = "mqq://";
     }else{//Android
         appData = "com.tencent.mobileqq";
     }
