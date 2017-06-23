@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    
+    <head>
+        <title>
+        </title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="../css/fonts/font-awesome.min.css">
+        <link rel="stylesheet" href="../css/ui-box.css">
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <link rel="stylesheet" href="../css/ui-color.css">
+        <link rel="stylesheet" href="../css/appcan.icon.css">
+        <link rel="stylesheet" href="../css/appcan.control.css">
+        <link rel="stylesheet" href="../css/index.css">
+    </head>
+    
+    <body class="" ontouchstart>
+        <div class="bc-bg" tabindex="0" data-control="PAGE" id="Page">
+            <div class="uh bc-head  ubb bc-border" data-control="HEADER" id="Header">
+                <div class="ub">
+                    <div class="nav-btn" id="nav-left">
+                        <div class="fa fa-1g ub-img1" onclick="closeCurrentWin()">返回</div>
+                    </div>
+                    <h1 class="ut ub-f1 ulev-3 ut-s tx-c" tabindex="0">uexWindow</h1>
+                    <div class="nav-btn" id="nav-right">
+                        <div class="fa  fa-1g  ub-img1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="" data-control="CONTENT" id="ScrollContent">
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>1.主窗口相关接口，包括open，close，windowForward，forward，pageForward，openSlibing，showSlibing，closeSlibing，
+                            evaluateScript，setWindowHidden，insertWindowAboveWindow，insertWindowBelowWindow，setWindowScrollbarVisible，
+                            openPresentWindow，closeAboveWndByName，setWindowFrame<br></span>
+                        <span class = "result_display"></span>
+                    </div>
+                    <input class = "button-go" type="button" value = "点击进入" onclick="openWindow('uexWindow1')" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>2.浮动窗口相关接口，包括openPopover，setPopoverVisibility，evaluatePopoverScript，setPopoverFrame，
+                            closePopover，openMultiPopover，setSelectedPopOverInMultiWindow，setMultiPopoverFrame，evaluateMultiPopoverScript，
+                            closeMultiPopover，insertPopoverAbovePopover，insertPopoverBelowPopover，bringPopoverToFront，
+                            sendPopoverToBack，sendToBack，insertAbove，insertBelow<br></span>
+                        <span class = "result_display"></span>
+                    </div>
+                    <input class = "button-go" type="button" value = "点击进入" onclick="openWindow('uexWindow2')" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>3.系统控制类接口，包括showSoftKeyboard，hideSoftKeyboard，getHeight，getWidth，setReportKey，
+                            onKeyPressed，share，putLocalData，getLocalData，subscribeChannelNotification，
+                            postGlobalNotification，publishChannelNotification，publishChannelNotificationForJson<br></span>
+                        <span class = "result_display"></span>
+                    </div>
+                    <input class = "button-go" type="button" value = "点击进入" onclick="openWindow('uexWindow3')" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>4.侧滑窗口，包括setSlidingWindowEnabled，setSlidingWindow，toggleSlidingWindow，
+                            getSlidingWindowState<br></span>
+                        <span class = "result_display"></span>
+                    </div>
+                    <input class = "button-go" type="button" value = "点击进入" onclick="openWindow('uexWindow4')" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>5.页面弹动，包括setBounce，getBounce，notifyBounceEvent，showBounceView，resetBounceView，
+                            setBounceParams，hiddenBounceView，topBounceViewRefresh<br></span>
+                        <span class = "result_display"></span>
+                    </div>
+                    <input class = "button-go" type="button" value = "点击进入" onclick="openWindow('uexWindow5')" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>6.界面UI，包括alert，confirm，prompt，actionSheet，toast，closeToast，createProgressDialog，destroyProgressDialog<br></span>
+                        <span class = "result_display"></span>
+                    </div>
+                    <input class = "button-go" type="button" value = "点击进入" onclick="openWindow('uexWindow6')" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>7.动画相关，包括beginAnimition，setAnimitionDelay，setAnimitionDuration，setAnimitionCurve，setAnimitionRepeatCount，
+                            setAnimitionAutoReverse，makeTranslation，makeScale，makeRotate，makeAlpha，commitAnimition<br></span>
+                        <span class = "result_display"></span>
+                    </div>
+                    <input class = "button-go" type="button" value = "点击进入" onclick="openWindow('uexWindow7')" />
+                </div>
+            </div>
+        </div>
+        <script src="../js/appcan.js">
+        </script>
+        <script src="../js/appcan.control.js">
+        </script>
+        <script src="../js/appcan.scrollbox.js">
+        </script>
+        <script src="../js/template.import.js">
+        </script>
+        <script src="../assets/mvvm/index.js">
+        </script>
+        <script src="../js/index.js">
+        </script>
+        <script type="text/javascript">
+            appcan.ready(function () {
+                platform = uexWidgetOne.getPlatform();
+            });
+
+        </script>
+    </body>
+
+</html>

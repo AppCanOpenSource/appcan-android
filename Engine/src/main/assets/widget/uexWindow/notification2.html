@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    
+    <head>
+        <title>
+        </title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="../css/fonts/font-awesome.min.css">
+        <link rel="stylesheet" href="../css/ui-box.css">
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <link rel="stylesheet" href="../css/ui-color.css">
+        <link rel="stylesheet" href="../css/appcan.icon.css">
+        <link rel="stylesheet" href="../css/appcan.control.css">
+        <link rel="stylesheet" href="../css/index.css">
+    </head>
+    
+    <body class="" ontouchstart>
+        <div tabindex="0" data-control="PAGE" id="Page" style="background-color: #BABABA">
+            <div class="" data-control="CONTENT" style = "padding: 1em 0em;">
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>notification2<br></span>
+                        <span class = "result_display" id = "result_display"></span>
+                    </div>
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>关闭当前页面<br></span>
+                    </div>
+                    <input class = "button-go" type="button" value = "关闭" onclick="closeCurrentWin()"/>
+                </div>
+
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>subscribeChannelNotification,channelID:2<br></span>
+                        <span class = "result_display" id = "subscribeChannelNotification_result_display"></span>
+                    </div>
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>打开notification3<br></span>
+                    </div>
+                    <input class = "button-go" type="button" value = "打开" onclick="openWindow('notification3');"/>
+                </div>
+            </div>
+        </div>
+        <script src="../js/appcan.js">
+        </script>
+        <script src="../js/appcan.control.js">
+        </script>
+        <script src="../js/appcan.scrollbox.js">
+        </script>
+        <script src="../js/template.import.js">
+        </script>
+        <script src="../js/index.js">
+        </script>
+        <script type="text/javascript">
+            appcan.ready(function(){
+                uexWindow.subscribeChannelNotification("2", "functionChannel");
+                uexWindow.functionChannel = function(data){
+                    $("#subscribeChannelNotification_result_display").html("收到全局消息:" + data);
+                };
+                var height = appcan.locStorage.getVal("screenHeight");
+                var width = appcan.locStorage.getVal("screenWidth");
+                uexWindow.openPopover({
+                    name:"notification2_content",
+                    url:"notification2_content.html",
+                    x:0,
+                    y:Math.floor(height/2),
+                    w:Math.floor(width),
+                    h:Math.floor(height/2)
+                });
+                openWindow('notification3');
+            });
+        </script>
+    </body>
+
+</html>

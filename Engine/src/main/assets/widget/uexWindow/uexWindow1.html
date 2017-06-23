@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    
+    <head>
+        <title>
+        </title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="../css/fonts/font-awesome.min.css">
+        <link rel="stylesheet" href="../css/ui-box.css">
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <link rel="stylesheet" href="../css/ui-color.css">
+        <link rel="stylesheet" href="../css/appcan.icon.css">
+        <link rel="stylesheet" href="../css/appcan.control.css">
+        <link rel="stylesheet" href="../css/index.css">
+    </head>
+    
+    <body class="" ontouchstart>
+        <div class="bc-bg" tabindex="0" data-control="PAGE" id="Page">
+            <div class="" data-control="CONTENT">
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>1.close //关闭当前窗口<br></span>
+                        <span class = "result_display" id = "close_result_display"></span>
+                    </div>
+                    <input id= "close" class = "button-go" type="button" value = "close" />
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>2.open //打开窗口<br></span>
+                        <span class = "result_display" id = "open_result_display"></span>
+                    </div>
+                    <input id= "open" class = "button-go" type="button" value = "open"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>3.windowForward //前进到下一个窗口<br></span>
+                        <span class = "result_display" id = "windowForward_result_display"></span>
+                    </div>
+                    <input id= "windowForward" class = "button-go" type="button" value = "windowForward"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>4.forward //前进到下一个页面<br/>测试该接口需要先通过a标签打开一个页面&nbsp;&nbsp;</span>
+                        <a href="a_open.html">点击打开</a>
+                    </div>
+                    <input id= "forward" class = "button-go" type="button" value = "forward"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>5.pageForward //前进到下一个页面<br/>测试该接口需要先通过a标签打开一个页面&nbsp;&nbsp;</span>
+                        <a href="a_open_1.html">点击打开</a>
+                    </div>
+                    <input id= "pageForward" class = "button-go" type="button" value = "pageForward"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>6.openSlibing //打开一个兄弟窗口<br></span>
+                        <span class = "result_display" id = "openSlibing_result_display"></span>
+                    </div>
+                    <input id= "openSlibing" class = "button-go" type="button" value = "openSlibing"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>7.showSlibing //显示兄弟窗口<br></span>
+                        <span class = "result_display" id = "showSlibing_result_display"></span>
+                    </div>
+                    <input id= "showSlibing" class = "button-go" type="button" value = "showSlibing"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>8.closeSlibing //关闭一个兄弟窗口<br></span>
+                        <span class = "result_display" id = "closeSlibing_result_display"></span>
+                    </div>
+                    <input id= "closeSlibing" class = "button-go" type="button" value = "closeSlibing"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>9.evaluateScript //执行js脚本<br></span>
+                        <span class = "result_display" id = "evaluateScript_result_display"></span>
+                    </div>
+                    <input id= "evaluateScript" class = "button-go" type="button" value = "打开辅助页面"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>10.setWindowHidden //设置当前窗口显示和隐藏<br></span>
+                        <span class = "result_display" id = "setWindowHidden_result_display">点击下面的按钮会使隐藏的辅助测试窗口显示出来</span>
+                    </div>
+                    <input id= "setWindowHidden" class = "button-go" type="button" value = "显示辅助测试窗口"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc result_display">打开两个窗口A,B用以测试插入相关接口</div>
+                    <input class = "button-go" type="button" value = "打开" onclick="openSomeWin();"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>11.setWindowScrollbarVisible //设置滚动条的显示和隐藏<br></span>
+                        <span class = "result_display" id = "setWindowScrollbarVisible_result_display">隐藏滚动条</span>
+                    </div>
+                    <input id= "setWindowScrollbarVisible" class = "button-go" type="button" value = "setWindowScrollbarVisible"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>12.openPresentWindow //打开一个位于最上层的window<br></span>
+                        <span class = "result_display" id = "openPresentWindow_result_display"></span>
+                    </div>
+                    <input id= "openPresentWindow" class = "button-go" type="button" value = "openPresentWindow"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>13.closeAboveWndByName //关闭某一窗口及其之后打开的窗口<br></span>
+                        <span class = "result_display" id = "closeAboveWndByName_result_display">回到root页</span>
+                    </div>
+                    <input id= "closeAboveWndByName" class = "button-go" type="button" value = "closeAboveWndByName"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>14.setWindowFrame //移动当前窗口位置<br></span>
+                        <span class = "result_display" id = "setWindowFrame_result_display"></span>
+                    </div>
+                    <input id= "setWindowFrame" class = "button-go" type="button" value = "setWindowFrame"/>
+                </div>
+            </div>
+        </div>
+        <script src="../js/appcan.js">
+        </script>
+        <script src="../js/appcan.control.js">
+        </script>
+        <script src="../js/appcan.scrollbox.js">
+        </script>
+        <script src="../js/template.import.js">
+        </script>
+        <script src="../js/index.js">
+        </script>
+        <script src="../js/uexWindow1.js">
+        </script>
+        <script type="text/javascript">
+            function funEvaluate(param){
+                $("#evaluateScript_result_display").html("evaluateScript方法调用成功，传回参数为:" + param);
+            }
+            function openSomeWin(){
+                openWindow("win_A");
+            }
+            appcan.ready(function(){
+                uexWindow.setWindowScrollbarVisible("false");
+            });
+        </script>
+    </body>
+
+</html>

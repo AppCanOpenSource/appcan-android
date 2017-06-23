@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    
+    <head>
+        <title>
+        </title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="../css/fonts/font-awesome.min.css">
+        <link rel="stylesheet" href="../css/ui-box.css">
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <link rel="stylesheet" href="../css/ui-color.css">
+        <link rel="stylesheet" href="../css/appcan.icon.css">
+        <link rel="stylesheet" href="../css/appcan.control.css">
+        <link rel="stylesheet" href="../css/index.css">
+    </head>
+    
+    <body class="" ontouchstart>
+        <div class="bc-bg" tabindex="0" data-control="PAGE" id="Page">
+            <div class="uh bc-head  ubb bc-border" data-control="HEADER" id="Header">
+                <div class="ub">
+                    <div class="nav-btn" id="nav-left">
+                        <div class="fa fa-1g ub-img1" onclick="closeCurrentWin()">返回</div>
+                    </div>
+                    <h1 class="ut ub-f1 ulev-3 ut-s tx-c" tabindex="0">uexWidgetOne</h1>
+                    <div class="nav-btn" id="nav-right">
+                        <div class="fa  fa-1g  ub-img1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="" data-control="CONTENT" id="ScrollContent">
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>1.platformName //系统名称,真机上返回值为android或者iOS<br></span>
+                        <span class = "result_display" id = "platformName_result_display"></span>
+                    </div>
+                    <input id = "platformName" class = "button-go" type="button" value = "platformName" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>2.platformVersion //系统版本,如2.3.4,4.3.1等.<br></span>
+                        <span class = "result_display" id = "platformVersion_result_display"></span>
+                    </div>
+                    <input id = "platformVersion" class = "button-go" type="button" value = "platformVersion" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>3.isFullScreen //判断当前应用是否为全屏.0非全屏(显示状态栏),1是全屏(不显示状态栏).<br></span>
+                        <span class = "result_display" id = "isFullScreen_result_display"></span>
+                    </div>
+                    <input id = "isFullScreen" class = "button-go" type="button" value = "isFullScreen" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>4.getPlatform //获取平台信息<br></span>
+                        <span class = "result_display" id = "getPlatform_result_display"></span>
+                    </div>
+                    <input id = "getPlatform" class = "button-go" type="button" value = "getPlatform" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>5.getCurrentWidgetInfo //获取当前widget信息<br></span>
+                        <span class = "result_display" id = "getCurrentWidgetInfo_result_display"></span>
+                    </div>
+                    <input id = "getCurrentWidgetInfo" class = "button-go" type="button" value = "getCurrentWidgetInfo" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>6.cleanCache //清除当前应用的网页缓存<br></span>
+                        <span class = "result_display" id = "cleanCache_result_display"></span>
+                    </div>
+                    <input id = "cleanCache" class = "button-go" type="button" value = "cleanCache" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>7.getMainWidgetId //获取主widget的appId<br></span>
+                        <span class = "result_display" id = "getMainWidgetId_result_display"></span>
+                    </div>
+                    <input id = "getMainWidgetId" class = "button-go" type="button" value = "getMainWidgetId" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>8.getEngineVersion //获取引擎当前版本<br></span>
+                        <span class = "result_display" id = "getEngineVersion_result_display"></span>
+                    </div>
+                    <input id = "getEngineVersion" class = "button-go" type="button" value = "getEngineVersion" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>9.getEngineVersionCode //获取当前引擎版本号<br></span>
+                        <span class = "result_display" id = "getEngineVersionCode_result_display"></span>
+                    </div>
+                    <input id = "getEngineVersionCode" class = "button-go" type="button" value = "getEngineVersionCode" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>11.restart //重启应用<br></span>
+                        <span class = "result_display" id = "restart_result_display"></span>
+                    </div>
+                    <input id = "restart" class = "button-go" type="button" value = "restart" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>12.exit //退出程序<br></span>
+                        <span class = "result_display" id = "exit_result_display"></span>
+                    </div>
+                    <input id = "exit" class = "button-go" type="button" value = "exit" />
+                </div>
+            </div>
+        </div>
+        <script src="../js/appcan.js">
+        </script>
+        <script src="../js/appcan.control.js">
+        </script>
+        <script src="../js/appcan.scrollbox.js">
+        </script>
+        <script src="../js/template.import.js">
+        </script>
+        <script src="../js/index.js">
+        </script>
+        <script src="../js/uexWidgetOne.js">
+        </script>
+        <script type="text/javascript">
+            appcan.ready(function () {
+                platform = uexWidgetOne.getPlatform();
+            });
+        </script>
+    </body>
+
+</html>

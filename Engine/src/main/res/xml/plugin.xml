@@ -1,4 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <uexplugins>
-
+    <plugin
+        className="org.zywx.wbpalmstar.plugin.uexfilemgr.EUExFileMgr"
+        uexName="uexFileMgr" >
+        <method name="createFile" />
+        <method name="createDir" />
+        <method name="openFile" />
+        <method name="deleteFileByPath" />
+        <method name="deleteFileByID" />
+        <method name="isFileExistByPath" />
+        <method name="isFileExistByID" />
+        <method name="getFileTypeByPath" />
+        <method name="getFileTypeByID" />
+        <method name="explorer" />
+        <method name="multiExplorer" />
+        <method name="seekFile" />
+        <method name="seekBeginOfFile" />
+        <method name="seekEndOfFile" />
+        <method name="writeFile" />
+        <method name="readFile" />
+        <method name="getFileSize" />
+        <method name="getFilePath" />
+        <method name="getFileRealPath" />
+        <method name="closeFile" />
+        <method name="getReaderOffset" />
+        <method name="readPercent" />
+        <method name="readNext" />
+        <method name="readPre" />
+        <method name="openSecure" />
+        <method name="createSecure" />
+    </plugin>
 </uexplugins>

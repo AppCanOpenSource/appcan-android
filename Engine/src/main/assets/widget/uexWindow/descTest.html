@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    
+    <head>
+        <title>
+        </title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="../css/fonts/font-awesome.min.css">
+        <link rel="stylesheet" href="../css/ui-box.css">
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <link rel="stylesheet" href="../css/ui-color.css">
+        <link rel="stylesheet" href="../css/appcan.icon.css">
+        <link rel="stylesheet" href="../css/appcan.control.css">
+        <link rel="stylesheet" href="../css/index.css">
+    </head>
+    
+    <body class="" ontouchstart>
+        <div class="bc-bg" tabindex="0" data-control="PAGE" id="Page">
+            <div class="" data-control="CONTENT" style = "padding: 2em 0em;">
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>辅助测试页面<br></span>
+                        <span class = "result_display" id = "result_display"></span>
+                    </div>
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>关闭当前页面<br></span>
+                    </div>
+                    <input class = "button-go" type="button" value = "关闭" onclick="closeCurrentWin()"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>1.windowBack //返回到上一个窗口<br></span>
+                        <span class = "result_display" id = "windowBack_result_display">点击windowBack退回到上一个页面，上一个页面可以调用windowForward再次进入</span>
+                    </div>
+                    <input id= "windowBack" class = "button-go" type="button" value = "windowBack"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>2.evaluateScript //执行js脚本<br></span>
+                    </div>
+                    <input class = "button-go" type="button" value = "evaluateScript" onclick="evaluateScript('main')"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>3.setWindowHidden //设置当前窗口显示和隐藏<br></span>
+                        <span class = "result_display" id = "setWindowHidden_result_display">隐藏本窗口，可以点击前一个页面的“显示辅助测试窗口”按钮再次显示本窗口</span>
+                    </div>
+                    <input class = "button-go" type="button" value = "隐藏辅助测试窗口" onclick="setWindowHidden(1)"/>
+                </div>
+
+            </div>
+        </div>
+        <script src="../js/appcan.js">
+        </script>
+        <script src="../js/appcan.control.js">
+        </script>
+        <script src="../js/appcan.scrollbox.js">
+        </script>
+        <script src="../js/template.import.js">
+        </script>
+        <script src="../js/index.js">
+        </script>
+        <script src="../js/uexWindow1.js">
+        </script>
+        <script type="text/javascript">
+            
+            var desc = appcan.locStorage.getVal("test_desc");
+            $("#result_display").html(desc);
+            
+            function evaluateScript(param){
+                uexWindow.evaluateScript({
+                    name:"uexWindow1", 
+                    type:0, 
+                    js:"funEvaluate('"+ param +"');"
+                });
+                closeCurrentWin();
+            }
+
+            function setWindowHidden(visible){
+                uexWindow.setWindowHidden(visible);
+            }
+        </script>
+    </body>
+
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    
+    <head>
+        <title>
+        </title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="../css/fonts/font-awesome.min.css">
+        <link rel="stylesheet" href="../css/ui-box.css">
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <link rel="stylesheet" href="../css/ui-color.css">
+        <link rel="stylesheet" href="../css/appcan.icon.css">
+        <link rel="stylesheet" href="../css/appcan.control.css">
+        <link rel="stylesheet" href="../css/index.css">
+    </head>
+    
+    <body class="" ontouchstart>
+        <div class="bc-bg" tabindex="0" data-control="PAGE" id="Page">
+            <div class="uh bc-head  ubb bc-border" data-control="HEADER" id="Header">
+                <div class="ub">
+                    <div class="nav-btn" id="nav-left">
+                        <div class="fa fa-1g ub-img1" onclick="closeCurrentWin()">返回</div>
+                    </div>
+                    <h1 class="ut ub-f1 ulev-3 ut-s tx-c" tabindex="0">uexWidget</h1>
+                    <div class="nav-btn" id="nav-right">
+                        <div class="fa  fa-1g  ub-img1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div data-control="CONTENT" id="ScrollContent">
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>1.startWidget //在当前widget加载一个子widget<br></span>
+                        <span class = "result_display" id = "startWidget_result_display"></span>
+                    </div>
+                    <input id = "startWidget" class = "button-go" type="button" value = "startWidget" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>2.removeWidget //删除一个widget<br></span>
+                        <span class = "result_display" id = "removeWidget_result_display"></span>
+                    </div>
+                    <input id = "removeWidget" class = "button-go" type="button" value = "removeWidget" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>3.checkUpdate //检查当前widget是否有更新<br></span>
+                        <span class = "result_display" id = "checkUpdate_result_display"></span>
+                    </div>
+                    <input id = "checkUpdate" class = "button-go" type="button" value = "checkUpdate" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>4.loadApp //启动第三方应用(iOS)<br></span>
+                        <span class = "result_display" id = "loadApp_result_display"></span>
+                    </div>
+                    <input id = "loadApp" class = "button-go" type="button" value = "loadApp" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>5.installApp //安装apk<br></span>
+                        <span class = "result_display" id = "installApp_result_display"></span>
+                    </div>
+                    <input id = "installApp" class = "button-go" type="button" value = "installApp" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>6.startApp //启动第三方应用(Android)调用该方法，请先执行installApp方法<br></span>
+                        <span class = "result_display" id = "startApp_result_display"></span>
+                    </div>
+                    <input id = "startApp0" class = "button-go" type="button" value = "startApp0" />
+                    <input id = "startApp1" class = "button-go" type="button" value = "startApp1" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>7.isAppInstalled //检测是否安装QQ应用<br></span>
+                        <span class = "result_display" id = "isAppInstalled_result_display"></span>
+                    </div>
+                    <input id = "isAppInstalled" class = "button-go" type="button" value = "isAppInstalled" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>8.moveToBack //运行到后台,不退出程序(Android)<br></span>
+                        <span class = "result_display" id = "moveToBack_result_display"></span>
+                    </div>
+                    <input id = "moveToBack" class = "button-go" type="button" value = "moveToBack" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>9.setKeyboardMode //设置键盘模式(Android)<br></span>
+                        <span class = "result_display" id = "setKeyboardMode_result_display"></span>
+                    </div>
+                    <input id = "setKeyboardMode" class = "button-go" type="button" value = "setKeyboardMode" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>11.onSuspend //程序挂起的监听方法,按主页键使程序进入后台<br></span>
+                        <span class = "result_display" id = "onSuspend_result_display"></span>
+                    </div>
+                    <input id = "onSuspend" class = "button-go" type="button" value = "onSuspend" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>12.onResume //程序恢复的监听方法<br></span>
+                        <span class = "result_display" id = "onResume_result_display"></span>
+                    </div>
+                    <input id = "onResume" class = "button-go" type="button" value = "onResume" />
+                </div>
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>推送相关<br></span>
+                    </div>
+                    <input onclick = "push_start()" class = "button-go" type="button" value = "推送相关" />
+                </div>
+            </div>
+        </div>
+        <script src="../js/appcan.js">
+        </script>
+        <script src="../js/appcan.control.js">
+        </script>
+        <script src="../js/appcan.scrollbox.js">
+        </script>
+        <script src="../js/template.import.js">
+        </script>
+        <script src="../assets/mvvm/index.js">
+        </script>
+        <script src="../js/index.js">
+        </script>
+        <script src="../js/uexWidget.js">
+        </script>
+        <script type="text/javascript">
+            appcan.ready(function () {
+                platform = uexWidgetOne.getPlatform();
+            });
+            function widgetStartFinish(data){
+                alert("子widget传回来的消息:" + data);
+            }
+            function setOnSuspend(){
+               $("#onSuspend_result_display").html("程序挂起");
+            }
+            function setOnResume(){
+               $("#onResume_result_display").html("程序恢复");
+            }
+            function push_start(){
+                openWindow("PushDemo");
+            }
+        </script>
+    </body>
+
+</html>

@@ -263,6 +263,7 @@ public class EUExScript {
                 + "share:function(){uexDispatcher.dispatch('uexWindow','share',jo(arguments));},"
                 + "putLocalData:function(){uexDispatcher.dispatch('uexWindow','putLocalData',jo(arguments));},"
                 + "getLocalData:function(){return uexDispatcher.dispatch('uexWindow','getLocalData',jo(arguments));},"
+                + "getWindowName:function(){return uexDispatcher.dispatch('uexWindow','getWindowName',jo(arguments));},"
 
 
                 + "setSlidingWindow:function(){uexDispatcher.dispatch('uexWindow','setSlidingWindow',jo(arguments));},"

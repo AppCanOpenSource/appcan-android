@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    
+    <head>
+        <title>
+        </title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="../css/fonts/font-awesome.min.css">
+        <link rel="stylesheet" href="../css/ui-box.css">
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <link rel="stylesheet" href="../css/ui-color.css">
+        <link rel="stylesheet" href="../css/appcan.icon.css">
+        <link rel="stylesheet" href="../css/appcan.control.css">
+        <link rel="stylesheet" href="../css/index.css">
+    </head>
+    
+    <body class="" ontouchstart>
+        <div class="bc-bg" tabindex="0" data-control="PAGE" id="Page">
+            <div class="" data-control="CONTENT">
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>1.beginAnimition //开始设置动画的相关参数<br></span>
+                        <span class = "result_display" id = "beginAnimition_result_display"></span>
+                    </div>
+                    <input id= "beginAnimition" class = "button-go" type="button" value = "beginAnimition"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>2.setAnimitionDelay //设置动画延迟执行时间<br></span>
+                        <span class = "result_display" id = "setAnimitionDelay_result_display">设置延迟1S执行动画</span>
+                    </div>
+                    <input id= "setAnimitionDelay" class = "button-go" type="button" value = "setAnimitionDelay"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>3.setAnimitionDuration //设置动画持续时间<br></span>
+                        <span class = "result_display" id = "setAnimitionDuration_result_display">设置动画持续时间3S</span>
+                    </div>
+                    <input id= "setAnimitionDuration" class = "button-go" type="button" value = "setAnimitionDuration"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>4.setAnimitionCurve //设置动画曲线类型<br></span>
+                        <span class = "result_display" id = "setAnimitionCurve_result_display">动画曲线为先加速后减速运动</span>
+                    </div>
+                    <input id= "setAnimitionCurve" class = "button-go" type="button" value = "setAnimitionCurve"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>5.setAnimitionRepeatCount //设置动画重复次数<br></span>
+                        <span class = "result_display" id = "setAnimitionRepeatCount_result_display">动画重复时间两次</span>
+                    </div>
+                    <input id= "setAnimitionRepeatCount" class = "button-go" type="button" value = "setAnimitionRepeatCount"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>6.setAnimitionAutoReverse //设置动画结束后自动恢复位置和状态<br></span>
+                        <span class = "result_display" id = "setAnimitionAutoReverse_result_display">动画结束后恢复位置和状态</span>
+                    </div>
+                    <input id= "setAnimitionAutoReverse" class = "button-go" type="button" value = "setAnimitionAutoReverse"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>7.makeTranslation //设置移动动画<br></span>
+                        <span class = "result_display" id = "makeTranslation_result_display">水平方向向右移动100</span>
+                    </div>
+                    <input id= "makeTranslation" class = "button-go" type="button" value = "makeTranslation"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>8.makeScale //设置伸缩动画<br></span>
+                        <span class = "result_display" id = "makeScale_result_display">水平方向拉伸1.5倍</span>
+                    </div>
+                    <input id= "makeScale" class = "button-go" type="button" value = "makeScale"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>9.makeRotate //设置旋转动画<br></span>
+                        <span class = "result_display" id = "makeRotate_result_display">绕X轴旋转45度</span>
+                    </div>
+                    <input id= "makeRotate" class = "button-go" type="button" value = "makeRotate"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>10.makeAlpha //设置透明度动画<br></span>
+                        <span class = "result_display" id = "makeAlpha_result_display">从不透明到半透明</span>
+                    </div>
+                    <input id= "makeAlpha" class = "button-go" type="button" value = "makeAlpha"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>11.commitAnimition //提交动画设置并开始执行动画<br></span>
+                        <span class = "result_display" id = "commitAnimition_result_display"></span>
+                    </div>
+                    <input id= "commitAnimition" class = "button-go" type="button" value = "commitAnimition"/>
+                </div>
+
+            </div>
+        </div>
+        <script src="../js/appcan.js">
+        </script>
+        <script src="../js/appcan.control.js">
+        </script>
+        <script src="../js/appcan.scrollbox.js">
+        </script>
+        <script src="../js/template.import.js">
+        </script>
+        <script src="../js/index.js">
+        </script>
+        <script src="../js/uexWindow7.js">
+        </script>
+        <script type="text/javascript">
+
+        </script>
+    </body>
+
+</html>

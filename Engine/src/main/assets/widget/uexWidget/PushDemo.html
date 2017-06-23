@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+
+<head>
+    <title>
+    </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="../css/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/ui-box.css">
+    <link rel="stylesheet" href="../css/ui-base.css">
+    <link rel="stylesheet" href="../css/ui-color.css">
+    <link rel="stylesheet" href="../css/appcan.icon.css">
+    <link rel="stylesheet" href="../css/appcan.control.css">
+    <link rel="stylesheet" href="../css/index.css">
+</head>
+
+<body class="" ontouchstart>
+    <div class="bc-bg" tabindex="0" data-control="PAGE" id="Page">
+        <div class="" data-control="CONTENT">
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>关闭当前页面<br></span>
+                    </div>
+                    <input class = "button-go" type="button" value = "关闭" onclick="closeCurrentWin()"/>
+                </div>
+            <div class = "fun-unit">
+                <div class="text-desc">
+                    <span>1.setPushState //设置推送服务的状态<br></span>
+                    <span class = "result_display" id = "setPushState_result_display"></span>
+                </div>
+                <input id = "setPushState0" class = "button-go" type="button" value = "开启推送" />
+                <input id = "setPushState1" class = "button-go" type="button" value = "关闭推送" />
+            </div>
+            <div class = "fun-unit">
+                <div class="text-desc">
+                    <span>2.getPushState //获取推送服务的状态<br></span>
+                    <span class = "result_display" id = "getPushState_result_display"></span>
+                </div>
+                <input id = "getPushState" class = "button-go" type="button" value = "getPushState" />
+            </div>
+            <div class = "fun-unit">
+                <div class="text-desc">
+                    <span>3.setPushNotifiCallback //设置Push消息到达时的回调函数<br></span>
+                    <span class = "result_display" id = "setPushNotifiCallback_result_display"></span>
+                </div>
+                <input id = "setPushNotifiCallback" class = "button-go" type="button" value = "setPushNotifiCallback" />
+            </div>
+            <div class = "fun-unit">
+                <div class="text-desc">
+                    <span>4.setPushInfo //设置推送用户信息<br></span>
+                    <span class = "result_display" id = "setPushInfo_result_display">这里写的是用户id和昵称，供服务端某些定制逻辑使用；大部分情况下都传空也不影响推送接收。</span>
+                </div>
+                <input id = "setPushInfo" class = "button-go" type="button" value = "setPushInfo" />
+            </div>
+            <div class = "fun-unit">
+                <div class="text-desc">
+                    <span>5.getPushInfo //获取推送消息<br></span>
+                    <span class = "result_display" id = "getPushInfo_result_display"></span>
+                </div>
+                <input id = "getPushInfo" class = "button-go" type="button" value = "getPushInfo" />
+            </div>
+        </div>
+    </div>
+        <script src="../js/appcan.js">
+        </script>
+        <script src="../js/appcan.control.js">
+        </script>
+        <script src="../js/appcan.scrollbox.js">
+        </script>
+        <script src="../js/template.import.js">
+        </script>
+        <script src="../assets/mvvm/index.js">
+        </script>
+        <script src="../js/index.js">
+        </script>
+        <script src="../js/uexWidget.js">
+        </script>
+        <script type="text/javascript">
+            function push_start(){
+                openWindow("PushDemo");
+            }
+        </script>
+</body>
+
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    
+    <head>
+        <title>
+        </title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="../css/fonts/font-awesome.min.css">
+        <link rel="stylesheet" href="../css/ui-box.css">
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <link rel="stylesheet" href="../css/ui-color.css">
+        <link rel="stylesheet" href="../css/appcan.icon.css">
+        <link rel="stylesheet" href="../css/appcan.control.css">
+        <link rel="stylesheet" href="../css/index.css">
+    </head>
+    
+    <body class="" ontouchstart>
+        <div tabindex="0" data-control="PAGE" id="Page" style="background-color: #7B7B7B">
+            <div class="" data-control="CONTENT" style = "padding: 2em 0em;">
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>浮动窗口C<br></span>
+                        <span class = "result_display" id = "result_display"></span>
+                    </div>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>1.bringToFront //置顶浮动窗口A<br></span>
+                        <span class = "result_display" id = "bringToFront_result_display">点击该按钮，会先通过evaluatePopoverScript方法调用浮动窗口A中的bringToFront方法将A窗口置顶</span>
+                    </div>
+                    <input id= "bringToFront" class = "button-go" type="button" value = "bringToFront"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>2.insertAbove //将浮动窗口B插入到指定浮动窗口C之上<br></span>
+                        <span class = "result_display" id = "insertAbove_result_display">点击该按钮，会先通过evaluatePopoverScript方法调用浮动窗口B中的insertAbove方法将B窗口插入到C之上</span>
+                    </div>
+                    <input id= "insertAbove" class = "button-go" type="button" value = "insertAbove"/>
+                </div>
+            </div>
+        </div>
+        <script src="../js/appcan.js">
+        </script>
+        <script src="../js/appcan.control.js">
+        </script>
+        <script src="../js/appcan.scrollbox.js">
+        </script>
+        <script src="../js/template.import.js">
+        </script>
+        <script src="../js/index.js">
+        </script>
+        <script src="../js/uexWindow2.js">
+        </script>
+        <script type="text/javascript">
+
+        </script>
+    </body>
+
+</html>

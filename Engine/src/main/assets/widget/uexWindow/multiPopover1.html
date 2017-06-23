@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    
+    <head>
+        <title>
+        </title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="../css/fonts/font-awesome.min.css">
+        <link rel="stylesheet" href="../css/ui-box.css">
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <link rel="stylesheet" href="../css/ui-color.css">
+        <link rel="stylesheet" href="../css/appcan.icon.css">
+        <link rel="stylesheet" href="../css/appcan.control.css">
+        <link rel="stylesheet" href="../css/index.css">
+    </head>
+    
+    <body class="" ontouchstart>
+        <div tabindex="0" data-control="PAGE" id="Page" style="background-color: #E0E0E0">
+            <div class="" data-control="CONTENT" style = "padding: 2em 0em;">
+                <div class = "fun-unit">
+                    <div class="text-desc">
+                        <span>multiPopover1<br></span>
+                        <span class = "result_display" id = "result_display"></span>
+                    </div>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>1.setMultilPopoverFlippingEnbaled //设置控件是否响应滑动事件<br></span>
+                        <span class = "result_display" id = "setMultilPopoverFlippingEnbaled_result_display"></span>
+                    </div>
+                    <input id= "setMultilPopoverFlippingEnbaled1" class = "button-go" type="button" value = "允许滑动"/>
+                    <input id= "setMultilPopoverFlippingEnbaled2" class = "button-go" type="button" value = "禁止滑动"/>
+                </div>
+            </div>
+        </div>
+        <script src="../js/appcan.js">
+        </script>
+        <script src="../js/appcan.control.js">
+        </script>
+        <script src="../js/appcan.scrollbox.js">
+        </script>
+        <script src="../js/template.import.js">
+        </script>
+        <script src="../js/index.js">
+        </script>
+        <script src="../js/uexWindow2.js">
+        </script>
+        <script type="text/javascript">
+            appcan.ready(function () {
+
+            });
+            function funEvaluateMultiPopover(param){
+                $("#result_display").html("执行evaluateMultiPopoverScript方法成功，传入的参数为:" + param);
+            }
+        </script>
+    </body>
+
+</html>

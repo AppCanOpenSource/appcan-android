@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    
+    <head>
+        <title>
+        </title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="../css/fonts/font-awesome.min.css">
+        <link rel="stylesheet" href="../css/ui-box.css">
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <link rel="stylesheet" href="../css/ui-color.css">
+        <link rel="stylesheet" href="../css/appcan.icon.css">
+        <link rel="stylesheet" href="../css/appcan.control.css">
+        <link rel="stylesheet" href="../css/index.css">
+    </head>
+    
+    <body class="" ontouchstart>
+        <div class="bc-bg" tabindex="0" data-control="PAGE" id="Page">
+            <div class="" data-control="CONTENT">
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <input class = "button-go" type="button" value = "返回" onclick="closeCurrentWin()"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>1.setBounce //设置是否支持网页弹动<br></span>
+                        <span class = "result_display" id = "setBounce_result_display"></span>
+                    </div>
+                    <input id= "setBounce" class = "button-go" type="button" value = "setBounce"/>
+                </div>
+
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>2.getBounce //获取网页弹动状态<br></span>
+                        <span class = "result_display" id = "getBounce_result_display"></span>
+                    </div>
+                    <input id= "getBounce" class = "button-go" type="button" value = "getBounce"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>3.setBounceParams //设置弹动参数<br></span>
+                        <span class = "result_display" id = "setBounceParams_result_display"></span>
+                    </div>
+                    <input id= "setBounceParams" class = "button-go" type="button" value = "setBounceParams"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>4.notifyBounceEvent //注册接收弹动事件<br></span>
+                        <span class = "result_display" id = "notifyBounceEvent_result_display"></span>
+                    </div>
+                    <input id= "notifyBounceEvent" class = "button-go" type="button" value = "notifyBounceEvent"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>onBounceStateChange //弹动状态改变的监听方法<br></span>
+                        <span class = "result_display" id = "onBounceStateChange_result_display"></span>
+                    </div>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>5.showBounceView //显示弹动效果<br></span>
+                        <span class = "result_display" id = "showBounceView_result_display">调用该接口之后下拉本页面，头部会显示更新中，直到点击resetBounceView接口，头部弹动效果消失</span>
+                    </div>
+                    <input id= "showBounceView" class = "button-go" type="button" value = "showBounceView"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>6.resetBounceView //设置弹动效果结束后显示的网页<br></span>
+                        <span class = "result_display" id = "resetBounceView_result_display"></span>
+                    </div>
+                    <input id= "resetBounceView" class = "button-go" type="button" value = "resetBounceView"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>7.topBounceViewRefresh //自动下拉刷新效果<br></span>
+                        <span class = "result_display" id = "topBounceViewRefresh_result_display">调用该接口，用户不用手动下拉页面，自动显示头部弹动效果，直到点击resetBounceView接口，头部弹动效果消失</span>
+                    </div>
+                    <input id= "topBounceViewRefresh" class = "button-go" type="button" value = "topBounceViewRefresh"/>
+                </div>
+                <div class = "fun-unit" style = "margin: 0em;">
+                    <div class="text-desc">
+                        <span>8.hiddenBounceView //隐藏弹动效果<br></span>
+                        <span class = "result_display" id = "hiddenBounceView_result_display">调用该接口之后，头部弹动效果隐藏，下拉之后，头部显示空白</span>
+                    </div>
+                    <input id= "hiddenBounceView" class = "button-go" type="button" value = "hiddenBounceView"/>
+                </div>
+            </div>
+        </div>
+        <script src="../js/appcan.js">
+        </script>
+        <script src="../js/appcan.control.js">
+        </script>
+        <script src="../js/appcan.scrollbox.js">
+        </script>
+        <script src="../js/template.import.js">
+        </script>
+        <script src="../js/index.js">
+        </script>
+        <script src="../js/uexWindow5.js">
+        </script>
+        <script type="text/javascript">
+            appcan.ready(function(){
+                uexWindow.onBounceStateChange = function(type, state){
+                    var descType = (type == 0 ? "网页顶端" : "网页底部");
+                    var descState = "";
+
+                    switch(state) {
+                        case 0:
+                            descState = "滑动事件开始";
+                            break;
+                        case 1:
+                            descState = "刷新事件开始";
+                            break;
+                        case 2:
+                            descState = "滑动事件结束";
+                            break;
+                    }
+                    $("#onBounceStateChange_result_display").html(descType + ":" + descState);
+                }
+            });
+        </script>
+    </body>
+
+</html>
