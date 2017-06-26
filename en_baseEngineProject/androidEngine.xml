@@ -3,6 +3,6 @@
     <version>$version$</version>
     <package>$package$</package>
     <kernel>$kernel$</kernel>
-    <description>修改混淆文件</description>
+    <description>修复一个崩溃问题</description>
     <dssVersion>4.0.0</dssVersion>
 </info>

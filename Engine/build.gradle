@@ -31,7 +31,7 @@ android {
     defaultConfig {
         applicationId 'org.zywx.wbpalmstar.widgetone.uex'
         minSdkVersion 14
-        targetSdkVersion 25 //
+        targetSdkVersion 14 //
         multiDexEnabled true
     }
     productFlavors {
