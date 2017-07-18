@@ -541,10 +541,17 @@ public class EUExWindow extends EUExBase {
 
     public void close(String[] parm) {
         if (parm!=null&&parm.length>0&&isJsonString(parm[0])){
-            WindowJsonWrapper.close(this,DataHelper.gson.fromJson(parm[0], WindowAnimVO.class));
-        }else{
-            closeMsg(parm);
+            WindowAnimVO closeVO = DataHelper.gson.fromJson(parm[0], WindowAnimVO.class);
+            parm = new String[]{String.valueOf(closeVO.animID),
+                                String.valueOf(closeVO.animDuration)};
         }
+        Message msg = mHandler.obtainMessage();
+        msg.what = MSG_FUNCTION_CLOSE;
+        msg.obj = this;
+        Bundle bd = new Bundle();
+        bd.putStringArray(TAG_BUNDLE_PARAM, parm);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
     }
 
     public void exit(String[] parm) {
