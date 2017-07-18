@@ -24,6 +24,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Build;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -265,5 +266,12 @@ public class ACEWebView extends WebView implements DownloadListener {
         }
         String info = DataHelper.gson.toJson(infoVO);
         return info;
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        // 腾讯X5内核，WebView不执行onTouchEvent()方法
+        onTouchEvent(ev);
+        return super.dispatchTouchEvent(ev);
     }
 }
