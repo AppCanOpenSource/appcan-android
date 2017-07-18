@@ -2810,10 +2810,10 @@ public class EUExWindow extends EUExBase {
     public void private_alert(String inTitle, String inMessage, String inButtonLable) {
 		/*if (!((EBrowserActivity) mContext).isVisable()) {
 			return;
-		}*/
+		}
         if (null != mAlert) {
             return;
-        }
+        }*/
         try {
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
             builder.setTitle(inTitle);
@@ -2936,10 +2936,10 @@ public class EUExWindow extends EUExBase {
                                String hint, final String callbackIdStr, int mode) {
 		/*if (!((EBrowserActivity) mContext).isVisable()) {
 			return;
-		}*/
+		}
         if (null != mPrompt) {
             return;
-        }
+        }*/
         final int callbackId=valueOfCallbackId(callbackIdStr);
         if (inButtonLables != null && inButtonLables.length == 2) {
             mPrompt = PromptDialog.show(mContext, inTitle, inMessage, inDefaultValue,hint, inButtonLables[0],mode, new
