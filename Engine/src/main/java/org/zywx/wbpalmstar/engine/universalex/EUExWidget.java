@@ -29,6 +29,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
@@ -809,8 +810,10 @@ public class EUExWidget extends EUExBase {
                         ((Activity) mContext).getWindow().setSoftInputMode(WindowManager.LayoutParams
                                 .SOFT_INPUT_ADJUST_RESIZE |
                                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-                    } else {
+                    } else if (mode == 1) {
                         ((Activity) mContext).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+                    } else if (mode == 2 && Build.VERSION.SDK_INT >= 11) {
+                        ((Activity) mContext).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
                     }
                 } catch (JSONException e) {
 

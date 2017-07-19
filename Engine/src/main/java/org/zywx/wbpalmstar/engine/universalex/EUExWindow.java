@@ -541,10 +541,17 @@ public class EUExWindow extends EUExBase {
 
     public void close(String[] parm) {
         if (parm!=null&&parm.length>0&&isJsonString(parm[0])){
-            WindowJsonWrapper.close(this,DataHelper.gson.fromJson(parm[0], WindowAnimVO.class));
-        }else{
-            closeMsg(parm);
+            WindowAnimVO closeVO = DataHelper.gson.fromJson(parm[0], WindowAnimVO.class);
+            parm = new String[]{String.valueOf(closeVO.animID),
+                                String.valueOf(closeVO.animDuration)};
         }
+        Message msg = mHandler.obtainMessage();
+        msg.what = MSG_FUNCTION_CLOSE;
+        msg.obj = this;
+        Bundle bd = new Bundle();
+        bd.putStringArray(TAG_BUNDLE_PARAM, parm);
+        msg.setData(bd);
+        mHandler.sendMessage(msg);
     }
 
     public void exit(String[] parm) {
@@ -2803,10 +2810,10 @@ public class EUExWindow extends EUExBase {
     public void private_alert(String inTitle, String inMessage, String inButtonLable) {
 		/*if (!((EBrowserActivity) mContext).isVisable()) {
 			return;
-		}*/
+		}
         if (null != mAlert) {
             return;
-        }
+        }*/
         try {
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
             builder.setTitle(inTitle);
@@ -2929,10 +2936,10 @@ public class EUExWindow extends EUExBase {
                                String hint, final String callbackIdStr, int mode) {
 		/*if (!((EBrowserActivity) mContext).isVisable()) {
 			return;
-		}*/
+		}
         if (null != mPrompt) {
             return;
-        }
+        }*/
         final int callbackId=valueOfCallbackId(callbackIdStr);
         if (inButtonLables != null && inButtonLables.length == 2) {
             mPrompt = PromptDialog.show(mContext, inTitle, inMessage, inDefaultValue,hint, inButtonLables[0],mode, new
