@@ -230,15 +230,23 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
     }
 
     public void removeViewFromCurrentWindow(View child) {
-        Message msg = mWindLoop.obtainMessage();
-        msg.what = F_WHANDLER_REMOVE_VIEW;
-        msg.obj = child;
-        mWindLoop.sendMessage(msg);
-        // Animation removeAnim = child.getAnimation();
-        // if (null != removeAnim) {
-        // removeAnim.start();
-        // }
-        // removeView(child);
+//        Message msg = mWindLoop.obtainMessage();
+//        msg.what = F_WHANDLER_REMOVE_VIEW;
+//        msg.obj = child;
+//        mWindLoop.sendMessage(msg);
+//         Animation removeAnim = child.getAnimation();
+//         if (null != removeAnim) {
+//         removeAnim.start();
+//         }
+//         removeView(child);
+
+//        View children = (View) msg.obj;
+        Animation removeAnim = child.getAnimation();
+        if (null != removeAnim) {
+            removeAnim.start();
+        }
+        removeViewList(child);
+//        msg.obj = null;
     }
 
 
