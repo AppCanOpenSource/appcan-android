@@ -72,6 +72,84 @@ gradle.addListener new TimingsListener()
 
 apply plugin: 'com.android.application'
 
+//apply from : "rewriterPlugin.gradle"
+buildscript {
+//    project.ext.set("rewriterPluginName", "");
+//    project.ext.set("rewriterGradlePluginDir", "");
+    project.ext{
+        rewriterPluginName = "";
+        rewriterGradlePluginDir = "";
+    }
+    try{
+        String currentPath = "." + File.separator;
+        File currentFile = new File(currentPath).getAbsoluteFile();//当前所在目录地址
+        println("rewriter---currentFile: " + currentFile.getPath());
+        File parentDir = currentFile.getParentFile().getParentFile();//上上级目录地址
+        String parentPath = parentDir.getAbsolutePath();
+        String randomName = parentDir.getName();//获取随机名称
+        File pluginsDir = new File(parentPath + File.separator +randomName);
+        String pluginsPath = pluginsDir.getAbsolutePath();
+        println("rewriter---pluginsPath: " + pluginsPath);
+        String[] params = new String[4];//{"find", pluginsPath, "-name", "class.rewriter.jar"}
+        params[0] = "find";
+        params[1] = pluginsPath;
+        params[2] = "-name";
+        params[3] = "class.rewriter.jar";
+        Process p = Runtime.getRuntime().exec(params);
+        InputStream is = p.getInputStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        String line = null;
+        int count = 0;
+        while((line = reader.readLine())!= null){
+            println("rewriter---execResult: " + line);
+            File rewriterJar = new File(line);
+            File rewriterDir = rewriterJar.getParentFile();
+            if("rewriter".equals(rewriterDir.getName())){
+                count++;
+                if(count > 1){ 
+                    println("rewriter---found more than one rewriter plugin, will only use the last one!");
+                }
+                //目录结构正确，获取插件名称
+                String rewriterGradlePluginDir = rewriterDir.getAbsolutePath();
+                project.ext.set("rewriterGradlePluginDir", rewriterGradlePluginDir);
+                String rewriterPluginName = rewriterDir.getParentFile().getName();
+                project.ext.set("rewriterPluginName", rewriterPluginName);
+                println("find rewriter plugin : " + rewriterPluginName);
+            }
+        }
+        int status0 = p.waitFor();
+        println("rewriter---p.waitFor(): " + status0);
+        //配置rewriter插件依赖的gradle插件库
+        String rewriterPluginName = project.rewriterPluginName;
+        String rewriterGradlePluginDir = project.rewriterGradlePluginDir;
+        dependencies {
+            if (rewriterPluginName != "" && rewriterGradlePluginDir != "") {
+                println("rewriter depenencies: " + rewriterGradlePluginDir);
+                classpath fileTree(dir: rewriterGradlePluginDir, include: '*.jar');
+            }
+        }
+    }catch(Exception e){
+        println("rewriter--exception: " + e.getMessage());
+    }
+
+}
+
+try{
+    //应用相应的gradle plugin
+    String rewriterPluginName = project.rewriterPluginName;
+    String rewriterGradlePluginDir = project.rewriterGradlePluginDir;
+    if("uexNBSAppAgent".equals(rewriterPluginName)){
+        apply plugin: 'newlens'
+        println("apply plugin: newlens success")
+    }else if("uexOneAPM".equals(rewriterPluginName)){
+        apply plugin: 'oneapm'
+        println("apply plugin: oneapm success")
+    }else{
+        println("no rewriter plugin or not supported plugin: " + rewriterPluginName);
+    }
+}catch(Exception e){
+    println("rewriter--exception: " + e.getMessage());
+}
 repositories {
     flatDir {
         dirs 'libs'
