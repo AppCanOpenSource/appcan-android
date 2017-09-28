@@ -223,7 +223,9 @@ public abstract class EUExBase {
                 ((Activity)mContext).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        mBrwView.loadUrl(sb.toString());
+                        if (null != mBrwView) {
+                            mBrwView.loadUrl(sb.toString());
+                        }
                     }
                 });
             }else{

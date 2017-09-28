@@ -26,14 +26,10 @@ public class WebViewSdkCompat {
     }
 
     public static void initInApplication(Context context) {
-        CookieSyncManager.createInstance(context);
-        CookieManager.getInstance().setAcceptCookie(true);
-        CookieManager.getInstance().removeSessionCookie();
-        CookieManager.getInstance().removeExpiredCookie();
         initTencentX5(context);
     }
 
-    private static void initTencentX5(Context context) {
+    private static void initTencentX5(final Context context) {
         int tbsVersion = 0;
         boolean noTencentX5 = false;
         try {
@@ -61,6 +57,10 @@ public class WebViewSdkCompat {
             QbSdk.initX5Environment(context, new QbSdk.PreInitCallback(){
                 @Override
                 public void onViewInitFinished(boolean success) {
+                    CookieSyncManager.createInstance(context);
+                    CookieManager.getInstance().setAcceptCookie(true);
+                    CookieManager.getInstance().removeSessionCookie();
+                    CookieManager.getInstance().removeExpiredCookie();
                     float deltaTime = (System.currentTimeMillis() - timerCounter);
                     BDebug.i("AppCanTBS", "success " + success + " x5初始化使用了" + deltaTime + "毫秒");
                 }
