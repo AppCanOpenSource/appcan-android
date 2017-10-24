@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +15,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.zywx.wbpalmstar.base.BDebug;
@@ -36,6 +38,7 @@ public class TempActivity extends Activity {
 
     private boolean isTemp = false;
     private long showTime = 0;
+    private Bitmap loadingBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +47,13 @@ public class TempActivity extends Activity {
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
         rootLayout.setLayoutParams(layoutParams);
         ConfigXmlUtil.setStatusBarColorWithAddView(this, Color.TRANSPARENT);
+        loadingBitmap = BUtility.getLoadingBitmap(this);
+        if (loadingBitmap != null) {
+            ImageView imageView = new ImageView(this);
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+            imageView.setImageBitmap(loadingBitmap);
+            rootLayout.addView(imageView);
+        }
         if (EBrowserActivity.develop) {
             TextView worn = new TextView(this);
             worn.setText(EUExUtil.getString("platform_only_test"));
@@ -86,6 +96,9 @@ public class TempActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (loadingBitmap != null && !loadingBitmap.isRecycled()) {
+            loadingBitmap.recycle();
+        }
         LocalBroadcastManager.getInstance(this).unregisterReceiver(
                 mBroadcastReceiver);
     }

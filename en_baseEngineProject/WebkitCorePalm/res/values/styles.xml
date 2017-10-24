@@ -20,6 +20,7 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowShowWallpaper">false</item>
         <item name="android:windowActionBar">false</item>
+        <item name="android:windowIsTranslucent">true</item>
     </style>
     <!-- WidgetOne use -->
     <style name="Style_platform_no_title_and_background" parent="android:Theme">

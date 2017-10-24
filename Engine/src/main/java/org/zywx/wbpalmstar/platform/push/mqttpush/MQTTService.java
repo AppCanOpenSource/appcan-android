@@ -23,6 +23,7 @@ import android.net.NetworkInfo;
 import android.os.Binder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.ibm.mqtt.IMqttClient;
@@ -331,8 +332,8 @@ public class MQTTService implements MqttSimpleCallback {
         // time to ping the server
         if (pingSender == null) {
             pingSender = new PingSender();
-            _context.registerReceiver(pingSender, new IntentFilter(
-                    MQTT_PING_ACTION));
+            LocalBroadcastManager.getInstance(_context).registerReceiver(
+                    pingSender, new IntentFilter(MQTT_PING_ACTION));
         }
 
         if (mHeartKeepAliveMgr == null) {
@@ -810,7 +811,7 @@ public class MQTTService implements MqttSimpleCallback {
             }
 
             if (pingSender != null) {
-                _context.unregisterReceiver(pingSender);
+                LocalBroadcastManager.getInstance(_context).unregisterReceiver(pingSender);
                 pingSender = null;
             }
         } catch (Exception e) {
