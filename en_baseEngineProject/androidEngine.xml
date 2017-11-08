@@ -3,6 +3,6 @@
     <version>$version$</version>
     <package>$package$</package>
     <kernel>$kernel$</kernel>
-    <description>修复一个崩溃问题</description>
+    <description>增加uexWindow.setPromptContent接口;X5设置Cookie失效;uexWindow.setLoadingImagePath()设置启动图片失效</description>
     <dssVersion>4.0.0</dssVersion>
 </info>

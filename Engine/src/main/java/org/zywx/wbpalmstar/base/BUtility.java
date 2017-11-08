@@ -1151,33 +1151,20 @@ public class BUtility {
         SharedPreferences sp = context.getSharedPreferences(
                 BUtility.m_loadingImageSp, Context.MODE_PRIVATE);
         String path = sp.getString(m_loadingImagePath, "");
-        InputStream input = null;
         if (TextUtils.isEmpty(path)) {
-            input = context.getResources().openRawResource(
-                    EUExUtil.getResDrawableID("startup_bg_16_9"));
-        } else {
-            if (path.startsWith(F_Widget_RES_path)) {
-                try {
-                    input = context.getResources().getAssets().open(path);
-                } catch (Exception e) {
-                    input = context.getResources().openRawResource(
-                            EUExUtil.getResDrawableID("startup_bg_16_9"));
-                    e.printStackTrace();
-                }
-            } else {
-                File file = new File(path);
-                if (!file.exists()) {
-                    input = context.getResources().openRawResource(
-                            EUExUtil.getResDrawableID("startup_bg_16_9"));
-                    BDebug.d("The loading path " + path + " does not exist");
-                }
-            }
+            return null;
         }
         DisplayMetrics dm = new DisplayMetrics();
         ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(dm);
         Bitmap bm = null;
-        if (input != null) {
-            bm = createBitmapWithStream(input, dm.widthPixels, dm.heightPixels);
+        if (path.startsWith(F_Widget_RES_path)) {
+            try {
+                InputStream input = context.getResources().getAssets().open(path);
+                bm = createBitmapWithStream(input, dm.widthPixels, dm.heightPixels);
+                input.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } else {
             bm = createBitmapWithPath(path, dm.widthPixels, dm.heightPixels);
         }
