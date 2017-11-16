@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.Keep;
 import android.text.TextUtils;
 
@@ -93,13 +91,13 @@ public class AppCan {
         mCrashReport = ECrashHandler.getInstance(mContext);
         initPlugin();
 
-        Handler mainHandler=new Handler(Looper.getMainLooper());
-        mainHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                reflectionPluginMethod("onApplicationCreate");//主线程调用onApplicationCreate,某些三方插件需要在主线程初始化
-            }
-        });
+//        Handler mainHandler=new Handler(Looper.getMainLooper());
+//        mainHandler.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                reflectionPluginMethod("onApplicationCreate");//主线程调用onApplicationCreate,某些三方插件需要在主线程初始化
+//            }
+//        });
 
         //清除上次运行的Session 数据
         SpManager.getInstance().clearSession();
@@ -113,6 +111,9 @@ public class AppCan {
         if (success) {
             BUtility.initWidgetOneFile(mContext, mWidgetData.m_appId);
         }
+
+        reflectionPluginMethod("onApplicationCreate");
+
         return success;
     }
 
