@@ -137,6 +137,10 @@ public final class EBrowserActivity extends BaseActivity {
 
         WWidgetData wWidgetData=getIntent().getParcelableExtra(KET_WIDGET_DATE);
         getIntent().removeExtra(KET_WIDGET_DATE);//删除intent中的数据，避免传递给网页
+        // maybe start by other app
+        if (wWidgetData == null || TextUtils.isEmpty(wWidgetData.m_indexUrl)) {
+            wWidgetData = AppCan.getInstance().getRootWidgetData();
+        }
         initEngine(wWidgetData);
 
         EUtil.printeBackup(savedInstanceState, "onCreate");
