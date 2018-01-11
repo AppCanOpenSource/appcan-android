@@ -19,12 +19,19 @@
 package org.zywx.wbpalmstar.engine;
 
 
+import org.zywx.wbpalmstar.base.vo.WindowOptionsVO;
+
 public class EBrwViewEntry {
+
+    public static final int VIEW_TYPE_ROOT = -1;//标识此窗口为本widget中的root窗口（首页）
     public static final int VIEW_TYPE_MAIN = 0;
     public static final int VIEW_TYPE_TOP = 1;
     public static final int VIEW_TYPE_BOTTOM = 2;
     public static final int VIEW_TYPE_POP = 3;
     public static final int VIEW_TYPE_ADD = 4;
+
+    public static final int WINDOW_SYTLE_NORMAL = 0;//默认值，标准样式
+    public static final int WINDOW_SYTLE_MEDIA_PLATFORM = 1; //仿微信公众号样式
 
     public static final int WINDOW_DATA_TYPE_URL = 0;
     public static final int WINDOW_DATA_TYPE_DATA = 1;
@@ -47,6 +54,7 @@ public class EBrwViewEntry {
 
 
     public int mType;
+    public int mWindowStyle;//窗口样式
 
     public int mX;
     public int mY;
@@ -75,8 +83,14 @@ public class EBrwViewEntry {
     public int mDownloadCallback = 0;// 0 下载不回调，使用引擎下载; 1 下载回调给主窗口，前端自己下载; 2 下载回调给当前窗口，前端自己下载;
     public String mUserAgent = "";
 
+    public WindowOptionsVO mWindowOptions;
+
     public EBrwViewEntry(int inType) {
         mType = inType;
+    }
+
+    public boolean isRootWindow(){
+        return mType == VIEW_TYPE_ROOT;
     }
 
     public boolean checkData() {
@@ -114,7 +128,7 @@ public class EBrwViewEntry {
         return mType + "," + mX + "," + mY + "," + mFontSize + "," + mViewName + "," +
                 mWidth + "," + mHeight + "," + mDataType + "," + mFlag + "," + mAnimId + "," +
                 mUrl + "," + mData + "," + mWindName + "," + mPreWindName + "," + mQuery +
-                "," + mRelativeUrl + "," + mAnimDuration + "," + mObj;
+                "," + mRelativeUrl + "," + mAnimDuration + "," + mObj + "," + mWindowOptions;
     }
 
 }

@@ -22,10 +22,29 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import org.zywx.wbpalmstar.base.BDebug;
+import org.zywx.wbpalmstar.base.vo.WidgetConfigVO.IndexWindowOptionsVO;
 
 import java.util.ArrayList;
 
 public class WWidgetData implements Parcelable,Cloneable {
+
+    // m_wgtType定义widget类型
+    /**
+     * 主Widget标识
+     */
+    public static final int WGT_TYPE_MAIN = 0;
+    /**
+     * EMM应用商店下发的常规子Widget标识
+     */
+    public static final int WGT_TYPE_SUB = 2;
+    /**
+     * 预置在主widget内部的plugin子widget标识（widget/plugin/）
+     */
+    public static final int WGT_TYPE_PLUGIN = 3;
+    /**
+     * 动态配置的子widget，一般为云应用
+     */
+    public static final int WGT_TYPE_CLOUD = 4;
 
     // 表示我的空间按钮显示，单击按钮进入我的空间
     public static final int F_SPACESTATUS_OPEN = 0x1;
@@ -129,6 +148,8 @@ public class WWidgetData implements Parcelable,Cloneable {
     public String mErrorPath;//页面加载错误时的错误页面路径
 
     public static int sStatusBarColor=-1;
+
+    public IndexWindowOptionsVO m_indexWindowOptions;//root窗口的相关配置参数，目前用于公众号样式窗口的配置
 
     public static final Parcelable.Creator<WWidgetData> CREATOR = new Creator<WWidgetData>() {
         public WWidgetData createFromParcel(Parcel source) {
