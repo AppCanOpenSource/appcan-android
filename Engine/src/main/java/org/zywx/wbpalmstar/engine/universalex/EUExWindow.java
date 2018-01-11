@@ -356,6 +356,141 @@ public class EUExWindow extends EUExBase {
         curWind.createWindow(mBrwView, windEntry);
     }
 
+    /**
+     * 打开一个公众号样式的窗口
+     *
+     * @param params
+     */
+    public void openWithOptions(String[] params) {
+        WindowOpenVO openVO=DataHelper.gson.fromJson(params[0],WindowOpenVO.class);
+        EBrowserWindow curWind = mBrwView.getBrowserWindow();
+        if (null == curWind) {
+            return;
+        }
+        String inWindowName = openVO.name;
+        if (!checkWindPermission(inWindowName)) {
+            showPermissionDialog(inWindowName);
+            return;
+        }
+        String inDataType = String.valueOf(openVO.dataType);
+        String inData = openVO.data;
+        String inAnimitionID = String.valueOf(openVO.animID);
+        String inWidth = String.valueOf(openVO.w);
+        String inHeight = String.valueOf(openVO.h);
+        String inFlag = String.valueOf(openVO.flag);
+        String animDuration = String.valueOf(openVO.animDuration);
+        boolean opaque = false;
+        /**赋初值，避免不传bgColor崩溃*/
+        String bgColor = "#00000000";
+        boolean hasExtraInfo = false;
+        int hardware = -1;
+        int downloadCallback = 0;
+        String userAgent = "";
+        String jsonData = openVO.extras == null ? null : DataHelper.gson.toJson(openVO.extras);
+        if (jsonData != null){
+            try {
+                JSONObject json = new JSONObject(jsonData);
+                String extraInfo = json.getString(EBrwViewEntry.TAG_EXTRAINFO);
+                JSONObject data = new JSONObject(extraInfo);
+                if (data.has(WWidgetData.TAG_WIN_BG_OPAQUE)) {
+                    opaque = Boolean.valueOf(data.getString(WWidgetData.TAG_WIN_BG_OPAQUE));
+                    hasExtraInfo = true;
+                }
+                if (data.has(WWidgetData.TAG_WIN_BG_COLOR)) {
+                    bgColor = data.getString(WWidgetData.TAG_WIN_BG_COLOR);
+                    hasExtraInfo = true;
+                }
+                hardware = data.optInt(KEY_HARDWARE, -1);
+                if (hardware != -1) {
+                    hasExtraInfo = true;
+                }
+                downloadCallback = data.optInt(KEY_DOWNLOAD_CALLBACK, 0);
+                userAgent = data.optString(KEY_USER_AGENT, "");
+            } catch (JSONException ignored) {
+            }
+        }
+
+        String cUrl = mBrwView.getCurrentUrl();
+        boolean op = EBrowser.checkFlag(EBrowser.F_BRW_FLAG_OPENING);
+        boolean hi = curWind.isHidden();
+        boolean eq = curWind.getName().equals(inWindowName);
+        if (op || hi || eq) {
+            return;
+        }
+        int width = 0;
+        int height = 0;
+        int flag = 0;
+        int dataType = 0;
+        int animitionId = EBrowserAnimation.ANIM_ID_NONE;
+        long duration = EBrowserAnimation.defaultDuration;
+        try {
+            if (null != inAnimitionID && inAnimitionID.length() != 0) {
+                animitionId = Integer.parseInt(inAnimitionID);
+            }
+            if (null != animDuration && animDuration.length() != 0
+                    && !animDuration.equals("undefined")) {
+                duration = Long.parseLong(animDuration);
+            }
+            dataType = Integer.valueOf(inDataType);
+            width = parseWidth(inWidth);
+            height = parseHeight(inHeight);
+            flag = Integer.parseInt(inFlag);
+        } catch (Exception e) {
+            if (BDebug.DEBUG){
+                e.printStackTrace();
+            }
+            errorCallback(0, EUExCallback.F_E_UEXWINDOW_OPEN, "Illegal parameter");
+            return;
+        }
+        WWidgetData wgt = mBrwView.getCurrentWidget();
+        EBrwViewEntry windEntry = new EBrwViewEntry(EBrwViewEntry.VIEW_TYPE_MAIN);
+        String data = null;
+        if (EBrwViewEntry.isData(dataType)) {
+            data = inData;
+        } else {
+            String wgtroot = "wgtroot://";
+            if (inData.startsWith(wgtroot)) {
+                String initUrl = wgt.m_indexUrl;
+                inData = inData.substring(wgtroot.length());
+                inData = BUtility.makeUrl(initUrl, inData);
+                data = inData;
+            } else {
+                data = BUtility.makeUrl(cUrl, inData);
+            }
+            windEntry.mRelativeUrl = inData;
+        }
+        String query = null;
+        if (Build.VERSION.SDK_INT >= 11) {
+            if (EBrwViewEntry.isUrl(dataType) && data != null) {
+                int index = data.indexOf("?");
+                if (index > 0) {
+                    query = data.substring(index + 1);
+                    if (!data.startsWith("http")) {
+                        data = data.substring(0, index);
+                    }
+                }
+            }
+        }
+        windEntry.mPreWindName = curWind.getName();
+        windEntry.mQuery = query;
+        windEntry.mWindName = inWindowName;
+        windEntry.mDataType = dataType;
+        windEntry.mData = data;
+        windEntry.mAnimId = animitionId;
+        windEntry.mWidth = width;
+        windEntry.mHeight = height;
+        windEntry.mFlag = flag;
+        windEntry.mAnimDuration = duration;
+        windEntry.mOpaque = opaque;
+        windEntry.mBgColor = bgColor;
+        windEntry.mHardware = hardware;
+        windEntry.mDownloadCallback = downloadCallback;
+        windEntry.mUserAgent = userAgent;
+        windEntry.hasExtraInfo = hasExtraInfo;
+        windEntry.mWindowStyle = EBrwViewEntry.WINDOW_SYTLE_MEDIA_PLATFORM;
+        curWind.createWindow(mBrwView, windEntry);
+    }
+
     public void openPresentWindow(String[] params){//与iOS保持一致添加的接口
         open(params);
     }

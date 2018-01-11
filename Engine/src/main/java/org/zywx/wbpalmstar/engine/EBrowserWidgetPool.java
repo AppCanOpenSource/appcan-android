@@ -159,6 +159,7 @@ public class EBrowserWidgetPool {
 
     public void startWidget(WWidgetData inData, EWgtResultInfo inResult) {
         if (checkWidget(inData, inResult)) {
+            //已经打开
             return;
         }
         WgtEnty obj = new WgtEnty(inData, inResult);
@@ -188,6 +189,13 @@ public class EBrowserWidgetPool {
         return false;
     }
 
+    /**
+     * 检查widget状态，若已经打开子widget并在后台，则执行重新打开操作，拉回前台，return true；否则重新执行正常逻辑即return false。
+     *
+     * @param inData
+     * @param inResult
+     * @return
+     */
     private boolean checkWidget(WWidgetData inData, EWgtResultInfo inResult) {
         String key = inData.m_appId;
         EBrowserWidget wdgObj = mWgtStack.get(key);
