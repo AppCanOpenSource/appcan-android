@@ -26,5 +26,9 @@ public class WindowOpenVO implements Serializable {
 
     public WindowOpenExtrasVO extras;
 
+    public int windowStyle;
+
+    public WindowOptionsVO windowOptionsVO;
+
 
 }
