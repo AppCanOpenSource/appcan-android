@@ -70,6 +70,7 @@ import org.zywx.wbpalmstar.base.vo.WindowOpenMultiPopoverVO;
 import org.zywx.wbpalmstar.base.vo.WindowOpenPopoverVO;
 import org.zywx.wbpalmstar.base.vo.WindowOpenSlibingVO;
 import org.zywx.wbpalmstar.base.vo.WindowOpenVO;
+import org.zywx.wbpalmstar.base.vo.WindowOptionsVO;
 import org.zywx.wbpalmstar.base.vo.WindowPromptResultVO;
 import org.zywx.wbpalmstar.base.vo.WindowPromptVO;
 import org.zywx.wbpalmstar.base.vo.WindowSetFrameVO;
@@ -379,6 +380,10 @@ public class EUExWindow extends EUExBase {
         String inHeight = String.valueOf(openVO.h);
         String inFlag = String.valueOf(openVO.flag);
         String animDuration = String.valueOf(openVO.animDuration);
+
+        int windowStyle = openVO.windowStyle;
+        WindowOptionsVO windowOptionsVO = openVO.windowOptionsVO;
+
         boolean opaque = false;
         /**赋初值，避免不传bgColor崩溃*/
         String bgColor = "#00000000";
@@ -487,8 +492,20 @@ public class EUExWindow extends EUExBase {
         windEntry.mDownloadCallback = downloadCallback;
         windEntry.mUserAgent = userAgent;
         windEntry.hasExtraInfo = hasExtraInfo;
-        windEntry.mWindowStyle = EBrwViewEntry.WINDOW_SYTLE_MEDIA_PLATFORM;
+        //处理窗口样式参数
+        windEntry.mWindowStyle = windowStyle;
+        windEntry.mWindowOptions = windowOptionsVO;
         curWind.createWindow(mBrwView, windEntry);
+    }
+
+    public void setWindowOptions(String[] params){
+        try {
+            String windowOptionsStr = new JSONObject(params[0]).getString("windowOptions");
+            WindowOptionsVO windowOptionsVO = DataHelper.gson.fromJson(windowOptionsStr, WindowOptionsVO.class);
+            mBrwView.getBrowserWindow().setWindowOptions(windowOptionsVO);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void openPresentWindow(String[] params){//与iOS保持一致添加的接口

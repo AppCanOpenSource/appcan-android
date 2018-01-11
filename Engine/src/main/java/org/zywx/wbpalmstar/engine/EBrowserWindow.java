@@ -144,6 +144,8 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
     public static String rootRightSlidingWinName = "rootRightSlidingWinName";
     private List<View> viewList = new ArrayList<View>();
 
+    private RelativeLayout mMPWrapLayout;//公众号样式外层layout
+
     public EBrowserWindow(Context context, EBrowserWidget inParent) {
         super(context);
         mContext = context;
@@ -171,18 +173,13 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
                 mMainView.setName("main");
                 LayoutInflater layoutInflater = LayoutInflater.from(mContext);
                 //外面套了一层wrapLayout，便于头部和底部布局
-                RelativeLayout wrapLayout = (RelativeLayout) layoutInflater.inflate(EUExUtil.getResLayoutID("platform_mp_window_wrapframe"), null);
-                mBounceView = (EBounceView) wrapLayout.findViewById(EUExUtil.getResIdID("platform_mp_window_bounceview"));
+                mMPWrapLayout = (RelativeLayout) layoutInflater.inflate(EUExUtil.getResLayoutID("platform_mp_window_wrapframe"), null);
+                mBounceView = (EBounceView) mMPWrapLayout.findViewById(EUExUtil.getResIdID("platform_mp_window_bounceview"));
                 EUtil.viewBaseSetting(mBounceView);
                 mBounceView.setId(VIEW_MID);
                 mBounceView.addView(mMainView);
-                //初始化标题栏
-                initMPWindowTopBar(wrapLayout, inEntry.mWindowOptions);
-                if (inEntry.mWindowOptions.isBottomBarShow){
-                    //是否显示底部栏
-                    initMPWindowBottomBar(wrapLayout, inEntry.mWindowOptions);
-                }
-                addView(wrapLayout);
+                setWindowOptions(inEntry.mWindowOptions);
+                addView(mMPWrapLayout);
             }else{
                 mMainView = new EBrowserView(mContext,
                         EBrwViewEntry.VIEW_TYPE_MAIN, this);
@@ -237,10 +234,31 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         }
     }
 
+    public void setWindowOptions(WindowOptionsVO windowOptionsVO){
+        if (mWindowStyle == EBrwViewEntry.WINDOW_SYTLE_MEDIA_PLATFORM){
+            if(windowOptionsVO != null && mMPWrapLayout != null){
+                //重新配置当前窗口的参数
+                //初始化标题栏
+                initMPWindowTopBar(mMPWrapLayout, windowOptionsVO);
+                if (windowOptionsVO.isBottomBarShow){
+                    //是否显示底部栏
+                    initMPWindowBottomBar(mMPWrapLayout, windowOptionsVO);
+                }
+            }else{
+                BDebug.w("setWindowOptions error: windowOptionsVO is null or mMPWrapLayout is null");
+            }
+        }else{
+            BDebug.w("setWindowOptions error: WindowStyle not supported :" + mWindowStyle);
+        }
+    }
+
     /**
      * 初始化公众号样式的顶部标题栏
      */
     private void initMPWindowTopBar(View rootView, WindowOptionsVO windowOptionsVO){
+        //设置标题
+        TextView windowTitle = (TextView)rootView.findViewById(R.id.platform_mp_window_text_title);
+        windowTitle.setText(windowOptionsVO.windowTitle);
         //右侧图标
         Button showDetailButton=(Button) rootView.findViewById(R.id.platform_mp_window_button_detail_info);
         //左侧图标
@@ -267,7 +285,6 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
      *
      */
     private void initMPWindowBottomBar(View rootView, WindowOptionsVO windowOptionsVO){
-        LinearLayout layout_bottom_container=(LinearLayout)rootView.findViewById(R.id.platform_mp_window_layout_menu_bar);
         //底部外层
         LinearLayout layout_bottom_menu_toolbar = (LinearLayout)rootView.findViewById(R.id.platform_mp_window_layout_custom_toolbar);
         //菜单栏
@@ -285,7 +302,9 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
                 }
             }
         };
+        layout_exchange.setOnClickListener(listener);
 
+        //初始化菜单部分
         List<WindowOptionsVO.MPWindowMenuVO> menuList = windowOptionsVO.menuList;
         if (menuList != null && menuList.size() > 0) {
             layout_bottom_menu_toolbar.setVisibility(View.VISIBLE);
