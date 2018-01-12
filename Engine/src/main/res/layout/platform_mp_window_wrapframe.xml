@@ -10,14 +10,15 @@
         android:layout_alignParentTop="true"
         layout="@layout/platform_mp_window_title_bar"
         />
-    <org.zywx.wbpalmstar.engine.EBounceView
-        android:id="@+id/platform_mp_window_bounceview"
+    <LinearLayout
+        android:id="@+id/platform_mp_window_bounceview_wrapper"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
+        android:orientation="vertical"
         android:layout_below="@+id/platform_mp_window_title_bar"
         android:layout_above="@+id/platform_mp_window_bottom_bar"
         >
-    </org.zywx.wbpalmstar.engine.EBounceView>
+    </LinearLayout>
     <include
         android:id="@+id/platform_mp_window_bottom_bar"
         android:layout_height="45dip"
