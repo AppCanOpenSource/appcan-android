@@ -174,7 +174,12 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
                 LayoutInflater layoutInflater = LayoutInflater.from(mContext);
                 //外面套了一层wrapLayout，便于头部和底部布局
                 mMPWrapLayout = (RelativeLayout) layoutInflater.inflate(EUExUtil.getResLayoutID("platform_mp_window_wrapframe"), null);
-                mBounceView = (EBounceView) mMPWrapLayout.findViewById(EUExUtil.getResIdID("platform_mp_window_bounceview"));
+                LinearLayout bounceViewWrapper = (LinearLayout) mMPWrapLayout.findViewById(EUExUtil.getResIdID("platform_mp_window_bounceview_wrapper"));
+                //防止混淆导致布局文件出错，不在布局中直接引用EBounceView了
+                mBounceView = new EBounceView(mContext);
+                LayoutParams bParm = new LayoutParams(Compat.FILL, Compat.FILL);
+                mBounceView.setLayoutParams(bParm);
+                bounceViewWrapper.addView(mBounceView);
                 EUtil.viewBaseSetting(mBounceView);
                 mBounceView.setId(VIEW_MID);
                 mBounceView.addView(mMainView);
@@ -243,6 +248,8 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
                 if (windowOptionsVO.isBottomBarShow){
                     //是否显示底部栏
                     initMPWindowBottomBar(mMPWrapLayout, windowOptionsVO);
+                }else{
+
                 }
             }else{
                 BDebug.w("setWindowOptions error: windowOptionsVO is null or mMPWrapLayout is null");
@@ -391,6 +398,10 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
 
     public void clearFlag() {
         mflag &= F_WINDOW_FLAG_NONE;
+    }
+
+    public void addViewToCurrentWindowBottom(View child){
+
     }
 
     public void addViewToCurrentWindow(View child) {
