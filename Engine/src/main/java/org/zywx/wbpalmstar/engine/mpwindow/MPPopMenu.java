@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import org.zywx.wbpalmstar.base.vo.WindowOptionsVO.MPWindowMenuVO;
 import org.zywx.wbpalmstar.base.vo.WindowOptionsVO.MPWindowMenuVO.MPWindowMenuItemVO;
-import org.zywx.wbpalmstar.widgetone.uex.R;
+import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 
 /**
  * 公众号样式浮动菜单控制类
@@ -44,9 +44,9 @@ public class MPPopMenu {
 		this.mHeight = height;
 		mMenuVO = menuVO;
 		mPopMenuClickListener = popMenuClickListener;
-		mContainerView = LayoutInflater.from(context).inflate(R.layout.platform_mp_window_popmenu_layout, null);
+		mContainerView = LayoutInflater.from(context).inflate(EUExUtil.getResLayoutID("platform_mp_window_popmenu_layout"), null);
 		//浮动菜单外层layout
-		mMenuListLayout = (LinearLayout) mContainerView.findViewById(R.id.platform_mp_window_menu_items_container);
+		mMenuListLayout = (LinearLayout) mContainerView.findViewById(EUExUtil.getResIdID("platform_mp_window_menu_items_container"));
 		//初始化浮动菜单内部的子项目
         initMenuSubItem();
 		mMenuListLayout.setFocusableInTouchMode(true);
@@ -107,10 +107,10 @@ public class MPPopMenu {
 		mMenuListLayout.removeAllViews();
 		for (int i = 0; i < mMenuVO.subItems.size(); i++) {
 		    final MPWindowMenuItemVO menuItemVO = mMenuVO.subItems.get(i);
-			LinearLayout layoutMenuItem = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.platform_mp_window_popmenu_item, null);
+			LinearLayout layoutMenuItem = (LinearLayout) LayoutInflater.from(mContext).inflate(EUExUtil.getResLayoutID("platform_mp_window_popmenu_item"), null);
 			layoutMenuItem.setFocusable(true);
-			TextView tvMenuItemTitle = (TextView) layoutMenuItem.findViewById(R.id.platform_mp_window_pop_item_title_textview);
-			View menuItemDecline = layoutMenuItem.findViewById(R.id.platform_mp_window_pop_item_line);
+			TextView tvMenuItemTitle = (TextView) layoutMenuItem.findViewById(EUExUtil.getResIdID("platform_mp_window_pop_item_title_textview"));
+			View menuItemDecline = layoutMenuItem.findViewById(EUExUtil.getResIdID("platform_mp_window_pop_item_line"));
 			if (i == mMenuVO.subItems.size()-1) {
 				//最后一个不加分割线
 				menuItemDecline.setVisibility(View.GONE);

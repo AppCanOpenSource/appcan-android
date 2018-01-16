@@ -989,7 +989,7 @@ public class WDataManager {
             widgetPath = BUtility.F_FILE_SCHEMA
                     + file.getParentFile().getAbsolutePath() + "/";
         }
-        String indexUrl = null;
+        String indexUrl = configVO.indexUrl;
         if ("#".equals(configVO.indexUrl)
                 || configVO.indexUrl == null
                 || configVO.indexUrl.length() == 0) {
