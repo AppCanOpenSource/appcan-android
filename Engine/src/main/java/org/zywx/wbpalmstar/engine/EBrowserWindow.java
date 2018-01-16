@@ -36,6 +36,7 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
+import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -62,8 +63,6 @@ import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.engine.universalex.EUExWidget.SpaceClickListener;
 import org.zywx.wbpalmstar.engine.universalex.EUExWindow;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
-import org.zywx.wbpalmstar.widgetone.uex.R;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -85,6 +84,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
     public static final String MP_WINDOW_CLICKED_TYPE_LEFT = "0";
     public static final String MP_WINDOW_CLICKED_TYPE_RIGHT = "1";
     public static final String MP_WINDOW_CLICKED_TYPE_MENU = "2";
+    public static final String MP_WINDOW_CLICKED_TYPE_BOTTOM_LEFT = "3";
     public static final String CALLBACK_METHOD_ON_MP_WINDOW_CLICKED = "uexWindow.onMPWindowClicked";
     public static final String CALLBACK_POST_GLOBAL_NOTI = "javascript:if(uexWindow.onGlobalNotification)"
             + "{uexWindow.onGlobalNotification('";
@@ -145,7 +145,8 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
     private List<View> viewList = new ArrayList<View>();
 
     private RelativeLayout mMPWrapLayout;//公众号样式外层layout
-
+    private LinearLayout bounceViewWrapper;
+    private LinearLayout bounceViewMenu;//公众号菜单布局
     public EBrowserWindow(Context context, EBrowserWidget inParent) {
         super(context);
         mContext = context;
@@ -174,7 +175,10 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
                 LayoutInflater layoutInflater = LayoutInflater.from(mContext);
                 //外面套了一层wrapLayout，便于头部和底部布局
                 mMPWrapLayout = (RelativeLayout) layoutInflater.inflate(EUExUtil.getResLayoutID("platform_mp_window_wrapframe"), null);
-                LinearLayout bounceViewWrapper = (LinearLayout) mMPWrapLayout.findViewById(EUExUtil.getResIdID("platform_mp_window_bounceview_wrapper"));
+
+                bounceViewWrapper = (LinearLayout) mMPWrapLayout.findViewById(EUExUtil.getResIdID("platform_mp_window_bounceview_wrapper"));
+                //公众号的菜单根布局
+                bounceViewMenu = (LinearLayout) mMPWrapLayout.findViewById(EUExUtil.getResIdID("platform_mp_window_layout_custom_toolbar"));
                 //防止混淆导致布局文件出错，不在布局中直接引用EBounceView了
                 mBounceView = new EBounceView(mContext);
                 LayoutParams bParm = new LayoutParams(Compat.FILL, Compat.FILL);
@@ -249,7 +253,13 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
                     //是否显示底部栏
                     initMPWindowBottomBar(mMPWrapLayout, windowOptionsVO);
                 }else{
-
+                    TranslateAnimation animation = new TranslateAnimation(0.0f, 0.0f, 0.0f, 300.0f);
+                    animation.setDuration(500);
+                    bounceViewMenu.setAnimation(animation);
+                    bounceViewMenu.setVisibility(GONE);
+//                    EUExChatKeyboard euExChatKeyboard=new EUExChatKeyboard(mContext,mMainView);
+//                    euExChatKeyboard.open(new String[]{params});
+                    BDebug.w("setWindowOptions error: WindowOptions isBottomBar is False");
                 }
             }else{
                 BDebug.w("setWindowOptions error: windowOptionsVO is null or mMPWrapLayout is null");
@@ -264,22 +274,19 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
      */
     private void initMPWindowTopBar(View rootView, WindowOptionsVO windowOptionsVO){
         //设置标题
-        TextView windowTitle = (TextView)rootView.findViewById(R.id.platform_mp_window_text_title);
+        TextView windowTitle = (TextView)rootView.findViewById(EUExUtil.getResIdID("platform_mp_window_text_title"));
         windowTitle.setText(windowOptionsVO.windowTitle);
         //右侧图标
-        Button showDetailButton=(Button) rootView.findViewById(R.id.platform_mp_window_button_detail_info);
+        Button showDetailButton=(Button) rootView.findViewById(EUExUtil.getResIdID("platform_mp_window_button_detail_info"));
         //左侧图标
-        Button backButton=(Button) rootView.findViewById(R.id.platform_mp_window_button_back);
+        Button backButton=(Button) rootView.findViewById(EUExUtil.getResIdID("platform_mp_window_button_back"));
         OnClickListener listener = new OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.platform_mp_window_button_back:
-                        callbackOnMPWindowOnClicked(MP_WINDOW_CLICKED_TYPE_LEFT, null, null);
-                        break;
-                    case R.id.platform_mp_window_button_detail_info: // 显示个人信息页面
-                        callbackOnMPWindowOnClicked(MP_WINDOW_CLICKED_TYPE_RIGHT, null, null);
-                        break;
+                if(v.getId()==EUExUtil.getResIdID("platform_mp_window_button_back")){
+                    callbackOnMPWindowOnClicked(MP_WINDOW_CLICKED_TYPE_LEFT, null, null);
+                }else if(v.getId()==EUExUtil.getResIdID("platform_mp_window_button_detail_info")){
+                    callbackOnMPWindowOnClicked(MP_WINDOW_CLICKED_TYPE_RIGHT, null, null);// 显示个人信息页面
                 }
             }
         };
@@ -293,19 +300,18 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
      */
     private void initMPWindowBottomBar(View rootView, WindowOptionsVO windowOptionsVO){
         //底部外层
-        LinearLayout layout_bottom_menu_toolbar = (LinearLayout)rootView.findViewById(R.id.platform_mp_window_layout_custom_toolbar);
+        LinearLayout layout_bottom_menu_toolbar = (LinearLayout)rootView.findViewById(EUExUtil.getResIdID("platform_mp_window_layout_custom_toolbar"));
         //菜单栏
-        LinearLayout layout_menu = (LinearLayout)rootView.findViewById(R.id.platform_mp_window_layout_custom_menu);
+        LinearLayout layout_menu = (LinearLayout)rootView.findViewById(EUExUtil.getResIdID("platform_mp_window_layout_custom_menu"));
         //键盘
-        LinearLayout layout_exchange=(LinearLayout)rootView.findViewById(R.id.platform_mp_window_exchange_layout);
+        LinearLayout layout_exchange=(LinearLayout)rootView.findViewById(EUExUtil.getResIdID("platform_mp_window_exchange_layout"));
 
         OnClickListener listener = new OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.platform_mp_window_exchange_layout:
-                        //TODO 显示键盘输入
-                        break;
+                if(v.getId()==EUExUtil.getResIdID("platform_mp_window_exchange_layout")){
+                    //TODO 显示键盘输入
+                    callbackOnMPWindowOnClicked(MP_WINDOW_CLICKED_TYPE_BOTTOM_LEFT,null,null);
                 }
             }
         };
@@ -319,10 +325,13 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
             for (int i = 0; i < menuList.size(); i++) {
                 final WindowOptionsVO.MPWindowMenuVO menuVO = menuList.get(i);
                 //遍历增加菜单栏目
-                LinearLayout layout = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.platform_mp_window_menu_title_item, null);
-                ImageView imageTab = (ImageView)layout.findViewById(R.id.platform_mp_window_icon_tab);
-                TextView tvMenuName = (TextView) layout.findViewById(R.id.platform_mp_window_tv_menu_name);
+                LinearLayout layout = (LinearLayout) LayoutInflater.from(mContext).inflate(EUExUtil.getResLayoutID("platform_mp_window_menu_title_item"), null);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f);
+                layout.setLayoutParams(lp);
+                ImageView imageTab = (ImageView)layout.findViewById(EUExUtil.getResIdID("platform_mp_window_icon_tab"));
+                TextView tvMenuName = (TextView) layout.findViewById(EUExUtil.getResIdID("platform_mp_window_tv_menu_name"));
                 tvMenuName.setText(menuVO.menuTitle);
+
                 if (menuVO.subItems!=null&&menuVO.subItems.size() > 0){
                     // 有子菜单项，显示三角
                     imageTab.setVisibility(VISIBLE);
