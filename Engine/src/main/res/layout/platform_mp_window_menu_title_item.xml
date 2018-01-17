@@ -25,16 +25,24 @@
             android:textColor="@color/platform_mp_window_gray_black"
             android:textSize="14sp"
             />
-        <ImageView
-            android:id="@+id/platform_mp_window_icon_tab"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-             android:background="@drawable/platform_mp_window_icon_black_three"
-            android:layout_alignBottom="@id/platform_mp_window_tv_menu_name"
-            android:layout_alignRight="@id/platform_mp_window_tv_menu_name"
-            />
+        <!--<ImageView-->
+            <!--android:id="@+id/platform_mp_window_icon_tab"-->
+            <!--android:layout_width="15dp"-->
+            <!--android:layout_height="15dp"-->
+             <!--android:background="@drawable/platform_mp_window_icon_black_three"-->
+            <!--android:layout_alignBottom="@id/platform_mp_window_tv_menu_name"-->
+            <!--android:layout_alignRight="@id/platform_mp_window_tv_menu_name"-->
+            <!--/>-->
     </RelativeLayout>
-
+    <ImageView
+        android:id="@+id/platform_mp_window_icon_tab"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/platform_mp_window_icon_black_three"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="10dp"
+        />
     <View
         android:layout_width="0.05dip"
         android:layout_height="fill_parent"

@@ -500,8 +500,8 @@ public class EUExWindow extends EUExBase {
 
     public void setWindowOptions(String[] params){
         try {
-            String windowOptionsStr = new JSONObject(params[0]).getString("windowOptions");
-            WindowOptionsVO windowOptionsVO = DataHelper.gson.fromJson(windowOptionsStr, WindowOptionsVO.class);
+//            String windowOptionsStr = new JSONObject(params[0]).getString("windowOptions");
+            WindowOptionsVO windowOptionsVO = DataHelper.gson.fromJson(params[0], WindowOptionsVO.class);
             mBrwView.getBrowserWindow().setWindowOptions(windowOptionsVO);
         } catch (Exception e) {
             e.printStackTrace();
