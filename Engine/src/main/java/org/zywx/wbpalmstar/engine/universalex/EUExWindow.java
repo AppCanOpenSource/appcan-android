@@ -362,6 +362,7 @@ public class EUExWindow extends EUExBase {
      *
      * @param params
      */
+    @AppCanAPI
     public void openWithOptions(String[] params) {
         WindowOpenVO openVO=DataHelper.gson.fromJson(params[0],WindowOpenVO.class);
         EBrowserWindow curWind = mBrwView.getBrowserWindow();
@@ -497,7 +498,7 @@ public class EUExWindow extends EUExBase {
         windEntry.mWindowOptions = windowOptionsVO;
         curWind.createWindow(mBrwView, windEntry);
     }
-
+    @AppCanAPI
     public void setWindowOptions(String[] params){
         try {
 //            String windowOptionsStr = new JSONObject(params[0]).getString("windowOptions");
