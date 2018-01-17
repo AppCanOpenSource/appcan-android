@@ -7,6 +7,11 @@
     android:gravity="center"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.05dp"
+        android:background="#cdcdcd"
+        ></View>
     <LinearLayout
         android:id="@+id/platform_mp_window_layout_custom_toolbar"
         android:layout_width="match_parent"

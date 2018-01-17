@@ -362,6 +362,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
                 });
                 layout_menu.addView(layout);
             }
+            layout_bottom_menu_toolbar.setVisibility(View.VISIBLE);
         } else {
             layout_bottom_menu_toolbar.setVisibility(View.GONE);
         }
