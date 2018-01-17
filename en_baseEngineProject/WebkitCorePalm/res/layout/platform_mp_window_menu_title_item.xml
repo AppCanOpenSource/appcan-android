@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:background="@drawable/platform_mp_window_item_bg_noborder_selector"
+    android:clickable="true"
+    android:gravity="center" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center" >
+
+        <TextView
+            android:id="@+id/platform_mp_window_tv_menu_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dip"
+            android:gravity="center_horizontal"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:text="菜单标题"
+            android:textColor="@color/platform_mp_window_gray_black"
+            android:textSize="14sp"
+            />
+        <ImageView
+            android:id="@+id/platform_mp_window_icon_tab"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+             android:background="@drawable/platform_mp_window_icon_black_three"
+            android:layout_alignBottom="@id/platform_mp_window_tv_menu_name"
+            android:layout_alignRight="@id/platform_mp_window_tv_menu_name"
+            />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="0.05dip"
+        android:layout_height="fill_parent"
+        android:background="@color/platform_mp_window_border_color" />
+
+</LinearLayout>
