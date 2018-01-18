@@ -84,7 +84,7 @@ public class EBrwViewEntry {
     public String mUserAgent = "";
 
     public WindowOptionsVO mWindowOptions;
-
+    public String mExeJS = "";//打开窗口时由前端传入想要注入的JS字符串，WebView加载完成的时候执行这段JS。
     public EBrwViewEntry(int inType) {
         mType = inType;
     }
