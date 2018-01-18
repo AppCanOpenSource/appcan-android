@@ -210,6 +210,7 @@ public class EUExWindow extends EUExBase {
     public static final String KEY_HARDWARE = "hardware";//硬件加速
     public static final String KEY_DOWNLOAD_CALLBACK = "downloadCallback";//下载回调
     public static final String KEY_USER_AGENT = "userAgent";
+    public static final String KEY_EXE_JS = "exeJS";
 
     public EUExWindow(Context context, EBrowserView inParent) {
         super(context, inParent);
@@ -251,6 +252,7 @@ public class EUExWindow extends EUExBase {
         int hardware = -1;
         int downloadCallback = 0;
         String userAgent = "";
+        String exeJS = "";
         if (parm.length > 7&&parm[7]!=null) {
             animDuration = parm[7];
         }
@@ -274,6 +276,9 @@ public class EUExWindow extends EUExBase {
                 }
                 downloadCallback = data.optInt(KEY_DOWNLOAD_CALLBACK, 0);
                 userAgent = data.optString(KEY_USER_AGENT, "");
+                if (data.has(KEY_EXE_JS)){
+                    exeJS = data.getString(KEY_EXE_JS);
+                }
             } catch (JSONException ignored) {
             }
         }
@@ -354,6 +359,7 @@ public class EUExWindow extends EUExBase {
         windEntry.mDownloadCallback = downloadCallback;
         windEntry.mUserAgent = userAgent;
         windEntry.hasExtraInfo = hasExtraInfo;
+        windEntry.mExeJS = exeJS;
         curWind.createWindow(mBrwView, windEntry);
     }
 
@@ -1283,6 +1289,7 @@ public class EUExWindow extends EUExBase {
         int hardware = -1;
         int downloadCallback = 0;
         String userAgent = "";
+        String exeJS = "";
         if (parm.length > 11 && parm[11] != null) {
             String jsonData = parm[11];
             try {
@@ -1303,6 +1310,9 @@ public class EUExWindow extends EUExBase {
                 }
                 downloadCallback = data.optInt(KEY_DOWNLOAD_CALLBACK, 0);
                 userAgent = data.optString(KEY_USER_AGENT, "");
+                if (data.has(KEY_EXE_JS)){
+                    exeJS = data.getString(KEY_EXE_JS);
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -1385,6 +1395,7 @@ public class EUExWindow extends EUExBase {
         popEntry.mDownloadCallback = downloadCallback;
         popEntry.mUserAgent = userAgent;
         popEntry.mHardware = hardware;
+        popEntry.mExeJS = exeJS;
         popEntry.hasExtraInfo = hasExtraInfo;
         String query = null;
         if (Build.VERSION.SDK_INT >= 11) {
