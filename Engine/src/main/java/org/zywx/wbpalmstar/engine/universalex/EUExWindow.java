@@ -389,7 +389,7 @@ public class EUExWindow extends EUExBase {
         String animDuration = String.valueOf(openVO.animDuration);
 
         int windowStyle = openVO.windowStyle;
-        WindowOptionsVO windowOptionsVO = openVO.windowOptionsVO;
+        WindowOptionsVO windowOptionsVO = openVO.windowOptions;
 
         boolean opaque = false;
         /**赋初值，避免不传bgColor崩溃*/
