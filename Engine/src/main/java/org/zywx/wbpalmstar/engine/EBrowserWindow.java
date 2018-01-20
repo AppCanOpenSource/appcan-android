@@ -147,6 +147,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
     private RelativeLayout mMPWrapLayout;//公众号样式外层layout
     private LinearLayout bounceViewWrapper;
     private LinearLayout bounceViewMenu;//公众号菜单布局
+    private LinearLayout platform_mp_window_bottom_bar; //整个底部布局
     public EBrowserWindow(Context context, EBrowserWidget inParent) {
         super(context);
         mContext = context;
@@ -179,6 +180,8 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
                 bounceViewWrapper = (LinearLayout) mMPWrapLayout.findViewById(EUExUtil.getResIdID("platform_mp_window_bounceview_wrapper"));
                 //公众号的菜单根布局
                 bounceViewMenu = (LinearLayout) mMPWrapLayout.findViewById(EUExUtil.getResIdID("platform_mp_window_layout_custom_toolbar"));
+                platform_mp_window_bottom_bar = (LinearLayout) mMPWrapLayout.findViewById(EUExUtil.getResIdID("platform_mp_window_bottom_bar"));
+
                 //防止混淆导致布局文件出错，不在布局中直接引用EBounceView了
                 mBounceView = new EBounceView(mContext);
                 LayoutParams bParm = new LayoutParams(Compat.FILL, Compat.FILL);
@@ -255,8 +258,8 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
                 }else{
                     TranslateAnimation animation = new TranslateAnimation(0.0f, 0.0f, 0.0f, 300.0f);
                     animation.setDuration(500);
-                    bounceViewMenu.setAnimation(animation);
-                    bounceViewMenu.setVisibility(GONE);
+                    platform_mp_window_bottom_bar.setAnimation(animation);
+                    platform_mp_window_bottom_bar.setVisibility(GONE);
 //                    EUExChatKeyboard euExChatKeyboard=new EUExChatKeyboard(mContext,mMainView);
 //                    euExChatKeyboard.open(new String[]{params});
                     BDebug.w("setWindowOptions error: WindowOptions isBottomBar is False");

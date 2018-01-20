@@ -28,7 +28,7 @@ public class WindowOpenVO implements Serializable {
 
     public int windowStyle;
 
-    public WindowOptionsVO windowOptionsVO;
+    public WindowOptionsVO windowOptions;
 
 
 }
