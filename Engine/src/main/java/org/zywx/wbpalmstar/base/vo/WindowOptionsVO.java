@@ -13,9 +13,11 @@ import java.util.List;
 
 public class WindowOptionsVO implements Parcelable {
     public String windowTitle;
+    public String titleBarBgColor;
     public boolean isBottomBarShow;
     public String titleLeftIcon;
     public String titleRightIcon;
+
     public List<MPWindowMenuVO> menuList;
 
     public static class MPWindowMenuVO implements Parcelable {
@@ -129,6 +131,7 @@ public class WindowOptionsVO implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.windowTitle);
+        dest.writeString(this.titleBarBgColor);
         dest.writeByte(this.isBottomBarShow ? (byte) 1 : (byte) 0);
         dest.writeString(this.titleLeftIcon);
         dest.writeString(this.titleRightIcon);
@@ -140,6 +143,7 @@ public class WindowOptionsVO implements Parcelable {
 
     protected WindowOptionsVO(Parcel in) {
         this.windowTitle = in.readString();
+        this.titleBarBgColor=in.readString();
         this.isBottomBarShow = in.readByte() != 0;
         this.titleLeftIcon = in.readString();
         this.titleRightIcon = in.readString();

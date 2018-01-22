@@ -392,7 +392,8 @@ public class EUExWindow extends EUExBase {
         WindowOptionsVO windowOptionsVO = openVO.windowOptions;
 
         boolean opaque = false;
-        /**赋初值，避免不传bgColor崩溃*/
+        /**赋初值，避免
+         * 不传bgColor崩溃*/
         String bgColor = "#00000000";
         boolean hasExtraInfo = false;
         int hardware = -1;
@@ -507,8 +508,8 @@ public class EUExWindow extends EUExBase {
     @AppCanAPI
     public void setWindowOptions(String[] params){
         try {
-//            String windowOptionsStr = new JSONObject(params[0]).getString("windowOptions");
-            WindowOptionsVO windowOptionsVO = DataHelper.gson.fromJson(params[0], WindowOptionsVO.class);
+            String windowOptionsStr = new JSONObject(params[0]).getString("windowOptions");
+            WindowOptionsVO windowOptionsVO = DataHelper.gson.fromJson(windowOptionsStr, WindowOptionsVO.class);
             mBrwView.getBrowserWindow().setWindowOptions(windowOptionsVO);
         } catch (Exception e) {
             e.printStackTrace();
