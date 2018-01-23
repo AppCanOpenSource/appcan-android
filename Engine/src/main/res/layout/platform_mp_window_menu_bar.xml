@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout android:id="@+id/platform_mp_window_layout_menu_bar"
     android:layout_width="match_parent"
-    android:layout_height="50dip"
+    android:layout_height="match_parent"
     android:layout_alignParentBottom="true"
     android:background="@color/white"
     android:gravity="center"
