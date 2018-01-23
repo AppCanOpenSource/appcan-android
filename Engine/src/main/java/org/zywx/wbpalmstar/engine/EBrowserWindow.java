@@ -291,10 +291,10 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         }
         //右侧图标
         Button showDetailButton=(Button) rootView.findViewById(EUExUtil.getResIdID("platform_mp_window_button_detail_info"));
-        showButtonIcon(showDetailButton,windowOptionsVO.titleLeftIcon);
+        showButtonIcon(showDetailButton,windowOptionsVO.titleRightIcon);
         //左侧图标
         Button backButton=(Button) rootView.findViewById(EUExUtil.getResIdID("platform_mp_window_button_back"));
-        showButtonIcon(backButton,windowOptionsVO.titleRightIcon);
+        showButtonIcon(backButton,windowOptionsVO.titleLeftIcon);
         OnClickListener listener = new OnClickListener() {
             @Override
             public void onClick(View v) {
