@@ -196,6 +196,7 @@ public class EUExScript {
                 + "open:function(){uexDispatcher.dispatch('uexWindow','open',jo(arguments));},"
                 + "openWithOptions:function(){uexDispatcher.dispatch('uexWindow','openWithOptions',jo(arguments));},"
                 + "setWindowOptions:function(){uexDispatcher.dispatch('uexWindow','setWindowOptions',jo(arguments));},"
+                + "setMpWindowStatus:function(){uexDispatcher.dispatch('uexWindow','setMpWindowStatus',jo(arguments));},"
                 + "setWindowFrame:function(){uexDispatcher.dispatch('uexWindow','setWindowFrame',jo(arguments));},"
                 + "close:function(){uexDispatcher.dispatch('uexWindow','close',jo(arguments));},"
                 + "openSlibing:function(){uexDispatcher.dispatch('uexWindow','openSlibing',jo(arguments));},"

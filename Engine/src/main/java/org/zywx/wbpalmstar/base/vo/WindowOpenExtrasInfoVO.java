@@ -14,4 +14,6 @@ public class WindowOpenExtrasInfoVO implements Serializable {
 
     public int hardware;
 
+    public String exeJS;
+
 }
