@@ -150,7 +150,8 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
 
     private RelativeLayout mMPWrapLayout;//公众号样式外层layout
     private LinearLayout bounceViewWrapper;
-    private LinearLayout bounceViewMenu;//公众号菜单布局
+    private LinearLayout bounceViewMenu;//公众号菜单布局inputviews
+    private LinearLayout inputviews;//公众号菜单布局inputviews
     private LinearLayout platform_mp_window_bottom_bar; //整个底部布局
     private RelativeLayout platform_mp_window_title_bar; //titleBar 布局
     public EBrowserWindow(Context context, EBrowserWidget inParent) {
@@ -184,7 +185,8 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
 
                 bounceViewWrapper = (LinearLayout) mMPWrapLayout.findViewById(EUExUtil.getResIdID("platform_mp_window_bounceview_wrapper"));
                 //公众号的菜单根布局
-                bounceViewMenu = (LinearLayout) mMPWrapLayout.findViewById(EUExUtil.getResIdID("platform_mp_window_layout_custom_toolbar"));
+                bounceViewMenu = (LinearLayout) mMPWrapLayout.findViewById(EUExUtil.getResIdID("platform_mp_window_layout_menu_bar"));
+                inputviews = (LinearLayout) mMPWrapLayout.findViewById(EUExUtil.getResIdID("inputviews"));
                 platform_mp_window_bottom_bar = (LinearLayout) mMPWrapLayout.findViewById(EUExUtil.getResIdID("platform_mp_window_bottom_bar"));
                 platform_mp_window_title_bar=(RelativeLayout) mMPWrapLayout.findViewById(EUExUtil.getResIdID("platform_mp_window_title_bar"));
                 //防止混淆导致布局文件出错，不在布局中直接引用EBounceView了
@@ -307,6 +309,14 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         };
         backButton.setOnClickListener(listener);
         showDetailButton.setOnClickListener(listener);
+    }
+
+    public void setMpWindowStatus(boolean flag) {
+        if(flag){
+            platform_mp_window_bottom_bar.setVisibility(VISIBLE);
+        }else {
+            platform_mp_window_bottom_bar.setVisibility(GONE);
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -444,9 +454,6 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         mflag &= F_WINDOW_FLAG_NONE;
     }
 
-    public void addViewToCurrentWindowBottom(View child){
-
-    }
 
     public void addViewToCurrentWindow(View child) {
         //Message msg = mWindLoop.obtainMessage();
@@ -2317,6 +2324,9 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
     public static final int F_WHANDLER_MULTIPOP_SET = 32;
 
     public static final int TOTAL = F_WHANDLER_SET_VISIBLE + 1;
+
+
+
 
     public class WindowHander extends Handler {
 
