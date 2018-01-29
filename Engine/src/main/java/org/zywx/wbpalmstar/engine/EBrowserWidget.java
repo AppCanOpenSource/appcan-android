@@ -115,8 +115,14 @@ public class EBrowserWidget extends AbsoluteLayout {
         EBrwViewEntry inEntry = new EBrwViewEntry(EBrwViewEntry.VIEW_TYPE_ROOT);
         //增加特殊窗口的逻辑
         if (mWidgetData.m_wgtType == WWidgetData.WGT_TYPE_CLOUD){
+            //JS注入
             if (mWidgetData.m_indexWindowOptions != null) {
-                inEntry.mExeJS=mWidgetData.m_indexWindowOptions.extras.extraInfo.exeJS;
+                if(null!=mWidgetData.m_indexWindowOptions.extras){
+                    if(null!=mWidgetData.m_indexWindowOptions.extras.extraInfo){
+                        inEntry.mExeJS=mWidgetData.m_indexWindowOptions.extras.extraInfo.exeJS;
+                    }
+                }
+                inEntry.mFlag=mWidgetData.m_indexWindowOptions.flag; //窗口标记
                 inEntry.mWindowStyle = mWidgetData.m_indexWindowOptions.windowStyle; //默认值是0，即WINDOW_SYTLE_NORMAL
                 inEntry.mWindowOptions = mWidgetData.m_indexWindowOptions.windowOptions; //窗口配置参数
             }else{
