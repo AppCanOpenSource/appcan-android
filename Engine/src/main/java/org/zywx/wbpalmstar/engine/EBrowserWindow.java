@@ -179,6 +179,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
                         EBrwViewEntry.VIEW_TYPE_MAIN, this);
                 mMainView.setVisibility(VISIBLE);
                 mMainView.setName("main");
+                mMainView.setExeJS(inEntry.mExeJS);
                 LayoutInflater layoutInflater = LayoutInflater.from(mContext);
                 //外面套了一层wrapLayout，便于头部和底部布局
                 mMPWrapLayout = (RelativeLayout) layoutInflater.inflate(EUExUtil.getResLayoutID("platform_mp_window_wrapframe"), null);

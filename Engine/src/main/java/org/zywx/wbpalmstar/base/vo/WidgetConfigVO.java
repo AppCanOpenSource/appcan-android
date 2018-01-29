@@ -36,6 +36,9 @@ public class WidgetConfigVO {
 
         public int windowStyle;
         public WindowOptionsVO windowOptions;
+        public int flag;
+        public WindowOpenExtrasVO extras;
+
 
     }
 
