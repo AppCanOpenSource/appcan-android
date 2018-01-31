@@ -514,8 +514,9 @@ public class EUExWindow extends EUExBase {
     public void setWindowOptions(String[] params){
         try {
             String windowOptionsStr = new JSONObject(params[0]).getString("windowOptions");
+            boolean isBottomShow=new JSONObject(windowOptionsStr).has("isBottomBarShow");
             WindowOptionsVO windowOptionsVO = DataHelper.gson.fromJson(windowOptionsStr, WindowOptionsVO.class);
-            mBrwView.getBrowserWindow().setWindowOptions(windowOptionsVO);
+            mBrwView.getBrowserWindow().setWindowOptions(windowOptionsVO,isBottomShow,false);
         } catch (Exception e) {
             e.printStackTrace();
         }

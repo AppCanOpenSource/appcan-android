@@ -154,6 +154,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
     private LinearLayout inputviews;//公众号菜单布局inputviews
     private LinearLayout platform_mp_window_bottom_bar; //整个底部布局
     private RelativeLayout platform_mp_window_title_bar; //titleBar 布局
+    private WindowOptionsVO mwindowOptionsVO;
     public EBrowserWindow(Context context, EBrowserWidget inParent) {
         super(context);
         mContext = context;
@@ -198,7 +199,8 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
                 EUtil.viewBaseSetting(mBounceView);
                 mBounceView.setId(VIEW_MID);
                 mBounceView.addView(mMainView);
-                setWindowOptions(inEntry.mWindowOptions);
+                mwindowOptionsVO=inEntry.mWindowOptions;
+                setWindowOptions(inEntry.mWindowOptions,false,true);
                 addView(mMPWrapLayout);
             }else{
                 mMainView = new EBrowserView(mContext,
@@ -254,9 +256,18 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         }
     }
 
-    public void setWindowOptions(WindowOptionsVO windowOptionsVO){
+    /**
+     *
+     * @param windowOptionsVO   传进来的数据
+     * @param isHasBottomBarShow 传进来数据是否有控制菜单栏显示的字段
+     * @param isInit 区分是否第一次设置
+     */
+    public void setWindowOptions(WindowOptionsVO windowOptionsVO,boolean isHasBottomBarShow,boolean isInit){
         if (mWindowStyle == EBrwViewEntry.WINDOW_SYTLE_MEDIA_PLATFORM){
             if(windowOptionsVO != null && mMPWrapLayout != null){
+                if(!isInit) {
+                    windowOptionsVO=optionVoCompensation(windowOptionsVO,isHasBottomBarShow);
+                }
                 //重新配置当前窗口的参数
                 //初始化标题栏
                 initMPWindowTopBar(mMPWrapLayout, windowOptionsVO);
@@ -279,6 +290,28 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         }else{
             BDebug.w("setWindowOptions error: WindowStyle not supported :" + mWindowStyle);
         }
+    }
+
+    private WindowOptionsVO optionVoCompensation(WindowOptionsVO windowOptionsVO,boolean isHasBottomBarShow) {
+        if(""!=windowOptionsVO.windowTitle&&null!=windowOptionsVO.windowTitle){
+            mwindowOptionsVO.windowTitle=windowOptionsVO.windowTitle;
+        }
+        if(""!=windowOptionsVO.titleBarBgColor&&null!=windowOptionsVO.titleBarBgColor){
+            mwindowOptionsVO.titleBarBgColor=windowOptionsVO.titleBarBgColor;
+        }
+        if(""!=windowOptionsVO.titleLeftIcon&&null!=windowOptionsVO.titleLeftIcon){
+            mwindowOptionsVO.titleLeftIcon=windowOptionsVO.titleLeftIcon;
+        }
+        if(""!=windowOptionsVO.titleRightIcon&&null!=windowOptionsVO.titleRightIcon){
+            mwindowOptionsVO.titleRightIcon=windowOptionsVO.titleRightIcon;
+        }
+        if(null!=windowOptionsVO.menuList){
+            mwindowOptionsVO.menuList=windowOptionsVO.menuList;
+        }
+        if(isHasBottomBarShow){
+            mwindowOptionsVO.isBottomBarShow=windowOptionsVO.isBottomBarShow;
+        }
+        return mwindowOptionsVO;
     }
 
     /**
