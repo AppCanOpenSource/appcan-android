@@ -71,6 +71,7 @@ QQ交流群：173758265
 ```
 ├── appcan
 │   ├── crosswalk
+│   ├── x5
 │   └── system
 ├── generated
 ├── intermediates
@@ -78,7 +79,8 @@ QQ交流群：173758265
 │   ├── engine
 │   ├── jar
 │   ├── aar 
-│   └── logs
+│   ├── logs
+│   └── mapping
 └── tmp
 ```
 
@@ -98,7 +100,7 @@ QQ交流群：173758265
 #### 排除混淆
 
 - 提供给JS调用的接口,请在方法添加`@AppCanAPI`注解，混淆时会排除
-- 提供给插件调用或不希望被混淆的，请添加`@Kepp`注解，混淆时会排除
+- 提供给插件调用或不希望被混淆的，请添加`@Keep`注解，混淆时会排除
 
 
 
@@ -179,5 +181,58 @@ QQ交流群：173758265
   applicationId 'org.zywx.wbpalmstar.widgetone.uex'
   ```
 
+### AndroidStudio3.0.1等开发环境适配
   ​
+在3.0.1遇到Gradle插件和脚本运行出错，是因为工程中的AppCanGradle插件未做高版本的适配。有两种方式解决：
 
+#### 降级gradle
+
+修改Engine/gradle/wrapper/gradle-wrapper.properties，其中版本改为2.14.1；其他部分维持原状即可编译通过。
+
+#### 依赖新版AppCanGradle插件（beta版）
+
+1. 修改Engine/gradle/wrapper/gradle-wrapper.properties，其中版本改为4.1；
+
+2. 修改Engine/build.gradle文件中。其中，repositories增加一个github的maven库，dependencies中将原来的依赖本地的gradle插件改为依赖线上的，版本目前是2.2.3，可以在此仓库关注更新 https://github.com/android-plugin/mvn-repo。修改部分参考下面：
+
+```groovy
+buildscript {
+    repositories {
+        google()
+        jcenter()
+        maven {
+            url 'https://raw.githubusercontent.com/android-plugin/mvn-repo/master/'
+        }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.0.1'
+//        classpath fileTree(dir: '../gradle-plugin', include: '*.jar')
+        classpath 'org.appcan.gradle.plugins:appcan-gradle-plugin:2.2.3'
+    }
+}
+```
+
+3. dependencies中com.android.tools.build:gradle设置为3.0.1之后，需要在所有的repositories中增加google()，否则会找不到Android新版的官方gradle相关插件库而报错；
+
+4. 若buildToolsVersion改为26或更高后，还会要求修改flavor的定义，如下修改即可：
+
+```groovy
+    //声明flavorDimension
+    flavorDimensions "kernel"
+
+    productFlavors {
+        crosswalk {
+            dimension "kernel"
+        }
+        system {
+            dimension "kernel"
+        }
+        x5 {
+            dimension "kernel"
+        }
+    }
+```
+
+5. 为了方便开发者使用，修改后的gradle文件已经放在了工程根目录，名为build.gradle.3.0.1，由于在实验阶段，没有替换原有的。
+
+6. 如果仍有问题，欢迎在提issue或者QQ群中互相讨论。
