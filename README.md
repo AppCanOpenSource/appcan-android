@@ -233,6 +233,6 @@ buildscript {
     }
 ```
 
-5. 为了方便开发者使用，修改后的gradle文件已经放在了工程根目录，名为build.gradle.3.0.1，由于在实验阶段，没有替换原有的。
+5. 为了方便开发者使用，修改后的gradle文件已经放在了工程根目录，名为**build.gradle.3.0.1**，由于在实验阶段，没有替换原有的。
 
-6. 如果仍有问题，欢迎在提issue或者QQ群中互相讨论。
+6. 关于此，如果仍有问题，欢迎在提issue或者QQ群中互相讨论，或者关注这个issue：https://github.com/AppCanOpenSource/appcan-android/issues/136
