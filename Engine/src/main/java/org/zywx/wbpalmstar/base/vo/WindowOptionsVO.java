@@ -17,6 +17,8 @@ public class WindowOptionsVO implements Parcelable {
     public boolean isBottomBarShow;
     public String titleLeftIcon;
     public String titleRightIcon;
+    public String titleCloseIcon;
+    public String titleTextColor;
 
     public List<MPWindowMenuVO> menuList;
 
@@ -119,6 +121,8 @@ public class WindowOptionsVO implements Parcelable {
                 ", isBottomBarShow=" + isBottomBarShow +
                 ", titleLeftIcon='" + titleLeftIcon + '\'' +
                 ", titleRightIcon='" + titleRightIcon + '\'' +
+                ", titleCloseIcon='" + titleCloseIcon + '\'' +
+                ", titleTextColor='" + titleTextColor + '\'' +
                 ", menuList=" + menuList +
                 '}';
     }
@@ -135,6 +139,8 @@ public class WindowOptionsVO implements Parcelable {
         dest.writeByte(this.isBottomBarShow ? (byte) 1 : (byte) 0);
         dest.writeString(this.titleLeftIcon);
         dest.writeString(this.titleRightIcon);
+        dest.writeString(this.titleTextColor);
+        dest.writeString(this.titleCloseIcon);
         dest.writeTypedList(this.menuList);
     }
 
@@ -147,6 +153,8 @@ public class WindowOptionsVO implements Parcelable {
         this.isBottomBarShow = in.readByte() != 0;
         this.titleLeftIcon = in.readString();
         this.titleRightIcon = in.readString();
+        this.titleTextColor = in.readString();
+        this.titleCloseIcon = in.readString();
         this.menuList = in.createTypedArrayList(MPWindowMenuVO.CREATOR);
     }
 
