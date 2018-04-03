@@ -89,6 +89,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
     public static final String MP_WINDOW_CLICKED_TYPE_RIGHT = "1";
     public static final String MP_WINDOW_CLICKED_TYPE_MENU = "2";
     public static final String MP_WINDOW_CLICKED_TYPE_BOTTOM_LEFT = "3";
+    public static final String MP_WINDOW_CLICKED_TYPE_CLOSE = "4";
     public static final String CALLBACK_METHOD_ON_MP_WINDOW_CLICKED = "uexWindow.onMPWindowClicked";
     public static final String CALLBACK_POST_GLOBAL_NOTI = "javascript:if(uexWindow.onGlobalNotification)"
             + "{uexWindow.onGlobalNotification('";
@@ -322,6 +323,10 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         TextView windowTitle = (TextView)rootView.findViewById(EUExUtil.getResIdID("platform_mp_window_text_title"));
         windowTitle.setText(windowOptionsVO.windowTitle);
         //设置标题栏的颜色
+        if(""!=windowOptionsVO.titleTextColor&&null!=windowOptionsVO.titleTextColor){
+            windowTitle.setTextColor(Color.parseColor(windowOptionsVO.titleTextColor));
+        }
+        //设置标题栏的颜色
         if(""!=windowOptionsVO.titleBarBgColor&&null!=windowOptionsVO.titleBarBgColor){
             platform_mp_window_title_bar.setBackgroundColor(Color.parseColor(windowOptionsVO.titleBarBgColor));
         }
@@ -331,6 +336,9 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         //左侧图标
         Button backButton=(Button) rootView.findViewById(EUExUtil.getResIdID("platform_mp_window_button_back"));
         showButtonIcon(backButton,windowOptionsVO.titleLeftIcon);
+        //关闭图标
+        Button  closeButton= (Button) rootView.findViewById(EUExUtil.getResIdID("platform_mp_window_button_close"));
+        showButtonIcon(closeButton,windowOptionsVO.titleCloseIcon);
         OnClickListener listener = new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -338,6 +346,8 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
                     callbackOnMPWindowOnClicked(MP_WINDOW_CLICKED_TYPE_LEFT, null, null);
                 }else if(v.getId()==EUExUtil.getResIdID("platform_mp_window_button_detail_info")){
                     callbackOnMPWindowOnClicked(MP_WINDOW_CLICKED_TYPE_RIGHT, null, null);// 显示个人信息页面
+                }else if(v.getId()==EUExUtil.getResIdID("platform_mp_window_button_close")){
+                    callbackOnMPWindowOnClicked(MP_WINDOW_CLICKED_TYPE_CLOSE,null,null);
                 }
             }
         };
