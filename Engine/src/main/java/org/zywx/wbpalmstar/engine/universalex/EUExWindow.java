@@ -322,7 +322,9 @@ public class EUExWindow extends EUExBase {
         } else {
             String wgtroot = "wgtroot://";
             if (inData.startsWith(wgtroot)) {
-                String initUrl = wgt.m_indexUrl;
+//              String initUrl = wgt.m_indexUrl;
+                String initUrl = "file:///android_asset/widget/";
+
                 inData = inData.substring(wgtroot.length());
                 inData = BUtility.makeUrl(initUrl, inData);
                 data = inData;
@@ -1392,7 +1394,8 @@ public class EUExWindow extends EUExBase {
         if (null != inUrl) {
             String wgtroot = "wgtroot://";
             if (inUrl.startsWith(wgtroot)) {
-                String initUrl = wgt.m_indexUrl;
+//                String initUrl = wgt.m_indexUrl;
+                String initUrl = "file:///android_asset/widget/";
                 inUrl = inUrl.substring(wgtroot.length());
                 inUrl = BUtility.makeUrl(initUrl, inUrl);
                 url = inUrl;
@@ -3813,6 +3816,7 @@ public class EUExWindow extends EUExBase {
                             views.get(j).removeAllViews();
                         }
                         views.clear();
+                        adapter.notifyDataSetChanged();
                         pager = null;
                         String js = SCRIPT_HEADER + "if(" + function_cbClosePluginViewContainer + "){"
                                 + function_cbClosePluginViewContainer + "(" + opid + "," + EUExCallback.F_C_TEXT + ",'"
@@ -3860,6 +3864,7 @@ public class EUExWindow extends EUExBase {
                             views.get(j).removeAllViews();
                         }
                         views.clear();
+                        adapter.notifyDataSetChanged();
                         String js = SCRIPT_HEADER + "if(" + function_cbClearPluginViewContainer + "){"
                                 + function_cbClearPluginViewContainer + "(" + opid + "," + EUExCallback.F_C_TEXT + ",'"
                                 + "success" + "'" + SCRIPT_TAIL;

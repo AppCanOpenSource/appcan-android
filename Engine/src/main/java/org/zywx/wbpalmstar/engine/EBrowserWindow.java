@@ -353,6 +353,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         };
         backButton.setOnClickListener(listener);
         showDetailButton.setOnClickListener(listener);
+        closeButton.setOnClickListener(listener);
     }
 
     public void setMpWindowStatus(boolean flag) {
@@ -378,6 +379,8 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
                     backButton.setBackground(bitmapDrawable);
                 }
             }
+        }else{
+            backButton.setVisibility(GONE);
         }
 
     }
