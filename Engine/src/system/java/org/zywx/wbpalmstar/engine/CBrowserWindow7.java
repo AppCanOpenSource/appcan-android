@@ -133,6 +133,7 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
             }
             return true;
         }
+        if (url.startsWith("http"))return false;
         EBrowserView target = (EBrowserView) view;
         if (target.isObfuscation()) {
             target.updateObfuscationHistroy(url,
