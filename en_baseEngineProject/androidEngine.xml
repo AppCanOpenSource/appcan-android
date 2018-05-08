@@ -3,6 +3,6 @@
     <version>$version$</version>
     <package>$package$</package>
     <kernel>$kernel$</kernel>
-    <description>同步调用onApplicationCreate方法;修复三方启动提示程序不完整的问题</description>
+    <description>修复input标签type为file时选择文件在有些高版本系统中的异常问题</description>
     <dssVersion>4.0.0</dssVersion>
 </info>
