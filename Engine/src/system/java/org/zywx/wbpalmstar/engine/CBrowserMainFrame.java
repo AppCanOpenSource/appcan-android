@@ -168,7 +168,7 @@ public class CBrowserMainFrame extends WebChromeClient {
         ((EBrowserActivity) mContext).setmUploadMessage(getCompatCallback(uploadMsg));
         Intent i = new Intent(Intent.ACTION_GET_CONTENT);
         i.addCategory(Intent.CATEGORY_OPENABLE);
-        i.setType("image/*");
+        i.setType("*/*");
         ((EBrowserActivity) mContext).startActivityForResult(Intent.createChooser(i, "File Chooser"),
                 EBrowserActivity.FILECHOOSER_RESULTCODE);
     }
@@ -188,7 +188,7 @@ public class CBrowserMainFrame extends WebChromeClient {
         ((EBrowserActivity) mContext).setmUploadMessage(getCompatCallback(uploadMsg));
         Intent i = new Intent(Intent.ACTION_GET_CONTENT);
         i.addCategory(Intent.CATEGORY_OPENABLE);
-        i.setType("image/*");
+        i.setType("*/*");
         ((EBrowserActivity) mContext).startActivityForResult(Intent.createChooser(i, "File Chooser"),
                 EBrowserActivity.FILECHOOSER_RESULTCODE);
     }
