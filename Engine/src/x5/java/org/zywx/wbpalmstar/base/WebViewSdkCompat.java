@@ -2,6 +2,7 @@ package org.zywx.wbpalmstar.base;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient;
 import com.tencent.smtt.sdk.CookieManager;
@@ -75,7 +76,11 @@ public class WebViewSdkCompat {
 
     public static void setCookie(String inUrl, String cookie) {
         CookieManager.getInstance().setCookie(inUrl, cookie);
-        CookieSyncManager.getInstance().sync();
+        if (Build.VERSION.SDK_INT < 21) {
+            CookieSyncManager.getInstance().sync();
+        } else {
+            CookieManager.getInstance().flush();
+        }
     }
     public static void clearCookie() {
         CookieManager.getInstance().removeAllCookie();

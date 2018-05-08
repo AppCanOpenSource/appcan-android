@@ -29,7 +29,11 @@ public class WebViewSdkCompat {
 
     public static void setCookie(String inUrl, String cookie){
         CookieManager.getInstance().setCookie(inUrl, cookie);
-        CookieSyncManager.getInstance().sync();
+        if (Build.VERSION.SDK_INT < 21) {
+            CookieSyncManager.getInstance().sync();
+        } else {
+            CookieManager.getInstance().flush();
+        }
     }
 
     public static  String getCookie(String inUrl){
