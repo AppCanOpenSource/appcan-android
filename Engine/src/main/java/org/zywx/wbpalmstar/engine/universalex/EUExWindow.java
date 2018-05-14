@@ -2499,6 +2499,27 @@ public class EUExWindow extends EUExBase {
         return SpManager.getInstance().getString(params[0], "",isSession);
     }
 
+    /**
+     * 传入key则清除指定键值对，不传则清空名为appcan_data的SharedPreference内部所有键值对存储
+     *
+     * @param params
+     * @return
+     */
+    public boolean removeLocalData(String[] params){
+        String key = null;
+        if (params.length > 0){
+            key = params[0];
+        }
+        if(TextUtils.isEmpty(key)){
+            SpManager.getInstance().clear();
+        }else{
+            SpManager.getInstance().remove(key);
+        }
+        return true;
+    }
+
+
+
     public void windowForward(String[] params) {
         if (isFirstParamExistAndIsJson(params)){
             WindowJsonWrapper.windowForward(this,DataHelper.gson.fromJson(params[0],
