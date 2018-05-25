@@ -35,6 +35,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -43,6 +44,7 @@ import android.view.animation.Animation.AnimationListener;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -330,6 +332,12 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         if(""!=windowOptionsVO.titleBarBgColor&&null!=windowOptionsVO.titleBarBgColor){
             platform_mp_window_title_bar.setBackgroundColor(Color.parseColor(windowOptionsVO.titleBarBgColor));
         }
+        platform_mp_window_title_bar.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
         //右侧图标
         Button showDetailButton=(Button) rootView.findViewById(EUExUtil.getResIdID("platform_mp_window_button_detail_info"));
         showButtonIcon(showDetailButton,windowOptionsVO.titleRightIcon);
@@ -365,7 +373,27 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private void showButtonIcon(Button backButton,  String iconPath) {
+    public void showButtonIcon(ImageButton Image, String iconPath) {
+        if(""!=iconPath && null!=iconPath){
+            String IconImg=iconPath;
+            IconImg=IconImg.substring(BUtility.F_Widget_RES_SCHEMA
+                    .length());
+            IconImg = BUtility.F_Widget_RES_path + IconImg;
+            Bitmap leftIconImgBitmap =((EBrowserActivity)mContext).getImage(IconImg);
+            if(null!=IconImg){
+                BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(),
+                        leftIconImgBitmap);
+                if(null!=bitmapDrawable){
+                    Image.setBackground(bitmapDrawable);
+                }
+            }
+        }else{
+            Image.setVisibility(GONE);
+        }
+
+    }
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public void showButtonIcon(Button backButton,  String iconPath) {
         if(""!=iconPath && null!=iconPath){
             String IconImg=iconPath;
             IconImg=IconImg.substring(BUtility.F_Widget_RES_SCHEMA
@@ -384,7 +412,6 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         }
 
     }
-
     /**
      * 初始化公众号样式的底部菜单和键盘输入栏
      *
@@ -1667,6 +1694,8 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
     }
 
     protected void onPageFinished(EBrowserView target, String url) {
+
+
         int type = target.getType();
         switch (type) {
             case EBrwViewEntry.VIEW_TYPE_TOP:

@@ -51,6 +51,7 @@ public class EBrowserWidgetPool {
     private EWidgetStack mWgtStack;
     private WWidgetData mRootWidget;
     private EBrowserWidget mRootBrowserWidget;
+    public static EBrowserWidgetPool mEBrowserWidgetPool;
 
     public EBrowserWidgetPool(EBrowser inBrw, FrameLayout window,
                               EBrowserAround inShelter) {
@@ -61,6 +62,7 @@ public class EBrowserWidgetPool {
         mWgtStack = new EWidgetStack();
         mContext = (EBrowserActivity) window.getContext();
         mWidPoolLoop = new PoolHandler(Looper.getMainLooper());
+        mEBrowserWidgetPool=this;
     }
 
     public void init(WWidgetData inWidget) {
@@ -196,7 +198,7 @@ public class EBrowserWidgetPool {
      * @param inResult
      * @return
      */
-    private boolean checkWidget(WWidgetData inData, EWgtResultInfo inResult) {
+    public boolean checkWidget(WWidgetData inData, EWgtResultInfo inResult) {
         String key = inData.m_appId;
         EBrowserWidget wdgObj = mWgtStack.get(key);
         if (null != wdgObj) {
@@ -255,6 +257,8 @@ public class EBrowserWidgetPool {
             }
 
             public void onAnimationEnd(Animation animation) {
+                EBrowserView eBrowserView = hiddenWidget.getEBrowserView();
+                eBrowserView.removeView(eBrowserView.getChildAt(eBrowserView.getChildCount()-1));
                 hiddenWidget.setVisibility(View.GONE);
                 showWidget.notifyVisibilityChanged(0);
                 hiddenWidget.notifyVisibilityChanged(1);

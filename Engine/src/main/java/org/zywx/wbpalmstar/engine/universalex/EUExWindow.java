@@ -764,10 +764,10 @@ public class EUExWindow extends EUExBase {
             return;
         }
 
-        if ("root".equals(mBrwView.getWindowName())) {
-            ((EBrowserActivity) mContext).exitApp(true);
-            return;
-        }
+//        if ("root".equals(mBrwView.getWindowName())) {
+//            ((EBrowserActivity) mContext).exitApp(true);
+//            return;
+//        }
         String inAnimitionID = null;
         String animDuration = null;
         switch (parm.length) {
