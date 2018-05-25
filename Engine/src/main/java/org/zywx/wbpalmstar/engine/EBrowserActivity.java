@@ -128,8 +128,9 @@ public final class EBrowserActivity extends BaseActivity {
         setContentView(mEBrwMainFrame);
         initInternalBranch();
 
+        //启动图超时关闭处理。特殊的：有config.xml中的removeloading为true时，则认为启动图由JS代码控制关闭，引擎不做超时了
         Message loadDelayMsg = mEHandler
-                .obtainMessage(EHandler.F_MSG_LOAD_HIDE_SH);
+                .obtainMessage(EHandler.F_MSG_LOAD_TIMEOUT_HIDE_SH);
         long delay = 3 * 1000L;
         if (mSipBranch) {
             delay = 1000L;
@@ -873,6 +874,8 @@ public final class EBrowserActivity extends BaseActivity {
         static final int F_MSG_LOAD_DELAY = 1;
         static final int F_MSG_LOAD_HIDE_SH = 2;
         static final int F_MSG_EXIT_APP = 3;
+        static final int F_MSG_LOAD_TIMEOUT_HIDE_SH = 4;//超时处理
+
 
         public EHandler(Looper loop) {
             super(loop);
@@ -883,6 +886,7 @@ public final class EBrowserActivity extends BaseActivity {
             removeMessages(F_MSG_LOAD_DELAY);
             removeMessages(F_MSG_LOAD_HIDE_SH);
             removeMessages(F_MSG_EXIT_APP);
+            removeMessages(F_MSG_LOAD_TIMEOUT_HIDE_SH);
         }
 
         public void handleMessage(Message msg) {
@@ -910,6 +914,19 @@ public final class EBrowserActivity extends BaseActivity {
                         mBrowser.hiddenShelter();
                     } else {
                         mBrowserAround.setTimeFlag(true);
+                    }
+                    break;
+                case F_MSG_LOAD_TIMEOUT_HIDE_SH:
+                    if (WWidgetData.m_remove_loading == 1){
+                        //默认1，正常逻辑；否则是有config.xml配置
+                        setContentViewVisible(0);
+                        if (mBrowserAround.checkTimeFlag()) {
+                            mBrowser.hiddenShelter();
+                        } else {
+                            mBrowserAround.setTimeFlag(true);
+                        }
+                    }else{
+                        BDebug.i("removeloading in config.xml is true, cancel loadingImage timeout");
                     }
                     break;
                 case F_MSG_EXIT_APP:
