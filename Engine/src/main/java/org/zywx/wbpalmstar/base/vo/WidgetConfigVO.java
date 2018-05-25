@@ -5,6 +5,8 @@ package org.zywx.wbpalmstar.base.vo;
  */
 
 public class WidgetConfigVO {
+    public  boolean appLoadingStatus;
+    public String appIcon;
 
     public String appId;
 

@@ -35,8 +35,19 @@ import android.os.Environment;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.webkit.MimeTypeMap;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -69,6 +80,8 @@ import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import static org.zywx.wbpalmstar.engine.EBrowserWidgetPool.mEBrowserWidgetPool;
 
 public class EUExWidget extends EUExBase {
     public static final String tag = "uexWidget";
@@ -197,7 +210,7 @@ public class EUExWidget extends EUExBase {
             callbackToJs(callbackId,false,result?0:1);
         }
     }
-
+    LinearLayout inflate;
     @AppCanAPI
     public boolean startWidgetWithConfig(String[] parm) {
         int callbackId=-1;
@@ -245,6 +258,9 @@ public class EUExWidget extends EUExBase {
                 EWgtResultInfo info = new EWgtResultInfo(inForResult, inInfo);
                 info.setAnimiId(animId);
                 info.setDuration(duration);
+                if(configVO.appLoadingStatus&&!mEBrowserWidgetPool.checkWidget(data, info)) {
+                    showLoadingPage(configVO, curWind);
+                }
                 // 启动子应用
                 if (startWidget(data, info)) {
                     resultStartWidgetWithConfig(true,callbackId);
@@ -267,6 +283,39 @@ public class EUExWidget extends EUExBase {
         }
     }
 
+
+    private void showLoadingPage(WidgetConfigVO configVO, EBrowserWindow curWind) {
+        LayoutInflater layoutInflater = LayoutInflater.from(mContext);
+        inflate = (LinearLayout) layoutInflater.inflate(EUExUtil.getResLayoutID("platform_mp_window_middle_loadding"), null);
+        inflate.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
+        ImageView platform_mp_loadding_close = (ImageView) inflate.findViewById(EUExUtil.getResIdID("platform_mp_loadding_close"));
+        TextView platformName = (TextView) inflate.findViewById(EUExUtil.getResIdID("platform_mp_loadding_iconname"));
+        platformName.setText(configVO.widgetName);
+        platform_mp_loadding_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //回调前端方法去关闭子应用
+                callBackPluginJs("uexWidget.cbCloseLoading", "0");
+                mBrwView.removeView(inflate);
+            }
+        });
+        ImageButton platform_mp_loadding_icon = (ImageButton) inflate.findViewById(EUExUtil.getResIdID("platform_mp_loadding_icon"));
+        curWind.showButtonIcon(platform_mp_loadding_icon, configVO.appIcon);
+        TranslateAnimation anim = new TranslateAnimation(Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, 1.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f);
+        anim.setDuration(500);
+        inflate.startAnimation(anim);
+        ViewGroup.LayoutParams param=new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        mBrwView.addView(inflate, -1,param);
+        Log.e("TAG", "显示过度界面完成================");
+    }
 
     private void showErrorAlert(final String msg) {
         /*Runnable ui = new Runnable() {
