@@ -21,7 +21,7 @@
     </LinearLayout>
     <include
         android:id="@+id/platform_mp_window_bottom_bar"
-        android:layout_height="45dip"
+        android:layout_height="50dp"
         android:layout_width="match_parent"
         android:layout_alignParentBottom="true"
         layout="@layout/platform_mp_window_bottom_bar"

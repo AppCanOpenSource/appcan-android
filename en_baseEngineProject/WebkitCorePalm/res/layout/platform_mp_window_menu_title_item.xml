@@ -11,9 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:gravity="center" >
-
+         >
         <TextView
+            android:layout_centerInParent="true"
             android:id="@+id/platform_mp_window_tv_menu_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -30,11 +30,21 @@
             android:layout_width="15dp"
             android:layout_height="15dp"
              android:background="@drawable/platform_mp_window_icon_black_three"
-            android:layout_alignBottom="@id/platform_mp_window_tv_menu_name"
-            android:layout_alignRight="@id/platform_mp_window_tv_menu_name"
+             android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="10dp"
             />
     </RelativeLayout>
-
+    <!--<ImageView-->
+        <!--android:id="@+id/platform_mp_window_icon_tab"-->
+        <!--android:layout_width="15dp"-->
+        <!--android:layout_height="15dp"-->
+        <!--android:layout_gravity="bottom"-->
+        <!--android:background="@drawable/platform_mp_window_icon_black_three"-->
+        <!--android:layout_marginRight="8dp"-->
+        <!--android:layout_marginBottom="10dp"-->
+        <!--/>-->
     <View
         android:layout_width="0.05dip"
         android:layout_height="fill_parent"
