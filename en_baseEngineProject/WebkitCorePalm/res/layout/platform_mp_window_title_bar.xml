@@ -1,24 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="#4f4f4f"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        >
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true">
         <Button
-            android:layout_gravity="center_vertical"
             android:id="@+id/platform_mp_window_button_back"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="20dp"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:background="@drawable/platform_mp_window_button_back"
             />
+        <Button
+            android:id="@+id/platform_mp_window_button_close"
+            android:layout_marginLeft="10dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/platform_mp_window_button_close"
+            android:layout_toRightOf="@+id/platform_mp_window_button_back" />
         <View
+            android:layout_alignLeft="@id/platform_mp_window_button_close"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
             android:layout_width="0.5dp"
@@ -26,22 +36,24 @@
             android:layout_height="30dp"/>
         <TextView
             android:id="@+id/platform_mp_window_text_title"
-            android:gravity="center"
+            android:layout_centerInParent="true"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:textColor="#fff"
-            android:text="AppCan"
+            android:singleLine="true"
+            android:ellipsize="middle"
+            android:text="appcan"
             />
-    </LinearLayout>
 
-    <Button
-        android:id="@+id/platform_mp_window_button_detail_info"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:background="@drawable/platform_mp_window_button_detail_info"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="10dp"
+        <Button
+            android:id="@+id/platform_mp_window_button_detail_info"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@drawable/platform_mp_window_button_detail_info"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            />
+    </RelativeLayout>
 
-        />
 </RelativeLayout>
