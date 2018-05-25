@@ -68,6 +68,10 @@ public class SpManager {
         return mSharedPreferences.edit().remove(key).commit();
     }
 
+    public boolean clear(){
+        return mSharedPreferences.edit().clear().commit();
+    }
+
     public boolean putString(String key, String value,boolean isSession){
         if (isSession){
             return mSharedPreferencesTemp.edit().putString(key,value).commit();
