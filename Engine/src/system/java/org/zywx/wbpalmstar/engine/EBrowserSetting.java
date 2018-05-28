@@ -76,6 +76,11 @@ public class EBrowserSetting implements EBrowserBaseSetting {
         mWebSetting.setUserAgentString(USERAGENT_NEW);
         mWebSetting.setRenderPriority(RenderPriority.HIGH);
         mWebSetting.setDefaultTextEncodingName("UTF-8");
+        mWebSetting.setBuiltInZoomControls(true);
+        mWebSetting.setDisplayZoomControls(false);
+        mWebSetting.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        mWebSetting.setDomStorageEnabled(true);//开启DOM storage API功能
+
         if (Build.VERSION.SDK_INT <= 7) {
             invokeHtml5(mWebSetting);
         }

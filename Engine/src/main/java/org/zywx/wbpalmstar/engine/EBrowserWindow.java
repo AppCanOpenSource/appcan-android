@@ -18,10 +18,14 @@
 
 package org.zywx.wbpalmstar.engine;
 
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -30,12 +34,21 @@ import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
+import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -45,8 +58,10 @@ import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.view.SwipeView;
 import org.zywx.wbpalmstar.base.vo.DownloadCallbackInfoVO;
+import org.zywx.wbpalmstar.base.vo.WindowOptionsVO;
 import org.zywx.wbpalmstar.engine.EBrowserHistory.EHistoryEntry;
 import org.zywx.wbpalmstar.engine.external.Compat;
+import org.zywx.wbpalmstar.engine.mpwindow.MPPopMenu;
 import org.zywx.wbpalmstar.engine.multipop.MultiPopAdapter;
 import org.zywx.wbpalmstar.engine.universalex.EUExCallback;
 import org.zywx.wbpalmstar.engine.universalex.EUExScript;
@@ -54,7 +69,6 @@ import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.engine.universalex.EUExWidget.SpaceClickListener;
 import org.zywx.wbpalmstar.engine.universalex.EUExWindow;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -73,6 +87,12 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
     public static final int F_WINDOW_FLAG_OPPOP = 0x10;
     public static final int F_WINDOW_FLAG_OPPOP_END = 0x20;
     public static final int F_WINDOW_FLAG_SLIDING_WIN = 0x40;
+    public static final String MP_WINDOW_CLICKED_TYPE_LEFT = "0";
+    public static final String MP_WINDOW_CLICKED_TYPE_RIGHT = "1";
+    public static final String MP_WINDOW_CLICKED_TYPE_MENU = "2";
+    public static final String MP_WINDOW_CLICKED_TYPE_BOTTOM_LEFT = "3";
+    public static final String MP_WINDOW_CLICKED_TYPE_CLOSE = "4";
+    public static final String CALLBACK_METHOD_ON_MP_WINDOW_CLICKED = "uexWindow.onMPWindowClicked";
     public static final String CALLBACK_POST_GLOBAL_NOTI = "javascript:if(uexWindow.onGlobalNotification)"
             + "{uexWindow.onGlobalNotification('";
     public static final String CALLBACK_PUBLISH_GLOBAL_NOTI = "javascript:uexWindow.";
@@ -82,6 +102,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
     public static final String TAG_CHANNEL_WINNAME = "winName";
     public static final String WIN_TYPE_MAIN = "main";
     public static final String WIN_TYPE_POP = "pop";
+    private int mWindowStyle;
     private int mAnimId;
     private long mAnimDuration;
     private boolean mAnimFill;
@@ -130,6 +151,13 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
     public static String rootRightSlidingWinName = "rootRightSlidingWinName";
     private List<View> viewList = new ArrayList<View>();
 
+    private RelativeLayout mMPWrapLayout;//公众号样式外层layout
+    private LinearLayout bounceViewWrapper;
+    private LinearLayout bounceViewMenu;//公众号菜单布局inputviews
+    private LinearLayout inputviews;//公众号菜单布局inputviews
+    private LinearLayout platform_mp_window_bottom_bar; //整个底部布局
+    private RelativeLayout platform_mp_window_title_bar; //titleBar 布局
+    private WindowOptionsVO mwindowOptionsVO;
     public EBrowserWindow(Context context, EBrowserWidget inParent) {
         super(context);
         mContext = context;
@@ -148,21 +176,51 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
     public void init(EBrowser inBrw, EBrwViewEntry inEntry) {
         EUtil.viewBaseSetting(this);
         mBrw = inBrw;
+        mWindowStyle = inEntry.mWindowStyle;
         if (null == mMainView) {
-            mMainView = new EBrowserView(mContext,
-                    EBrwViewEntry.VIEW_TYPE_MAIN, this);
-            mMainView.setVisibility(VISIBLE);
-            mMainView.setName("main");
-            mBounceView = new EBounceView(mContext);
-            EUtil.viewBaseSetting(mBounceView);
-            mBounceView.setId(VIEW_MID);
-            LayoutParams bParm = new LayoutParams(Compat.FILL, Compat.FILL);
-            mBounceView.setLayoutParams(bParm);
-            mBounceView.addView(mMainView);
-            addView(mBounceView);
+            if (mWindowStyle == EBrwViewEntry.WINDOW_SYTLE_MEDIA_PLATFORM){
+                mMainView = new EBrowserView(mContext,
+                        EBrwViewEntry.VIEW_TYPE_MAIN, this);
+                mMainView.setVisibility(VISIBLE);
+                mMainView.setName("main");
+                mMainView.setExeJS(inEntry.mExeJS);
+                LayoutInflater layoutInflater = LayoutInflater.from(mContext);
+                //外面套了一层wrapLayout，便于头部和底部布局
+                mMPWrapLayout = (RelativeLayout) layoutInflater.inflate(EUExUtil.getResLayoutID("platform_mp_window_wrapframe"), null);
+
+                bounceViewWrapper = (LinearLayout) mMPWrapLayout.findViewById(EUExUtil.getResIdID("platform_mp_window_bounceview_wrapper"));
+                //公众号的菜单根布局
+                bounceViewMenu = (LinearLayout) mMPWrapLayout.findViewById(EUExUtil.getResIdID("platform_mp_window_layout_menu_bar"));
+                inputviews = (LinearLayout) mMPWrapLayout.findViewById(EUExUtil.getResIdID("inputviews"));
+                platform_mp_window_bottom_bar = (LinearLayout) mMPWrapLayout.findViewById(EUExUtil.getResIdID("platform_mp_window_bottom_bar"));
+                platform_mp_window_title_bar=(RelativeLayout) mMPWrapLayout.findViewById(EUExUtil.getResIdID("platform_mp_window_title_bar"));
+                //防止混淆导致布局文件出错，不在布局中直接引用EBounceView了
+                mBounceView = new EBounceView(mContext);
+                LayoutParams bParm = new LayoutParams(Compat.FILL, Compat.FILL);
+                mBounceView.setLayoutParams(bParm);
+                bounceViewWrapper.addView(mBounceView);
+                EUtil.viewBaseSetting(mBounceView);
+                mBounceView.setId(VIEW_MID);
+                mBounceView.addView(mMainView);
+                mwindowOptionsVO=inEntry.mWindowOptions;
+                setWindowOptions(inEntry.mWindowOptions,false,true);
+                addView(mMPWrapLayout);
+            }else{
+                mMainView = new EBrowserView(mContext,
+                        EBrwViewEntry.VIEW_TYPE_MAIN, this);
+                mMainView.setVisibility(VISIBLE);
+                mMainView.setName("main");
+                mBounceView = new EBounceView(mContext);
+                EUtil.viewBaseSetting(mBounceView);
+                mBounceView.setId(VIEW_MID);
+                LayoutParams bParm = new LayoutParams(Compat.FILL, Compat.FILL);
+                mBounceView.setLayoutParams(bParm);
+                mBounceView.addView(mMainView);
+                addView(mBounceView);
+            }
         }
         mMainView.init();
-        if (null == inEntry) {
+        if (inEntry.isRootWindow()) {
             setName("root");
             mMainView.setRelativeUrl(mBroWidget.getWidget().m_indexUrl);
 
@@ -201,6 +259,262 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         }
     }
 
+    /**
+     *
+     * @param windowOptionsVO   传进来的数据
+     * @param isHasBottomBarShow 传进来数据是否有控制菜单栏显示的字段
+     * @param isInit 区分是否第一次设置
+     */
+    public void setWindowOptions(WindowOptionsVO windowOptionsVO,boolean isHasBottomBarShow,boolean isInit){
+        if (mWindowStyle == EBrwViewEntry.WINDOW_SYTLE_MEDIA_PLATFORM){
+            if(windowOptionsVO != null && mMPWrapLayout != null){
+                if(!isInit) {
+                    windowOptionsVO=optionVoCompensation(windowOptionsVO,isHasBottomBarShow);
+                }
+                //重新配置当前窗口的参数
+                //初始化标题栏
+                initMPWindowTopBar(mMPWrapLayout, windowOptionsVO);
+                if (windowOptionsVO.isBottomBarShow){
+                    //是否显示底部栏
+                    platform_mp_window_bottom_bar.setVisibility(VISIBLE);
+                    initMPWindowBottomBar(mMPWrapLayout, windowOptionsVO);
+                }else{
+                    TranslateAnimation animation = new TranslateAnimation(0.0f, 0.0f, 0.0f, 300.0f);
+                    animation.setDuration(500);
+                    platform_mp_window_bottom_bar.setAnimation(animation);
+                    platform_mp_window_bottom_bar.setVisibility(GONE);
+//                    EUExChatKeyboard euExChatKeyboard=new EUExChatKeyboard(mContext,mMainView);
+//                    euExChatKeyboard.open(new String[]{params});
+                    BDebug.w("setWindowOptions error: WindowOptions isBottomBar is False");
+                }
+            }else{
+                BDebug.w("setWindowOptions error: windowOptionsVO is null or mMPWrapLayout is null");
+            }
+        }else{
+            BDebug.w("setWindowOptions error: WindowStyle not supported :" + mWindowStyle);
+        }
+    }
+
+    private WindowOptionsVO optionVoCompensation(WindowOptionsVO windowOptionsVO,boolean isHasBottomBarShow) {
+        if(""!=windowOptionsVO.windowTitle&&null!=windowOptionsVO.windowTitle){
+            mwindowOptionsVO.windowTitle=windowOptionsVO.windowTitle;
+        }
+        if(""!=windowOptionsVO.titleBarBgColor&&null!=windowOptionsVO.titleBarBgColor){
+            mwindowOptionsVO.titleBarBgColor=windowOptionsVO.titleBarBgColor;
+        }
+        if(""!=windowOptionsVO.titleLeftIcon&&null!=windowOptionsVO.titleLeftIcon){
+            mwindowOptionsVO.titleLeftIcon=windowOptionsVO.titleLeftIcon;
+        }
+        if(""!=windowOptionsVO.titleRightIcon&&null!=windowOptionsVO.titleRightIcon){
+            mwindowOptionsVO.titleRightIcon=windowOptionsVO.titleRightIcon;
+        }
+        if(null!=windowOptionsVO.menuList){
+            mwindowOptionsVO.menuList=windowOptionsVO.menuList;
+        }
+        if(isHasBottomBarShow){
+            mwindowOptionsVO.isBottomBarShow=windowOptionsVO.isBottomBarShow;
+        }
+        return mwindowOptionsVO;
+    }
+
+    /**
+     * 初始化公众号样式的顶部标题栏
+     */
+    private void initMPWindowTopBar(View rootView, WindowOptionsVO windowOptionsVO){
+        //设置标题
+        TextView windowTitle = (TextView)rootView.findViewById(EUExUtil.getResIdID("platform_mp_window_text_title"));
+        windowTitle.setText(windowOptionsVO.windowTitle);
+        //设置标题栏的颜色
+        if(""!=windowOptionsVO.titleTextColor&&null!=windowOptionsVO.titleTextColor){
+            windowTitle.setTextColor(Color.parseColor(windowOptionsVO.titleTextColor));
+        }
+        //设置标题栏的颜色
+        if(""!=windowOptionsVO.titleBarBgColor&&null!=windowOptionsVO.titleBarBgColor){
+            platform_mp_window_title_bar.setBackgroundColor(Color.parseColor(windowOptionsVO.titleBarBgColor));
+        }
+        platform_mp_window_title_bar.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
+        //右侧图标
+        Button showDetailButton=(Button) rootView.findViewById(EUExUtil.getResIdID("platform_mp_window_button_detail_info"));
+        showButtonIcon(showDetailButton,windowOptionsVO.titleRightIcon);
+        //左侧图标
+        Button backButton=(Button) rootView.findViewById(EUExUtil.getResIdID("platform_mp_window_button_back"));
+        showButtonIcon(backButton,windowOptionsVO.titleLeftIcon);
+        //关闭图标
+        Button  closeButton= (Button) rootView.findViewById(EUExUtil.getResIdID("platform_mp_window_button_close"));
+        showButtonIcon(closeButton,windowOptionsVO.titleCloseIcon);
+        OnClickListener listener = new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(v.getId()==EUExUtil.getResIdID("platform_mp_window_button_back")){
+                    callbackOnMPWindowOnClicked(MP_WINDOW_CLICKED_TYPE_LEFT, null, null);
+                }else if(v.getId()==EUExUtil.getResIdID("platform_mp_window_button_detail_info")){
+                    callbackOnMPWindowOnClicked(MP_WINDOW_CLICKED_TYPE_RIGHT, null, null);// 显示个人信息页面
+                }else if(v.getId()==EUExUtil.getResIdID("platform_mp_window_button_close")){
+                    callbackOnMPWindowOnClicked(MP_WINDOW_CLICKED_TYPE_CLOSE,null,null);
+                }
+            }
+        };
+        backButton.setOnClickListener(listener);
+        showDetailButton.setOnClickListener(listener);
+        closeButton.setOnClickListener(listener);
+    }
+
+    public void setMpWindowStatus(boolean flag) {
+        if(flag){
+            platform_mp_window_bottom_bar.setVisibility(VISIBLE);
+        }else {
+            platform_mp_window_bottom_bar.setVisibility(GONE);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public void showButtonIcon(ImageButton Image, String iconPath) {
+        if(""!=iconPath && null!=iconPath){
+            String IconImg=iconPath;
+            IconImg=IconImg.substring(BUtility.F_Widget_RES_SCHEMA
+                    .length());
+            IconImg = BUtility.F_Widget_RES_path + IconImg;
+            Bitmap leftIconImgBitmap =((EBrowserActivity)mContext).getImage(IconImg);
+            if(null!=IconImg){
+                BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(),
+                        leftIconImgBitmap);
+                if(null!=bitmapDrawable){
+                    Image.setBackground(bitmapDrawable);
+                }
+            }
+        }else{
+            Image.setVisibility(GONE);
+        }
+
+    }
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public void showButtonIcon(Button backButton,  String iconPath) {
+        if(""!=iconPath && null!=iconPath){
+            String IconImg=iconPath;
+            IconImg=IconImg.substring(BUtility.F_Widget_RES_SCHEMA
+                    .length());
+            IconImg = BUtility.F_Widget_RES_path + IconImg;
+            Bitmap leftIconImgBitmap =((EBrowserActivity)mContext).getImage(IconImg);
+            if(null!=IconImg){
+                BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(),
+                        leftIconImgBitmap);
+                if(null!=bitmapDrawable){
+                    backButton.setBackground(bitmapDrawable);
+                }
+            }
+        }else{
+            backButton.setVisibility(GONE);
+        }
+
+    }
+    /**
+     * 初始化公众号样式的底部菜单和键盘输入栏
+     *
+     */
+    private void initMPWindowBottomBar(View rootView, WindowOptionsVO windowOptionsVO){
+        //底部外层
+        LinearLayout layout_bottom_menu_toolbar = (LinearLayout)rootView.findViewById(EUExUtil.getResIdID("platform_mp_window_layout_custom_toolbar"));
+        //菜单栏
+        LinearLayout layout_menu = (LinearLayout)rootView.findViewById(EUExUtil.getResIdID("platform_mp_window_layout_custom_menu"));
+        //键盘
+        LinearLayout layout_exchange=(LinearLayout)rootView.findViewById(EUExUtil.getResIdID("platform_mp_window_exchange_layout"));
+
+        OnClickListener listener = new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(v.getId()==EUExUtil.getResIdID("platform_mp_window_exchange_layout")){
+                    //TODO 显示键盘输入
+                    callbackOnMPWindowOnClicked(MP_WINDOW_CLICKED_TYPE_BOTTOM_LEFT,null,null);
+                }
+            }
+        };
+        layout_exchange.setOnClickListener(listener);
+
+        //初始化菜单部分
+        List<WindowOptionsVO.MPWindowMenuVO> menuList = windowOptionsVO.menuList;
+        if (menuList != null && menuList.size() > 0) {
+            layout_bottom_menu_toolbar.setVisibility(View.VISIBLE);
+            layout_menu.removeAllViews();
+            for (int i = 0; i < menuList.size(); i++) {
+                final WindowOptionsVO.MPWindowMenuVO menuVO = menuList.get(i);
+                //遍历增加菜单栏目
+                LinearLayout layout = (LinearLayout) LayoutInflater.from(mContext).inflate(EUExUtil.getResLayoutID("platform_mp_window_menu_title_item"), null);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f);
+                layout.setLayoutParams(lp);
+                ImageView imageTab = (ImageView)layout.findViewById(EUExUtil.getResIdID("platform_mp_window_icon_tab"));
+                TextView tvMenuName = (TextView) layout.findViewById(EUExUtil.getResIdID("platform_mp_window_tv_menu_name"));
+                tvMenuName.setText(menuVO.menuTitle);
+
+                if (menuVO.subItems!=null&&menuVO.subItems.size() > 0){
+                    // 有子菜单项，显示三角
+                    imageTab.setVisibility(VISIBLE);
+                } else {
+                    // 无子菜单项，隐藏三角
+                    imageTab.setVisibility(GONE);
+                }
+                layout.setOnClickListener(new OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            if (menuVO.subItems!=null && menuVO.subItems.size() > 0) {
+                                MPPopMenu popupWindowMenu = new MPPopMenu(mContext, menuVO, 0, 0, new MPPopMenu.PopMenuClickListener() {
+                                    @Override
+                                    public void onClick(String itemId) {
+                                        callbackOnMPWindowOnClicked(MP_WINDOW_CLICKED_TYPE_MENU, menuVO.menuId, itemId);
+                                    }
+                                });
+                                popupWindowMenu.showAtLocation(v);
+                            } else {
+                                callbackOnMPWindowOnClicked(MP_WINDOW_CLICKED_TYPE_MENU, menuVO.menuId, null);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                layout_menu.addView(layout);
+            }
+            layout_bottom_menu_toolbar.setVisibility(View.VISIBLE);
+        } else {
+            layout_bottom_menu_toolbar.setVisibility(View.GONE);
+        }
+    }
+
+    private void callbackOnMPWindowOnClicked(String type, String menuId, String itemId){
+        JSONObject json = new JSONObject();
+        try {
+            json.put("type", type);
+            if (menuId!=null) {
+                json.put("menuId", menuId);
+            }
+            if (itemId!=null) {
+                json.put("itemId", itemId);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String data = json.toString();
+        callbackToMainWebView(CALLBACK_METHOD_ON_MP_WINDOW_CLICKED, data);
+    }
+
+    /**
+     * 用于特殊样式的窗口（如公众号窗口）进行功能性交互回调
+     *
+     */
+    private void callbackToMainWebView(String callbackFunc, String jsonObject){
+        String js = "javascript:if(" + callbackFunc + "){"
+                + callbackFunc + "(" + jsonObject + ");}else{console.log('function " + callbackFunc +" not found.')}";
+        if (null != mMainView) {
+            mMainView.addUriTask(js);
+        }
+    }
+
     public boolean checkFlag(int flag) {
 
         return (mflag & flag) != 0;
@@ -213,6 +527,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
     public void clearFlag() {
         mflag &= F_WINDOW_FLAG_NONE;
     }
+
 
     public void addViewToCurrentWindow(View child) {
         //Message msg = mWindLoop.obtainMessage();
@@ -1379,6 +1694,8 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
     }
 
     protected void onPageFinished(EBrowserView target, String url) {
+
+
         int type = target.getType();
         switch (type) {
             case EBrwViewEntry.VIEW_TYPE_TOP:
@@ -1477,6 +1794,9 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
     }
 
     protected void stopLoad() {
+        if (mMainView==null){
+            return;
+        }
         mMainView.stopLoading();
         for (Map.Entry<String, EBrowserView> entry : mPopTable.entrySet()) {
             EBrowserView temp = entry.getValue();
@@ -1503,6 +1823,9 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
     }
 
     public void reset() {
+        if (mMainView==null){
+            return;
+        }
         mMainView.reset();
         if (null != mTopView) {
             mTopView.reset();
@@ -1579,6 +1902,9 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
     public void destory() {
         stopLoop();
         stopLoad();
+        if (mMainView==null){
+            return;
+        }
         mMainView.clearCache(false);
         mMainView.destroy();
         if (null != mTopView) {
@@ -1845,6 +2171,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         eView.init();
         eView.setDownloadCallback(entity.mDownloadCallback);
         eView.setUserAgent(entity.mUserAgent);
+        eView.setExeJS(entity.mExeJS);
         if (entity.checkFlag(EBrwViewEntry.F_FLAG_GESTURE)) {
             eView.setSupportZoom();
         }
@@ -2073,6 +2400,9 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
     public static final int F_WHANDLER_MULTIPOP_SET = 32;
 
     public static final int TOTAL = F_WHANDLER_SET_VISIBLE + 1;
+
+
+
 
     public class WindowHander extends Handler {
 
@@ -2867,7 +3197,9 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         }
         return -1;
     }
-
+    public void setExeJS(String exeJS){
+        mMainView.setExeJS(exeJS);
+    }
     public void closeWindowByAnimation(Animation anim) {
 
         if (anim != null) {

@@ -2,7 +2,7 @@
 <resources>
     <!-- contactfromjson use -->
     <color name="green">#7CFC00</color>
-    
+
 	<color name="start_bg_color">#FFFFFF</color>
 	<color name="red">#FFFF0000</color>
 	<color name="orange">#FFFF9900</color>
@@ -16,10 +16,16 @@
 	<color name="blue">#2162BD</color>
 	<color name="menu_press">#FF00599F</color>
 	<color name="dialog_bg">#1B252F</color>
-	
+
 	<!-- Widgetone use-->
 	<color name="widget_dialog_title_line_color">#666666</color>
 	<color name="widget_bg_color">#333333</color>
 	<color name="activity_window_background_color">#60000000</color>
 
+	<!--Engine MP Window use-->
+	<color name="platform_mp_window_border_color">#cccccc</color>
+	<color name="platform_mp_window_gray_white">#f7f7f7</color>
+	<color name="platform_mp_window_white">#FFFFFFFF</color>
+	<color name="platform_mp_window_gray_black">#333333</color>
+	<color name="platform_mp_window_menu_bg_color">#646464</color>
 </resources>

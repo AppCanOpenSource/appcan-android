@@ -79,7 +79,7 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
     private OnEBrowserViewChangeListener mBrowserViewChangeListener;
 
     public static boolean sHardwareAccelerate = true;//配置全部WebView是否硬件加速,默认开启，config.xml 配置关闭
-
+    private String mExeJS;//打开窗口时由前端传入想要注入的JS字符串，WebView加载完成的时候执行这段JS。
     public EBrowserView(Context context, int inType, EBrowserWindow inParent) {
         super(context);
         mMyCountId = EBrowser.assignCountID();
@@ -1470,5 +1470,14 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
 
     public String getWebViewKernelInfo() {
         return super.getWebViewKernelInfo();
+    }
+    public void setExeJS(String exeJS){
+        this.mExeJS = exeJS;
+    }
+
+    public void loadExeJS(){
+        if (!TextUtils.isEmpty(mExeJS)){
+            loadUrl("javascript:"+mExeJS+"//"+System.currentTimeMillis());
+        }
     }
 }

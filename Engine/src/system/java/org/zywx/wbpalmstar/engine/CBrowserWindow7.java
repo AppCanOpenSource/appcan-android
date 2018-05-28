@@ -133,6 +133,7 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
             }
             return true;
         }
+        if (url.startsWith("http"))return false;
         EBrowserView target = (EBrowserView) view;
         if (target.isObfuscation()) {
             target.updateObfuscationHistroy(url,
@@ -175,6 +176,7 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
             return;
         }
         EBrowserView target = (EBrowserView) view;
+        target.loadExeJS();
         target.onPageStarted(target, url);
         if (null != mParms) {
             target.setQuery(mParms);
@@ -234,6 +236,7 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
         info.mFinished = true;
         target.loadUrl(EUExScript.F_UEX_DISPATCHER_SCRIPT);
         target.loadUrl(EUExScript.F_UEX_SCRIPT);
+        target.loadExeJS();
         target.onPageFinished(target, url);
 
         if (bWindow != null && bWindow.getWidget().m_appdebug == 1) {

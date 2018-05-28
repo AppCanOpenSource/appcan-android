@@ -149,6 +149,7 @@ public class EUExScript {
                 // Widget
                 "window.uexWidget={"
                 + "startWidget:function(){return uexDispatcher.dispatch('uexWidget','startWidget',jo(arguments));},"
+                + "startWidgetWithConfig:function(){return uexDispatcher.dispatch('uexWidget','startWidgetWithConfig',jo(arguments));},"
                 + "startWidgetWithPath:function(){uexDispatcher.dispatch('uexWidget','startWidgetWithPath',jo(arguments));},"
                 + "finishWidget:function(){uexDispatcher.dispatch('uexWidget','finishWidget',jo(arguments));},"
                 + "removeWidget:function(){return uexDispatcher.dispatch('uexWidget','removeWidget',jo(arguments));},"
@@ -193,6 +194,9 @@ public class EUExScript {
                 + "actionSheet:function(){uexDispatcher.dispatch('uexWindow','actionSheet',jo(arguments));},"
                 + "setReportKey:function(){uexDispatcher.dispatch('uexWindow','setReportKey',jo(arguments));},"
                 + "open:function(){uexDispatcher.dispatch('uexWindow','open',jo(arguments));},"
+                + "openWithOptions:function(){uexDispatcher.dispatch('uexWindow','openWithOptions',jo(arguments));},"
+                + "setWindowOptions:function(){uexDispatcher.dispatch('uexWindow','setWindowOptions',jo(arguments));},"
+                + "setMpWindowStatus:function(){uexDispatcher.dispatch('uexWindow','setMpWindowStatus',jo(arguments));},"
                 + "setWindowFrame:function(){uexDispatcher.dispatch('uexWindow','setWindowFrame',jo(arguments));},"
                 + "close:function(){uexDispatcher.dispatch('uexWindow','close',jo(arguments));},"
                 + "openSlibing:function(){uexDispatcher.dispatch('uexWindow','openSlibing',jo(arguments));},"

@@ -30,6 +30,8 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.Nullable;
+import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -85,7 +87,15 @@ public class EBounceView extends LinearLayout {
     private float mDensity = ESystemInfo.getIntence().mDensity;
 
     public EBounceView(Context context) {
-        super(context);
+        this(context, null);
+    }
+
+    public EBounceView(Context context, @Nullable AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public EBounceView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
         mContext = context;
         mScroller = new Scroller(mContext);
         mRefrshHeight = ESystemInfo.getIntence().mDefaultBounceHeight;
