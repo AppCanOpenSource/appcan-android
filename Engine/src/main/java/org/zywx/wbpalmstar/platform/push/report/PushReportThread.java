@@ -37,7 +37,6 @@ import java.util.List;
 public class PushReportThread extends Thread implements PushReportConstants {
     public Context m_activity = null;
     private int mThreadType;
-    private String host_pushReport = null;
     private String host_pushBindUser = null;
     private String mTaskId = null;
     private String mTenantId = null;
@@ -51,10 +50,7 @@ public class PushReportThread extends Thread implements PushReportConstants {
         m_activity = inActivity;
         // mPushAgent = pushAgent;
         mThreadType = threadType;
-        host_pushReport = ResoureFinder.getInstance().getString(inActivity,
-                KEY_PUSH_REPORT_HOST);
-        host_pushBindUser = ResoureFinder.getInstance().getString(inActivity,
-                KEY_PUSH_BINDUSER_HOST);
+        host_pushBindUser = BUtility.getBindUserHost(m_activity);
         setName("Appcan-Push");
     }
 
@@ -122,15 +118,15 @@ public class PushReportThread extends Thread implements PushReportConstants {
                         unBindUserInfo();
                         break;
                     case TYPE_PUSH_REPORT_OPEN:
-                        if (TextUtils.isEmpty(host_pushReport)) {
-                            Log.w("PushReportThread", "host_pushReport is empty");
+                        if (TextUtils.isEmpty(host_pushBindUser)) {
+                            Log.w("PushReportThread", "host_pushBindUser is empty");
                             break;
                         }
                         pushReportOpen();
                         break;
                     case TYPE_PUSH_REPORT_ARRIVED:
-                        if (TextUtils.isEmpty(host_pushReport)) {
-                            Log.w("PushReportThread", "host_pushReport is empty");
+                        if (TextUtils.isEmpty(host_pushBindUser)) {
+                            Log.w("PushReportThread", "host_pushBindUser is empty");
                             break;
                         }
                         pushReportArrive();
@@ -204,7 +200,7 @@ public class PushReportThread extends Thread implements PushReportConstants {
 
     private void pushReportOpen() {
         String result = PushReportHttpClient.sendPostDataByNameValuePair(
-                (host_pushReport + url_push_report), mNameValuePairs,
+                (host_pushBindUser + url_push_report), mNameValuePairs,
                 m_activity);
         Log.i("PushReportThread", "pushReportOpen result======" + result);
     }
@@ -221,7 +217,7 @@ public class PushReportThread extends Thread implements PushReportConstants {
 
     private void pushReportArrive() {
         String result = PushReportHttpClient.sendPostDataByNameValuePair(
-                (host_pushReport + url_push_report), mNameValuePairs,
+                (host_pushBindUser + url_push_report), mNameValuePairs,
                 m_activity);
         Log.i("PushReportThread", "pushReportArrive result======" + result);
     }

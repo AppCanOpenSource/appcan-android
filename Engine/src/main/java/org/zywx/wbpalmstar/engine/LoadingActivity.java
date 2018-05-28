@@ -58,9 +58,6 @@ public class LoadingActivity extends Activity {
         registerFinishReceiver();
         addDevelopInfo();
         hideMenu();
-        if (!isTemp) {
-            startEngine();
-        }
     }
 
     private void handleIntent() {
@@ -97,6 +94,19 @@ public class LoadingActivity extends Activity {
 
     @Override
     public void onBackPressed() {
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!isTemp) {
+                    startEngine();
+                }
+            }
+        }, 100);
     }
 
     @Override

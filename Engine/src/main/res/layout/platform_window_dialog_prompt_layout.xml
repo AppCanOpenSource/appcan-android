@@ -10,7 +10,7 @@
         android:layout_alignParentTop="true"
         android:layout_margin="10dip"
         android:gravity="left|center_vertical"
-        android:textSize="20sp" />
+        android:textSize="16sp" />
 
     <EditText
         android:id="@+id/et_dialog_input_text"

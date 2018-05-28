@@ -851,6 +851,20 @@ public class BUtility {
     }
 
     /**
+     * 保存key,value到指定SharedPreferences（spName）中
+     *
+     * @param context
+     * @param spName
+     * @param key
+     * @param value
+     */
+    public static void putString(Context context, String spName, String key,
+                                   String value) {
+        SharedPreferences sp = context.getSharedPreferences(spName, Context.MODE_PRIVATE);
+        sp.edit().putString(key, value).commit();
+    }
+
+    /**
      * 从指定SharedPreferences（spName）中获取key对应的String
      *
      * @param context
@@ -863,6 +877,40 @@ public class BUtility {
                                    String defValue) {
         SharedPreferences sp = context.getSharedPreferences(spName, Context.MODE_PRIVATE);
         return sp.getString(key, defValue);
+    }
+
+    /**
+     * 保存绑定解绑以及链接推送服务器的host地址
+     */
+    public static void setPushAndBindUserHost(Context context, String bindUserHost, String pushHost) {
+        SharedPreferences sp = context.getSharedPreferences(
+                PushReportConstants.SP_PUSH_HOST, Context.MODE_MULTI_PROCESS);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(PushReportConstants.KEY_BINDUSER_HOST, bindUserHost);
+        editor.putString(PushReportConstants.KEY_PUSH_HOST, pushHost);
+        editor.commit();
+    }
+
+    /**
+     * 获取绑定解绑的host地址
+     */
+    public static String getBindUserHost(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(
+                PushReportConstants.SP_PUSH_HOST, Context.MODE_MULTI_PROCESS);
+        String bindUserHost = ResoureFinder.getInstance().getString(context, "bindUser_host");
+        bindUserHost = sp.getString(PushReportConstants.KEY_BINDUSER_HOST, bindUserHost);
+        return bindUserHost;
+    }
+
+    /**
+     * 获取链接推送服务器的host地址
+     */
+    public static String getPushHost(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(
+                PushReportConstants.SP_PUSH_HOST, Context.MODE_MULTI_PROCESS);
+        String pushHost = ResoureFinder.getInstance().getString(context, "push_host");
+        pushHost = sp.getString(PushReportConstants.KEY_PUSH_HOST, pushHost);
+        return pushHost;
     }
 
     /**

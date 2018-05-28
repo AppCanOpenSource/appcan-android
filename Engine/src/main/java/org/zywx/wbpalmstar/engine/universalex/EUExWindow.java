@@ -34,7 +34,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Message;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -2983,6 +2985,20 @@ public class EUExWindow extends EUExBase {
                     resultPrompt(wPromptDialog.getInput(),1,callbackId);
                 }
             });
+            mPrompt.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    onPromptContentChange("" + charSequence);
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                }
+            });
         }
     }
 
@@ -2994,6 +3010,24 @@ public class EUExWindow extends EUExBase {
             callbackToJs(callbackId,false,resultVO.index,resultVO.data);
         }else{
             jsCallback(function_prompt, 0, EUExCallback.F_C_JSON, DataHelper.gson.toJson(resultVO));
+        }
+    }
+
+    private void onPromptContentChange(String text) {
+        if (mBrwView != null) {
+            String js = "javascript:if(uexWindow.onPromptContentChange){uexWindow.onPromptContentChange('"
+                    + text + "');}";
+            mBrwView.loadUrl(js);
+        }
+    }
+
+    @AppCanAPI
+    public void setPromptContent(String[] parm) {
+        if (parm.length < 1) {
+            return;
+        }
+        if (null != mPrompt) {
+            mPrompt.setInputText(parm[0]);
         }
     }
 

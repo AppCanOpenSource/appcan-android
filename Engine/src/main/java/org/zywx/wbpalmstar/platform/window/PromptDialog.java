@@ -23,6 +23,7 @@ import android.content.Context;
 import android.os.IBinder;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -60,6 +61,7 @@ public class PromptDialog extends AlertDialog {
     public void setInputText(String text) {
         if (text != null && text.length() > 0) {
             etInput.setText(text);
+            etInput.setSelection(text.length());
         }
     }
 
@@ -110,6 +112,12 @@ public class PromptDialog extends AlertDialog {
         this.mode = mode;
         if (mode==1){
             etInput.setTransformationMethod(PasswordTransformationMethod.getInstance());
+        }
+    }
+
+    public void addTextChangedListener(TextWatcher watcher) {
+        if (watcher != null) {
+            etInput.addTextChangedListener(watcher);
         }
     }
 }
