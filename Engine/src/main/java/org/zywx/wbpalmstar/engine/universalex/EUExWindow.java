@@ -2700,6 +2700,7 @@ public class EUExWindow extends EUExBase {
      * @param params
      * @return
      */
+    @AppCanAPI
     public boolean removeLocalData(String[] params){
         String key = null;
         if (params.length > 0){
