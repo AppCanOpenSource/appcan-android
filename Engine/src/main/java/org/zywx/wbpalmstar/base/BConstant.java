@@ -44,7 +44,7 @@ public class BConstant {
     public static final String F_PUSH_NOTI_FUN_NAME = "funName";
 
     public static String USERAGENT_NEW;
-    public static final String USERAGENT_APPCAN = " Appcan/3.1";
+    public static final String USERAGENT_APPCAN = " AppCan/" + ENGINE_VERSION;
 
     public static Application app = null;
 

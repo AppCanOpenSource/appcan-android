@@ -44,7 +44,7 @@ public class EBrowserSetting implements EBrowserBaseSetting {
             + "(KHTML, like Gecko) Version/4.0 Mobile Safari/533.1";
 
     public static final String USERAGENT = FROYO_USERAGENT;
-    public static final String USERAGENT_APPCAN = " Appcan/3.1";
+    public static final String USERAGENT_APPCAN = BConstant.USERAGENT_APPCAN;
     public static String USERAGENT_NEW;
 
     protected WebSettings mWebSetting;
