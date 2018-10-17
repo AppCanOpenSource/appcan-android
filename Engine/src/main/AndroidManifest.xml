@@ -78,6 +78,8 @@
         
         <provider android:name="org.zywx.wbpalmstar.base.ACEContentProvider"
           android:authorities="${applicationId}.sp" android:exported="false"/>
+
+        <meta-data android:name="android.max_aspect" android:value="2.5"/>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

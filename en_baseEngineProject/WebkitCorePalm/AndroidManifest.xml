@@ -63,6 +63,7 @@
                  android:process=":temp"
                  android:exported="false"
                  android:enabled="true"/>
+		<meta-data android:name="android.max_aspect" android:value="2.5"/>
 
     </application>
 
