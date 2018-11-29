@@ -148,10 +148,10 @@ public class ACEWebView extends WebView implements DownloadListener {
     }
 
     public float getScaleWrap() {
-        if (Build.VERSION.SDK_INT<=18){
+//        if (Build.VERSION.SDK_INT<=18){
             return getScale();
-        }
-        return 1.0f;
+//        }
+//        return 1.0f;
     }
 
     public int getScrollYWrap() {

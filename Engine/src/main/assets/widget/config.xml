@@ -13,7 +13,8 @@
 	<obfuscation>true</obfuscation>
 	<bgcolor>#fefefe</bgcolor>
 	<orientation>15</orientation>
-    <config desc="whiteList" type="AUTHORITY">
+	<debug>true</debug>
+	<config desc="whiteList" type="AUTHORITY">
         <permission platform="iOS" info="urlSchemeWhiteList">
             <string>wechat</string>
             <string>weixin</string>

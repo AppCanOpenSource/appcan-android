@@ -19,6 +19,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/browser_main_theme"
+            android:exported="false"
             android:windowSoftInputMode="stateHidden|adjustPan" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -36,6 +37,7 @@
             android:theme="@style/browser_loading_theme"
             android:screenOrientation="portrait"
             android:launchMode="standard"
+            android:exported="false"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -63,7 +65,9 @@
             android:enabled="true" />
 
         <receiver
-            android:name="org.zywx.wbpalmstar.platform.push.PushBroadCastReceiver" android:process=":push">
+            android:name="org.zywx.wbpalmstar.platform.push.PushBroadCastReceiver" android:process=":push"
+            android:exported="false"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

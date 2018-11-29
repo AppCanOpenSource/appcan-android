@@ -18,6 +18,7 @@
 
 package org.zywx.wbpalmstar.engine;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -26,6 +27,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
@@ -36,13 +38,18 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Surface;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.slidingmenu.lib.SlidingMenu;
 
@@ -426,6 +433,7 @@ public final class EBrowserActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+//        requsetPerssions(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         EUtil.loge("App onResume");
         mVisable = true;
 //        if (null != mBrowser) {
@@ -948,6 +956,55 @@ public final class EBrowserActivity extends BaseActivity {
     public void onSlidingWindowStateChanged(int position) {
         if (null != mBrowser) {
             mBrowser.onSlidingWindowStateChanged(position);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        mActivityCallback.onRequestPermissionResult(requestCode, permissions, grantResults);
+
+    }
+
+    public void requsetPerssions(final String perssions, EUExBase callack, String message, final int requestCode){
+        //系统运行环境小于6.0不需要权限申请
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return;
+        }
+//        if (mCallbackRuning) {
+//            return;
+//        }
+        if (null != callack) {
+            mActivityCallback = callack;
+//            mCallbackRuning = true;
+        }
+
+        //检查权限是否授权
+        int checkCallPhonePermisssion = ContextCompat.checkSelfPermission(this, perssions);
+
+        if(checkCallPhonePermisssion!= PackageManager.PERMISSION_GRANTED){
+            //判断是不是第一次申请权限，如果是第一次申请权限则返回fasle，如果之前拒绝再次申请则返回true
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,perssions)) {
+                new AlertDialog.Builder(EBrowserActivity.this)
+                        .setTitle("提示")
+                        .setMessage(message)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ActivityCompat.requestPermissions(EBrowserActivity.this, new String[]{perssions}, requestCode);
+                            }
+                        })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        }).show();
+            } else {
+                ActivityCompat.requestPermissions(EBrowserActivity.this, new String[]{perssions}, requestCode);
+            }
+        }else {
+            mActivityCallback.onRequestPermissionResult(requestCode, new String[]{perssions}, new int[]{0});
         }
     }
 }

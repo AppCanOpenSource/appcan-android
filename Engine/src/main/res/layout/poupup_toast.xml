@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/popup_window_bg"
+    android:gravity="center"
+    >
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.1px"
+        android:background="#888" />
+<TextView
+    android:textColor="#000000"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:gravity="center"
+    android:padding="16dp"
+    android:textSize="16sp"
+    android:text="为了能够正常使用App,请开启权限!"
+    />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.1px"
+        android:background="#a1a1a1" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        >
+        <TextView
+            android:id="@+id/popupwindow_cancle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="取消"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:textColor="#000000"
+            />
+        <View
+            android:layout_width="0.1dp"
+            android:layout_height="match_parent"
+            android:background="#888"
+            ></View>
+        <TextView
+            android:id="@+id/popupwindow_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="设置"
+            android:textColor="#000000"
+            />
+
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.1px"
+        android:background="#888" />
+</LinearLayout>

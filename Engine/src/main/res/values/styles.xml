@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
+
+    <style name="popupwindow_anim_style">
+
+        <!-- 指定显示的动画xml -->
+        <item name="android:windowEnterAnimation">@anim/show_from_bottom</item>
+        <!-- 指定消失的动画xml -->
+        <item name="android:windowExitAnimation">@anim/hide_to_bottom</item>
+    </style>
 	<style name="Style_custom_dialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowNoTitle">true</item> 
