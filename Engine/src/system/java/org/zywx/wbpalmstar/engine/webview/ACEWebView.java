@@ -208,4 +208,8 @@ public class ACEWebView extends WebView implements DownloadListener {
         String info = DataHelper.gson.toJson(infoVO);
         return info;
     }
+
+    public View getRealWebView(){
+        return this;
+    }
 }

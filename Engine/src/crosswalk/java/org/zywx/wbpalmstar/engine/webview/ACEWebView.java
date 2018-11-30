@@ -310,4 +310,9 @@ public class ACEWebView extends XWalkView {
         String info = DataHelper.gson.toJson(infoVO);
         return info;
     }
+
+
+	public View getRealWebView(){
+		return this;
+	}
 }
