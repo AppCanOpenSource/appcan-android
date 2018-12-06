@@ -8,9 +8,27 @@ buildscript {
     }
 }
 
-apply plugin: 'com.android.application'
-//apply plugin: 'com.android.library'
+//apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 apply plugin: 'appcan'
+
+// 发布到本地库 ----begin-----------------------------------------
+apply plugin: 'maven'
+def coreAarFile = file('build/outputs/aar/Engine-system-release.aar')
+artifacts {
+    archives coreAarFile
+}
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: uri('repository'))
+            pom.groupId = "org.appcan"
+            pom.artifactId = "engine"
+            pom.version = "4.3.1"
+        }
+    }
+}
+// 发布到本地库 ---- end -----------------------------------------
 
 android {
     compileSdkVersion 25
@@ -30,7 +48,7 @@ android {
         abortOnError false
     }
     defaultConfig {
-        applicationId 'org.zywx.wbpalmstar.widgetone.uex'
+//        applicationId 'org.zywx.wbpalmstar.widgetone.uex'
         minSdkVersion 14
         targetSdkVersion 26 //
         multiDexEnabled true
