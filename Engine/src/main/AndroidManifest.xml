@@ -37,7 +37,7 @@
             android:theme="@style/browser_loading_theme"
             android:screenOrientation="portrait"
             android:launchMode="standard"
-            android:exported="false"
+            android:exported="true"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
