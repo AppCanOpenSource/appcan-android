@@ -19,6 +19,7 @@ import org.zywx.wbpalmstar.base.WebViewSdkCompat;
 import org.zywx.wbpalmstar.base.cache.DiskCache;
 import org.zywx.wbpalmstar.base.listener.OnAppCanFinishListener;
 import org.zywx.wbpalmstar.base.listener.OnAppCanInitListener;
+import org.zywx.wbpalmstar.base.util.ActivityActionRecorder;
 import org.zywx.wbpalmstar.base.util.SpManager;
 import org.zywx.wbpalmstar.base.vo.NameValuePairVO;
 import org.zywx.wbpalmstar.base.vo.SubWidgetToStartVO;
@@ -79,6 +80,7 @@ public class AppCan {
         if (!(mContext instanceof Application)){
             return false;
         }
+        ActivityActionRecorder.getInstance().initRecorder((Application) context.getApplicationContext());
         mListenerQueue = new ELinkedList<EngineEventListener>();
         PushEngineEventListener pushlistener = new PushEngineEventListener();
         mListenerQueue.add(pushlistener);
