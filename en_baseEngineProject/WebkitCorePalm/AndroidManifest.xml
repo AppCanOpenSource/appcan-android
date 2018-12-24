@@ -18,7 +18,6 @@
             android:alwaysRetainTaskState="true"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
             android:theme="@style/browser_main_theme"
             android:windowSoftInputMode="stateHidden|adjustPan">
             <intent-filter>
@@ -36,12 +35,10 @@
             android:configChanges="orientation|keyboardHidden|navigation" android:windowSoftInputMode="adjustPan"/>
         <activity android:name="org.zywx.wbpalmstar.engine.TempActivity"
                   android:launchMode="standard"
-                  android:screenOrientation="portrait"
                   android:theme="@style/browser_loading_theme"/>
         <activity android:name="org.zywx.wbpalmstar.engine.LoadingActivity"
                   android:configChanges="keyboardHidden|orientation"
                   android:launchMode="standard"
-                  android:screenOrientation="portrait"
                   android:theme="@style/browser_loading_theme"
         >
             <intent-filter>
@@ -79,6 +76,8 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
+	<uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"

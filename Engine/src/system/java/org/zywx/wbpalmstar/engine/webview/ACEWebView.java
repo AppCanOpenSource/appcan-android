@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.util.Log;
 import android.view.View;
 import android.webkit.DownloadListener;
 import android.webkit.WebView;
@@ -59,6 +60,7 @@ public class ACEWebView extends WebView implements DownloadListener {
 
     public void init(EBrowserView eBrowserView) {
         mBroView = eBrowserView;
+        mWebApp=true;
         if (Build.VERSION.SDK_INT <= 7) {
             if (mBaSetting == null) {
                 mBaSetting = new EBrowserSetting(eBrowserView);
@@ -207,5 +209,8 @@ public class ACEWebView extends WebView implements DownloadListener {
         }
         String info = DataHelper.gson.toJson(infoVO);
         return info;
+    }
+    public View getRealWebView(){
+        return this;
     }
 }

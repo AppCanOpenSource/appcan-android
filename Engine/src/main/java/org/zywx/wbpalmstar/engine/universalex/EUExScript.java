@@ -269,7 +269,7 @@ public class EUExScript {
                 + "share:function(){uexDispatcher.dispatch('uexWindow','share',jo(arguments));},"
                 + "putLocalData:function(){uexDispatcher.dispatch('uexWindow','putLocalData',jo(arguments));},"
                 + "getLocalData:function(){return uexDispatcher.dispatch('uexWindow','getLocalData',jo(arguments));},"
-                + "removeLocalData:function(){return uexDispatcher.dispatch('uexWindow','removeLocalData',jo(arguments));},"
+//                + "removeLocalData:function(){return uexDispatcher.dispatch('uexWindow','removeLocalData',jo(arguments));},"
                 + "getWindowName:function(){return uexDispatcher.dispatch('uexWindow','getWindowName',jo(arguments));},"
 
 

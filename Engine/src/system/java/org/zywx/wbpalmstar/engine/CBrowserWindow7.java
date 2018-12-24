@@ -251,6 +251,24 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
         CookieSyncManager.getInstance().sync();
     }
 
+    @Override
+    public void onScaleChanged(WebView view, float oldScale, float
+            newScale) {
+        String windowName = null;
+        if (view instanceof EBrowserView){
+            windowName = ((EBrowserView) view).getName();
+            notifyScaleChangedToJS((EBrowserView) view);
+            BDebug.i("windowName = " + windowName + " oldScale = " + oldScale + " newScale = " + newScale);
+        }
+    }
+
+    private void notifyScaleChangedToJS(EBrowserView webview){
+        String js = "javascript:if(window.onresize){window.onresize()}else{console.log('AppCanEngine-->notifyScaleChangedToJS else')}";
+        webview.addUriTask(js);
+    }
+
+
+
 	/*
      * This method is unstable and generally leads to error, so deprecate.
 	 * 

@@ -31,17 +31,17 @@ import android.os.Environment;
 import android.os.Message;
 import android.widget.Toast;
 
-import org.zywx.wbpalmstar.acedes.ACEDESBrowserWindow7;
-import org.zywx.wbpalmstar.base.BDebug;
-import org.zywx.wbpalmstar.engine.universalex.EUExScript;
-import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
-import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
-
 import com.tencent.smtt.export.external.interfaces.HttpAuthHandler;
 import com.tencent.smtt.export.external.interfaces.SslError;
 import com.tencent.smtt.export.external.interfaces.SslErrorHandler;
 import com.tencent.smtt.sdk.CookieSyncManager;
 import com.tencent.smtt.sdk.WebView;
+
+import org.zywx.wbpalmstar.acedes.ACEDESBrowserWindow7;
+import org.zywx.wbpalmstar.base.BDebug;
+import org.zywx.wbpalmstar.engine.universalex.EUExScript;
+import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
+import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -247,6 +247,22 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
         }
 
         CookieSyncManager.getInstance().sync();
+    }
+
+    @Override
+    public void onScaleChanged(WebView view, float oldScale, float
+            newScale) {
+        String windowName = null;
+        if (view instanceof EBrowserView){
+            windowName = ((EBrowserView) view).getName();
+            notifyScaleChangedToJS((EBrowserView) view);
+            BDebug.i("windowName = " + windowName + " oldScale = " + oldScale + " newScale = " + newScale);
+        }
+    }
+
+    private void notifyScaleChangedToJS(EBrowserView webview){
+        String js = "javascript:if(window.onresize){window.onresize()}else{console.log('AppCanEngine-->notifyScaleChangedToJS else')}";
+        webview.addUriTask(js);
     }
 
 	/*

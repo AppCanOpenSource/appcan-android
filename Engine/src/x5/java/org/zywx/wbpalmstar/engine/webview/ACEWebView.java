@@ -274,4 +274,7 @@ public class ACEWebView extends WebView implements DownloadListener {
         onTouchEvent(ev);
         return super.dispatchTouchEvent(ev);
     }
+    public View getRealWebView(){
+        return getView();
+    }
 }

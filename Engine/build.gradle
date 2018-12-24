@@ -1,15 +1,19 @@
 buildscript {
     repositories {
         jcenter()
+        maven {
+            url 'https://raw.githubusercontent.com/android-plugin/mvn-repo/master/'
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.0'
-        classpath fileTree(dir: '../gradle-plugin', include: '*.jar')
+//        classpath fileTree(dir: '../gradle-plugin', include: '*.jar')
+        classpath 'org.appcan.gradle.plugins:appcan-gradle-plugin:2.1.2'
     }
 }
 
-//apply plugin: 'com.android.application'
-apply plugin: 'com.android.library'
+apply plugin: 'com.android.application'
+//apply plugin: 'com.android.library'
 apply plugin: 'appcan'
 
 // 发布到本地库 ----begin-----------------------------------------
@@ -31,8 +35,8 @@ uploadArchives {
 // 发布到本地库 ---- end -----------------------------------------
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.3'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
 //    buildToolsVersion '24.0.0'
     packagingOptions {
         exclude 'META-INF/MANIFEST.MF'
@@ -48,9 +52,9 @@ android {
         abortOnError false
     }
     defaultConfig {
-//        applicationId 'org.zywx.wbpalmstar.widgetone.uex'
+        applicationId 'org.zywx.wbpalmstar.widgetone.uex'
         minSdkVersion 14
-        targetSdkVersion 26 //
+        targetSdkVersion 28 //
         multiDexEnabled true
     }
     productFlavors {

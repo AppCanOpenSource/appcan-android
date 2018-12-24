@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <info>
-    <version>$version$</version>
+    <version>$version$_singlesh</version>
     <package>$package$</package>
     <kernel>$kernel$</kernel>
-    <description>合并一系列bug修复；新增removeLocalData接口；打开操作本地文件的权限；修复Cookie设置在5.1系统以上可能会无效的问题（主要针对X5内核）；修复input标签type为file时选择文件在有些高版本系统中的异常问题;升级target版本为26，动态权限申请</description>
+    <description>(深航定制，因bug暂时去掉removeLocalData接口)合并一系列bug修复；新增removeLocalData接口；打开操作本地文件的权限；修复Cookie设置在5.1系统以上可能会无效的问题（主要针对X5内核）；修复input标签type为file时选择文件在有些高版本系统中的异常问题;升级target版本为26，动态权限申请</description>
     <dssVersion>4.3.0</dssVersion>
 </info>
