@@ -18,12 +18,7 @@
 
 package org.zywx.wbpalmstar.engine;
 
-import org.json.JSONObject;
-import org.zywx.wbpalmstar.base.BUtility;
-import org.zywx.wbpalmstar.base.WebViewSdkCompat;
-import org.zywx.wbpalmstar.engine.external.Compat;
-import org.zywx.wbpalmstar.engine.universalex.EUExScript;
-
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -37,6 +32,12 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.LinearLayout;
 import android.widget.Scroller;
+
+import org.json.JSONObject;
+import org.zywx.wbpalmstar.base.BUtility;
+import org.zywx.wbpalmstar.base.WebViewSdkCompat;
+import org.zywx.wbpalmstar.engine.external.Compat;
+import org.zywx.wbpalmstar.engine.universalex.EUExScript;
 
 public class EBounceView extends LinearLayout {
 
@@ -108,9 +109,14 @@ public class EBounceView extends LinearLayout {
         mHeaderView.setVisibility(GONE);
 
         mBrwView = (EBrowserView) child;
-        LayoutParams wlp = new LinearLayout.LayoutParams(Compat.FILL, Compat.FILL);
+        final LayoutParams wlp = new LinearLayout.LayoutParams(Compat.FILL, Compat.FILL);
         wlp.weight = 1.0f;
-        addView(mBrwView, wlp);
+        ((Activity)mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                addView(mBrwView, wlp);
+            }
+        });
 
         mTailView = new EBounceViewHeader(mContext, EViewEntry.F_BOUNCE_TYPE_BOTTOM);
         LayoutParams tlp = new LinearLayout.LayoutParams(Compat.FILL, mBounceViewHeight);
