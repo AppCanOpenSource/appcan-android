@@ -18,7 +18,6 @@
 
 package org.zywx.wbpalmstar.engine.universalex;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.Keep;
@@ -78,16 +77,10 @@ public class EUExManager {
 
                         ELinkedList<EUExBase> plugins = getThirdPlugins();
                         for (final EUExBase plugin : plugins) {
-                            final Object[] object = new Object[1];
+
                             if (plugin.getUexName().equals(pluginName)) {
-                                ((Activity)mContext).runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-//
-                                        object[0] = callMethod(plugin,
-                                                methodName, params);
-                                    }
-                                });
+                                Object object = callMethod(plugin,
+                                        methodName, params);
 //                                if (null != object) {
 //                                    result.confirm(object.toString());
 //                                }

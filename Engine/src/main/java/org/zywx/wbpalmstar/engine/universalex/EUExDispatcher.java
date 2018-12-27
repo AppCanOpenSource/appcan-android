@@ -22,6 +22,7 @@ package org.zywx.wbpalmstar.engine.universalex;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.webkit.JavascriptInterface;
 
 import org.zywx.wbpalmstar.base.EUExAbstractDispatcher;
@@ -41,25 +42,32 @@ public class EUExDispatcher extends EUExAbstractDispatcher {
 
     @JavascriptInterface
     public Object dispatch(final String pluginName, final String methodName, final String[] params){
-        Handler handler = new Handler(Looper.getMainLooper()){
+        final DispatchResultVO resultVO = new DispatchResultVO();
+
+        Handler handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
-                DispatchResultVO resultVO = (DispatchResultVO)msg.obj;
-                resultVO.setResult(mDispatcherCallback.onDispatch(pluginName, methodName, params));
-                resultVO.notify();
+                synchronized (resultVO) {
+
+                    DispatchResultVO resultVO = (DispatchResultVO) msg.obj;
+                    resultVO.setResult(mDispatcherCallback.onDispatch(pluginName, methodName, params));
+                    resultVO.notify();
+                }
             }
         };
-        DispatchResultVO resultVO = new DispatchResultVO();
-        Message msg = Message.obtain();
-        msg.obj = resultVO;
-        handler.sendMessage(msg);
-        try {
-            resultVO.wait();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        synchronized (resultVO) {
+            Message msg = Message.obtain();
+            msg.obj = resultVO;
+            handler.sendMessage(msg);
+
+            try {
+                resultVO.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return resultVO.getResult();
         }
-        return resultVO.getResult();
     }
 
 }

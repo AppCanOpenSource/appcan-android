@@ -111,12 +111,7 @@ public class EBounceView extends LinearLayout {
         mBrwView = (EBrowserView) child;
         final LayoutParams wlp = new LinearLayout.LayoutParams(Compat.FILL, Compat.FILL);
         wlp.weight = 1.0f;
-        ((Activity)mContext).runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                addView(mBrwView, wlp);
-            }
-        });
+        addView(mBrwView, wlp);
 
         mTailView = new EBounceViewHeader(mContext, EViewEntry.F_BOUNCE_TYPE_BOTTOM);
         LayoutParams tlp = new LinearLayout.LayoutParams(Compat.FILL, mBounceViewHeight);
