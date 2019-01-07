@@ -52,6 +52,7 @@ import org.zywx.wbpalmstar.acedes.ACEDes;
 import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.ResoureFinder;
 import org.zywx.wbpalmstar.base.WebViewSdkCompat;
+import org.zywx.wbpalmstar.base.util.ActivityActionRecorder;
 import org.zywx.wbpalmstar.base.util.ConfigXmlUtil;
 import org.zywx.wbpalmstar.engine.external.Compat;
 import org.zywx.wbpalmstar.engine.universalex.EUExBase;
@@ -176,6 +177,30 @@ public final class EBrowserActivity extends BaseActivity {
                             "FLAG_NEEDS_MENU_KEY").getInt(null));
         } catch (Exception e) {
         }
+        //TODO 新的更精准的前后台监听，待完善
+        ActivityActionRecorder.getInstance().registerTriggerListener(new ActivityActionRecorder.AppBackgroundStatusListener() {
+            @Override
+            public void onEnterBackground() {
+                isForground = false;
+                if (null != mBrowser) {
+                    mBrowser.onAppPause();
+                }
+                if (null != mBrowserAround) {
+                    mBrowserAround.onPause();
+                }
+            }
+
+            @Override
+            public void onEnterForground() {
+                if (null != mBrowser) {
+                    mBrowser.onAppResume();
+                }
+                if (null != mBrowserAround) {
+                    mBrowserAround.onResume();
+                }
+                isForground = true;
+            }
+        });
     }
 
     private void reflectionPluginMethod(String method) {
@@ -402,13 +427,13 @@ public final class EBrowserActivity extends BaseActivity {
         super.onResume();
         EUtil.loge("App onResume");
         mVisable = true;
-        if (null != mBrowser) {
-            mBrowser.onAppResume();
-        }
-        if (null != mBrowserAround) {
-            mBrowserAround.onResume();
-        }
-        isForground = true;
+//        if (null != mBrowser) {
+//            mBrowser.onAppResume();
+//        }
+//        if (null != mBrowserAround) {
+//            mBrowserAround.onResume();
+//        }
+//        isForground = true;
         reflectionPluginMethod("onActivityResume");
     }
 
@@ -424,19 +449,19 @@ public final class EBrowserActivity extends BaseActivity {
 
     @Override
     protected void onPause() {
-        isForground = false;
         super.onPause();
         EUtil.loge("App onPause");
         mVisable = false;
         if (mFinish) {
             return;
         }
-        if (null != mBrowser) {
-            mBrowser.onAppPause();
-        }
-        if (null != mBrowserAround) {
-            mBrowserAround.onPause();
-        }
+//        isForground = false;
+//        if (null != mBrowser) {
+//            mBrowser.onAppPause();
+//        }
+//        if (null != mBrowserAround) {
+//            mBrowserAround.onPause();
+//        }
         reflectionPluginMethod("onActivityPause");
     }
 

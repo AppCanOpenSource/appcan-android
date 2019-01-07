@@ -18,4 +18,8 @@ public class WidgetStartVO implements Serializable {
 
     public int animDuration;
 
+    public String appKey;
+
+    public String appkey;
+
 }

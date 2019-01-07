@@ -104,13 +104,26 @@ public class EUExWidget extends EUExBase {
                 callbackId=valueOfCallbackId(parm[1]);
             }
             WidgetStartVO startVO= DataHelper.gson.fromJson(parm[0], WidgetStartVO.class);
-            parm=new String[]{
-                    startVO.appId,
-                    String.valueOf(startVO.animId),
-                    startVO.funcName,
-                    startVO.info,
-                    String.valueOf(startVO.animDuration)
-            };
+            // 兼容企业级参数appKey（也兼容了appkey这个小写写法）
+            String appKey = TextUtils.isEmpty(startVO.appkey)?startVO.appKey:startVO.appkey;
+            if (!TextUtils.isEmpty(appKey)){
+                parm=new String[]{
+                        startVO.appId,
+                        String.valueOf(startVO.animId),
+                        startVO.funcName,
+                        startVO.info,
+                        String.valueOf(startVO.animDuration),
+                        appKey
+                };
+            }else{
+                parm=new String[]{
+                        startVO.appId,
+                        String.valueOf(startVO.animId),
+                        startVO.funcName,
+                        startVO.info,
+                        String.valueOf(startVO.animDuration)
+                };
+            }
         }
 
         if (parm.length < 4) {

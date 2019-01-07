@@ -22,4 +22,5 @@
             <string>mqq</string>
         </permission>
     </config>
+	<debug>true</debug>
 </widget>

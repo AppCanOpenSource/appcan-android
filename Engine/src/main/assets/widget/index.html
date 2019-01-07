@@ -40,6 +40,15 @@
                 <div class="btncss" data-control="BOX">
                     <div class="button ub ub-ac bc-text-head ub-pc bc-btn" onclick="openModulePage('uexWidgetOne')">uexWidgetOne</div>
                 </div>
+                <div class="btncss" data-control="BOX">
+                    <div class="button ub ub-ac bc-text-head ub-pc bc-btn" onclick="putLocalData()">putLocalData</div>
+                </div>
+                <div class="btncss" data-control="BOX">
+                    <div class="button ub ub-ac bc-text-head ub-pc bc-btn" onclick="getLocalData()">getLocalData</div>
+                </div>
+                <div class="btncss" data-control="BOX">
+                    <div class="button ub ub-ac bc-text-head ub-pc bc-btn" onclick="removeLocalData()">removeLocalData</div>
+                </div>
             </div>
         </div>
         <script src="js/appcan.js">
@@ -58,6 +67,7 @@
                     alert("被第三方应用启动传递的数据为:" + json);
                 }
                 uexWidget.onSuspend = function(){
+                    console.log("uexWidget.onSuspend");
                     //程序挂起
                     uexWindow.evaluatePopoverScript({
                         windowName:"uexWidget",
@@ -66,6 +76,7 @@
                     });
                 };
                 uexWidget.onResume = function(){
+                    console.log("uexWidget.onResume");
                     //程序恢复
                     uexWindow.evaluatePopoverScript({
                         windowName:"uexWidget",
@@ -74,6 +85,16 @@
                     });
                 }
             });
+            function putLocalData(){
+                uexWindow.putLocalData('appcan','LocalData');
+            }
+            function getLocalData(){
+                var mydata = uexWindow.getLocalData('appcan');
+                alert("mydata=="+mydata);
+            }
+            function removeLocalData(){
+                uexWindow.removeLocalData('appcan')
+            }
             function openModulePage(moduleName){
                 var h = uexWindow.getHeight();
                 var w = uexWindow.getWidth();
