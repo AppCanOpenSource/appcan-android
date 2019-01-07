@@ -32,6 +32,7 @@ import org.zywx.wbpalmstar.engine.AppCan;
 import org.zywx.wbpalmstar.engine.DataHelper;
 import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.ELinkedList;
+import org.zywx.wbpalmstar.engine.callback.EUExDispatcherCallback;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -66,7 +67,48 @@ public class EUExManager {
         mThirdPlugins.add(widgetOne);
         mThirdPlugins.add(window);
         mThirdPlugins.add(widget);
+
         // third-party plugin
+        EUExDispatcher uexDispatcher = new EUExDispatcher(
+                new EUExDispatcherCallback() {
+                    @Override
+                    public Object onDispatch(String pluginName,
+                                             final String methodName, final String[] params) {
+
+                        ELinkedList<EUExBase> plugins = getThirdPlugins();
+                        for (final EUExBase plugin : plugins) {
+
+                            if (plugin.getUexName().equals(pluginName)) {
+                                Object object = callMethod(plugin,
+                                        methodName, params);
+//                                if (null != object) {
+//                                    result.confirm(object.toString());
+//                                }
+//                                Log.i("zhangyibo", "return result = " + object);
+                                return object;
+                            }
+                        }
+                        // 调用单实例插件
+                        Map<String, ThirdPluginObject> thirdPlugins =
+                                getPlugins();
+                        ThirdPluginObject thirdPluginObject = thirdPlugins
+                                .get(pluginName);
+                        if (thirdPluginObject != null
+                                && thirdPluginObject.isGlobal
+                                && thirdPluginObject.pluginObj != null) {
+                            Object object = callMethod(
+                                    thirdPluginObject.pluginObj,
+                                    methodName, params);
+//                            if (null != object) {
+//                                result.confirm(object.toString());
+//                            }
+                            return object;
+                        }
+                        BDebug.e("plugin", pluginName, "not exist...");
+                        return null;
+                    }
+                });
+        brwView.addJavascriptInterface(uexDispatcher, EUExDispatcher.JS_OBJECT_NAME);
         Map<String, ThirdPluginObject> thirdPlugins = getPlugins();
 //		String symbol = "_";
         Set<Map.Entry<String, ThirdPluginObject>> pluginSet = thirdPlugins.entrySet();
@@ -150,7 +192,7 @@ public class EUExManager {
                 String resultStr =callMethod(plugin,
                         methodName, params);
                 if (null != resultStr) {
-                        return resultStr;
+                    return resultStr;
                 }
             }
         }
