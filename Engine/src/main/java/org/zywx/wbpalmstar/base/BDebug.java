@@ -67,6 +67,10 @@ public class BDebug {
         }
     }
 
+    public static boolean isDebugMode(){
+        return DEBUG;
+    }
+
     /**
      * 不想显示log 行号等信息，调用该接口
      * @param msg

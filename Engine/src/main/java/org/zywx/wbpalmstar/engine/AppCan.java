@@ -430,19 +430,37 @@ public class AppCan {
                                   Context mContext, EBrowserView mBrwView) {
         List<NameValuePairVO> nameValuePairs = new ArrayList<NameValuePairVO>();
         for (EngineEventListener Listener : mListenerQueue) {
-            Listener.delPushInfo(mContext, nameValuePairs);
+            try {
+                Listener.delPushInfo(mContext, nameValuePairs);
+            } catch (Exception e) {
+                if (BDebug.isDebugMode()) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
     public final void deviceBind(String userId, String userNick, Context mContext, EBrowserView mBrwView) {
         for (EngineEventListener Listener : mListenerQueue) {
-            Listener.deviceBind(userId, userNick, mContext);
+            try {
+                Listener.deviceBind(userId, userNick, mContext);
+            } catch (Exception e) {
+                if (BDebug.isDebugMode()) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
     public final void deviceUnBind(Context mContext, EBrowserView mBrwView) {
         for (EngineEventListener Listener : mListenerQueue) {
-            Listener.deviceUnBind(mContext);
+            try {
+                Listener.deviceUnBind(mContext);
+            } catch (Exception e) {
+                if (BDebug.isDebugMode()) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
