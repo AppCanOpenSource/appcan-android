@@ -40,7 +40,7 @@ public class EUExDispatcher extends EUExAbstractDispatcher {
     }
 
     @JavascriptInterface
-    public Object dispatch(final String pluginName, final String methodName, final String[] params){
+    public String dispatch(final String pluginName, final String methodName, final String[] params){
         final DispatchResultVO resultVO = new DispatchResultVO();
 
         Handler handler = new Handler(Looper.getMainLooper()) {
@@ -48,7 +48,6 @@ public class EUExDispatcher extends EUExAbstractDispatcher {
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 synchronized (resultVO) {
-
                     DispatchResultVO resultVO = (DispatchResultVO) msg.obj;
                     resultVO.setResult(mDispatcherCallback.onDispatch(pluginName, methodName, params));
                     resultVO.notify();

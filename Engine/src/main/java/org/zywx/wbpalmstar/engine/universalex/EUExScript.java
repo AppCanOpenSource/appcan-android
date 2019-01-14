@@ -87,8 +87,9 @@ public class EUExScript {
 //                "}"+
 //                "var temp = uexDispatcherNative.dispatch(uexName, method, args);console.log(temp);"+
 //                "var result = JSON.parse(temp);"+
-                "var result = uexDispatcherNative.dispatch(uexName, method, args); console.info('3333333333==========='+args); "+
-                "  var content = result.result; " +
+                "var result = uexDispatcherNative.dispatch(uexName, method, args); "+
+                " var finalResult =JSON.parse(result) ; "+
+                "  var content = finalResult.result; " +
                 "   if (content&&content.funcMaps) { " +
                 "     for (var name in content.funcMaps) { " +
                 "      (function(name){" +
@@ -270,7 +271,7 @@ public class EUExScript {
                 + "share:function(){uexDispatcher.dispatch('uexWindow','share',jo(arguments));},"
                 + "putLocalData:function(){uexDispatcher.dispatch('uexWindow','putLocalData',jo(arguments));},"
                 + "getLocalData:function(){return uexDispatcher.dispatch('uexWindow','getLocalData',jo(arguments));},"
-                + "removeLocalData:function(){return uexDispatcher.dispatch('uexWindow','removeLocalData',jo(arguments));},"
+//                + "removeLocalData:function(){return uexDispatcher.dispatch('uexWindow','removeLocalData',jo(arguments));},"
                 + "getWindowName:function(){return uexDispatcher.dispatch('uexWindow','getWindowName',jo(arguments));},"
 
 

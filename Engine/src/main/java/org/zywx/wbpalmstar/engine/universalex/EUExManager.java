@@ -21,6 +21,7 @@ package org.zywx.wbpalmstar.engine.universalex;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.Keep;
+import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -72,19 +73,20 @@ public class EUExManager {
         EUExDispatcher uexDispatcher = new EUExDispatcher(
                 new EUExDispatcherCallback() {
                     @Override
-                    public Object onDispatch(String pluginName,
+                    public String onDispatch(String pluginName,
                                              final String methodName, final String[] params) {
 
                         ELinkedList<EUExBase> plugins = getThirdPlugins();
                         for (final EUExBase plugin : plugins) {
 
                             if (plugin.getUexName().equals(pluginName)) {
-                                Object object = callMethod(plugin,
+                                String object = callMethod(plugin,
                                         methodName, params);
+                                Log.d("AppCan:","插件名称:"+pluginName+"\n插件方法:"+methodName+"\n相关参数:"+getParams(params));
 //                                if (null != object) {
 //                                    result.confirm(object.toString());
 //                                }
-//                                Log.i("zhangyibo", "return result = " + object);
+//                                Log.e("TAG", "return result = " + object);
                                 return object;
                             }
                         }
@@ -96,7 +98,7 @@ public class EUExManager {
                         if (thirdPluginObject != null
                                 && thirdPluginObject.isGlobal
                                 && thirdPluginObject.pluginObj != null) {
-                            Object object = callMethod(
+                            String object = callMethod(
                                     thirdPluginObject.pluginObj,
                                     methodName, params);
 //                            if (null != object) {
@@ -144,6 +146,14 @@ public class EUExManager {
 
             }
         }
+    }
+
+    private String getParams(String[] params) {
+        StringBuffer stringBuffer=new StringBuffer();
+        for (String param:params){
+            stringBuffer.append("\n参数类型:String"+"\n参数值:"+param+"\n");
+        }
+        return stringBuffer.toString();
     }
 
     public Map<String, ThirdPluginObject> getPlugins() {

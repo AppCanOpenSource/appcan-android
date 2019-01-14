@@ -5,13 +5,13 @@ package org.zywx.wbpalmstar.base.vo;
  */
 
 public class DispatchResultVO {
-    private Object result;
+    private String result;
 
-    public Object getResult() {
+    public String getResult() {
         return result;
     }
 
-    public void setResult(Object result) {
+    public void setResult(String result) {
         this.result = result;
     }
 }

@@ -26,6 +26,6 @@ public abstract class EUExAbstractDispatcher {
 
     public static final String JS_OBJECT_NAME = "uexDispatcherNative";
 
-    public abstract Object dispatch(String pluginName, String methodName, String[] params);
+    public abstract String dispatch(String pluginName, String methodName, String[] params);
 
 }

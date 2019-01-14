@@ -25,6 +25,6 @@ package org.zywx.wbpalmstar.engine.callback;
  */
 public interface EUExDispatcherCallback {
 
-    Object onDispatch(String pluginName, String methodName, String[] params);
+    String onDispatch(String pluginName, String methodName, String[] params);
 
 }
