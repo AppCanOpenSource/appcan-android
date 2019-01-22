@@ -30,6 +30,7 @@ import android.net.http.SslError;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Message;
+import android.util.Log;
 import android.webkit.CookieSyncManager;
 import android.webkit.HttpAuthHandler;
 import android.webkit.SslErrorHandler;
@@ -258,12 +259,19 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
         if (view instanceof EBrowserView){
             windowName = ((EBrowserView) view).getName();
             notifyScaleChangedToJS((EBrowserView) view);
-            BDebug.i("windowName = " + windowName + " oldScale = " + oldScale + " newScale = " + newScale);
+//            BDebug.i("windowName = " + windowName + " oldScale = " + oldScale + " newScale = " + newScale);
+            Log.e("TAG","windowName = " + windowName + " oldScale = " + oldScale + " newScale = " + newScale);
+            EBrowserView target = (EBrowserView) view;
+            ESystemInfo info = ESystemInfo.getIntence();
+            int defaultFontSize;
+            defaultFontSize = (int) (info.mDefaultFontSize / target.getScaleWrap());
+            info.mScaled = true;
+            target.setDefaultFontSize(defaultFontSize);
         }
     }
 
     private void notifyScaleChangedToJS(EBrowserView webview){
-        String js = "javascript:if(window.onresize){window.onresize()}else{console.log('AppCanEngine-->notifyScaleChangedToJS else')}";
+        String js = "javascript:if(w00indow.onresize){window.onresize()}else{console.log('AppCanEngine-->notifyScaleChangedToJS else')}";
         webview.addUriTask(js);
     }
 
