@@ -60,8 +60,8 @@ public class EUExScript {
                 "      var permanent = params.shift();" +
                 "      this.queue[id].apply(this, params);" +
                 "      if (!permanent) {" +
-                 "        delete this.queue[id];" +
-                 "     }" +
+                "        delete this.queue[id];" +
+                "     }" +
                 "    }" +
                 "  };"+
                 "function fo(){" +
@@ -76,15 +76,18 @@ public class EUExScript {
                 "if (type == \"function\") {" +
                 "          var callbackID = uexCallback.queue.length;" +
                 "          uexCallback.queue[callbackID] = arg;" +
-                "          args[i] = callbackID" +
+                "          args[i] = ''+callbackID" +
                 "        }"+
                 "aTypes[aTypes.length] = type;" +
                 "}" +
-                "var result =JSON.parse(prompt(" + JS_APPCAN_ONJSPARSE_HEADER +
-                "JSON.stringify({uexName:uexName,method:method,args:args,types:aTypes})));" +
-                " if (result.code != 200) {" +
-                "   console.log( \"method call error, code:\" + result.code + \", message: \" + result.result  );" +
-                "}"+
+//                "var result =JSON.parse(prompt(" + JS_APPCAN_ONJSPARSE_HEADER +
+//                "JSON.stringify({uexName:uexName,method:method,args:args,types:aTypes})));" +
+//                " if (result.code != 200) {" +
+//                "   console.log( \"method call error, code:\" + result.code + \", message: \" + result.result  );" +
+//                "}"+
+//                "var temp = uexDispatcherNative.dispatch(uexName, method, args);console.log(temp);"+
+//                "var result = JSON.parse(temp);"+
+                "var result = uexDispatcherNative.dispatch(uexName, method, args); console.info('3333333333==========='+args); "+
                 "  var content = result.result; " +
                 "   if (content&&content.funcMaps) { " +
                 "     for (var name in content.funcMaps) { " +
@@ -116,6 +119,8 @@ public class EUExScript {
                 "var b = a[i];" +
                 "if(b instanceof Array || typeof(b)=='number' || typeof(b)=='boolean'){" +
                 "t[i]=b.toString();" +
+                "}else if(typeof(b)=='object'){" +
+                "t[i]=JSON.stringify(b)" +
                 "}else{" +
                 "t[i]=b;" +
                 "}" +
