@@ -59,6 +59,7 @@ public class ACEWebView extends WebView implements DownloadListener {
 
     public void init(EBrowserView eBrowserView) {
         mBroView = eBrowserView;
+        mWebApp=true;
         if (Build.VERSION.SDK_INT <= 7) {
             if (mBaSetting == null) {
                 mBaSetting = new EBrowserSetting(eBrowserView);
@@ -148,10 +149,10 @@ public class ACEWebView extends WebView implements DownloadListener {
     }
 
     public float getScaleWrap() {
-        if (Build.VERSION.SDK_INT<=18){
+//        if (Build.VERSION.SDK_INT<=18){
             return getScale();
-        }
-        return 1.0f;
+//        }
+//        return 1.0f;
     }
 
     public int getScrollYWrap() {
