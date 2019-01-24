@@ -59,7 +59,6 @@ public class ACEWebView extends WebView implements DownloadListener {
 
     public void init(EBrowserView eBrowserView) {
         mBroView = eBrowserView;
-        mWebApp=true;
         if (Build.VERSION.SDK_INT <= 7) {
             if (mBaSetting == null) {
                 mBaSetting = new EBrowserSetting(eBrowserView);
@@ -67,16 +66,13 @@ public class ACEWebView extends WebView implements DownloadListener {
                 setWebViewClient(mEXWebViewClient = new CBrowserWindow());
                 setWebChromeClient(new CBrowserMainFrame(eBrowserView.getContext()));
             }
-
         } else {
-
             if (mBaSetting == null) {
                 mBaSetting = new EBrowserSetting7(eBrowserView);
                 mBaSetting.initBaseSetting(mWebApp);
                 setWebViewClient(mEXWebViewClient = new CBrowserWindow7());
                 setWebChromeClient(new CBrowserMainFrame7(eBrowserView.getContext()));
             }
-
         }
     }
 
