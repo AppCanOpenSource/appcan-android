@@ -271,7 +271,7 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
     }
 
     private void notifyScaleChangedToJS(EBrowserView webview){
-        String js = "javascript:if(w00indow.onresize){window.onresize()}else{console.log('AppCanEngine-->notifyScaleChangedToJS else')}";
+        String js = "javascript:if(window.onresize){window.onresize()}else{console.log('AppCanEngine-->notifyScaleChangedToJS else')}";
         webview.addUriTask(js);
     }
 
