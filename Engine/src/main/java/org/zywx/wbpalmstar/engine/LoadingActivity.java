@@ -8,15 +8,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -26,12 +23,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.zywx.wbpalmstar.base.util.ConfigXmlUtil;
+import org.zywx.wbpalmstar.base.util.PermissionUtils;
+import org.zywx.wbpalmstar.engine.callback.RequestPermissionsCallBcak;
 import org.zywx.wbpalmstar.engine.external.Compat;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.zywx.wbpalmstar.base.util.PermissionUtils.REQUESTFLAGDENIED;
+import static org.zywx.wbpalmstar.base.util.PermissionUtils.REQUESTFLAGDENIEDNOASK;
 
 
 /**
@@ -42,7 +44,7 @@ import java.util.List;
  * 原因：历史问题，推送，暴露给三方的入口等都是EBrowserActivity
  */
 
-public class LoadingActivity extends Activity  {
+public class LoadingActivity extends Activity implements RequestPermissionsCallBcak {
 
     public static final String FINISH_BROADCAST_ACTION = "com.appcan.close";
 
@@ -62,6 +64,7 @@ public class LoadingActivity extends Activity  {
     //1、首先声明一个数组permissions，将需要的权限都放在里面
     String permissions[] = {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.READ_PHONE_STATE};
     //2、创建一个mPermissionList，逐个判断哪些权限未授予，未授予的权限存储到mPerrrmissionList中
     List<String> mPermissionList = new ArrayList<String>();
@@ -145,6 +148,36 @@ public class LoadingActivity extends Activity  {
                 mBroadcastReceiver);
     }
 
+    /**
+     * 权限申请过执行的操作
+     *
+     * @param requestCode
+     */
+    @Override
+    public void requestPermissionsSucesss(int requestCode) {
+        startEngin();
+    }
+
+    /**
+     * 权限申请失败回调
+     *
+     * @param errorCode
+     * @param requestCode
+     */
+    @Override
+    public void requestPermissionfailure(int errorCode, Object requestCode) {
+        //普通拒绝重新申请权限
+        if (errorCode == REQUESTFLAGDENIED) {
+            if (requestCode instanceof List) {
+                String[] requestAgin = (String[]) ((List) requestCode).toArray(new String[((List) requestCode).size()]);
+                PermissionUtils.requestPermissions(this, requestAgin, REQUEST_CODE_ASK_CALL_PHONE, this);
+            }
+
+        } else if (errorCode == REQUESTFLAGDENIEDNOASK) {   //已经勾选不在提示申请权限
+//            showPerssionDialog();
+            Toast.makeText(this,"请到设置页面开启相关权限！",Toast.LENGTH_LONG).show();
+        }
+    }
 
 
     private class FinishSelfReceiver extends BroadcastReceiver {
@@ -199,75 +232,33 @@ public class LoadingActivity extends Activity  {
             }
         }
     }
+
     public void requsetPerssions(final String[] perssions) {
         //系统运行环境小于6.0不需要权限申请
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             startEngin();
             return;
         }
-        mPermissionList.clear();//清空没有通过的权限
-        for (String perssion : perssions) {
-            if (ContextCompat.checkSelfPermission(this, perssion) != PackageManager.PERMISSION_GRANTED) {
-                mPermissionList.add(perssion);
-            }
-        }
-        if (mPermissionList.size() > 0) {
-            //有未申请的权限，需要动态去申请
-
-//            for (String  permission : permissions) {
-                ActivityCompat.requestPermissions(this, perssions, REQUEST_CODE_ASK_CALL_PHONE);
-//            }
-
-        } else {
-            //说明权限都已经通过，
-            startEngin();
-        }
+        //多个权限申请操作
+        PermissionUtils.requestPermissions(this, perssions, REQUEST_CODE_ASK_CALL_PHONE, this);
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        boolean hasPermissionDismiss = true;//有权限没有通过
         if (REQUEST_CODE_ASK_CALL_PHONE == requestCode) {
-            for (int i = 0; i < grantResults.length; i++) {
-                if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                    hasPermissionDismiss = false;
-                    //在用户已经拒绝授权的情况下，如果shouldShowRequestPermissionRationale返回false则
-                    // 可以推断出用户选择了“不在提示”选项，在这种情况下需要引导用户至设置页手动授权
-                    if (!ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[i])) {
-                        //解释原因，并且引导用户至设置页手动授权
-                        //引导用户至设置页手动授权
-                        Toast.makeText(this,"为了不影响正常使用,请到设置界面开启权限" ,Toast.LENGTH_LONG).show();
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                finish();
-                            }
-                        },2000);
-
-                    } else {
-                        //权限请求失败，但未选中“不再提示”选项
-                        showPerssionDialog("为了能够正常使用App,请开启权限!",permissions);
-                    }
-                    break;
-                }
-
-            }
-            //如果有权限没有被允许
-            if (hasPermissionDismiss) {
-                startEngin();
-            }
-
+            PermissionUtils.onRequestPermissionsResults(this, requestCode, permissions, grantResults, this);
         }
     }
 
-    private void showPerssionDialog(String message, final String[] permission) {
+    private void showPerssionDialog() {
         new AlertDialog.Builder(this)
                 .setTitle("提示")
-                .setMessage(message)
+                .setMessage("请到设置中心开启相关权限!")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        ActivityCompat.requestPermissions(LoadingActivity.this, permission, REQUEST_CODE_ASK_CALL_PHONE);
+                        gotoMiuiPermission();
                     }
                 })
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -277,4 +268,25 @@ public class LoadingActivity extends Activity  {
                     }
                 }).show();
     }
+    /**
+     * 跳转到miui的权限管理页面
+     */
+    private void gotoMiuiPermission() {
+        try { // MIUI 8
+            Intent localIntent = new Intent("miui.intent.action.APP_PERM_EDITOR");
+            localIntent.setClassName("com.miui.securitycenter", "com.miui.permcenter.permissions.PermissionsEditorActivity");
+            localIntent.putExtra("extra_pkgname", this.getPackageName());
+            this.startActivity(localIntent);
+        } catch (Exception e) {
+            try { // MIUI 5/6/7
+                Intent localIntent = new Intent("miui.intent.action.APP_PERM_EDITOR");
+                localIntent.setClassName("com.miui.securitycenter", "com.miui.permcenter.permissions.AppPermissionsEditorActivity");
+                localIntent.putExtra("extra_pkgname", this.getPackageName());
+                this.startActivity(localIntent);
+            } catch (Exception e1) { // 否则跳转到应用详情
+                e1.printStackTrace();
+            }
+        }
+    }
+
 }

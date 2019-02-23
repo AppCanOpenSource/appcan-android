@@ -18,7 +18,6 @@
 
 package org.zywx.wbpalmstar.engine;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -42,14 +41,12 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Surface;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import com.slidingmenu.lib.SlidingMenu;
 
@@ -488,17 +485,17 @@ public final class EBrowserActivity extends BaseActivity {
             Intent firstIntent = getIntent();
             int type = intent.getIntExtra("ntype", 0);
             switch (type) {
-            case ENotification.F_TYPE_PUSH:
-                handlePushNotify(intent);
-                break;
-            case ENotification.F_TYPE_USER:
-                break;
-            case ENotification.F_TYPE_SYS:
-                break;
-            default:
-                getIntentData(intent);
-                firstIntent.putExtras(intent);
-                break;
+                case ENotification.F_TYPE_PUSH:
+                    handlePushNotify(intent);
+                    break;
+                case ENotification.F_TYPE_USER:
+                    break;
+                case ENotification.F_TYPE_SYS:
+                    break;
+                default:
+                    getIntentData(intent);
+                    firstIntent.putExtras(intent);
+                    break;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -527,7 +524,7 @@ public final class EBrowserActivity extends BaseActivity {
                             taskId);
                     String tenantId = dataInfo.getTenantId();
                     editor.putString(PushReportConstants.PUSH_DATA_SHAREPRE_TENANTID,
-                        tenantId);
+                            tenantId);
                 }
                 editor.commit();
                 String appType = "";
@@ -967,10 +964,7 @@ public final class EBrowserActivity extends BaseActivity {
     }
 
     public void requsetPerssions(final String perssions, EUExBase callack, String message, final int requestCode){
-        //系统运行环境小于6.0不需要权限申请
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return;
-        }
+
 //        if (mCallbackRuning) {
 //            return;
 //        }
@@ -978,31 +972,16 @@ public final class EBrowserActivity extends BaseActivity {
             mActivityCallback = callack;
 //            mCallbackRuning = true;
         }
-
+        //系统运行环境小于6.0不需要权限申请
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            mActivityCallback.onRequestPermissionResult(requestCode, new String[]{perssions}, new int[]{0});
+            return;
+        }
         //检查权限是否授权
         int checkCallPhonePermisssion = ContextCompat.checkSelfPermission(this, perssions);
-
         if(checkCallPhonePermisssion!= PackageManager.PERMISSION_GRANTED){
             //判断是不是第一次申请权限，如果是第一次申请权限则返回fasle，如果之前拒绝再次申请则返回true
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,perssions)) {
-                new AlertDialog.Builder(EBrowserActivity.this)
-                        .setTitle("提示")
-                        .setMessage(message)
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                ActivityCompat.requestPermissions(EBrowserActivity.this, new String[]{perssions}, requestCode);
-                            }
-                        })
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        }).show();
-            } else {
-                ActivityCompat.requestPermissions(EBrowserActivity.this, new String[]{perssions}, requestCode);
-            }
+            ActivityCompat.requestPermissions(EBrowserActivity.this, new String[]{perssions}, requestCode);
         }else {
             mActivityCallback.onRequestPermissionResult(requestCode, new String[]{perssions}, new int[]{0});
         }
