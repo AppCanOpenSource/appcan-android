@@ -340,7 +340,7 @@ public class AppCan {
         }
         for (EngineEventListener Listener : mListenerQueue) {
             // 携带正确的widgetType
-            Listener.onWidgetStart(wgtData.m_wgtType, wgtData,
+            Listener.onWidgetStart(EngineEventListener.WGT_TYPE_SUB, wgtData,
                     activity);
         }
     }

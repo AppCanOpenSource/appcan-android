@@ -35,7 +35,8 @@ public interface EngineEventListener {
     /**
      * EMM应用商店下发的常规子Widget标识
      */
-    public static final int WGT_TYPE_SUB = WWidgetData.WGT_TYPE_SUB;
+//    public static final int WGT_TYPE_SUB = WWidgetData.WGT_TYPE_SUB;
+    public static final int WGT_TYPE_SUB = 1;
 
     /**
      * 预置在主widget内部的plugin子widget标识（widget/plugin/）
