@@ -44,6 +44,7 @@ public class EUExWidgetOne extends EUExBase {
     public static final String function_getCurrentWidgetInfo = "uexWidgetOne.cbGetCurrentWidgetInfo";
     public static final String function_clearCache = "uexWidgetOne.cbCleanCache";
     public static final String function_getMainWidgetId = "uexWidgetOne.cbGetMainWidgetId";
+    public static final String function_getPerssionsDenied = "uexWidgetOne.cbGetPerssionsDenied";
 
     public EUExWidgetOne(Context context, EBrowserView inParent) {
         super(context, inParent);

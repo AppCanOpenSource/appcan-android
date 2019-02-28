@@ -51,6 +51,7 @@ public class EBrowserWidgetPool {
     private EWidgetStack mWgtStack;
     private WWidgetData mRootWidget;
     private EBrowserWidget mRootBrowserWidget;
+    public static EBrowserWidgetPool mEBrowserWidgetPool;
 
     public EBrowserWidgetPool(EBrowser inBrw, FrameLayout window,
                               EBrowserAround inShelter) {
@@ -61,6 +62,7 @@ public class EBrowserWidgetPool {
         mWgtStack = new EWidgetStack();
         mContext = (EBrowserActivity) window.getContext();
         mWidPoolLoop = new PoolHandler(Looper.getMainLooper());
+        mEBrowserWidgetPool=this;
     }
 
     public void init(WWidgetData inWidget) {
@@ -159,6 +161,7 @@ public class EBrowserWidgetPool {
 
     public void startWidget(WWidgetData inData, EWgtResultInfo inResult) {
         if (checkWidget(inData, inResult)) {
+            //已经打开
             return;
         }
         WgtEnty obj = new WgtEnty(inData, inResult);
@@ -188,7 +191,14 @@ public class EBrowserWidgetPool {
         return false;
     }
 
-    private boolean checkWidget(WWidgetData inData, EWgtResultInfo inResult) {
+    /**
+     * 检查widget状态，若已经打开子widget并在后台，则执行重新打开操作，拉回前台，return true；否则重新执行正常逻辑即return false。
+     *
+     * @param inData
+     * @param inResult
+     * @return
+     */
+    public boolean checkWidget(WWidgetData inData, EWgtResultInfo inResult) {
         String key = inData.m_appId;
         EBrowserWidget wdgObj = mWgtStack.get(key);
         if (null != wdgObj) {
@@ -247,6 +257,8 @@ public class EBrowserWidgetPool {
             }
 
             public void onAnimationEnd(Animation animation) {
+                EBrowserView eBrowserView = hiddenWidget.getEBrowserView();
+                eBrowserView.removeView(eBrowserView.getChildAt(eBrowserView.getChildCount()-1));
                 hiddenWidget.setVisibility(View.GONE);
                 showWidget.notifyVisibilityChanged(0);
                 hiddenWidget.notifyVisibilityChanged(1);

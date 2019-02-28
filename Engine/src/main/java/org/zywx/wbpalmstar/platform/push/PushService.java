@@ -72,10 +72,7 @@ public class PushService extends Service implements PushDataCallback {
     @Override
     public void onDestroy() {
         // restart Service when the Service is stopped by user.
-        Intent localIntent = new Intent();
-        localIntent.setClass(this, PushService.class);
-        localIntent.putExtra("type", type);
-        this.startService(localIntent);
+        // 系统已经不允许在onDestroy中startService了
         super.onDestroy();
     }
 

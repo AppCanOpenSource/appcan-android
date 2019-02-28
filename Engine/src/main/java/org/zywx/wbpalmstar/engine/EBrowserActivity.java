@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
@@ -36,6 +37,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Surface;
@@ -128,8 +132,9 @@ public final class EBrowserActivity extends BaseActivity {
         setContentView(mEBrwMainFrame);
         initInternalBranch();
 
+        //启动图超时关闭处理。特殊的：有config.xml中的removeloading为true时，则认为启动图由JS代码控制关闭，引擎不做超时了
         Message loadDelayMsg = mEHandler
-                .obtainMessage(EHandler.F_MSG_LOAD_HIDE_SH);
+                .obtainMessage(EHandler.F_MSG_LOAD_TIMEOUT_HIDE_SH);
         long delay = 3 * 1000L;
         if (mSipBranch) {
             delay = 1000L;
@@ -425,6 +430,7 @@ public final class EBrowserActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+//        requsetPerssions(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         EUtil.loge("App onResume");
         mVisable = true;
 //        if (null != mBrowser) {
@@ -479,17 +485,17 @@ public final class EBrowserActivity extends BaseActivity {
             Intent firstIntent = getIntent();
             int type = intent.getIntExtra("ntype", 0);
             switch (type) {
-            case ENotification.F_TYPE_PUSH:
-                handlePushNotify(intent);
-                break;
-            case ENotification.F_TYPE_USER:
-                break;
-            case ENotification.F_TYPE_SYS:
-                break;
-            default:
-                getIntentData(intent);
-                firstIntent.putExtras(intent);
-                break;
+                case ENotification.F_TYPE_PUSH:
+                    handlePushNotify(intent);
+                    break;
+                case ENotification.F_TYPE_USER:
+                    break;
+                case ENotification.F_TYPE_SYS:
+                    break;
+                default:
+                    getIntentData(intent);
+                    firstIntent.putExtras(intent);
+                    break;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -518,7 +524,7 @@ public final class EBrowserActivity extends BaseActivity {
                             taskId);
                     String tenantId = dataInfo.getTenantId();
                     editor.putString(PushReportConstants.PUSH_DATA_SHAREPRE_TENANTID,
-                        tenantId);
+                            tenantId);
                 }
                 editor.commit();
                 String appType = "";
@@ -873,6 +879,8 @@ public final class EBrowserActivity extends BaseActivity {
         static final int F_MSG_LOAD_DELAY = 1;
         static final int F_MSG_LOAD_HIDE_SH = 2;
         static final int F_MSG_EXIT_APP = 3;
+        static final int F_MSG_LOAD_TIMEOUT_HIDE_SH = 4;//超时处理
+
 
         public EHandler(Looper loop) {
             super(loop);
@@ -883,6 +891,7 @@ public final class EBrowserActivity extends BaseActivity {
             removeMessages(F_MSG_LOAD_DELAY);
             removeMessages(F_MSG_LOAD_HIDE_SH);
             removeMessages(F_MSG_EXIT_APP);
+            removeMessages(F_MSG_LOAD_TIMEOUT_HIDE_SH);
         }
 
         public void handleMessage(Message msg) {
@@ -912,6 +921,19 @@ public final class EBrowserActivity extends BaseActivity {
                         mBrowserAround.setTimeFlag(true);
                     }
                     break;
+                case F_MSG_LOAD_TIMEOUT_HIDE_SH:
+                    if (WWidgetData.m_remove_loading == 1){
+                        //默认1，正常逻辑；否则是有config.xml配置
+                        setContentViewVisible(0);
+                        if (mBrowserAround.checkTimeFlag()) {
+                            mBrowser.hiddenShelter();
+                        } else {
+                            mBrowserAround.setTimeFlag(true);
+                        }
+                    }else{
+                        BDebug.i("removeloading in config.xml is true, cancel loadingImage timeout");
+                    }
+                    break;
                 case F_MSG_EXIT_APP:
                     readyExit((Boolean) msg.obj);
                     break;
@@ -931,6 +953,37 @@ public final class EBrowserActivity extends BaseActivity {
     public void onSlidingWindowStateChanged(int position) {
         if (null != mBrowser) {
             mBrowser.onSlidingWindowStateChanged(position);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        mActivityCallback.onRequestPermissionResult(requestCode, permissions, grantResults);
+
+    }
+
+    public void requsetPerssions(final String perssions, EUExBase callack, String message, final int requestCode){
+
+//        if (mCallbackRuning) {
+//            return;
+//        }
+        if (null != callack) {
+            mActivityCallback = callack;
+//            mCallbackRuning = true;
+        }
+        //系统运行环境小于6.0不需要权限申请
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            mActivityCallback.onRequestPermissionResult(requestCode, new String[]{perssions}, new int[]{0});
+            return;
+        }
+        //检查权限是否授权
+        int checkCallPhonePermisssion = ContextCompat.checkSelfPermission(this, perssions);
+        if(checkCallPhonePermisssion!= PackageManager.PERMISSION_GRANTED){
+            //判断是不是第一次申请权限，如果是第一次申请权限则返回fasle，如果之前拒绝再次申请则返回true
+            ActivityCompat.requestPermissions(EBrowserActivity.this, new String[]{perssions}, requestCode);
+        }else {
+            mActivityCallback.onRequestPermissionResult(requestCode, new String[]{perssions}, new int[]{0});
         }
     }
 }

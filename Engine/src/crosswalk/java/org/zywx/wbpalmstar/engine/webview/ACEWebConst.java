@@ -2,6 +2,8 @@ package org.zywx.wbpalmstar.engine.webview;
 
 import android.os.Build;
 
+import org.zywx.wbpalmstar.base.BConstant;
+
 public class ACEWebConst {
 
 	public static final String DESKTOP_USERAGENT = "Mozilla/5.0 (Macintosh; "
@@ -19,7 +21,7 @@ public class ACEWebConst {
 			+ "(KHTML, like Gecko) Version/4.0 Mobile Safari/533.1";
 
 	public static final String USERAGENT = FROYO_USERAGENT;
-	public static final String USERAGENT_APPCAN = " Appcan/3.1";
+	public static final String USERAGENT_APPCAN = BConstant.USERAGENT_APPCAN;
 
 	public static String USERAGENT_NEW=USERAGENT+USERAGENT_APPCAN;
 

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    >
+<ImageView
+    android:id="@+id/platform_mp_loadding_close"
+    android:layout_marginLeft="10dp"
+    android:layout_marginTop="10dp"
+    android:padding="20dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/mp_close_loadding"
+    />
+
+    <ImageButton
+        android:id="@+id/platform_mp_loadding_icon"
+        android:layout_marginTop="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        />
+
+<TextView
+    android:id="@+id/platform_mp_loadding_iconname"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="廊坊电子健康卡"
+    android:textSize="18sp"
+    android:layout_gravity="center"
+    android:layout_marginTop="10dp"
+    android:textColor="#515151"
+    android:padding="10dp"
+    />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:padding="10dp"
+        android:id="@+id/platform_mp_loadding_dot"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/platform_mp_window_loadding_dot"
+            android:layout_margin="5dp"
+            />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/platform_mp_window_loadding_dot"
+            android:layout_margin="5dp"
+            />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/platform_mp_window_loadding_dot_selected"
+            android:layout_margin="5dp"
+            />
+    </LinearLayout>
+</LinearLayout>

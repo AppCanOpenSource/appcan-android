@@ -22,6 +22,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
+import android.os.StrictMode;
 import android.support.multidex.MultiDex;
 
 import org.zywx.wbpalmstar.base.BDebug;
@@ -37,6 +38,9 @@ public class WidgetOneApplication extends Application {
         long startTime=System.currentTimeMillis();
         AppCan.getInstance().initSync(this.getApplicationContext());//有些插件需要在别的进程初始化,因此最好在Application.onCreate()里面初始化引擎,或者将反射调用部分抽离出来
         AppCan.getInstance().setWidgetSdk(false);
+        //解决Android7.0以上apk安装失败问题
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
         init=true;
         BDebug.d("appcan","init time ",(System.currentTimeMillis()-startTime));
     }

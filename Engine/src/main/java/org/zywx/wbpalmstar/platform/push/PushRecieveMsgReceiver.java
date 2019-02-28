@@ -19,6 +19,7 @@
 package org.zywx.wbpalmstar.platform.push;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -30,11 +31,13 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
 
 import org.json.JSONObject;
+import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.WebViewSdkCompat;
 import org.zywx.wbpalmstar.engine.AppCan;
@@ -54,6 +57,10 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 
 public class PushRecieveMsgReceiver extends BroadcastReceiver {
+
+    private static final String PUSH_NOTIFICATION_CHANNEL_ID = "com.zymobi.appcan.engine.push";
+    private static final String PUSH_NOTIFICATION_CHANNEL_NAME = "AppCanPush";
+    private static final String PUSH_NOTIFICATION_CHANNEL_DESCRIPTION = "AppCanNotification";
 
     public static final String ACTION_PUSH = "org.zywx.push.receive";
     private static Context mContext;
@@ -84,7 +91,11 @@ public class PushRecieveMsgReceiver extends BroadcastReceiver {
                 .get(PushReportConstants.PUSH_DATA_INFO_KEY);
         int contentAvailable = dataInfo.getContentAvailable();
         if (contentAvailable == 0 && !EBrowserActivity.isForground) {
-            buildPushNotification(context, intent, dataInfo);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                buildPushNotification(context, intent, dataInfo);
+            }else{
+                buildPushNotificationBeforeAndroidO(context, intent, dataInfo);
+            }
         } else {
             if (mContext != null) {
                 intent.putExtra("ntype", F_TYPE_PUSH);
@@ -95,7 +106,136 @@ public class PushRecieveMsgReceiver extends BroadcastReceiver {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void buildPushNotification(Context context, Intent intent,
+                                       PushDataInfo dataInfo) {
+        NotificationManager manager = (NotificationManager) context
+                .getSystemService(Context.NOTIFICATION_SERVICE);
+        if (manager == null){
+            BDebug.e("NotificationManager is null, system error");
+            return;
+        }
+        // 创建专属通知渠道
+        NotificationChannel channel = new NotificationChannel(
+                PUSH_NOTIFICATION_CHANNEL_ID,
+                PUSH_NOTIFICATION_CHANNEL_NAME,
+                NotificationManager.IMPORTANCE_HIGH
+        );
+        channel.setDescription(PUSH_NOTIFICATION_CHANNEL_DESCRIPTION);
+        // 配置渠道提醒方式
+        String[] remindType = dataInfo.getRemindType();
+        boolean isEnableLights = false;
+        boolean isEnableVibration = false;
+        boolean isEnableSound = false;
+        if (remindType != null) {
+            if (remindType.length == 3) {
+                // 开启呼吸灯、震动、声音提醒
+                isEnableLights = true;
+                isEnableVibration = true;
+                isEnableSound = true;
+            } else {
+                for (int i = 0; i < remindType.length; i++) {
+                    if ("sound".equalsIgnoreCase(remindType[i])) {
+                        isEnableSound = true;
+                        continue;
+                    }
+                    if ("shake".equalsIgnoreCase(remindType[i])) {
+                        isEnableVibration = true;
+                        continue;
+                    }
+                    if ("breathe".equalsIgnoreCase(remindType[i])) {
+                        isEnableLights = true;
+                        continue;
+                    }
+                }
+            }
+            channel.enableVibration(isEnableVibration);
+            channel.enableLights(isEnableLights);
+            if (!isEnableSound){
+                channel.setSound(null, null);
+            }
+        }
+        manager.createNotificationChannel(channel);
+        // 开始构建Notification Builder
+        String title = dataInfo.getTitle();
+        String body = dataInfo.getAlert();
+        String message = dataInfo.getPushDataString();
+        Builder builder = new Builder(context, PUSH_NOTIFICATION_CHANNEL_ID);
+        builder.setAutoCancel(true);
+        builder.setContentTitle(title); // 通知标题
+        builder.setContentText(body); // 通知内容
+        builder.setTicker(body); // 通知栏信息
+
+        Resources res = context.getResources();
+        int icon = res.getIdentifier("icon", "drawable",
+                intent.getPackage());
+        builder.setSmallIcon(icon);
+        builder.setWhen(System.currentTimeMillis()); // 通知时间
+
+        String iconUrl = dataInfo.getIconUrl();
+        boolean isDefaultIcon = !TextUtils.isEmpty(iconUrl)
+                && "default".equalsIgnoreCase(iconUrl);
+        Bitmap bitmap = null;
+        if (!isDefaultIcon) {
+            bitmap = getIconBitmap(context, iconUrl);
+        }
+        String fontColor = dataInfo.getFontColor();
+        RemoteViews remoteViews = null;
+        if (!TextUtils.isEmpty(fontColor)) {
+            int color = BUtility.parseColor(fontColor);
+            int alphaColor = parseAlphaColor(fontColor);
+            remoteViews = new RemoteViews(intent.getPackage(),
+                    EUExUtil.getResLayoutID("push_notification_view"));
+            // Title
+            remoteViews.setTextViewText(
+                    EUExUtil.getResIdID("notification_title"), title);
+            remoteViews.setTextColor(
+                    EUExUtil.getResIdID("notification_title"), color);
+            // Body
+            remoteViews.setTextViewText(
+                    EUExUtil.getResIdID("notification_body"), body);
+            remoteViews.setTextColor(
+                    EUExUtil.getResIdID("notification_body"),
+                    alphaColor);
+            // LargeIcon
+            if (bitmap != null) {
+                remoteViews.setImageViewBitmap(
+                        EUExUtil.getResIdID("notification_largeIcon"),
+                        bitmap);
+            } else {
+                remoteViews.setImageViewResource(
+                        EUExUtil.getResIdID("notification_largeIcon"),
+                        EUExUtil.getResDrawableID("icon"));
+            }
+            // Time
+            SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+            remoteViews.setTextViewText(
+                    EUExUtil.getResIdID("notification_time"),
+                    format.format(System.currentTimeMillis()));
+            remoteViews.setTextColor(
+                    EUExUtil.getResIdID("notification_time"),
+                    alphaColor);
+            builder.setContent(remoteViews);
+        }
+        // 配置通知点击指向的PendingIntent
+        Intent notiIntent = new Intent(context, EBrowserActivity.class);
+        notiIntent.putExtra("ntype", F_TYPE_PUSH);
+        notiIntent.putExtra("data", body);
+        notiIntent.putExtra("message", message);
+        notiIntent.putExtra(EBrowserActivity.KET_WIDGET_DATE, AppCan.getInstance().getRootWidgetData());
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(PushReportConstants.PUSH_DATA_INFO_KEY, dataInfo);
+        notiIntent.putExtras(bundle);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                context, notificationNB, notiIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(pendingIntent);
+        Notification notification = builder.build();
+        manager.notify(notificationNB, notification);
+        notificationNB++;
+    }
+
+    private void buildPushNotificationBeforeAndroidO(Context context, Intent intent,
             PushDataInfo dataInfo) {
         String title = dataInfo.getTitle();
         String body = dataInfo.getAlert();
@@ -255,7 +395,9 @@ public class PushRecieveMsgReceiver extends BroadcastReceiver {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            if (BDebug.isDebugMode()){
+                e.printStackTrace();
+            }
         }
         return null;
     }

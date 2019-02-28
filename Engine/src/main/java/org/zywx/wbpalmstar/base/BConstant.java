@@ -25,8 +25,8 @@ import java.text.DecimalFormat;
 
 public class BConstant {
 
-    public static final String ENGINE_VERSION="4.1.15";
-    public static final int ENGINE_VERSION_CODE=41015;
+    public static final String ENGINE_VERSION="4.3.20";
+    public static final int ENGINE_VERSION_CODE=403020;
 
     public static final String F_URL = "url";
     public static final String F_WIDGET = "widget";
@@ -44,7 +44,7 @@ public class BConstant {
     public static final String F_PUSH_NOTI_FUN_NAME = "funName";
 
     public static String USERAGENT_NEW;
-    public static final String USERAGENT_APPCAN = " Appcan/3.1";
+    public static final String USERAGENT_APPCAN = " AppCan/" + ENGINE_VERSION;
 
     public static Application app = null;
 

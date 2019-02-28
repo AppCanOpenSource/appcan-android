@@ -35,8 +35,19 @@ import android.os.Environment;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.webkit.MimeTypeMap;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -52,6 +63,7 @@ import org.zywx.wbpalmstar.base.vo.ErrorResultVO;
 import org.zywx.wbpalmstar.base.vo.PushHostVO;
 import org.zywx.wbpalmstar.base.vo.StartAppVO;
 import org.zywx.wbpalmstar.base.vo.WidgetCheckUpdateResultVO;
+import org.zywx.wbpalmstar.base.vo.WidgetConfigVO;
 import org.zywx.wbpalmstar.base.vo.WidgetFinishVO;
 import org.zywx.wbpalmstar.base.vo.WidgetStartVO;
 import org.zywx.wbpalmstar.engine.*;
@@ -69,6 +81,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import static org.zywx.wbpalmstar.engine.EBrowserWidgetPool.mEBrowserWidgetPool;
+
 public class EUExWidget extends EUExBase {
     public static final String tag = "uexWidget";
 
@@ -77,6 +91,7 @@ public class EUExWidget extends EUExBase {
     public static final String function_getOpenerInfo = "uexWidget.cbGetOpenerInfo";
     public static final String function_checkUpdate = "uexWidget.cbCheckUpdate";
     public static final String function_startWidget = "uexWidget.cbStartWidget";
+    public static final String function_startWidgetWithConfig = "uexWidget.cbStartWidgetWithConfig";
     public static final String function_removeWidget = "uexWidget.cbRemoveWidget";
     public static final String function_getPushInfo = "uexWidget.cbGetPushInfo";
     public static final String function_getPushState = "uexWidget.cbGetPushState";
@@ -200,6 +215,120 @@ public class EUExWidget extends EUExBase {
         }
     }
 
+    private void resultStartWidgetWithConfig(boolean result,int callbackId){
+        if (callbackId==-1){
+            jsCallback(function_startWidgetWithConfig, 0, EUExCallback.F_C_INT,
+                    EUExCallback.F_C_FAILED);
+        }else{
+            callbackToJs(callbackId,false,result?0:1);
+        }
+    }
+    LinearLayout inflate;
+    @AppCanAPI
+    public boolean startWidgetWithConfig(String[] parm) {
+        int callbackId=-1;
+        if (isJsonString(parm[0])){
+            if (parm.length > 1){
+                callbackId = valueOfCallbackId(parm[1]);
+            }
+            WidgetConfigVO configVO= DataHelper.gson.fromJson(parm[0], WidgetConfigVO.class);
+            EBrowserWindow curWind = mBrwView.getBrowserWindow();
+            if (null == curWind) {
+                BDebug.w("curWind is null, startWidgetWithConfig failed");
+                resultStartWidgetWithConfig(false,callbackId);
+                return false;
+            }
+            if (null == configVO) {
+                BDebug.w("configVO is null, startWidgetWithConfig failed");
+                resultStartWidgetWithConfig(false,callbackId);
+                return false;
+            }
+            String inAnimiId = String.valueOf(configVO.animId);
+            String inForResult = configVO.cbFuncName;
+            String inInfo = configVO.startInfo;
+            String animDuration = String.valueOf(configVO.animDuration);
+            int animId = EBrowserAnimation.ANIM_ID_NONE;
+            long duration = EBrowserAnimation.defaultDuration;
+            try {
+                if (null != inAnimiId && inAnimiId.length() != 0) {
+                    animId = Integer.parseInt(inAnimiId);
+                }
+                if (null != animDuration && animDuration.length() != 0) {
+                    duration = Long.parseLong(animDuration);
+                }
+            } catch (Exception e) {
+                if (BDebug.DEBUG) {
+                    e.printStackTrace();
+                }
+            }
+            try {
+                WDataManager widgetData = new WDataManager(mContext);
+                WWidgetData data = widgetData.getWidgetDataByConfigJson(configVO);
+                if (data == null) {
+                    resultStartWidgetWithConfig(false,callbackId);
+                    return false;
+                }
+                EWgtResultInfo info = new EWgtResultInfo(inForResult, inInfo);
+                info.setAnimiId(animId);
+                info.setDuration(duration);
+                if(configVO.appLoadingStatus&&!mEBrowserWidgetPool.checkWidget(data, info)) {
+                    showLoadingPage(configVO, curWind);
+                }
+                // 启动子应用
+                if (startWidget(data, info)) {
+                    resultStartWidgetWithConfig(true,callbackId);
+                    return true;
+                } else {
+                    resultStartWidgetWithConfig(false,callbackId);
+                    return false;
+                }
+            } catch (Exception e) {
+                if (BDebug.DEBUG) {
+                    e.printStackTrace();
+                }
+                resultStartWidgetWithConfig(false,callbackId);
+                return false;
+            }
+        }else{
+            BDebug.w("params error, startWidgetWithConfig failed");
+            resultStartWidgetWithConfig(false, callbackId);
+            return false;
+        }
+    }
+
+
+    private void showLoadingPage(WidgetConfigVO configVO, EBrowserWindow curWind) {
+        LayoutInflater layoutInflater = LayoutInflater.from(mContext);
+        inflate = (LinearLayout) layoutInflater.inflate(EUExUtil.getResLayoutID("platform_mp_window_middle_loadding"), null);
+        inflate.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
+        ImageView platform_mp_loadding_close = (ImageView) inflate.findViewById(EUExUtil.getResIdID("platform_mp_loadding_close"));
+        TextView platformName = (TextView) inflate.findViewById(EUExUtil.getResIdID("platform_mp_loadding_iconname"));
+        platformName.setText(configVO.widgetName);
+        platform_mp_loadding_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //回调前端方法去关闭子应用
+                callBackPluginJs("uexWidget.cbCloseLoading", "0");
+                mBrwView.removeView(inflate);
+            }
+        });
+        ImageButton platform_mp_loadding_icon = (ImageButton) inflate.findViewById(EUExUtil.getResIdID("platform_mp_loadding_icon"));
+        curWind.showButtonIcon(platform_mp_loadding_icon, configVO.appIcon);
+        TranslateAnimation anim = new TranslateAnimation(Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, 1.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f);
+        anim.setDuration(500);
+        inflate.startAnimation(anim);
+        ViewGroup.LayoutParams param=new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        mBrwView.addView(inflate, -1,param);
+        Log.e("TAG", "显示过度界面完成================");
+    }
 
     private void showErrorAlert(final String msg) {
         /*Runnable ui = new Runnable() {
@@ -506,14 +635,15 @@ public class EUExWidget extends EUExBase {
             WidgetJsonWrapper.finishWidget(this,finishVO);
         }
 
-        if (parm.length < 1) {
-            return;
-        }
         EBrowserWindow curWind = mBrwView.getBrowserWindow();
         if (null == curWind) {
             return;
         }
-        String inResultInfo = parm[0];
+        //此处修改resultInfo的参数处理逻辑，不再要求必传，不传参时默认空字符串 20180109
+        String inResultInfo = "";
+        if (parm.length > 0) {
+            inResultInfo = parm[0];
+        }
         String appId = null;
         boolean isWgtBG = false;
         String inAnimiId = "";

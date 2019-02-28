@@ -30,12 +30,23 @@ public interface EngineEventListener {
     /**
      * 主Widget标识
      */
-    public static final int WGT_TYPE_MAIN = 0;
+    public static final int WGT_TYPE_MAIN = WWidgetData.WGT_TYPE_MAIN;
 
     /**
-     * 子Widget标识
+     * EMM应用商店下发的常规子Widget标识
      */
+//    public static final int WGT_TYPE_SUB = WWidgetData.WGT_TYPE_SUB;
     public static final int WGT_TYPE_SUB = 1;
+
+    /**
+     * 预置在主widget内部的plugin子widget标识（widget/plugin/）
+     */
+    public static final int WGT_TYPE_PLUGIN = WWidgetData.WGT_TYPE_PLUGIN;
+
+    /**
+     * 动态配置的子widget，一般为云应用
+     */
+    public static final int WGT_TYPE_CLOUD = WWidgetData.WGT_TYPE_CLOUD;
 
     /**
      * 对应拆分之前WidgetOneApplication下的:<br>

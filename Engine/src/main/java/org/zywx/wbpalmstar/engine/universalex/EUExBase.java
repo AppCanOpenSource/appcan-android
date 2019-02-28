@@ -21,11 +21,13 @@ package org.zywx.wbpalmstar.engine.universalex;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Keep;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
@@ -56,6 +58,7 @@ public abstract class EUExBase {
     public static final int F_UEX_EVENT_TYPE_APP_ON_RESUME = 1;
     public static final int F_UEX_EVENT_TYPE_APP_ON_PAUSE = 2;
     public static final int F_UEX_EVENT_TYPE_APP_ON_READY = 3;
+
 
     private String mUexName;
     /**
@@ -902,5 +905,25 @@ public abstract class EUExBase {
         }
         return callbackId;
     }
+
+
+    public interface RequestPerssionsCallBackListener{
+        void RequestPerssionsSucess();
+        void RequestPerssionsFaile();
+    }
+    public void requsetPerssions(String perssions,String message,int requestCode){
+        ((EBrowserActivity) mContext).requsetPerssions(perssions,this,message,requestCode);
+
+    }
+
+    @Keep
+    public void onRequestPermissionResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(grantResults[0]== PackageManager.PERMISSION_DENIED){
+            String js = "javascript:if(uexWidgetOne.cbPerssionsDenied){uexWidgetOne.cbPerssionsDenied(' "+permissions[0]+" ')}";
+            callbackToJs(js);
+        }
+    }
+
+
 
 }

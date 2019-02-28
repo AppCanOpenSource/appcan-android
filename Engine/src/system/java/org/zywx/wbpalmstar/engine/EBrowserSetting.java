@@ -44,7 +44,7 @@ public class EBrowserSetting implements EBrowserBaseSetting {
             + "(KHTML, like Gecko) Version/4.0 Mobile Safari/533.1";
 
     public static final String USERAGENT = FROYO_USERAGENT;
-    public static final String USERAGENT_APPCAN = " Appcan/3.1";
+    public static final String USERAGENT_APPCAN = BConstant.USERAGENT_APPCAN;
     public static String USERAGENT_NEW;
 
     protected WebSettings mWebSetting;
@@ -78,6 +78,9 @@ public class EBrowserSetting implements EBrowserBaseSetting {
         mWebSetting.setDefaultTextEncodingName("UTF-8");
         mWebSetting.setBuiltInZoomControls(true);
         mWebSetting.setDisplayZoomControls(false);
+        mWebSetting.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        mWebSetting.setDomStorageEnabled(true);//开启DOM storage API功能
+
         if (Build.VERSION.SDK_INT <= 7) {
             invokeHtml5(mWebSetting);
         }

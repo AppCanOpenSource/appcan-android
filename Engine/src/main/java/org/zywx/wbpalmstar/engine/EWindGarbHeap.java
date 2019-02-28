@@ -22,7 +22,7 @@ package org.zywx.wbpalmstar.engine;
 public class EWindGarbHeap {
 
     private ELinkedList<EBrowserWindow> mInvalidHeap;
-    private static final int mCount = 5;
+    private static final int mCount = 0;//由5改为0，关闭窗口缓存逻辑
 
 
     public EWindGarbHeap() {
@@ -31,6 +31,13 @@ public class EWindGarbHeap {
     }
 
     public void put(EBrowserWindow wind) {
+        if(mCount == 0){
+            if (wind != null){
+                wind.destory();
+                Runtime.getRuntime().gc();
+            }
+            return;
+        }
         if (mInvalidHeap.contains(wind)) {
             return;
         }
