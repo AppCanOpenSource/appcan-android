@@ -2,7 +2,7 @@
 *.apk
 *.ap_
 
-# Files for the Dalvik VM
+# Files for the ART/Dalvik VM
 *.dex
 
 # Java class files
@@ -11,10 +11,12 @@
 # Generated files
 bin/
 gen/
+out/
 
 # Gradle files
 .gradle/
 build/
+/*/build/
 
 # Local configuration file (sdk path, etc)
 local.properties
@@ -31,7 +33,23 @@ proguard/
 # Android Studio captures folder
 captures/
 
-# Android Studio Configs
+# Intellij
+*.iml
 .idea/
 
-.gradle/
+# Keystore files
+*.jks
+
+# Windows
+Thumbs.db
+
+# Mac
+.DS_Stor
+
+# 
+gradle/
+gradlew
+gradlew.bat
+
+# AppCanEngine temp local version
+local-appcanengine-build-versions.properties
