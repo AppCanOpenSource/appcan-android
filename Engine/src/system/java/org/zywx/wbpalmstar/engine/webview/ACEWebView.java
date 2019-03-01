@@ -66,16 +66,13 @@ public class ACEWebView extends WebView implements DownloadListener {
                 setWebViewClient(mEXWebViewClient = new CBrowserWindow());
                 setWebChromeClient(new CBrowserMainFrame(eBrowserView.getContext()));
             }
-
         } else {
-
             if (mBaSetting == null) {
                 mBaSetting = new EBrowserSetting7(eBrowserView);
                 mBaSetting.initBaseSetting(mWebApp);
                 setWebViewClient(mEXWebViewClient = new CBrowserWindow7());
                 setWebChromeClient(new CBrowserMainFrame7(eBrowserView.getContext()));
             }
-
         }
     }
 
@@ -148,10 +145,10 @@ public class ACEWebView extends WebView implements DownloadListener {
     }
 
     public float getScaleWrap() {
-        if (Build.VERSION.SDK_INT<=18){
+//        if (Build.VERSION.SDK_INT<=18){
             return getScale();
-        }
-        return 1.0f;
+//        }
+//        return 1.0f;
     }
 
     public int getScrollYWrap() {
@@ -207,5 +204,9 @@ public class ACEWebView extends WebView implements DownloadListener {
         }
         String info = DataHelper.gson.toJson(infoVO);
         return info;
+    }
+
+    public View getRealWebView(){
+        return this;
     }
 }

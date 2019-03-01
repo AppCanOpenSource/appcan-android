@@ -1,10 +1,15 @@
 buildscript {
     repositories {
         jcenter()
+        maven {
+            url 'https://raw.githubusercontent.com/android-plugin/mvn-repo/master/'
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.0'
-        classpath fileTree(dir: '../gradle-plugin', include: '*.jar')
+//        classpath fileTree(dir: '../gradle-plugin', include: '*.jar')
+        classpath 'org.appcan.gradle.plugins:appcan-gradle-plugin:2.1.2'
+
     }
 }
 

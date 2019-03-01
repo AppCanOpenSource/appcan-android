@@ -378,8 +378,8 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
                 if (mIsNeedScroll) {
                     //modify no-response-for-onclick-event
                     int temp_ScrollY = this.getScrollYWrap();
-                    this.scrollTo(this.getScrollXWrap(), this.getScrollYWrap() + 1);
-                    this.scrollTo(this.getScrollXWrap(), temp_ScrollY);
+                    getRealWebView().scrollTo(this.getScrollXWrap(), this.getScrollYWrap() + 1);
+                    getRealWebView().scrollTo(this.getScrollXWrap(), temp_ScrollY);
                 }
                 setMultilPopoverFlippingEnbaled();
                 break;
