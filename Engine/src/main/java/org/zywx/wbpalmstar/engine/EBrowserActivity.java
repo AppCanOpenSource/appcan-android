@@ -76,7 +76,9 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -985,6 +987,35 @@ public final class EBrowserActivity extends BaseActivity {
 
     }
 
+    public void requsetPerssionsMore(final String[] perssions, EUExBase callack, String message, final int requestCode){
+
+//        if (mCallbackRuning) {
+//            return;
+//        }
+        if (null != callack) {
+            mActivityCallback = callack;
+//            mCallbackRuning = true;
+        }
+        //系统运行环境小于6.0不需要权限申请
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            mActivityCallback.onRequestPermissionResult(requestCode, perssions, new int[]{0});
+            return;
+        }
+
+        List<String> permissionLists = new ArrayList<String>();
+        for (String permission : perssions) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                permissionLists.add(permission);
+            }
+        }
+        if (!permissionLists.isEmpty()) {
+            ActivityCompat.requestPermissions(this, permissionLists.toArray(new String[permissionLists.size()]), requestCode);
+        } else {
+            //表示全都授权了
+            mActivityCallback.onRequestPermissionResult(requestCode, perssions, new int[]{0});
+        }
+    }
+
     public void requsetPerssions(final String perssions, EUExBase callack, String message, final int requestCode){
 
 //        if (mCallbackRuning) {
@@ -1008,4 +1039,5 @@ public final class EBrowserActivity extends BaseActivity {
             mActivityCallback.onRequestPermissionResult(requestCode, new String[]{perssions}, new int[]{0});
         }
     }
+
 }

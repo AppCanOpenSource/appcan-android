@@ -77,6 +77,9 @@ public class EUExManager {
                                              final String methodName, final String[] params) {
 
                         ELinkedList<EUExBase> plugins = getThirdPlugins();
+                        if(plugins==null) {
+                            return null;
+                        }
                         for (final EUExBase plugin : plugins) {
 
                             if (plugin.getUexName().equals(pluginName)) {
