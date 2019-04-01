@@ -78,6 +78,8 @@ public class EUExManager {
 
                         ELinkedList<EUExBase> plugins = getThirdPlugins();
                         if(plugins==null) {
+                            // 防止页面关闭后，插件已经回收导致异常。
+                            BDebug.w("AppCan:","插件名称:"+pluginName+"\n插件方法:"+methodName+"\n相关参数:"+getParams(params)+"\nError: plugins == null, window may be closed.");
                             return null;
                         }
                         for (final EUExBase plugin : plugins) {
@@ -85,7 +87,7 @@ public class EUExManager {
                             if (plugin.getUexName().equals(pluginName)) {
                                 String object = callMethod(plugin,
                                         methodName, params);
-                                Log.d("AppCan:","插件名称:"+pluginName+"\n插件方法:"+methodName+"\n相关参数:"+getParams(params));
+                                BDebug.d("AppCan:","插件名称:"+pluginName+"\n插件方法:"+methodName+"\n相关参数:"+getParams(params));
 //                                if (null != object) {
 //                                    result.confirm(object.toString());
 //                                }
