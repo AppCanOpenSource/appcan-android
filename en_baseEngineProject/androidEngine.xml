@@ -3,6 +3,6 @@
     <version>$version$</version>
     <package>$package$</package>
     <kernel>$kernel$</kernel>
-    <description>增加合并申请权限的插件API；修复一个闪退问题；修复Android5.0以上无法携带cookie的问题；更新v4和v7等常用支持库至26；优化JSBridge机制，以及其他优化，兼容高版本Chromium内核；适配Anddroid9.0，升级target版本为28(动态权限处理、8.0推送通知适配等)；解决Android7.0以上apk安装失败问题</description>
+    <description>minSdkVersion由14升为16；只过滤armeabi架构的so；增加合并申请权限的插件API；修复一个闪退问题；修复Android5.0以上无法携带cookie的问题；更新v4和v7等常用支持库至26；优化JSBridge机制，以及其他优化，兼容高版本Chromium内核；适配Anddroid9.0，升级target版本为28(动态权限处理、8.0推送通知适配等)；解决Android7.0以上apk安装失败问题</description>
     <dssVersion>4.3.0</dssVersion>
 </info>
