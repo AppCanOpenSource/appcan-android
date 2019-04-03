@@ -9,31 +9,12 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
 //        classpath fileTree(dir: '../gradle-plugin', include: '*.jar')
-        classpath 'org.appcan.gradle.plugins:appcan-gradle-plugin:2.2.3'
+        classpath 'org.appcan.gradle.plugins:appcan-gradle-plugin:2.2.4'
     }
 }
 
 apply plugin: 'com.android.application'
-//apply plugin: 'com.android.library'
 apply plugin: 'appcan'
-
-// 发布到本地库 ----begin-----------------------------------------
-apply plugin: 'maven'
-def coreAarFile = file('build/outputs/aar/Engine-system-release.aar')
-artifacts {
-    archives coreAarFile
-}
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: uri('repository'))
-            pom.groupId = "org.appcan"
-            pom.artifactId = "engine"
-            pom.version = "4.3.1"
-        }
-    }
-}
-// 发布到本地库 ---- end -----------------------------------------
 
 android {
     compileSdkVersion 28
@@ -53,7 +34,7 @@ android {
     }
     defaultConfig {
         applicationId 'org.zywx.wbpalmstar.widgetone.uex'
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 28 //
         multiDexEnabled true
     }
@@ -115,5 +96,6 @@ dependencies {
     implementation(name: 'support-fragment-26.0.0', ext: 'aar')
     implementation(name: 'support-media-compat-26.0.0', ext: 'aar')
     implementation(name: 'appcompat-v7-26.0.0', ext: 'aar')
+    implementation(name: 'recyclerview-v7-26.0.0', ext: 'aar')
 
 }
