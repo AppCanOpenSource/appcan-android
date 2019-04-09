@@ -1,0 +1,37 @@
+apply plugin: 'maven'
+
+// 输出aar到maven仓库的脚本
+
+afterEvaluate { project ->
+
+    def GROUP_ID = "org.appcan"
+    def ARTIFACT_ID = "engine"
+    def VERSION = "4.3.21" // 引擎版本号
+//    def KERNEL = "system" // 内核类型
+
+    // 从工程根目录获取local.properties文件中的maven_repo_dir字段的值，当作本地maven仓库地址
+    Properties properties = new Properties()
+    InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream() ;
+    properties.load( inputStream )
+
+    def maven_repo_dir = properties.getProperty('maven_repo_dir')
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                repository(url: uri(maven_repo_dir)) {
+                    println(ARTIFACT_ID + ": uploadArchives processing............")
+
+                    pom.groupId = GROUP_ID
+                    pom.version = "${VERSION}"
+                    pom.artifactId = ARTIFACT_ID
+
+                    pom.whenConfigured { pom ->
+                        pom.dependencies.forEach { dep ->
+                            println(dep.getArtifactId() + "'s version is unspecified")
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

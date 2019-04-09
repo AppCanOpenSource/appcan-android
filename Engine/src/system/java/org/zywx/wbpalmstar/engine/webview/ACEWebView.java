@@ -22,8 +22,8 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.util.Log;
 import android.view.View;
+import android.webkit.CookieManager;
 import android.webkit.DownloadListener;
 import android.webkit.WebView;
 
@@ -70,7 +70,10 @@ public class ACEWebView extends WebView implements DownloadListener {
             }
 
         } else {
-
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+                // 适配Android5.0无法正常保存和携带cookie的问题
+                CookieManager.getInstance().setAcceptThirdPartyCookies(this, true);
+            }
             if (mBaSetting == null) {
                 mBaSetting = new EBrowserSetting7(eBrowserView);
                 mBaSetting.initBaseSetting(mWebApp);
