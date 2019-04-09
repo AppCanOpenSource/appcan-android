@@ -211,12 +211,12 @@ public class EUExWindow extends EUExBase {
     public static final String KEY_DOWNLOAD_CALLBACK = "downloadCallback";//下载回调
     public static final String KEY_USER_AGENT = "userAgent";
     public static final String KEY_EXE_JS = "exeJS";
-
+    private EBrowserView mInParent;
     public EUExWindow(Context context, EBrowserView inParent) {
         super(context, inParent);
         inParent.setScrollCallBackContex(this);
         finder = ResoureFinder.getInstance(context);
-
+        mInParent=inParent;
     }
 
     public void open(String[] params) {
@@ -732,7 +732,7 @@ public class EUExWindow extends EUExBase {
         if (parm!=null&&parm.length>0&&isJsonString(parm[0])){
             WindowAnimVO closeVO = DataHelper.gson.fromJson(parm[0], WindowAnimVO.class);
             parm = new String[]{String.valueOf(closeVO.animID),
-                                String.valueOf(closeVO.animDuration)};
+                    String.valueOf(closeVO.animDuration)};
         }
         Message msg = mHandler.obtainMessage();
         msg.what = MSG_FUNCTION_CLOSE;
@@ -1090,7 +1090,6 @@ public class EUExWindow extends EUExBase {
         msg.setData(bd);
         mHandler.sendMessage(msg);
     }
-
     public void handleSetSlidingWin(String[] param) {
         WindowSetSlidingWindowVO slidingWindowVO = DataHelper.gson.fromJson(param[0],
                 WindowSetSlidingWindowVO.class);
@@ -1106,7 +1105,7 @@ public class EUExWindow extends EUExBase {
         }
         if (slidingWindowVO.leftSliding != null) {
             slidingMode = SlidingMenu.LEFT;
-            with = slidingWindowVO.leftSliding.width;
+            with = (int) (slidingWindowVO.leftSliding.width*mInParent.getScaleWrap());
             url = slidingWindowVO.leftSliding.url;
             if (with > 0) {
                 activity.globalSlidingMenu.setBehindWidth(with);
@@ -1119,7 +1118,7 @@ public class EUExWindow extends EUExBase {
 
         if (slidingWindowVO.rightSliding != null) {
             slidingMode = SlidingMenu.RIGHT;
-            with = slidingWindowVO.rightSliding.width;
+            with = (int) (slidingWindowVO.rightSliding.width*mInParent.getScaleWrap());
             url = slidingWindowVO.rightSliding.url;
             if (with > 0) {
                 activity.globalSlidingMenu.setBehindWidth(with);
@@ -2064,7 +2063,7 @@ public class EUExWindow extends EUExBase {
             BDebug.e("curWind is null");
             return false;
         }
-       return curWind.setPopoverVisibility(popName, visible);
+        return curWind.setPopoverVisibility(popName, visible);
     }
 
     public void bringPopoverToFront(String[] parm) {
@@ -3161,15 +3160,15 @@ public class EUExWindow extends EUExBase {
         if (inButtonLables != null && inButtonLables.length == 2) {
             mPrompt = PromptDialog.show(mContext, inTitle, inMessage, inDefaultValue,hint, inButtonLables[0],mode, new
                     OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    final PromptDialog wPromptDialog = (PromptDialog) dialog;
-                    hideSoftKeyboard(wPromptDialog.getWindowToken());
-                    dialog.dismiss();
-                    mPrompt = null;
-                    resultPrompt(wPromptDialog.getInput(),0,callbackId);
-                }
-            }, inButtonLables[1], new OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            final PromptDialog wPromptDialog = (PromptDialog) dialog;
+                            hideSoftKeyboard(wPromptDialog.getWindowToken());
+                            dialog.dismiss();
+                            mPrompt = null;
+                            resultPrompt(wPromptDialog.getInput(),0,callbackId);
+                        }
+                    }, inButtonLables[1], new OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     final PromptDialog wPromptDialog = (PromptDialog) dialog;
@@ -3271,12 +3270,12 @@ public class EUExWindow extends EUExBase {
     }
 
     public void actionSheet(String[] params) {
-       if (isFirstParamExistAndIsJson(params)){
-           WindowJsonWrapper.actionSheet(this,DataHelper.gson.fromJson(params[0],
-                   WindowActionSheetVO.class),params.length>1?params[1]:null);
-       }else{
-           actionSheetMsg(params);
-       }
+        if (isFirstParamExistAndIsJson(params)){
+            WindowJsonWrapper.actionSheet(this,DataHelper.gson.fromJson(params[0],
+                    WindowActionSheetVO.class),params.length>1?params[1]:null);
+        }else{
+            actionSheetMsg(params);
+        }
     }
 
     public void actionSheetMsg(String[] params) {
@@ -3685,7 +3684,7 @@ public class EUExWindow extends EUExBase {
         lp.leftMargin = (int) inputVO.getX();
         lp.topMargin = (int) inputVO.getY();
         if(mBrwView != null){
-        	mBrwView.addViewToCurrentWindow(containerViewPager, lp);
+            mBrwView.addViewToCurrentWindow(containerViewPager, lp);
             String js = SCRIPT_HEADER + "if(" + function_cbCreatePluginViewContainer + "){"
                     + function_cbCreatePluginViewContainer + "(" + inputVO.getId() + "," + EUExCallback.F_C_TEXT + ",'"
                     + "success" + "'" + SCRIPT_TAIL;

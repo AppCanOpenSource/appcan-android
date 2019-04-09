@@ -113,7 +113,7 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
     public void init() {
         super.init(this);
         setEBrowserWindow(mBroWind);
-        setInitialScale(100);
+//        setInitialScale(100);
         setVerticalScrollbarOverlay(true);
         setHorizontalScrollbarOverlay(true);
         setLayoutAnimation(null);

@@ -915,7 +915,10 @@ public abstract class EUExBase {
         ((EBrowserActivity) mContext).requsetPerssions(perssions,this,message,requestCode);
 
     }
+    public void requsetPerssionsMore(String[] perssions,String message,int requestCode){
+        ((EBrowserActivity) mContext).requsetPerssionsMore(perssions,this,message,requestCode);
 
+    }
     @Keep
     public void onRequestPermissionResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if(grantResults[0]== PackageManager.PERMISSION_DENIED){

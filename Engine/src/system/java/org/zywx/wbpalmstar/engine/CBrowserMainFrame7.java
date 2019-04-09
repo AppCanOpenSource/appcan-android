@@ -19,27 +19,37 @@
 package org.zywx.wbpalmstar.engine;
 
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.webkit.ConsoleMessage;
 import android.webkit.GeolocationPermissions;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
 import android.webkit.WebStorage.QuotaUpdater;
+import android.webkit.WebView;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
-import org.zywx.wbpalmstar.base.BConstant;
 import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.WebViewSdkCompat;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.widgetone.dataservice.WDataManager;
-import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
+
+import static org.zywx.wbpalmstar.engine.EBrowserActivity.FILECHOOSER_RESULTCODE;
+import static org.zywx.wbpalmstar.engine.EBrowserActivity.REQUEST_SELECT_FILE;
 
 public class CBrowserMainFrame7 extends CBrowserMainFrame {
 
@@ -137,6 +147,45 @@ public class CBrowserMainFrame7 extends CBrowserMainFrame {
 
     }
 
+
+
+    public void openFileChooser(ValueCallback uploadMsg, String acceptType)
+    {
+        ((EBrowserActivity) mContext).setmUploadMessage(getCompatCallback(uploadMsg));
+        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+        i.addCategory(Intent.CATEGORY_OPENABLE);
+        i.setType("image/*");
+        ((EBrowserActivity)mContext).startActivityForResult(Intent.createChooser(i, "File Browser"), FILECHOOSER_RESULTCODE);
+    }
+
+    // For Lollipop 5.0+ Devices
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public boolean onShowFileChooser(WebView mWebView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams)
+    {
+        ValueCallback<Uri[]> uploadMessage = ((EBrowserActivity) mContext).getUploadMessage();
+        if (uploadMessage != null) {
+            uploadMessage.onReceiveValue(null);
+            uploadMessage = null;
+        }
+
+        uploadMessage = filePathCallback;
+        ((EBrowserActivity)mContext).setUploadMessage(uploadMessage);
+        Intent intent = fileChooserParams.createIntent();
+        try
+        {
+            ((EBrowserActivity)mContext).startActivityForResult(intent, REQUEST_SELECT_FILE);
+        } catch (ActivityNotFoundException e)
+        {
+            uploadMessage = null;
+            Toast.makeText(mContext, "Cannot Open File Chooser", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        return true;
+    }
+
+
+
+
 //	public void openFileChooser(ValueCallback<Uri> uploadFile) {
 //		if(null != mFile){
 //			return;
@@ -147,7 +196,7 @@ public class CBrowserMainFrame7 extends CBrowserMainFrame {
 //        intent.setType("*/*");
 //        ((Activity)m_eContext).startActivityForResult(Intent.createChooser(intent, ""), EBrowser.F_ACT_REQ_CODE_UEX_NATIVE_FILE_EXPLORER);
 //	}
-//	
+//
 //	public void openFileCallBack(Uri uri){
 //		mFile.onReceiveValue(uri);
 //		mFile = null;

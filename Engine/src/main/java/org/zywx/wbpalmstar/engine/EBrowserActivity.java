@@ -46,6 +46,8 @@ import android.view.Surface;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
 import android.widget.FrameLayout;
 
 import com.slidingmenu.lib.SlidingMenu;
@@ -74,7 +76,9 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -110,6 +114,16 @@ public final class EBrowserActivity extends BaseActivity {
     private WebViewSdkCompat.ValueCallback<Uri> mUploadMessage;
     private boolean mLoadingRemoved = false;
 
+    public ValueCallback<Uri[]> getUploadMessage() {
+        return uploadMessage;
+    }
+
+    public void setUploadMessage(ValueCallback<Uri[]> uploadMessage) {
+        this.uploadMessage = uploadMessage;
+    }
+
+    private ValueCallback<Uri[]> uploadMessage;
+    public static final int REQUEST_SELECT_FILE = 100;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(null);
@@ -715,6 +729,16 @@ public final class EBrowserActivity extends BaseActivity {
             Uri result = data == null || resultCode != RESULT_OK ? null : data.getData();
             mUploadMessage.onReceiveValue(result);
             mUploadMessage = null;
+        } else if(requestCode==REQUEST_SELECT_FILE) {
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            {
+
+                if (uploadMessage == null)
+                    return;
+                uploadMessage.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(resultCode, data));
+                uploadMessage = null;
+            }
+
         }
         if (mCallbackRuning && null != mActivityCallback) {
             mActivityCallback.onActivityResult(requestCode, resultCode, data);
@@ -963,6 +987,35 @@ public final class EBrowserActivity extends BaseActivity {
 
     }
 
+    public void requsetPerssionsMore(final String[] perssions, EUExBase callack, String message, final int requestCode){
+
+//        if (mCallbackRuning) {
+//            return;
+//        }
+        if (null != callack) {
+            mActivityCallback = callack;
+//            mCallbackRuning = true;
+        }
+        //系统运行环境小于6.0不需要权限申请
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            mActivityCallback.onRequestPermissionResult(requestCode, perssions, new int[]{0});
+            return;
+        }
+
+        List<String> permissionLists = new ArrayList<String>();
+        for (String permission : perssions) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                permissionLists.add(permission);
+            }
+        }
+        if (!permissionLists.isEmpty()) {
+            ActivityCompat.requestPermissions(this, permissionLists.toArray(new String[permissionLists.size()]), requestCode);
+        } else {
+            //表示全都授权了
+            mActivityCallback.onRequestPermissionResult(requestCode, perssions, new int[]{0});
+        }
+    }
+
     public void requsetPerssions(final String perssions, EUExBase callack, String message, final int requestCode){
 
 //        if (mCallbackRuning) {
@@ -986,4 +1039,5 @@ public final class EBrowserActivity extends BaseActivity {
             mActivityCallback.onRequestPermissionResult(requestCode, new String[]{perssions}, new int[]{0});
         }
     }
+
 }
