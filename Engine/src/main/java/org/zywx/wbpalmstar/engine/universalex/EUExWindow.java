@@ -211,6 +211,7 @@ public class EUExWindow extends EUExBase {
     public static final String KEY_DOWNLOAD_CALLBACK = "downloadCallback";//下载回调
     public static final String KEY_USER_AGENT = "userAgent";
     public static final String KEY_EXE_JS = "exeJS";
+    public static final String KEY_EXE_SCALE = "exeScale";
     private EBrowserView mInParent;
     public EUExWindow(Context context, EBrowserView inParent) {
         super(context, inParent);
@@ -1317,6 +1318,7 @@ public class EUExWindow extends EUExBase {
         int downloadCallback = 0;
         String userAgent = "";
         String exeJS = "";
+        int exeScale = -1;
         if (parm.length > 11 && parm[11] != null) {
             String jsonData = parm[11];
             try {
@@ -1339,6 +1341,9 @@ public class EUExWindow extends EUExBase {
                 userAgent = data.optString(KEY_USER_AGENT, "");
                 if (data.has(KEY_EXE_JS)){
                     exeJS = data.getString(KEY_EXE_JS);
+                }
+                if(data.has(KEY_EXE_SCALE)){
+                    exeScale=Integer.parseInt(data.optString(KEY_EXE_SCALE));
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -1424,6 +1429,7 @@ public class EUExWindow extends EUExBase {
         popEntry.mUserAgent = userAgent;
         popEntry.mHardware = hardware;
         popEntry.mExeJS = exeJS;
+        popEntry.mExeScale = exeScale;
         popEntry.hasExtraInfo = hasExtraInfo;
         String query = null;
         if (Build.VERSION.SDK_INT >= 11) {
