@@ -41,6 +41,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
@@ -54,6 +55,7 @@ import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.ResoureFinder;
 import org.zywx.wbpalmstar.base.util.AppCanAPI;
+import org.zywx.wbpalmstar.base.util.ConfigXmlUtil;
 import org.zywx.wbpalmstar.base.util.SpManager;
 import org.zywx.wbpalmstar.base.vo.CreateContainerVO;
 import org.zywx.wbpalmstar.base.vo.SetSwipeCloseEnableVO;
@@ -219,6 +221,29 @@ public class EUExWindow extends EUExBase {
         finder = ResoureFinder.getInstance(context);
         mInParent=inParent;
     }
+    //获取状态栏的高度
+    @AppCanAPI
+    public int getStatusBarHeight(String[] param){
+      int statusBarHeight=0;
+        try {
+            statusBarHeight=ConfigXmlUtil.getStatusBarHeight((EBrowserActivity) mContext);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return statusBarHeight;
+    }
+    //判断屏幕是否全屏
+    @AppCanAPI
+    public boolean isFullScreen(String[] param){
+        boolean isFullScreen=false;
+        try {
+           EBrowserActivity activity= (EBrowserActivity) mContext;
+           isFullScreen= (activity.getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) == WindowManager.LayoutParams.FLAG_FULLSCREEN&&WWidgetData.sFullScreen;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return isFullScreen;
+    }
 
     public void open(String[] params) {
         if (isJsonString(params[0])){
@@ -323,14 +348,18 @@ public class EUExWindow extends EUExBase {
         } else {
             String wgtroot = "wgtroot://";
             if (inData.startsWith(wgtroot)) {
-//              String initUrl = wgt.m_indexUrl;
-                String initUrl = "file:///android_asset/widget/";
-
+                String initUrl ;
+                if(wgt.m_indexUrl.indexOf("Http://")>-1||wgt.m_indexUrl.indexOf("https://")>-1) {
+                    initUrl = "file:///android_asset/widget/";
+                }else {
+                    initUrl = wgt.m_indexUrl;
+                }
                 inData = inData.substring(wgtroot.length());
                 inData = BUtility.makeUrl(initUrl, inData);
                 data = inData;
             } else {
                 data = BUtility.makeUrl(cUrl, inData);
+//                data=BUtility.makeRealPath(inData,mInParent);
             }
             windEntry.mRelativeUrl = inData;
         }

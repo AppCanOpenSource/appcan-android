@@ -147,8 +147,8 @@ public class WWidgetData implements Parcelable,Cloneable {
 
     public String mErrorPath;//页面加载错误时的错误页面路径
 
-    public static int sStatusBarColor=-1;
-
+    public static int sStatusBarColor=-16777216;
+    public static boolean sStatusfontBlack = false;//状态栏上字体的颜色
     public IndexWindowOptionsVO m_indexWindowOptions;//root窗口的相关配置参数，目前用于公众号样式窗口的配置
 
     public static final Parcelable.Creator<WWidgetData> CREATOR = new Creator<WWidgetData>() {

@@ -29,6 +29,7 @@ import android.graphics.Color;
 import android.support.annotation.Keep;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Xml;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -1556,7 +1557,12 @@ public class WDataManager {
                                     "src");
                         }else if("statusbar".equals(localName)){
                             WWidgetData.sStatusBarColor= Color.parseColor(parser.getAttributeValue(null,"color"));
-                        } else if ("deviceitem".equals(localName)) {
+                        } else if ("statusfontblack".equals(localName)) {
+                            String text = parser.nextText();
+                            if ("true".equals(text)) {
+                                WWidgetData.sStatusfontBlack = true;
+                            }
+                        }else if ("deviceitem".equals(localName)) {
                             String text = parser.nextText();
                             if (!widgetData.noHardwareList.contains(text)) {
                                 widgetData.noHardwareList.add(text);

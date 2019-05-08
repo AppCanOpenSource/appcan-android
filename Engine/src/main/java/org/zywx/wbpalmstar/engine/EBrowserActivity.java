@@ -315,7 +315,7 @@ public final class EBrowserActivity extends BaseActivity {
         if (mLoadingRemoved) {
             return;
         }
-        ConfigXmlUtil.setStatusBarColor(this,WWidgetData.sStatusBarColor);
+        ConfigXmlUtil.setStatusBarColor(this,WWidgetData.sStatusBarColor,WWidgetData.sStatusfontBlack);
         mLoadingRemoved = true;
         getWindow().setBackgroundDrawable(new ColorDrawable(0xFFFFFFFF));
         sendFinishLoadingBroadcast(delayTime);
