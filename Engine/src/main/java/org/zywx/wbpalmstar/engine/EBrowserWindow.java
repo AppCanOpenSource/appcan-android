@@ -967,7 +967,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         if (entitys.size() > 0) {
             EBrwViewEntry entityTemp = entitys.get(0);
             EBrowserView childTemp = childs.get(0);
-            if(entityTemp.hasExtraInfo){   
+            if(entityTemp.hasExtraInfo){
                 ((EBounceView) childTemp.getParent()).setBounceViewBackground(
                         entityTemp.mOpaque, entityTemp.mBgColor, "", childTemp);
             }
@@ -2175,6 +2175,8 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         eView.setDownloadCallback(entity.mDownloadCallback);
         eView.setUserAgent(entity.mUserAgent);
         eView.setExeJS(entity.mExeJS);
+        if (entity.mExeScale!=-1) eView.setInitialScale(entity.mExeScale);
+
         if (entity.checkFlag(EBrwViewEntry.F_FLAG_GESTURE)) {
             eView.setSupportZoom();
         }
@@ -2885,9 +2887,9 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
             // TODO Auto-generated method stub
             /*
              * 此方法是在状态改变的时候调用，其中arg0这个参数 有三种状态（0，1，2）。arg0
-			 * ==1的时辰默示正在滑动，arg0==2的时辰默示滑动完毕了，arg0==0的时辰默示什么都没做。
-			 * 当页面开始滑动的时候，三种状态的变化顺序为（1，2，0）
-			 */
+             * ==1的时辰默示正在滑动，arg0==2的时辰默示滑动完毕了，arg0==0的时辰默示什么都没做。
+             * 当页面开始滑动的时候，三种状态的变化顺序为（1，2，0）
+             */
 
             if (mWindowCallback != null) {
 
@@ -2935,10 +2937,10 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
             }
         }
 
-		/*
+        /*
          * 当页面在滑动的时候会调用此方法，在滑动被停止之前，此方法回一直得到 调用。其中三个参数的含义分别为： arg0
-		 * :当前页面，及你点击滑动的页面 arg1:当前页面偏移的百分比 arg2:当前页面偏移的像素位置
-		 */
+         * :当前页面，及你点击滑动的页面 arg1:当前页面偏移的百分比 arg2:当前页面偏移的像素位置
+         */
 
         @Override
         public void onPageScrolled(int arg0, float arg1, int arg2) {

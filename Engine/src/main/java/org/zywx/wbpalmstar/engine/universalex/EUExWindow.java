@@ -41,6 +41,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
@@ -54,6 +55,7 @@ import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.ResoureFinder;
 import org.zywx.wbpalmstar.base.util.AppCanAPI;
+import org.zywx.wbpalmstar.base.util.ConfigXmlUtil;
 import org.zywx.wbpalmstar.base.util.SpManager;
 import org.zywx.wbpalmstar.base.vo.CreateContainerVO;
 import org.zywx.wbpalmstar.base.vo.SetSwipeCloseEnableVO;
@@ -211,12 +213,36 @@ public class EUExWindow extends EUExBase {
     public static final String KEY_DOWNLOAD_CALLBACK = "downloadCallback";//下载回调
     public static final String KEY_USER_AGENT = "userAgent";
     public static final String KEY_EXE_JS = "exeJS";
+    public static final String KEY_EXE_SCALE = "exeScale";
     private EBrowserView mInParent;
     public EUExWindow(Context context, EBrowserView inParent) {
         super(context, inParent);
         inParent.setScrollCallBackContex(this);
         finder = ResoureFinder.getInstance(context);
         mInParent=inParent;
+    }
+    //获取状态栏的高度
+    @AppCanAPI
+    public int getStatusBarHeight(String[] param){
+      int statusBarHeight=0;
+        try {
+            statusBarHeight=ConfigXmlUtil.getStatusBarHeight((EBrowserActivity) mContext);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return statusBarHeight;
+    }
+    //判断屏幕是否全屏
+    @AppCanAPI
+    public boolean isFullScreen(String[] param){
+        boolean isFullScreen=false;
+        try {
+           EBrowserActivity activity= (EBrowserActivity) mContext;
+           isFullScreen= (activity.getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) == WindowManager.LayoutParams.FLAG_FULLSCREEN&&WWidgetData.sFullScreen;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return isFullScreen;
     }
 
     public void open(String[] params) {
@@ -322,14 +348,18 @@ public class EUExWindow extends EUExBase {
         } else {
             String wgtroot = "wgtroot://";
             if (inData.startsWith(wgtroot)) {
-//              String initUrl = wgt.m_indexUrl;
-                String initUrl = "file:///android_asset/widget/";
-
+                String initUrl ;
+                if(wgt.m_indexUrl.indexOf("Http://")>-1||wgt.m_indexUrl.indexOf("https://")>-1) {
+                    initUrl = "file:///android_asset/widget/";
+                }else {
+                    initUrl = wgt.m_indexUrl;
+                }
                 inData = inData.substring(wgtroot.length());
                 inData = BUtility.makeUrl(initUrl, inData);
                 data = inData;
             } else {
                 data = BUtility.makeUrl(cUrl, inData);
+//                data=BUtility.makeRealPath(inData,mInParent);
             }
             windEntry.mRelativeUrl = inData;
         }
@@ -1317,6 +1347,7 @@ public class EUExWindow extends EUExBase {
         int downloadCallback = 0;
         String userAgent = "";
         String exeJS = "";
+        int exeScale = -1;
         if (parm.length > 11 && parm[11] != null) {
             String jsonData = parm[11];
             try {
@@ -1339,6 +1370,9 @@ public class EUExWindow extends EUExBase {
                 userAgent = data.optString(KEY_USER_AGENT, "");
                 if (data.has(KEY_EXE_JS)){
                     exeJS = data.getString(KEY_EXE_JS);
+                }
+                if(data.has(KEY_EXE_SCALE)){
+                    exeScale=Integer.parseInt(data.optString(KEY_EXE_SCALE));
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -1367,11 +1401,11 @@ public class EUExWindow extends EUExBase {
                 y = (int) (Integer.valueOf(inY) * sc);
             }
             if (null != inWidth && inWidth.length() != 0
-                    && !"0".equals(inWidth)) {
+                    && !"0".equals(inWidth)&&!"-1".equals(inWidth)) {
                 w = (int) (Integer.valueOf(inWidth) * sc);
             }
             if (null != inHeight && inHeight.length() != 0
-                    && !"0".equals(inHeight)) {
+                    && !"0".equals(inHeight)&& !"-1".equals(inHeight)) {
                 h = (int) (Integer.valueOf(inHeight) * sc);
             }
             if (null != inFontSize && inFontSize.length() != 0) {
@@ -1424,6 +1458,7 @@ public class EUExWindow extends EUExBase {
         popEntry.mUserAgent = userAgent;
         popEntry.mHardware = hardware;
         popEntry.mExeJS = exeJS;
+        popEntry.mExeScale = exeScale;
         popEntry.hasExtraInfo = hasExtraInfo;
         String query = null;
         if (Build.VERSION.SDK_INT >= 11) {

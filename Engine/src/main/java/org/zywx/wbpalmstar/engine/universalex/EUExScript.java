@@ -226,6 +226,8 @@ public class EUExScript {
                 + "publishChannelNotificationForJson:function(){uexDispatcher.dispatch('uexWindow','publishChannelNotificationForJson',jo(arguments));},"
                 + "closeAboveWndByName:function(){uexDispatcher.dispatch('uexWindow','closeAboveWndByName',jo(arguments));},"
                 + "setMultilPopoverFlippingEnbaled:function(){uexDispatcher.dispatch('uexWindow','setMultilPopoverFlippingEnbaled',jo(arguments));},"
+                + "getStatusBarHeight:function(){return uexDispatcher.dispatch('uexWindow','getStatusBarHeight',jo(arguments));},"
+                + "isFullScreen:function(){return uexDispatcher.dispatch('uexWindow','isFullScreen',jo(arguments));},"
 
                 + "openAd:function(){uexDispatcher.dispatch('uexWindow','openAd',jo(arguments));},"
                 + "closePopover:function(){uexDispatcher.dispatch('uexWindow','closePopover',jo(arguments));},"
@@ -271,7 +273,7 @@ public class EUExScript {
                 + "share:function(){uexDispatcher.dispatch('uexWindow','share',jo(arguments));},"
                 + "putLocalData:function(){uexDispatcher.dispatch('uexWindow','putLocalData',jo(arguments));},"
                 + "getLocalData:function(){return uexDispatcher.dispatch('uexWindow','getLocalData',jo(arguments));},"
-//                + "removeLocalData:function(){return uexDispatcher.dispatch('uexWindow','removeLocalData',jo(arguments));},"
+                + "removeLocalData:function(){return uexDispatcher.dispatch('uexWindow','removeLocalData',jo(arguments));},"
                 + "getWindowName:function(){return uexDispatcher.dispatch('uexWindow','getWindowName',jo(arguments));},"
 
 
