@@ -181,15 +181,17 @@ QQ交流群：173758265
   applicationId 'org.zywx.wbpalmstar.widgetone.uex'
   ```
 
-### AndroidStudio3.0.1等开发环境适配
+### AndroidStudio3.0.1开发环境适配（举例）
   ​
+> 后续更高的gradle版本，升级原理相同，本文档更新不及时的话，开发者可以自行更新工程配置。但是gradle版本更新过高可能会导致引擎出包脚本使用的gradle插件不兼容，需要等待后续进行适配。目前经过完整测试的是可以适配到3.0.1。
+
 在3.0.1遇到Gradle插件和脚本运行出错，是因为工程中的AppCanGradle插件未做高版本的适配。有两种方式解决：
 
-#### 降级gradle
+#### 1. 降级gradle
 
 修改Engine/gradle/wrapper/gradle-wrapper.properties，其中版本改为2.14.1；其他部分维持原状即可编译通过。
 
-#### 依赖新版AppCanGradle插件（beta版）
+#### 2. 依赖新版AppCanGradle插件（beta版）
 
 1. 修改Engine/gradle/wrapper/gradle-wrapper.properties，其中版本改为4.1；
 
@@ -236,3 +238,24 @@ buildscript {
 5. 为了方便开发者使用，修改后的gradle文件已经放在了工程根目录，名为**build.gradle.3.0.1**，由于在实验阶段，没有替换原有的。
 
 6. 关于此，如果仍有问题，欢迎在提issue或者QQ群中互相讨论，或者关注这个issue：https://github.com/AppCanOpenSource/appcan-android/issues/136
+
+### 插件开发gradle依赖引擎配置
+
+1. repositories中增加下面的maven地址：
+
+```
+repositories {
+    
+    maven {
+        url 'https://raw.githubusercontent.com/android-plugin/mvn-repo/master/'
+    }
+}
+```
+
+2. dependencies中增加依赖包。其中，版本号+号是指随便获取一个版本（不一定是最新版本）。如果要指定版本号，可以将+号改为4.0.0，或4.3.21等等。未来还会有更多版本。
+
+```
+dependencies {
+    implementation 'org.appcan:engine:+:systemRelease@aar'//依赖远程引擎
+}
+```
