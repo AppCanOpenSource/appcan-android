@@ -112,7 +112,7 @@ public final class EBrowserActivity extends BaseActivity {
 
     public SlidingMenu globalSlidingMenu;
     private WebViewSdkCompat.ValueCallback<Uri> mUploadMessage;
-    private boolean mLoadingRemoved = false;
+    public static boolean mLoadingRemoved = false;
 
     public ValueCallback<Uri[]> getUploadMessage() {
         return uploadMessage;
