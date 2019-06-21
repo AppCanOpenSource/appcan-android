@@ -790,6 +790,57 @@ public class BUtility {
     }
 
     /**
+     * 获取引擎加密H5文件的读取协议头，与ACEContentProvider对应
+     * 形如：content://com.appcan.packagename.sp/android_asset/
+     */
+    public static String getACEContentProviderPrefix(Context context){
+        String packageName = context.getPackageName();
+        String contentPrefix = "content://" + packageName + ".sp/android_asset/";
+        return contentPrefix;
+    }
+
+    /**
+     * 将本地文件路径转换为加密协议头，一般用于插件回调图片等资源给加密的H5页面中直接展示时，
+     * 由于加密后的本地页面协议头为content://，是无法读取file://协议的文件的，涉及跨域问题。
+     * 因此需要这样的转换。
+     *
+     * @param context 上下文
+     * @param fileUrl 需要转换的路径
+     * @return
+     */
+    public static String convertToACEContentScheme(Context context, String fileUrl){
+        String convertFileUrl = fileUrl;
+        String contentPrefix = getACEContentProviderPrefix(context);
+        if (!TextUtils.isEmpty(fileUrl)){
+            if (fileUrl.startsWith(F_FILE_SCHEMA)){
+                // 将file://替换为content加密协议头
+                convertFileUrl = contentPrefix + fileUrl.substring("file:///".length());
+            }else if (fileUrl.startsWith("/")){
+                // 绝对路径，直接增加content加密协议头
+                convertFileUrl = contentPrefix + fileUrl.substring(1);
+            }
+            // 其他的路径转换加密协议头，后续增加
+        }
+        return convertFileUrl;
+    }
+
+    /**
+     * 主应用是否开启增量更新开关
+     *
+     */
+    public static boolean canMainWidgetPatchUpdate(){
+        return WDataManager.isCopyAssetsFinish;
+    }
+
+    /**
+     * 主应用的增量更新功能前置拷贝任务是否已经完成
+     *
+     */
+    public static boolean isMainWidgetCopyAssetsFinish(){
+        return WDataManager.isCopyAssetsFinish;
+    }
+
+    /**
      * 获取租户标示
      *
      * @param context
