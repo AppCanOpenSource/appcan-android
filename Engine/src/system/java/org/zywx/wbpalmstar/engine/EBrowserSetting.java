@@ -90,6 +90,10 @@ public class EBrowserSetting implements EBrowserBaseSetting {
         if (webApp) {
             mWebSetting.setUseWideViewPort(true);
 //			mWebSetting.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+            //允许混合模式，解决个别页面或者视频无法正常显示和播放的问题（http与https）
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mWebSetting.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+            }
             return;
         }
 //		mWebSetting.setCacheMode(WebSettings.LOAD_NO_CACHE);

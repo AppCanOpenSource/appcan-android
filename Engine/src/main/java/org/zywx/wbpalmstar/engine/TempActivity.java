@@ -24,6 +24,8 @@ import org.zywx.wbpalmstar.base.util.ConfigXmlUtil;
 import org.zywx.wbpalmstar.engine.external.Compat;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 
+import static org.zywx.wbpalmstar.engine.EBrowserActivity.mLoadingRemoved;
+
 
 /**
  * Created by yanlongtao on 2015/4/21 0021.
@@ -101,6 +103,23 @@ public class TempActivity extends Activity {
         }
         LocalBroadcastManager.getInstance(this).unregisterReceiver(
                 mBroadcastReceiver);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //如果EBrowserActivity 发送的关闭Activity的本地广播比TempActivity创建的要早，需要本身来关闭
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(mLoadingRemoved) {
+                    finish();
+                    overridePendingTransition(EUExUtil.getResAnimID("platform_myspace_fade_in_anim"),
+                            EUExUtil.getResAnimID("platform_myspace_fade_out_anim"));
+                }
+
+            }
+        },200);
     }
 
     private class MyBroadcastReceiver extends BroadcastReceiver {
