@@ -29,12 +29,6 @@
                 <data android:scheme="appcanscheme"/>
             </intent-filter>
         </activity>
-        <activity
-            android:name="org.zywx.wbpalmstar.platform.mam.PolicyActivity"
-            android:configChanges="orientation|keyboardHidden|navigation" android:windowSoftInputMode="adjustPan"/>
-        <activity
-            android:name="org.zywx.wbpalmstar.platform.mam.PolicyInfoActivity"
-            android:configChanges="orientation|keyboardHidden|navigation" android:windowSoftInputMode="adjustPan"/>
         <activity android:name="org.zywx.wbpalmstar.engine.TempActivity"
                   android:launchMode="standard"
                   android:theme="@style/browser_loading_theme"/>
