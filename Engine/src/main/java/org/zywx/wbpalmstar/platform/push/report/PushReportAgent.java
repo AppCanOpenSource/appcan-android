@@ -27,6 +27,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import org.json.JSONObject;
+import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.ResoureFinder;
 import org.zywx.wbpalmstar.base.vo.NameValuePairVO;
@@ -43,6 +44,8 @@ import java.util.TimeZone;
 
 public class PushReportAgent implements PushReportConstants {
 
+    private static final String TAG = "PushReportAgent";
+    
     // public static String m_appKey;
     // public static String m_appId;
     // public static Context mContext;
@@ -123,7 +126,7 @@ public class PushReportAgent implements PushReportConstants {
                 isCertificate = true;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            BDebug.w(TAG, "checkAppStatus exception: " + e.getClass().getSimpleName() + " exception detail: " + e.getMessage());
         }
 
     }
