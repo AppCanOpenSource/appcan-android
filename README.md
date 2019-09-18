@@ -181,21 +181,27 @@ QQ交流群：173758265
   applicationId 'org.zywx.wbpalmstar.widgetone.uex'
   ```
 
-### AndroidStudio3.0.1开发环境适配（举例）
+### 已经适配到AndroidStudio3.5.0开发环境
   ​
-> 后续更高的gradle版本，升级原理相同，本文档更新不及时的话，开发者可以自行更新工程配置。但是gradle版本更新过高可能会导致引擎出包脚本使用的gradle插件不兼容，需要等待后续进行适配。目前经过完整测试的是可以适配到3.0.1。
+> 后续更高的gradle版本，升级原理相同，本文档更新不及时的话，开发者可以自行更新工程配置。但是gradle版本更新过高可能会导致引擎出包脚本使用的gradle插件不兼容，需要等待后续进行适配。目前经过完整测试的是可以适配到3.5.0。
 
-在3.0.1遇到Gradle插件和脚本运行出错，是因为工程中的AppCanGradle插件未做高版本的适配。有两种方式解决：
+在3.5.0遇到Gradle插件和脚本运行出错，是因为工程中的AppCanGradle插件未做高版本的适配。有两种方式解决：
 
 #### 1. 降级gradle
 
-修改Engine/gradle/wrapper/gradle-wrapper.properties，其中版本改为2.14.1；其他部分维持原状即可编译通过。
+目前，本工程的默认配置为适配AS3.5.0，Gradle版本为5.4.1，AndroidGradle构建插件版本为3.5.0。如果开发者没有升级AndroidStudio，按照以下操作降级：
 
-#### 2. 依赖新版AppCanGradle插件（beta版）
+- 修改Engine/gradle/wrapper/gradle-wrapper.properties，其中版本改为4.1；
 
-1. 修改Engine/gradle/wrapper/gradle-wrapper.properties，其中版本改为4.1；
+- 修改build.gradle中的``` classpath 'org.appcan.gradle.plugins:appcan-gradle-plugin:2.3.1' ```，其中2.3.1修改为2.2.4。
 
-2. 修改Engine/build.gradle文件中。其中，repositories增加一个github的maven库，dependencies中将原来的依赖本地的gradle插件改为依赖线上的，版本目前是2.2.3，可以在此仓库关注更新 https://github.com/android-plugin/mvn-repo。修改部分参考下面：
+- 经过以上操作后，理论上可以编译通过。不过还是建议升级AS。
+
+#### 2. 依赖新版AppCanGradle插件
+
+1. 修改Engine/gradle/wrapper/gradle-wrapper.properties，其中版本改为5.4.1；
+
+2. 修改Engine/build.gradle文件中。其中，repositories增加一个github的maven库，dependencies中将原来的依赖本地的gradle插件改为依赖线上的，版本目前是2.3.1，可以在此仓库关注更新 https://github.com/android-plugin/mvn-repo。修改部分参考下面：
 
 ```groovy
 buildscript {
@@ -207,14 +213,14 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.android.tools.build:gradle:3.5.0'
 //        classpath fileTree(dir: '../gradle-plugin', include: '*.jar')
-        classpath 'org.appcan.gradle.plugins:appcan-gradle-plugin:2.2.3'
+        classpath 'org.appcan.gradle.plugins:appcan-gradle-plugin:2.3.1'
     }
 }
 ```
 
-3. dependencies中com.android.tools.build:gradle设置为3.0.1之后，需要在所有的repositories中增加google()，否则会找不到Android新版的官方gradle相关插件库而报错；
+3. dependencies中com.android.tools.build:gradle设置为3.0.1或更高版本之后，需要在所有的repositories中增加google()，否则会找不到Android新版的官方gradle相关插件库而报错；
 
 4. 若buildToolsVersion改为26或更高后，还会要求修改flavor的定义，如下修改即可：
 
@@ -235,9 +241,7 @@ buildscript {
     }
 ```
 
-5. 为了方便开发者使用，修改后的gradle文件已经放在了工程根目录，名为**build.gradle.3.0.1**，由于在实验阶段，没有替换原有的。
-
-6. 关于此，如果仍有问题，欢迎在提issue或者QQ群中互相讨论，或者关注这个issue：https://github.com/AppCanOpenSource/appcan-android/issues/136
+5. 关于此，如果仍有问题，欢迎在提issue或者QQ群中互相讨论，或者关注这个issue：https://github.com/AppCanOpenSource/appcan-android/issues/136
 
 ### 插件开发gradle依赖引擎配置
 
