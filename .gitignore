@@ -44,12 +44,21 @@ captures/
 Thumbs.db
 
 # Mac
-.DS_Stor
+.DS_Store
 
 # 
 gradle/
 gradlew
 gradlew.bat
+
+# ndk temp
+
+Engine/obj/*
+Engine/.externalNativeBuild
+Engine/.cxx
+.externalNativeBuild
+.cxx
+obj/*
 
 # AppCanEngine temp local version
 local-appcanengine-build-versions.properties

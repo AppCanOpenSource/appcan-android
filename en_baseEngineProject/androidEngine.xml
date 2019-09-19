@@ -3,6 +3,6 @@
     <version>$version$</version>
     <package>$package$</package>
     <kernel>$kernel$</kernel>
-    <description>增加针对插件的解密页面API；minSdkVersion由16升为18，提升安全性；允许Https中访问http资源，解决部分视频加载问题；修复长时间不使用时重新启动会卡死在启动页的问题；</description>
+    <description>libappcan.so库增加armeabi-v7a和arm64-v8a的支持，build.gradle中过滤了这两种架构</description>
     <dssVersion>4.3.0</dssVersion>
 </info>
