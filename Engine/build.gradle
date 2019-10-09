@@ -7,7 +7,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.android.tools.build:gradle:3.0.0'
 //        classpath fileTree(dir: '../gradle-plugin', include: '*.jar')
         classpath 'org.appcan.gradle.plugins:appcan-gradle-plugin:2.2.4'
     }
@@ -97,5 +97,14 @@ dependencies {
     implementation(name: 'support-media-compat-26.0.0', ext: 'aar')
     implementation(name: 'appcompat-v7-26.0.0', ext: 'aar')
     implementation(name: 'recyclerview-v7-26.0.0', ext: 'aar')
+
+    compile(name: "serverprotocol-release", ext: 'aar')
+    compile(name: "uusafe-sandbox-protocol", ext: 'aar')
+    compile(name: "uusafe-sandbox-relate-release", ext: 'aar')
+    compile(name: "uusandboxsdk-api-release", ext: 'aar')
+    compile(name: "uusandboxsdk-daemon-release", ext: 'aar')
+    compile(name: "uusandboxsdk-library-release", ext: 'aar')
+    compile(name: "uusafe-engine-app-sdk", ext: 'aar')
+    compile(name: "uusafe-zplatform-network", ext: 'aar')
 
 }

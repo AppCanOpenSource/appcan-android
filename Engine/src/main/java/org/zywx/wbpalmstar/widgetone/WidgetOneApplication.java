@@ -25,6 +25,8 @@ import android.content.res.Resources;
 import android.os.StrictMode;
 import android.support.multidex.MultiDex;
 
+import com.zzy.engine.app.sdk.ZManager;
+
 import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.engine.AppCan;
 
@@ -35,6 +37,10 @@ public class WidgetOneApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        ZManager.ZStatus zs = ZManager.onCreateSSDK(this);
+        if (zs.isSandboxProcess()) {
+            return;// 沙箱进程，直接 return
+        }
         long startTime=System.currentTimeMillis();
         AppCan.getInstance().initSync(this.getApplicationContext());//有些插件需要在别的进程初始化,因此最好在Application.onCreate()里面初始化引擎,或者将反射调用部分抽离出来
         AppCan.getInstance().setWidgetSdk(false);
@@ -49,6 +55,10 @@ public class WidgetOneApplication extends Application {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
+        ZManager.ZStatus zs = ZManager.attachBaseContextSSDK(this);
+        if (zs.isSandboxProcess()) {
+            return;// 沙箱进程, 直接 return
+        }
     }
 
     @Override
