@@ -415,6 +415,15 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
         }
     }
 
+    /**
+     * 尝试获取焦点
+     */
+    public void requestForFocus() {
+        if (!isFocused()) {
+            strugglefoucs();
+        }
+    }
+
     private void strugglefoucs() {
         requestFocus();
         /**

@@ -409,10 +409,9 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
     }
 
     public void bringToFront(EBrowserView child) {
-        View v = (View) child.getParent();
         Message msg = mWindLoop.obtainMessage();
         msg.what = F_WHANDLER_BRING_TO_FRONT;
-        msg.obj = v;
+        msg.obj = child;
         mWindLoop.sendMessage(msg);
     }
 
@@ -489,10 +488,9 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
     public void bringPopoverToFront(String name) {
         EBrowserView bv = mPopTable.get(name);
         if (null != bv) {
-            View v = (View) bv.getParent();
             Message msg = mWindLoop.obtainMessage();
             msg.what = F_WHANDLER_BING_POPOVER_TO_FRONT;
-            msg.obj = v;
+            msg.obj = bv;
             mWindLoop.sendMessage(msg);
         }
     }
@@ -2164,9 +2162,11 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
                     hBounceTask(bunceEnty, msg.arg1);
                     break;
                 case F_WHANDLER_BRING_TO_FRONT:
-                    View child = (View) msg.obj;
-                    bringChildToFront(child);
+                    EBrowserView childView = (EBrowserView) msg.obj;
+                    View childLayout = (View) childView.getParent();
+                    bringChildToFront(childLayout);
                     invalidate();
+                    childView.requestForFocus();
                     break;
                 case F_WHANDLER_SEND_TO_BACK:
                     View child1 = (View) msg.obj;
@@ -2207,9 +2207,11 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
                     addView(bo1, j2);
                     break;
                 case F_WHANDLER_BING_POPOVER_TO_FRONT:
-                    View bp = (View) msg.obj;
-                    bringChildToFront(bp);
+                    EBrowserView childPopView = (EBrowserView) msg.obj;
+                    View childPopLayout = (View) childPopView.getParent();
+                    bringChildToFront(childPopLayout);
                     invalidate();
+                    childPopView.requestForFocus();
                     break;
                 case F_WHANDLER_SEND_POPOVER_TO_BACK:
                     View bq = (View) msg.obj;
