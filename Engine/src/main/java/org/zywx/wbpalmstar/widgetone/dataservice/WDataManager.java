@@ -26,10 +26,10 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.provider.Settings;
 import android.support.annotation.Keep;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Xml;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -40,7 +40,6 @@ import org.zywx.wbpalmstar.base.ResoureFinder;
 import org.zywx.wbpalmstar.base.vo.WidgetConfigVO;
 import org.zywx.wbpalmstar.base.zip.CnZipInputStream;
 import org.zywx.wbpalmstar.base.zip.ZipEntry;
-import org.zywx.wbpalmstar.engine.DataHelper;
 import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.ESystemInfo;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
@@ -1312,7 +1311,9 @@ public class WDataManager {
             try {
                 TelephonyManager telephonyManager = (TelephonyManager) m_context
                         .getSystemService(Context.TELEPHONY_SERVICE);
-                widgetData.m_imei = telephonyManager.getDeviceId();
+
+//                widgetData.m_imei = telephonyManager.getDeviceId();
+                widgetData.m_imei = Settings.System.getString(m_context.getContentResolver(), Settings.Secure.ANDROID_ID);
             } catch (Exception e) {
                 // TODO: handle exception
                 e.printStackTrace();

@@ -35,8 +35,8 @@ import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Environment;
+import android.provider.Settings;
 import android.support.annotation.Keep;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Xml;
@@ -1443,14 +1443,15 @@ public class BUtility {
             return softToken;
         }
 
-        String[] val = new String[4];
+        String[] val = new String[2];
         try {
-            val[0] = getMacAddress(context);
-            TelephonyManager telephonyManager = (TelephonyManager) context
-                    .getSystemService(Context.TELEPHONY_SERVICE);
-            val[1] = telephonyManager.getDeviceId();
-            val[2] = getCPUSerial();
-            val[3] = appKey;
+//            val[0] = getMacAddress(context);
+//            TelephonyManager telephonyManager = (TelephonyManager) context
+//                    .getSystemService(Context.TELEPHONY_SERVICE);
+//            val[1] = telephonyManager.getDeviceId();
+//            val[2] = getCPUSerial();
+            val[0] = Settings.System.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+            val[1] = appKey;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1635,11 +1636,19 @@ public class BUtility {
      */
     public static void restartAPP(final Context context, final long delayTime) {
         /**开启一个新的服务，用来重启本APP*/
-        Intent intent = new Intent(context, killSelfService.class);
-        intent.putExtra(killSelfService.KEY_STOP_PACKAGE_NAME, context.getPackageName());
-        intent.putExtra(killSelfService.KEY_STOP_DELAY, delayTime);
-        context.startService(intent);
+//        Intent intent = new Intent(context, killSelfService.class);
+//        intent.putExtra(killSelfService.KEY_STOP_PACKAGE_NAME, context.getPackageName());
+//        intent.putExtra(killSelfService.KEY_STOP_DELAY, delayTime);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            context.startForegroundService(intent);
+//        } else {
+//            context.startService(intent);
+//        }
+//        context.startActivity(new Intent(context,ReStartActivity.class));
 
+       final Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+           intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(intent);
         /**杀死整个进程**/
         android.os.Process.killProcess(android.os.Process.myPid());
 
