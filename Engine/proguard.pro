@@ -10,7 +10,7 @@
 
 -libraryjars libs/wmqtt.jar
 -libraryjars libs/httpmime-4.1.3.jar
--libraryjars libs/android-support-v4.jar
+#-libraryjars libs/android-support-v4.jar
 -libraryjars libs/commons-io-2.4.jar
 -libraryjars libs/aceimageloader.jar
 -libraryjars libs/gson-2.2.4.jar
