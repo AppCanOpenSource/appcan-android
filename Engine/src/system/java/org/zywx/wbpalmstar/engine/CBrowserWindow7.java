@@ -124,13 +124,17 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
         }
         boolean isUrl = url.startsWith("file") || url.startsWith("http")
                 || url.startsWith("content://");
-        boolean isCustomUrl = url.startsWith("alipay://") || url.startsWith("weixin://");
+        boolean isCustomUrl = url.startsWith("alipay://")
+                || url.startsWith("alipays://")
+                || url.startsWith("weixin://");
         if (!isUrl) {
             if (isCustomUrl) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse(url));
                 activity.startActivity(intent);
                 return true;
+            } else {
+                BDebug.w("Unknown url protocol: " + url);
             }
             return true;
         }
