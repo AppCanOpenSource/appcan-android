@@ -793,7 +793,7 @@ public class EUExWidget extends EUExBase {
         }else if (requestCode == REQUEST_CODE_INSTALL_APK_PERMISSION){
             if (resultCode == Activity.RESULT_OK){
                 if (!TextUtils.isEmpty(lastInstallApkPath)){
-                    internalInstallApk(lastInstallApkPath);
+                    BUtility.internalInstallApk(mContext, lastInstallApkPath);
                     lastInstallApkPath = null;
                 }else{
                     BDebug.e("onActivityResult: no last time install failed apk");
@@ -865,27 +865,10 @@ public class EUExWidget extends EUExBase {
                     return;
                 }
             }
-            internalInstallApk(inAppPath);
+            BUtility.internalInstallApk(mContext, inAppPath);
         } catch (Exception e) {
             BDebug.w("installApp exception: " + e);
         }
-    }
-
-    private void internalInstallApk(String inAppPath){
-        // install apk.
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        MimeTypeMap type = MimeTypeMap.getSingleton();
-        String mime = type.getMimeTypeFromExtension("apk");
-        Uri apkFileUri;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            apkFileUri = BUtility.getUriForFileWithFileProvider(mContext, inAppPath);
-        }else {
-            apkFileUri = Uri.parse("file://" + inAppPath);
-        }
-        intent.setDataAndType(apkFileUri, mime);
-        mContext.startActivity(intent);
     }
 
     public void setMySpaceInfo(String[] parm) {

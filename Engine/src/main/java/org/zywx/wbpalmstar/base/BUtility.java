@@ -34,12 +34,14 @@ import android.graphics.Matrix;
 import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
 import android.support.annotation.Keep;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Xml;
+import android.webkit.MimeTypeMap;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.zywx.wbpalmstar.acedes.ACEDes;
@@ -1652,6 +1654,23 @@ public class BUtility {
         /**杀死整个进程**/
         android.os.Process.killProcess(android.os.Process.myPid());
 
+    }
+
+    public static void internalInstallApk(Context context, String inAppPath){
+        // install apk.
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        MimeTypeMap type = MimeTypeMap.getSingleton();
+        String mime = type.getMimeTypeFromExtension("apk");
+        Uri apkFileUri;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            apkFileUri = BUtility.getUriForFileWithFileProvider(context, inAppPath);
+        }else {
+            apkFileUri = Uri.parse("file://" + inAppPath);
+        }
+        intent.setDataAndType(apkFileUri, mime);
+        context.startActivity(intent);
     }
 
     /**
