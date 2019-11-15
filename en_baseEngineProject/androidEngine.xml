@@ -3,6 +3,6 @@
     <version>$version$</version>
     <package>$package$</package>
     <kernel>$kernel$</kernel>
-    <description>修复个别手机上开启硬件加速后切换浮动窗口可能导致页面空白不主动刷新的问题；修改设备唯一标识的获取方式，兼容Android10；libappcan.so库增加armeabi-v7a和arm64-v8a的支持，build.gradle中过滤了这两种架构</description>
+    <description>修复Android10中安装apk的问题；修复个别手机上开启硬件加速后切换浮动窗口可能导致页面空白不主动刷新的问题；修改设备唯一标识的获取方式，兼容Android10；libappcan.so库增加armeabi-v7a和arm64-v8a的支持，build.gradle中过滤了这两种架构</description>
     <dssVersion>4.3.0</dssVersion>
 </info>
