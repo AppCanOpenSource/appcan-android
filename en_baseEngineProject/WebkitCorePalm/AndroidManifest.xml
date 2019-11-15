@@ -57,7 +57,15 @@
                  android:exported="false"
                  android:enabled="true"/>
 		<meta-data android:name="android.max_aspect" android:value="2.5"/>
-
+        <provider
+            android:name="org.zywx.wbpalmstar.base.ACEngineFileProvider"
+            android:authorities="${applicationId}.acengine.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/acengine_file_paths" />
+        </provider>
     </application>
 
     <uses-sdk android:minSdkVersion="4"/>
