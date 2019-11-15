@@ -82,6 +82,16 @@
         <provider android:name="org.zywx.wbpalmstar.base.ACEContentProvider"
           android:authorities="${applicationId}.sp" android:exported="false"/>
 
+        <provider
+            android:name="org.zywx.wbpalmstar.base.ACEngineFileProvider"
+            android:authorities="${applicationId}.acengine.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/acengine_file_paths" />
+        </provider>
+
         <meta-data android:name="android.max_aspect" android:value="2.5"/>
     </application>
 
@@ -108,6 +118,8 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
+
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature

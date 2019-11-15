@@ -1654,4 +1654,15 @@ public class BUtility {
 
     }
 
+    /**
+     * 通过引擎内置的FileProvider将本地文件路径转换为content://的形式提供给其他应用使用
+     *
+     * @param context 上下文
+     * @param filePath 需要转换的file://路径
+     * @return 返回content://形式的Uri对象
+     */
+    public static Uri getUriForFileWithFileProvider(Context context, String filePath) {
+        return ACEngineFileProvider.getUriForFile(context, context.getPackageName() + ACEngineFileProvider.AUTHORITIES_SUFFIX, new File(filePath));
+    }
+
 }

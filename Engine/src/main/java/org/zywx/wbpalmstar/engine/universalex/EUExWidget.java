@@ -33,6 +33,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -87,6 +88,10 @@ public class EUExWidget extends EUExBase {
     public static final String tag = "uexWidget";
 
     public static final int LOADAPP_RQ_CODE = 1000001;
+    /**
+     * 请求安装apk权限的固定请求码（可能是，反正改成别的不生效）
+     */
+    public static final int REQUEST_CODE_INSTALL_APK_PERMISSION = 19900;
 
     public static final String function_getOpenerInfo = "uexWidget.cbGetOpenerInfo";
     public static final String function_checkUpdate = "uexWidget.cbCheckUpdate";
@@ -106,6 +111,11 @@ public class EUExWidget extends EUExBase {
     private static final String PUSH_MSG_ALL = "1";
     private static final int MSG_IS_APP_INSTALLED = 0;
     private static final int MSG_RELOAD_WIDGET_BY_APPID= 1;
+
+    /**
+     * 用来记录上次未成功安装的apk路径
+     */
+    private String lastInstallApkPath;
 
     public EUExWidget(Context context, EBrowserView inParent) {
         super(context, inParent);
@@ -780,6 +790,18 @@ public class EUExWidget extends EUExBase {
             }
             jsCallback(function_loadApp, 0, EUExCallback.F_C_JSON,
                     json.toString());
+        }else if (requestCode == REQUEST_CODE_INSTALL_APK_PERMISSION){
+            if (resultCode == Activity.RESULT_OK){
+                if (!TextUtils.isEmpty(lastInstallApkPath)){
+                    internalInstallApk(lastInstallApkPath);
+                    lastInstallApkPath = null;
+                }else{
+                    BDebug.e("onActivityResult: no last time install failed apk");
+                }
+            }else{
+                Toast.makeText(mContext, EUExUtil.getString("no_permisson_declare"), Toast.LENGTH_SHORT).show();
+                BDebug.e("onActivityResult: missing install apk permission");
+            }
         }
     }
 
@@ -828,12 +850,41 @@ public class EUExWidget extends EUExBase {
                 return;
             }
         }
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                // 如果是Android8以上，则需要判断是否具有APK的安装权限
+                if (!mContext.getPackageManager().canRequestPackageInstalls()){
+                    // 未获得安装apk的系统权限，则需要申请权限。不再进行安装操作。
+                    // 安装操作可以放到onActivityResult中处理。
+                    lastInstallApkPath = inAppPath;
+                    Toast.makeText(mContext, EUExUtil.getString("no_permisson_declare"), Toast.LENGTH_SHORT).show();
+                    Uri uri = Uri.parse("package:" + mContext.getPackageName());
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, uri);
+                    startActivityForResult(intent, REQUEST_CODE_INSTALL_APK_PERMISSION);
+                    BDebug.w("missing permission to install apk, go to request permission.");
+                    return;
+                }
+            }
+            internalInstallApk(inAppPath);
+        } catch (Exception e) {
+            BDebug.w("installApp exception: " + e);
+        }
+    }
+
+    private void internalInstallApk(String inAppPath){
         // install apk.
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         MimeTypeMap type = MimeTypeMap.getSingleton();
         String mime = type.getMimeTypeFromExtension("apk");
-        intent.setDataAndType(Uri.parse("file://" + inAppPath), mime);
+        Uri apkFileUri;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            apkFileUri = BUtility.getUriForFileWithFileProvider(mContext, inAppPath);
+        }else {
+            apkFileUri = Uri.parse("file://" + inAppPath);
+        }
+        intent.setDataAndType(apkFileUri, mime);
         mContext.startActivity(intent);
     }
 
