@@ -99,6 +99,8 @@ public class WWidgetData implements Parcelable,Cloneable {
     public String m_indexUrl;
     // 是否加密
     public int m_obfuscation;
+    // 全局加密开关（用于强制主应用和所有子应用开启和关闭加密开关，适用于某些特殊情况下，子应用未加密但是开关不统一的情况）
+    public int m_globalObfuscation = -1; // 默认值-1，代表没有配置此开关，忽略之。
     // log服务器ip
     public String m_logServerIp;
     // widget类型（0-主widget；1-我的空间；2-空间的widget；3-Plug-in）
@@ -171,6 +173,7 @@ public class WWidgetData implements Parcelable,Cloneable {
             widget.m_widgetPath = source.readString();
             widget.m_indexUrl = source.readString();
             widget.m_obfuscation = source.readInt();
+            widget.m_globalObfuscation = source.readInt();
             widget.m_logServerIp = source.readString();
             widget.m_wgtType = source.readInt();
             widget.m_updateurl = source.readString();
@@ -251,6 +254,7 @@ public class WWidgetData implements Parcelable,Cloneable {
         parcel.writeString(m_widgetPath);
         parcel.writeString(m_indexUrl);
         parcel.writeInt(m_obfuscation);
+        parcel.writeInt(m_globalObfuscation);
         parcel.writeString(m_logServerIp);
         parcel.writeInt(m_wgtType);
         parcel.writeString(m_updateurl);
@@ -308,6 +312,8 @@ public class WWidgetData implements Parcelable,Cloneable {
         sb.append("m_indexUrl: " + m_indexUrl);
         sb.append("\n");
         sb.append("m_obfuscation: " + m_obfuscation);
+        sb.append("\n");
+        sb.append("m_globalObfuscation: " + m_globalObfuscation);
         sb.append("\n");
         sb.append("m_opaque: " + m_opaque);
         sb.append("\n");
