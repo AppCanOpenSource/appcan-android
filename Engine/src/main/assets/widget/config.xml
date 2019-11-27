@@ -11,6 +11,8 @@
 	<logserverip></logserverip> 
 	<showmyspace>false</showmyspace>
 	<obfuscation>true</obfuscation>
+    <!--  全局控制加密开关，-1：保持原装（等同于不配置此开关），0：全局关闭加密，1：全局开启加密  -->
+	<globalobfuscation>0</globalobfuscation>
 	<bgcolor>#fefefe</bgcolor>
 	<orientation>15</orientation>
 	<debug>true</debug>

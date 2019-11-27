@@ -101,6 +101,11 @@ public class WDataManager {
     public static boolean isWidgetOneSBox = false;
     // private int m_count = 0;
 
+    /**
+     * 用来记录全局控制加密的开关。-1：未配置；0：全局不加密；1：全局加密
+     */
+    private static int globalObfuscationConfigInMainWidget = -1;
+
     public WDataManager(Context context) {
         m_context = context;
         // m_mdba = new WDataBaseAdapter1(m_context);
@@ -142,6 +147,15 @@ public class WDataManager {
         wgt.m_wgtType = 1;
         wgt.m_widgetPath = sRootWgt.m_widgetPath + wgt.m_appId + "/";
         return wgt;
+    }
+
+    public static int getGlobalObfuscationConfigInMainWidget() {
+        BDebug.d("getGlobalObfuscationConfigInMainWidget: " + globalObfuscationConfigInMainWidget);
+        return globalObfuscationConfigInMainWidget;
+    }
+
+    public static void setGlobalObfuscationConfigInMainWidget(int globalObfuscationConfigInMainWidget) {
+        WDataManager.globalObfuscationConfigInMainWidget = globalObfuscationConfigInMainWidget;
     }
 
     /**
@@ -1280,6 +1294,16 @@ public class WDataManager {
             if (widgetData == null) {
                 return null;
             }
+
+            // 用于处理全局强制加密控制开关（逻辑上来说，仅主应用有效）
+            if (type == WWidgetData.WGT_TYPE_MAIN) {
+                setGlobalObfuscationConfigInMainWidget(widgetData.m_globalObfuscation);
+            }
+            if (getGlobalObfuscationConfigInMainWidget() != -1) {
+                // 不等于-1，则认为配置了全局控制开关，所以需要改写加密开关
+                widgetData.m_obfuscation = getGlobalObfuscationConfigInMainWidget();
+            }
+
             String widgetPath = null;
             if (!path.startsWith("/")) {
                 if (type == 3) {
@@ -1336,7 +1360,6 @@ public class WDataManager {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
             widgetData.m_wgtType = type;
             if (type == 3) {
                 widgetData.m_widgetPath = widgetPath
@@ -1497,6 +1520,15 @@ public class WDataManager {
                             if ("true".equals(parser.nextText())) {
                                 widgetData.m_obfuscation = 1;
                                 ACEDes.setEncryptcj(true);
+                            }
+                        } else if ("globalobfuscation".equals(localName)) {
+                            // 用于处理全局强制加密控制开关（逻辑上来说，仅主应用有效）
+                            String value = parser.nextText();
+                            if ("1".equals(value)) {
+                                widgetData.m_globalObfuscation = 1;
+                                ACEDes.setEncryptcj(true);
+                            } else if ("0".equals(value)) {
+                                widgetData.m_globalObfuscation = 0;
                             }
                         } else if ("logserverip".equals(localName)) {
                             widgetData.m_logServerIp = parser.nextText();

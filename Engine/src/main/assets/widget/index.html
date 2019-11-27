@@ -49,6 +49,9 @@
                 <div class="btncss" data-control="BOX">
                     <div class="button ub ub-ac bc-text-head ub-pc bc-btn" onclick="removeLocalData()">removeLocalData</div>
                 </div>
+                <div class="btncss" data-control="BOX">
+                    <div class="button ub ub-ac bc-text-head ub-pc bc-btn" onclick="installApp()">installApp</div>
+                </div>
             </div>
         </div>
         <script src="js/appcan.js">
@@ -106,6 +109,9 @@
                     animID:2,
                     flag:1024
                 });
+            }
+            function installApp(){
+                uexWidget.installApp("/test");
             }
         </script>
     </body>
