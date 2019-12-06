@@ -16,7 +16,7 @@
     <style name="browser_loading_theme" parent="@android:style/Theme.NoTitleBar">
         <item name="android:scrollbarThumbHorizontal">@drawable/engine_scroller_thumb_hor</item>
         <item name="android:scrollbarThumbVertical">@drawable/engine_scroller_thumb_ver</item>
-        <item name="android:windowBackground">@drawable/startup_bg_16_9</item>
+        <!-- <item name="android:windowBackground">@drawable/startup_bg_16_9</item> -->
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowIsFloating">false</item>
         <item name="android:windowNoTitle">true</item>

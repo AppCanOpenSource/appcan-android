@@ -17,8 +17,10 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +30,7 @@ import org.zywx.wbpalmstar.engine.callback.RequestPermissionsCallBcak;
 import org.zywx.wbpalmstar.engine.external.Compat;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 
+import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +65,7 @@ public class LoadingActivity extends Activity implements RequestPermissionsCallB
 
     //申请两个权限，录音和文件读写
     //1、首先声明一个数组permissions，将需要的权限都放在里面
-    String permissions[] = {
+    private String[] permissions = {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.READ_PHONE_STATE};
@@ -84,6 +87,16 @@ public class LoadingActivity extends Activity implements RequestPermissionsCallB
         hideMenu();
     }
 
+    /**
+     * 动态添加启动图，CENTER_CROP模式，防止变形
+     */
+    private void addLoadingImage(ViewGroup parent) {
+        ImageView imageView = new ImageView(this);
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imageView.setImageResource(EUExUtil.getResDrawableID("startup_bg_16_9"));
+        parent.addView(imageView);
+    }
+
     private void handleIntent() {
         try {
             Intent intent = getIntent();
@@ -98,6 +111,7 @@ public class LoadingActivity extends Activity implements RequestPermissionsCallB
         mRootLayout = new FrameLayout(this);
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
         mRootLayout.setLayoutParams(layoutParams);
+        addLoadingImage(mRootLayout);
     }
 
     private void addDevelopInfo() {
