@@ -105,6 +105,9 @@ public final class EBrowserActivity extends BaseActivity {
     private String mAuthorID;
     private boolean mSipBranch;
 
+    /**
+     * IDE引擎标识。
+     */
     public static boolean develop = false;
     public static boolean analytics = true;
     private JSONObject OtherAppData;
