@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -52,9 +53,11 @@ public class TempActivity extends Activity {
         loadingBitmap = BUtility.getLoadingBitmap(this);
         if (loadingBitmap != null) {
             ImageView imageView = new ImageView(this);
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView.setImageBitmap(loadingBitmap);
             rootLayout.addView(imageView);
+        }else{
+            addLoadingImage(rootLayout);
         }
         if (EBrowserActivity.develop) {
             TextView worn = new TextView(this);
@@ -89,6 +92,16 @@ public class TempActivity extends Activity {
                             "FLAG_NEEDS_MENU_KEY").getInt(null));
         } catch (Exception e) {
         }
+    }
+
+    /**
+     * 动态添加启动图，CENTER_CROP模式，防止变形
+     */
+    private void addLoadingImage(ViewGroup parent) {
+        ImageView imageView = new ImageView(this);
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imageView.setImageResource(EUExUtil.getResDrawableID("startup_bg_16_9"));
+        parent.addView(imageView);
     }
 
     @Override

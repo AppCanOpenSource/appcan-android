@@ -27,6 +27,7 @@ import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.content.res.XmlResourceParser;
+import android.os.Build;
 import android.util.Xml;
 
 import com.ryg.dynamicload.internal.DLPluginManager;
@@ -56,6 +57,8 @@ import dalvik.system.DexClassLoader;
 
 public class ThirdPluginMgr {
 
+	private static final String TAG = "ThirdPluginMgr";
+
 	private final static String pluginNode = "plugin";
 	private final static String methodNode = "method";
 	private final static String propertyNode = "property";
@@ -70,7 +73,14 @@ public class ThirdPluginMgr {
 	private static final String F_SP_KEY_NAME_PLUGIN_COPY_LAST_PKG_VERSION = "lastCopyPkgVersion";
 	private static final String dexApk = "apkfile";
 	private static final String dexJar = "dexfile/jar";
-	private static final String dexLib = "dexfile/armeabi";
+	private static final String CPU_ABI_ARM_LEGACY = "armeabi";
+	private static final String CPU_ABI_ARM_V7A = "armeabi-v7a";
+	private static final String CPU_ABI_ARM64_V8 = "arm64-v8a";
+	private static final String SO_LIB_PARENT = "dexfile/libs/";
+	private static final String SO_LIB_ARM_LEGACY = SO_LIB_PARENT + CPU_ABI_ARM_LEGACY;
+	private static final String SO_LIB_ARM_V7A = SO_LIB_PARENT + CPU_ABI_ARM_V7A;
+	private static final String SO_LIB_ARM64_V8= SO_LIB_PARENT + CPU_ABI_ARM64_V8;
+	private static String dexLib = SO_LIB_ARM_LEGACY;
 	private static final String optFile = "dexfile/out";
 
 	private Context mContext;
@@ -83,7 +93,7 @@ public class ThirdPluginMgr {
     private Map<String, ThirdPluginObject> mThirdClass;
 	private LinkedList<String> javaNames;
     private int PluginCount = 0;
-	private String libsParentDir = null;
+	private String libsParentDir;
 
 	private String[] pluginJars = null;
 
@@ -91,6 +101,15 @@ public class ThirdPluginMgr {
         mThirdClass = new Hashtable<String, ThirdPluginObject>();
 		javaNames = new LinkedList<String>();
         libsParentDir = context.getFilesDir().getAbsolutePath();
+        BDebug.i(TAG, "CPU_ABI: " + Build.CPU_ABI);
+        BDebug.i(TAG, "CPU_ABI2: " + Build.CPU_ABI2);
+        if (Build.CPU_ABI.equalsIgnoreCase(CPU_ABI_ARM_V7A)){
+        	// v7a的统一使用32位的v7a架构so
+			dexLib = SO_LIB_ARM_V7A;
+		}else{
+        	// 其他架构统统使用64位的v8架构so（以后的新架构如果增加在引擎中，这里再修改代码）
+        	dexLib = SO_LIB_ARM64_V8;
+		}
 		mContext = context;
     }
 
