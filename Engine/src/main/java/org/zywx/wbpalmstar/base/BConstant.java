@@ -25,7 +25,7 @@ import java.text.DecimalFormat;
 
 public class BConstant {
 
-    public static final String ENGINE_VERSION="4.4.28";
+    public static final String ENGINE_VERSION="4.4.29";
     public static final int ENGINE_VERSION_CODE=404028;
 
     public static final String F_URL = "url";
