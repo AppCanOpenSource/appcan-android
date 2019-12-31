@@ -510,7 +510,7 @@ public class EBrowserWidget extends AbsoluteLayout {
             mBroWindow.onAppStop();
         }
         EBrowserWindow root = mEWindowStack.get("root");
-        if (mBroWindow != root) {
+        if (mBroWindow != root && root != null) {
             root.onAppStop();
         }
     }
@@ -518,7 +518,7 @@ public class EBrowserWidget extends AbsoluteLayout {
     public void onAppResume() {
         mBroWindow.onAppResume();
         EBrowserWindow root = mEWindowStack.get("root");
-        if (mBroWindow != root) {
+        if (mBroWindow != root && root != null) {
             root.onAppResume();
         }
     }
