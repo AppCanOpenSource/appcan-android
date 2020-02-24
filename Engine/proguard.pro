@@ -1,19 +1,31 @@
 -keepattributes SourceFile,LineNumberTable
 
 -optimizationpasses 5
+# 混淆时不使用大小写混合，混淆后的类名为小写。用于兼容Windows等不区分大小写的情况。
 -dontusemixedcaseclassnames
--dontskipnonpubliclibraryclasses
+# 用于告诉ProGuard，不要跳过对非公开类的处理。默认情况下是跳过的，因为程序中不会引用它们，有些情况下人们编写的代码与类库中的类在同一个包下，并且对包中内容加以引用，此时需要加入此条声明。
+#-dontskipnonpubliclibraryclasses
+#-dontskipnonpubliclibraryclassmembers
+# 不做预校验，preverify是proguard的4个步骤之一
+# Android不需要preverify，去掉这一步可加快混淆速度
 -dontpreverify
+# 有了verbose这句话，混淆后就会生成映射文件
+# 包含有类名->混淆后类名的映射关系
+# 然后使用printmapping指定映射文件的名称
 -verbose
 -ignorewarnings
--optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
+## note-20200224-zhangyipeng: 全面升级了v4v7库到28之后，混淆时总会出错，暂时无法找到问题原因，只能使用下面的选项，禁用了优化。
+-dontoptimize
+# 指定混淆时采用的算法，后面的参数是一个过滤器
+# 这个过滤器是谷歌推荐的算法，一般不改变
+#-optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
 
 -libraryjars libs/wmqtt.jar
 -libraryjars libs/httpmime-4.1.3.jar
 #-libraryjars libs/android-support-v4.jar
 -libraryjars libs/commons-io-2.4.jar
 -libraryjars libs/aceimageloader.jar
--libraryjars libs/gson-2.2.4.jar
+#-libraryjars libs/gson-2.2.4.jar
 
 -keep public class * extends android.app.Activity
 -keep public class * extends android.app.Application
@@ -26,11 +38,32 @@
 -keep public class org.zywx.wbpalmstar.platform.mam.SlidePaneLayout
 -keep public class org.zywx.wbpalmstar.platform.mam.WheelView
 
+-dontwarn com.google.gson.**
+-keep class com.google.gson.** { *; }
+-keep interface com.google.gson.** { *; }
+-keep public class * extends com.google.gson.**
+
+-dontwarn android.support.annotation.**
+-keep class android.support.annotation.** { *; }
+-keep interface android.support.annotation.** { *; }
+-keep public class * extends android.support.annotation.**
+
 -dontwarn android.support.v4.**
 -keep class android.support.v4.** { *; }
+-keep interface android.support.v4.** { *; }
 -keep public class * extends android.support.v4.**
+
 -keep public class * extends android.app.Fragment
 -keep public class * extends android.support.v4.app.FragmentActivity
+
+-dontwarn android.support.v7.**
+-keep class android.support.v7.** { *; }
+-keep interface android.support.v7.** { *; }
+
+-dontwarn android.arch.lifecycle.**
+-keep class android.arch.lifecycle.** { *; }
+-keep interface android.arch.lifecycle.** { *; }
+
 -keep public class * extends org.xwalk.core.XWalkView
 -dontwarn org.chromium.**
 -dontwarn javax.annotation.**
