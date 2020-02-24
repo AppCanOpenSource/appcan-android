@@ -22,53 +22,9 @@ buildscript {
       }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
+        classpath 'com.android.tools.build:gradle:3.1.3'
     }
 }
-
-
-// Log timings per task.
-class TimingsListener implements TaskExecutionListener, BuildListener {
-    private Clock clock
-    private timings = []
-
-    @Override
-    void beforeExecute(Task task) {
-        clock = new org.gradle.util.Clock()
-    }
-
-    @Override
-    void afterExecute(Task task, TaskState taskState) {
-        def ms = clock.timeInMs
-        timings.add([ms, task.path])
-        task.project.logger.warn "${task.path} took ${ms}ms"
-    }
-
-    @Override
-    void buildFinished(BuildResult result) {
-        println "Task timings:"
-        for (timing in timings) {
-            if (timing[0] >= 50) {
-                printf "%7sms  %s\n", timing
-            }
-        }
-    }
-
-    @Override
-    void buildStarted(Gradle gradle) {}
-
-    @Override
-    void projectsEvaluated(Gradle gradle) {}
-
-    @Override
-    void projectsLoaded(Gradle gradle) {}
-
-    @Override
-    void settingsEvaluated(Settings settings) {}
-}
-
-gradle.addListener new TimingsListener()
-
 
 apply plugin: 'com.android.application'
 
@@ -194,18 +150,6 @@ android {
             assets.srcDirs = ['assets']
             jniLibs.srcDirs=['libs']
         }
-
-        // Move the tests to tests/java, tests/res, etc...
-        instrumentTest.setRoot('tests')
-
-        // Move the build types to build-types/<type>
-        // For instance, build-types/debug/java, build-types/debug/AndroidManifest.xml, ...
-        // This moves them out of them default location under src/<type>/... which would
-        // conflict with src/ being used by the main source set.
-        // Adding new build types or product flavors should be accompanied
-        // by a similar customization.
-        debug.setRoot('build-types/debug')
-        release.setRoot('build-types/release')
     }
     lintOptions {
           checkReleaseBuilds false
@@ -221,10 +165,11 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 18 // 由14调整为16
-        targetSdkVersion 28 // 
+        minSdkVersion 18 
+        targetSdkVersion 28 
         multiDexEnabled true
         // 过滤armeabi架构，如有其它架构需要，后续可以再增加或自行定制引擎
+        // 此处AbiFilters选项的值，打包服务脚本程序可能会对其进行修改，不要进行大幅度的变更格式
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a'
         }
