@@ -222,7 +222,8 @@ android {
         multiDexEnabled true
         // 过滤armeabi架构，如有其它架构需要，后续可以再增加或自行定制引擎
         ndk {
-            abiFilters 'armeabi-v7a', 'arm64-v8a'
+            // 仅保留armeabi-v7a架构，定制版本。
+            abiFilters 'armeabi-v7a'
         }
     }
 }

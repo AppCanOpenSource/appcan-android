@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <info>
-    <version>$version$</version>
+    <version>$version$_armv7</version>
     <package>$package$</package>
     <kernel>$kernel$</kernel>
-    <description>修改WebView中的SSL错误处理行为，允许根据打包开关进行忽略；修改启动图的加载逻辑，适配多种屏幕尺寸；优化IDE引擎的动态加载支持；修复偶现的一个闪退问题。</description>
+    <description>(armeabi-v7a定制版)修改WebView中的SSL错误处理行为，允许根据打包开关进行忽略；修改启动图的加载逻辑，适配多种屏幕尺寸；优化IDE引擎的动态加载支持；修复偶现的一个闪退问题。</description>
     <dssVersion>4.3.0</dssVersion>
 </info>
