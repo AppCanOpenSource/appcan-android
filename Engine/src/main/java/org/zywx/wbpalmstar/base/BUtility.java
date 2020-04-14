@@ -38,6 +38,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
 import android.support.annotation.Keep;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Xml;
@@ -1447,12 +1448,7 @@ public class BUtility {
 
         String[] val = new String[2];
         try {
-//            val[0] = getMacAddress(context);
-//            TelephonyManager telephonyManager = (TelephonyManager) context
-//                    .getSystemService(Context.TELEPHONY_SERVICE);
-//            val[1] = telephonyManager.getDeviceId();
-//            val[2] = getCPUSerial();
-            val[0] = Settings.System.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+            val[0] = getIMEI(context);
             val[1] = appKey;
         } catch (Exception e) {
             e.printStackTrace();
@@ -1462,6 +1458,24 @@ public class BUtility {
         editor.putString("softToken", softToken);
         editor.commit();
         return softToken;
+    }
+
+    public static String getIMEI(Context context){
+        String imei = "";
+        try {
+            if (Build.VERSION.SDK_INT >= 29){
+                // Android10.0以上，使用AndroidID
+                imei = Settings.System.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+            }else{
+                // 否则，使用IMEI
+                TelephonyManager telephonyManager = (TelephonyManager) context
+                        .getSystemService(Context.TELEPHONY_SERVICE);
+                imei = telephonyManager.getDeviceId();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return imei;
     }
 
     /**
