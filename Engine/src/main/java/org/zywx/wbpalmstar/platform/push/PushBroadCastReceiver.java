@@ -29,17 +29,21 @@ public class PushBroadCastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (ACTION.equals(intent.getAction())) {
-            SharedPreferences sp = context.getSharedPreferences("saveData",
-                    Context.MODE_MULTI_PROCESS);
-            String pushMes = sp.getString("pushMes", "0");
-            String localPushMes = sp.getString("localPushMes", pushMes);
-            if (!TextUtils.isEmpty(pushMes) && "1".equals(pushMes)
-                    && "1".equals(localPushMes)) {
-                Intent myIntent = new Intent(context, PushService.class);
-                myIntent.putExtra("type", 1);
-                context.startService(myIntent);
+        try {
+            if (ACTION.equals(intent.getAction())) {
+                SharedPreferences sp = context.getSharedPreferences("saveData",
+                        Context.MODE_MULTI_PROCESS);
+                String pushMes = sp.getString("pushMes", "0");
+                String localPushMes = sp.getString("localPushMes", pushMes);
+                if (!TextUtils.isEmpty(pushMes) && "1".equals(pushMes)
+                        && "1".equals(localPushMes)) {
+                    Intent myIntent = new Intent(context, PushService.class);
+                    myIntent.putExtra("type", 1);
+                    context.startService(myIntent);
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
