@@ -4,5 +4,5 @@
     <package>$package$</package>
     <kernel>$kernel$</kernel>
     <description>(内测版本，未混淆，需要新打包服务支持)android-support库由26升级为28，gson库由2.2.4升级为2.8.5；gradlebuildtools指定为3.1.3，需要依赖gradlewrapper4.4，jdk1.8支持，minSdkVersion21</description>
-    <dssVersion>4.3.0</dssVersion>
+    <dssVersion>4.4.1</dssVersion>
 </info>
