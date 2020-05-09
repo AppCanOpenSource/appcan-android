@@ -986,7 +986,11 @@ public final class EBrowserActivity extends BaseActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        mActivityCallback.onRequestPermissionResult(requestCode, permissions, grantResults);
+        if (mActivityCallback != null){
+            mActivityCallback.onRequestPermissionResult(requestCode, permissions, grantResults);
+        }else{
+            BDebug.w("onRequestPermissionsResult error: mActivityCallback is null. Do you forget to call registerActivityResult() of EUExBase's instance?");
+        }
 
     }
 
