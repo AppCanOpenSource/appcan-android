@@ -801,57 +801,6 @@ public final class EBrowserActivity extends BaseActivity {
         mEBrwMainFrame.setLayoutParams(mainPagePa);
     }
 
-    public Thread[] findAllVMThreads() {
-        ThreadGroup group = Thread.currentThread().getThreadGroup();
-        ThreadGroup topGroup = group;
-        while (group != null) {
-            topGroup = group;
-            group = group.getParent();
-        }
-        int estimatedSize = topGroup.activeCount() * 2;
-        Thread[] slackList = new Thread[estimatedSize];
-        int actualSize = topGroup.enumerate(slackList);
-        Thread[] list = new Thread[actualSize];
-        System.arraycopy(slackList, 0, list, 0, actualSize);
-        return list;
-    }
-
-    public void execMethodReadPrivateFileSystem(String path) {
-        String line = "";
-        String args[] = new String[3];
-        args[0] = "chmod";
-        args[1] = "777";
-        args[2] = "/data/data/com.eoemobile/databases/webviewCache.db";
-        try {
-            java.lang.Process process = Runtime.getRuntime().exec(args);
-            InputStream stderr = process.getErrorStream();
-            InputStreamReader isrerr = new InputStreamReader(stderr);
-            BufferedReader brerr = new BufferedReader(isrerr);
-            InputStream outs = process.getInputStream();
-            InputStreamReader isrout = new InputStreamReader(outs);
-            BufferedReader brout = new BufferedReader(isrout);
-            String errline = null;
-            String result = "";
-            while ((line = brerr.readLine()) != null) {
-                result += line;
-                result += "\n";
-            }
-            if (result != "") {
-                errline = result;
-                System.out.println(errline);
-            }
-            while ((line = brout.readLine()) != null) {
-                result += line;
-                result += "\n";
-            }
-            if (result != "") {
-                System.out.println(result);
-            }
-        } catch (Throwable t) {
-            t.printStackTrace();
-        }
-    }
-
     private void getIntentData(Intent in) {
         if (null != in) {
             Bundle bundle = in.getExtras();
