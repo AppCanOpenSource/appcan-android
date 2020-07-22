@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
+import org.zywx.wbpalmstar.engine.external.AndroidBug5497Workaround;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
 /**
@@ -43,6 +44,9 @@ public class ConfigXmlUtil {
             Window window = activity.getWindow();
             if (color!= Color.TRANSPARENT) {
                 window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            }else{
+                // 为了解决沉浸式状态栏的键盘压缩模式失效的问题
+                AndroidBug5497Workaround.assistActivity(activity.findViewById(android.R.id.content));
             }
             //取消设置全屏属性，导致的状态栏覆盖布局问题
 //            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN

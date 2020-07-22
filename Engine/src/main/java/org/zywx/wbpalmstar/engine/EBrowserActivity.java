@@ -793,6 +793,8 @@ public final class EBrowserActivity extends BaseActivity {
 
     private final void initEngineUI() {
         mEBrwMainFrame = new EBrowserMainFrame(this);
+        // 若为了解决沉浸状态栏适配问题，增加了此属性为true，则会导致系统自动将此布局内容向下平移出状态栏的高度，露出背景色。这样就无法让H5来自定义状态栏区域的内容了。所以此方法不适合本场景。
+//        mEBrwMainFrame.setFitsSystemWindows(true);
         FrameLayout.LayoutParams mainPagePa = new FrameLayout.LayoutParams(
                 Compat.FILL, Compat.FILL);
         EUtil.viewBaseSetting(mEBrwMainFrame);
