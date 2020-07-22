@@ -3,6 +3,6 @@
     <version>$version$</version>
     <package>$package$</package>
     <kernel>$kernel$</kernel>
-    <description>修复uexWindow.share的系统适配问题</description>
+    <description>解决沉浸式状态栏开启后键盘压缩模式adjustResize不生效的问题；修复摄像头和麦克风权限的申请失败的问题；修复uexWindow.share的系统适配问题</description>
     <dssVersion>4.3.0</dssVersion>
 </info>
