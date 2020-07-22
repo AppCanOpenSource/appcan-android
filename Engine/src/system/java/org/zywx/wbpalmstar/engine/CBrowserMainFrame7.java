@@ -30,12 +30,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.webkit.ConsoleMessage;
 import android.webkit.GeolocationPermissions;
+import android.webkit.PermissionRequest;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebStorage.QuotaUpdater;
@@ -54,6 +56,11 @@ import static org.zywx.wbpalmstar.engine.EBrowserActivity.REQUEST_SELECT_FILE;
 public class CBrowserMainFrame7 extends CBrowserMainFrame {
 
     final long MAX_QUOTA = 104857600L;
+
+    private static final String TAG = "CBrowserMainFrame7";
+
+    private AlertDialog mGeoPromptAlertDialog;
+    private AlertDialog mResourcesPromptAlertDialog;
 
     /**
      * android version < 2.1 use
@@ -147,70 +154,81 @@ public class CBrowserMainFrame7 extends CBrowserMainFrame {
 
     }
 
-
-
-    public void openFileChooser(ValueCallback uploadMsg, String acceptType)
-    {
-        ((EBrowserActivity) mContext).setmUploadMessage(getCompatCallback(uploadMsg));
-        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-        i.addCategory(Intent.CATEGORY_OPENABLE);
-        i.setType("image/*");
-        ((EBrowserActivity)mContext).startActivityForResult(Intent.createChooser(i, "File Browser"), FILECHOOSER_RESULTCODE);
+    // For Android 3.0-
+    public void openFileChooser(ValueCallback<Uri> uploadMsg) {
+        openFileChooser(uploadMsg, null, null);
     }
 
-    // For Lollipop 5.0+ Devices
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public boolean onShowFileChooser(WebView mWebView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams)
-    {
+    // For Android 3.0+
+    public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType) {
+        openFileChooser(uploadMsg, acceptType, null);
+    }
+
+    // For Android 4.1
+    public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
+        ((EBrowserActivity) mContext).setmUploadMessage(getCompatCallback(uploadMsg));
+        // 前往选择文件
+        String title = EUExUtil.getString("ac_engine_webview_file_chooser_title");
+        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+        i.addCategory(Intent.CATEGORY_OPENABLE);
+        if (!TextUtils.isEmpty(acceptType)){
+            i.setType(acceptType);
+        }else{
+            i.setType("*/*");
+        }
+        try {
+            ((EBrowserActivity)mContext).startActivityForResult(Intent.createChooser(i, title), FILECHOOSER_RESULTCODE);
+        } catch (Exception e) {
+            BDebug.w(TAG, "openFileChooser exception", e);
+            uploadMsg.onReceiveValue(null);
+        }
+    }
+
+    /**
+     * API21以上选择文件走这里
+     *
+     * @param webView webview实例
+     * @param filePathCallback 选择回调
+     * @param fileChooserParams 选择文件的类型
+     * @return
+     */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
         ValueCallback<Uri[]> uploadMessage = ((EBrowserActivity) mContext).getUploadMessage();
         if (uploadMessage != null) {
             uploadMessage.onReceiveValue(null);
             uploadMessage = null;
         }
-
-        uploadMessage = filePathCallback;
-        ((EBrowserActivity)mContext).setUploadMessage(uploadMessage);
-        Intent intent = fileChooserParams.createIntent();
-        try
-        {
-            ((EBrowserActivity)mContext).startActivityForResult(intent, REQUEST_SELECT_FILE);
-        } catch (ActivityNotFoundException e)
-        {
-            uploadMessage = null;
-            Toast.makeText(mContext, "Cannot Open File Chooser", Toast.LENGTH_LONG).show();
-            return false;
+        ((EBrowserActivity) mContext).setUploadMessage(filePathCallback);
+        // TODO 此处还应当进一步处理fileChooserParams的多种情况，目前暂未实现。仅实现了单选文件。
+        // 前往选择文件
+        String title = EUExUtil.getString("ac_engine_webview_file_chooser_title");
+        try {
+            Intent i = fileChooserParams.createIntent();
+            ((EBrowserActivity)mContext).startActivityForResult(Intent.createChooser(i, title), REQUEST_SELECT_FILE);
+        } catch (Exception e) {
+            BDebug.w(TAG, "onShowFileChooser exception", e);
+            filePathCallback.onReceiveValue(null);
         }
         return true;
     }
 
-
-
-
-//	public void openFileChooser(ValueCallback<Uri> uploadFile) {
-//		if(null != mFile){
-//			return;
-//		}
-//		mFile = uploadFile;
-//        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-//        intent.addCategory(Intent.CATEGORY_OPENABLE);
-//        intent.setType("*/*");
-//        ((Activity)m_eContext).startActivityForResult(Intent.createChooser(intent, ""), EBrowser.F_ACT_REQ_CODE_UEX_NATIVE_FILE_EXPLORER);
-//	}
-//
-//	public void openFileCallBack(Uri uri){
-//		mFile.onReceiveValue(uri);
-//		mFile = null;
-//	}
-
     @Override
     public void onGeolocationPermissionsHidePrompt() {
-        super.onGeolocationPermissionsHidePrompt();
+        // 这里需要对应的隐藏交互对话框。
+        // 因为页面跳转等原因取消了请求时，会进行此回调
+        if (mGeoPromptAlertDialog != null && mGeoPromptAlertDialog.isShowing()){
+            mGeoPromptAlertDialog.dismiss();
+            mGeoPromptAlertDialog = null;
+        }
     }
 
     @Override
     public void onGeolocationPermissionsShowPrompt(final String origin, final GeolocationPermissions.Callback callback) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setMessage("是否允许获取您的位置信息?");
+        // 是否允许获取您的位置信息?
+        builder.setMessage(EUExUtil.getString("ac_engine_webview_prompt_to_request_location_permission"));
         DialogInterface.OnClickListener dialogButtonOnClickListener = new DialogInterface.OnClickListener() {
 
             @Override
@@ -222,12 +240,71 @@ public class CBrowserMainFrame7 extends CBrowserMainFrame {
                 }
             }
         };
-        builder.setPositiveButton("允许", dialogButtonOnClickListener);
-        builder.setNegativeButton("拒绝", dialogButtonOnClickListener);
-        builder.show();
-        super.onGeolocationPermissionsShowPrompt(origin, callback);
+        builder.setPositiveButton(EUExUtil.getString("ac_engine_webview_allow"), dialogButtonOnClickListener);
+        builder.setNegativeButton(EUExUtil.getString("ac_engine_webview_deny"), dialogButtonOnClickListener);
+        mGeoPromptAlertDialog = builder.create();
+        mGeoPromptAlertDialog.show();
     }
 
+    /**
+     * 权限申请的可读文字转换
+     *
+     * @param permissionRes WebView返回的权限Resource
+     */
+    private String parsePermissionName(String permissionRes){
+        if (permissionRes == null){
+            return null;
+        }else if (permissionRes.equals(PermissionRequest.RESOURCE_VIDEO_CAPTURE)){
+            return EUExUtil.getString("ac_engine_webview_prompt_to_request_video");
+        }else if (permissionRes.equals(PermissionRequest.RESOURCE_AUDIO_CAPTURE)){
+            return EUExUtil.getString("ac_engine_webview_prompt_to_request_audio");
+        }else{
+            String permissionResStr = EUExUtil.getString("ac_engine_webview_prompt_to_request_unknown") + permissionRes;
+            return permissionResStr;
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public void onPermissionRequest(final PermissionRequest request) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        // 是否授权本页面访问以下资源？
+        StringBuilder messageStrb = new StringBuilder();
+        messageStrb.append(EUExUtil.getString("ac_engine_webview_prompt_to_request_resource_permission"));
+        String[] resources = request.getResources();
+        if (resources != null){
+            for (String res : resources){
+                String resStr = parsePermissionName(res);
+                messageStrb.append("\r\n");
+                messageStrb.append(resStr);
+            }
+        }
+        builder.setMessage(messageStrb.toString());
+        DialogInterface.OnClickListener dialogButtonOnClickListener = new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int clickedButton) {
+                if (DialogInterface.BUTTON_POSITIVE == clickedButton) {
+                    request.grant(request.getResources());
+                } else if (DialogInterface.BUTTON_NEGATIVE == clickedButton) {
+                    request.deny();
+                }
+            }
+        };
+        builder.setPositiveButton(EUExUtil.getString("ac_engine_webview_allow"), dialogButtonOnClickListener);
+        builder.setNegativeButton(EUExUtil.getString("ac_engine_webview_deny"), dialogButtonOnClickListener);
+        mResourcesPromptAlertDialog = builder.create();
+        mResourcesPromptAlertDialog.show();
+    }
+
+    @Override
+    public void onPermissionRequestCanceled(PermissionRequest request) {
+        // 因为页面跳转等原因取消了请求时，会进行此回调
+        if (mResourcesPromptAlertDialog != null && mResourcesPromptAlertDialog.isShowing()){
+            mResourcesPromptAlertDialog.dismiss();
+            mResourcesPromptAlertDialog = null;
+        }
+    }
 
     @Override
     public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
