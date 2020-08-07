@@ -43,6 +43,8 @@ public class EBrowserSetting7 extends EBrowserSetting {
             mWebSetting.setAllowFileAccessFromFileURLs(true);
             mWebSetting.setAllowUniversalAccessFromFileURLs(true);
         }
+        // 默认是允许的，但是为了保险还是加上。猜测可能当时76和77版本的webview存在问题与此有关。
+        mWebSetting.setAllowContentAccess(true);
 
         mWebSetting.setDatabasePath(mBrwView.getContext().getDir("database", 0).getPath());
         if (Build.VERSION.SDK_INT >= 8) {
