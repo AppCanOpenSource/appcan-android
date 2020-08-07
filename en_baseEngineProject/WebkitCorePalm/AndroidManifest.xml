@@ -31,7 +31,8 @@
         </activity>
         <activity android:name="org.zywx.wbpalmstar.engine.TempActivity"
                   android:launchMode="standard"
-                  android:theme="@style/browser_loading_theme"/>
+                  android:theme="@style/browser_loading_theme"
+                  android:exported="false"/>
         <activity android:name="org.zywx.wbpalmstar.engine.LoadingActivity"
                   android:configChanges="keyboardHidden|orientation"
                   android:launchMode="standard"
@@ -51,12 +52,16 @@
             </intent-filter>
         </receiver>
 
-        <service android:name="org.zywx.wbpalmstar.base.DebugService"/>
+        <service
+            android:name="org.zywx.wbpalmstar.base.DebugService"
+            android:exported="false"/>
         <service android:name="org.zywx.wbpalmstar.base.killSelfService"
                  android:process=":temp"
                  android:exported="false"
                  android:enabled="true"/>
+
 		<meta-data android:name="android.max_aspect" android:value="2.5"/>
+
         <provider
             android:name="org.zywx.wbpalmstar.base.ACEngineFileProvider"
             android:authorities="${applicationId}.acengine.fileprovider"
