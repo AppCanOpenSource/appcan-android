@@ -16,6 +16,9 @@
 -ignorewarnings
 ## note-20200224-zhangyipeng: 全面升级了v4v7库到28之后，混淆时总会出错，暂时无法找到问题原因，只能使用下面的选项，禁用了优化。
 -dontoptimize
+## note-20200807-zhangyipeng: 直接关闭混淆，暂不使用，编译错误和运行错误，原因同上。
+#-dontobfuscate
+
 # 指定混淆时采用的算法，后面的参数是一个过滤器
 # 这个过滤器是谷歌推荐的算法，一般不改变
 #-optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
