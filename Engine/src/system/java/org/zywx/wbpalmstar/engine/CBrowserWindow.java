@@ -31,6 +31,8 @@ import android.net.http.SslError;
 import android.os.Message;
 import android.webkit.CookieSyncManager;
 import android.webkit.SslErrorHandler;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.widget.Toast;
 
@@ -245,6 +247,11 @@ public class CBrowserWindow extends EXWebViewClient {
                                 String description, String failingUrl) {
 
         ((EBrowserView) view).receivedError(errorCode, description, failingUrl);
+    }
+
+    @Override
+    public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
+        super.onReceivedHttpError(view, request, errorResponse);
     }
 
     @Override
