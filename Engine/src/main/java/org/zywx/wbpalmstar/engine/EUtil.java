@@ -26,6 +26,7 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
@@ -479,8 +480,14 @@ public class EUtil {
             intent.setAction(Intent.ACTION_SEND_MULTIPLE);
             ArrayList<Uri> imagePathList = new ArrayList<Uri>();
             for(String picPath: inputVO.getImgPaths()){
-                File file=new File(picPath);
-                imagePathList.add(Uri.fromFile(file));
+                Uri fileUri;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+                    fileUri = BUtility.getUriForFileWithFileProvider(context, picPath);
+                }else{
+                    File file=new File(picPath);
+                    fileUri = Uri.fromFile(file);
+                }
+                imagePathList.add(fileUri);
             }
             intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM,imagePathList);
         }else{

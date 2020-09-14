@@ -793,61 +793,12 @@ public final class EBrowserActivity extends BaseActivity {
 
     private final void initEngineUI() {
         mEBrwMainFrame = new EBrowserMainFrame(this);
+        // 若为了解决沉浸状态栏适配问题，增加了此属性为true，则会导致系统自动将此布局内容向下平移出状态栏的高度，露出背景色。这样就无法让H5来自定义状态栏区域的内容了。所以此方法不适合本场景。
+//        mEBrwMainFrame.setFitsSystemWindows(true);
         FrameLayout.LayoutParams mainPagePa = new FrameLayout.LayoutParams(
                 Compat.FILL, Compat.FILL);
         EUtil.viewBaseSetting(mEBrwMainFrame);
         mEBrwMainFrame.setLayoutParams(mainPagePa);
-    }
-
-    public Thread[] findAllVMThreads() {
-        ThreadGroup group = Thread.currentThread().getThreadGroup();
-        ThreadGroup topGroup = group;
-        while (group != null) {
-            topGroup = group;
-            group = group.getParent();
-        }
-        int estimatedSize = topGroup.activeCount() * 2;
-        Thread[] slackList = new Thread[estimatedSize];
-        int actualSize = topGroup.enumerate(slackList);
-        Thread[] list = new Thread[actualSize];
-        System.arraycopy(slackList, 0, list, 0, actualSize);
-        return list;
-    }
-
-    public void execMethodReadPrivateFileSystem(String path) {
-        String line = "";
-        String args[] = new String[3];
-        args[0] = "chmod";
-        args[1] = "777";
-        args[2] = "/data/data/com.eoemobile/databases/webviewCache.db";
-        try {
-            java.lang.Process process = Runtime.getRuntime().exec(args);
-            InputStream stderr = process.getErrorStream();
-            InputStreamReader isrerr = new InputStreamReader(stderr);
-            BufferedReader brerr = new BufferedReader(isrerr);
-            InputStream outs = process.getInputStream();
-            InputStreamReader isrout = new InputStreamReader(outs);
-            BufferedReader brout = new BufferedReader(isrout);
-            String errline = null;
-            String result = "";
-            while ((line = brerr.readLine()) != null) {
-                result += line;
-                result += "\n";
-            }
-            if (result != "") {
-                errline = result;
-                System.out.println(errline);
-            }
-            while ((line = brout.readLine()) != null) {
-                result += line;
-                result += "\n";
-            }
-            if (result != "") {
-                System.out.println(result);
-            }
-        } catch (Throwable t) {
-            t.printStackTrace();
-        }
     }
 
     private void getIntentData(Intent in) {
@@ -986,7 +937,11 @@ public final class EBrowserActivity extends BaseActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        mActivityCallback.onRequestPermissionResult(requestCode, permissions, grantResults);
+        if (mActivityCallback != null){
+            mActivityCallback.onRequestPermissionResult(requestCode, permissions, grantResults);
+        }else{
+            BDebug.w("onRequestPermissionsResult error: mActivityCallback is null. Do you forget to call registerActivityResult() of EUExBase's instance?");
+        }
 
     }
 

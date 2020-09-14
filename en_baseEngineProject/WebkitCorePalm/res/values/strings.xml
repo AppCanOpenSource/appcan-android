@@ -67,6 +67,15 @@
     <string name="platform_widget_path_not_exist">路径为 %1$s 的Widget不存在</string>
     <string name="platform_widget_search_failed">搜索Widget发生异常!请确认Widget是否损坏!</string>
 
+    <string name="ac_engine_webview_file_chooser_title">前往选择文件</string>
+    <string name="ac_engine_webview_allow">允许</string>
+    <string name="ac_engine_webview_deny">拒绝</string>
+    <string name="ac_engine_webview_prompt_to_request_location_permission">是否允许获取您的位置信息?</string>
+    <string name="ac_engine_webview_prompt_to_request_resource_permission">是否授权本页面访问以下资源?</string>
+    <string name="ac_engine_webview_prompt_to_request_video">使用摄像头</string>
+    <string name="ac_engine_webview_prompt_to_request_audio">使用麦克风</string>
+    <string name="ac_engine_webview_prompt_to_request_unknown">使用未知资源：</string>
+
     <string name="warning">警告</string>
     <string name="no_permission_to_open_window">没有打开%1$s窗口的权限</string>
     <string name="load_uex_object_error">uex对象加载发生异常,请检查XML文件!</string>
