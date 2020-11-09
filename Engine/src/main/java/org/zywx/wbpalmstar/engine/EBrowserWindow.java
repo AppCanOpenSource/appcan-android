@@ -2173,6 +2173,7 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
         eView.setDownloadCallback(entity.mDownloadCallback);
         eView.setUserAgent(entity.mUserAgent);
         eView.setExeJS(entity.mExeJS);
+        eView.setCacheMode(entity.mCacheMode);
         if (entity.mExeScale!=-1) eView.setInitialScale(entity.mExeScale);
 
         if (entity.checkFlag(EBrwViewEntry.F_FLAG_GESTURE)) {
@@ -3303,6 +3304,15 @@ public class EBrowserWindow extends SwipeView implements AnimationListener {
      */
     public void setDownloadCallback(int flag) {
         mMainView.setDownloadCallback(flag);
+    }
+
+    /**
+     * 设置缓存模式
+     *
+     * @param cacheMode
+     */
+    public void setCacheMode(int cacheMode) {
+        mMainView.setCacheMode(cacheMode);
     }
 
     public void executeCbDownloadCallbackJs(EBrowserView eBrwView, int callbackType, String url, String userAgent,

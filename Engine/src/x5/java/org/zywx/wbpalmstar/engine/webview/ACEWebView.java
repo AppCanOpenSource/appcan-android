@@ -152,6 +152,12 @@ public class ACEWebView extends WebView implements DownloadListener {
         }
     }
 
+    public void setCacheMode(int mCacheMode) {
+        if (mBaSetting != null){
+            mBaSetting.setCacheMode(mCacheMode);
+        }
+    }
+
     public void setWebApp(boolean flag) {
         mWebApp = flag;
     }

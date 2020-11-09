@@ -53,6 +53,7 @@ public class ACEWebView extends WebView implements DownloadListener {
     private int mDownloadCallback = 0;  // 0 下载不回调，使用引擎下载; 1 下载回调给主窗口，前端自己下载; 2 下载回调给当前窗口，前端自己下载;
     private boolean mWebApp;
 
+
     public ACEWebView(Context context) {
 		super(context);
         this.mContext=context;
@@ -117,6 +118,12 @@ public class ACEWebView extends WebView implements DownloadListener {
     public void setUserAgent(String userAgent) {
         if (mBaSetting!=null){
             mBaSetting.setUserAgent(userAgent);
+        }
+    }
+
+    public void setCacheMode(int mCacheMode) {
+        if (mBaSetting != null){
+            mBaSetting.setCacheMode(mCacheMode);
         }
     }
 

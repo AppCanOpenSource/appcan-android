@@ -475,7 +475,7 @@ public class EUtil {
 
     public static void share(Context context, ShareInputVO inputVO){
         Intent intent=new Intent();
-        if (inputVO.getImgPaths()!=null&&inputVO.getImgPaths().size()>0){
+        if (inputVO.getImgPaths()!=null&&inputVO.getImgPaths().size()>1){
             //分享多张图片
             intent.setAction(Intent.ACTION_SEND_MULTIPLE);
             ArrayList<Uri> imagePathList = new ArrayList<Uri>();
@@ -489,7 +489,31 @@ public class EUtil {
                 }
                 imagePathList.add(fileUri);
             }
-            intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM,imagePathList);
+            intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, imagePathList);
+        }else if(inputVO.getImgPaths()!=null&&inputVO.getImgPaths().size()==1){
+            //分享单张图片
+            String picPath = inputVO.getImgPaths().get(0);
+            Uri fileUri;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+                fileUri = BUtility.getUriForFileWithFileProvider(context, picPath);
+            }else{
+                File file=new File(picPath);
+                fileUri = Uri.fromFile(file);
+            }
+            intent.setAction(Intent.ACTION_SEND);
+            intent.putExtra(Intent.EXTRA_STREAM, fileUri);
+        }else if(!TextUtils.isEmpty(inputVO.getImgPath())){
+            //分享单张图片的另一种情况
+            String picPath = inputVO.getImgPath();
+            Uri fileUri;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+                fileUri = BUtility.getUriForFileWithFileProvider(context, picPath);
+            }else{
+                File file=new File(picPath);
+                fileUri = Uri.fromFile(file);
+            }
+            intent.setAction(Intent.ACTION_SEND);
+            intent.putExtra(Intent.EXTRA_STREAM, fileUri);
         }else{
             intent.setAction(Intent.ACTION_SEND);
         }
@@ -506,7 +530,7 @@ public class EUtil {
         if (!TextUtils.isEmpty(inputVO.getSubject())){
             intent.putExtra(Intent.EXTRA_SUBJECT,inputVO.getSubject());
         }
-        if (!TextUtils.isEmpty(inputVO.getImgPath())||inputVO.getImgPaths()!=null) {
+        if (!TextUtils.isEmpty(inputVO.getImgPath())||(inputVO.getImgPaths()!=null&&inputVO.getImgPaths().size()!=0)) {
             intent.setType("image/*");
         }else{
             intent.setType("text/plain");
@@ -526,6 +550,13 @@ public class EUtil {
 
     }
 
+    private String makeFileSuffix(String url) {
+        int index = url.lastIndexOf(".");
+        if (index < 0) {
 
+            return null;
+        }
+        return url.substring(index + 1);
+    }
 
 }

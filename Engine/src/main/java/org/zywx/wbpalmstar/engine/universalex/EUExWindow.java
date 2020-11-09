@@ -213,6 +213,7 @@ public class EUExWindow extends EUExBase {
     public static final String KEY_DOWNLOAD_CALLBACK = "downloadCallback";//下载回调
     public static final String KEY_USER_AGENT = "userAgent";
     public static final String KEY_EXE_JS = "exeJS";
+    public static final String KEY_CACHE_MODE = "cacheMode";
     public static final String KEY_EXE_SCALE = "exeScale";
     private EBrowserView mInParent;
     public EUExWindow(Context context, EBrowserView inParent) {
@@ -279,11 +280,12 @@ public class EUExWindow extends EUExBase {
         int downloadCallback = 0;
         String userAgent = "";
         String exeJS = "";
+        int cacheMode = EBrwViewEntry.AC_LOAD_ENGINE_DEFAULT;
         if (parm.length > 7&&parm[7]!=null) {
             animDuration = parm[7];
         }
         if (parm.length > 8&&parm[8]!=null) {
-            String jsonData = parm[8];
+            String jsonData = parm[8]; //extras
             try {
                 JSONObject json = new JSONObject(jsonData);
                 String extraInfo = json.getString(EBrwViewEntry.TAG_EXTRAINFO);
@@ -305,7 +307,9 @@ public class EUExWindow extends EUExBase {
                 if (data.has(KEY_EXE_JS)){
                     exeJS = data.getString(KEY_EXE_JS);
                 }
-            } catch (JSONException ignored) {
+                cacheMode = data.optInt(KEY_CACHE_MODE, EBrwViewEntry.AC_LOAD_ENGINE_DEFAULT);
+            } catch (JSONException exception) {
+                BDebug.w(tag, "openMsg exception: ", exception.getMessage());
             }
         }
         String cUrl = mBrwView.getCurrentUrl();
@@ -392,6 +396,7 @@ public class EUExWindow extends EUExBase {
         windEntry.mUserAgent = userAgent;
         windEntry.hasExtraInfo = hasExtraInfo;
         windEntry.mExeJS = exeJS;
+        windEntry.mCacheMode = cacheMode;
         curWind.createWindow(mBrwView, windEntry);
     }
 
@@ -432,6 +437,7 @@ public class EUExWindow extends EUExBase {
         int downloadCallback = 0;
         String userAgent = "";
         String exeJS = "";
+        int cacheMode = EBrwViewEntry.AC_LOAD_ENGINE_DEFAULT;
         String jsonData = openVO.extras == null ? null : DataHelper.gson.toJson(openVO.extras);
         if (jsonData != null){
             try {
@@ -455,6 +461,7 @@ public class EUExWindow extends EUExBase {
                 if (data.has(KEY_EXE_JS)){
                     exeJS = data.getString(KEY_EXE_JS);
                 }
+                cacheMode = data.optInt(KEY_CACHE_MODE, EBrwViewEntry.AC_LOAD_ENGINE_DEFAULT);
             } catch (JSONException ignored) {
             }
         }
@@ -540,6 +547,7 @@ public class EUExWindow extends EUExBase {
         windEntry.mWindowStyle = windowStyle;
         windEntry.mWindowOptions = windowOptionsVO;
         windEntry.mExeJS = exeJS;
+        windEntry.mCacheMode = cacheMode;
         curWind.createWindow(mBrwView, windEntry);
     }
     @AppCanAPI
@@ -1348,6 +1356,7 @@ public class EUExWindow extends EUExBase {
         String userAgent = "";
         String exeJS = "";
         int exeScale = -1;
+        int cacheMode = EBrwViewEntry.AC_LOAD_ENGINE_DEFAULT;
         if (parm.length > 11 && parm[11] != null) {
             String jsonData = parm[11];
             try {
@@ -1374,6 +1383,7 @@ public class EUExWindow extends EUExBase {
                 if(data.has(KEY_EXE_SCALE)){
                     exeScale=Integer.parseInt(data.optString(KEY_EXE_SCALE));
                 }
+                cacheMode = data.optInt(KEY_CACHE_MODE, EBrwViewEntry.AC_LOAD_ENGINE_DEFAULT);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -1460,6 +1470,7 @@ public class EUExWindow extends EUExBase {
         popEntry.mExeJS = exeJS;
         popEntry.mExeScale = exeScale;
         popEntry.hasExtraInfo = hasExtraInfo;
+        popEntry.mCacheMode = cacheMode;
         String query = null;
         if (Build.VERSION.SDK_INT >= 11) {
             if (url != null && url.trim().length() != 0) {

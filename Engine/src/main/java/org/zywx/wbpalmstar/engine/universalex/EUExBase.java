@@ -62,7 +62,7 @@ public abstract class EUExBase {
 
     private String mUexName;
     /**
-     * 全局上下文,实际内存地址为AppCan引擎的主Activity(继承自ActivityGroup).<br>
+     * 全局上下文,实际内存地址为AppCan引擎的主Activity(继承自Activity).<br>
      * 可根据实际情况强转为相应的类.
      */
     protected Context mContext;
