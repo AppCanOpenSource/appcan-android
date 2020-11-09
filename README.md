@@ -201,7 +201,7 @@ QQ交流群：173758265
 
 1. 修改Engine/gradle/wrapper/gradle-wrapper.properties，其中版本改为5.4.1；
 
-2. 修改Engine/build.gradle文件中。其中，repositories增加一个github的maven库，dependencies中将原来的依赖本地的gradle插件改为依赖线上的，版本目前是2.3.1，可以在此仓库关注更新 https://github.com/android-plugin/mvn-repo。修改部分参考下面：
+2. 修改Engine/build.gradle文件中。其中，repositories增加一个github的maven库，dependencies中将原来的依赖本地的gradle插件改为依赖线上的，版本目前是2.4.0，相关仓库见文档后面。修改部分参考下面：
 
 ```groovy
 buildscript {
@@ -213,9 +213,9 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.0'
+        classpath 'com.android.tools.build:gradle:3.5.3'
 //        classpath fileTree(dir: '../gradle-plugin', include: '*.jar')
-        classpath 'org.appcan.gradle.plugins:appcan-gradle-plugin:2.3.1'
+        classpath 'org.appcan.gradle.plugins:appcan-gradle-plugin:2.4.0'
     }
 }
 ```
@@ -249,17 +249,62 @@ buildscript {
 
 ```
 repositories {
-    
     maven {
         url 'https://raw.githubusercontent.com/android-plugin/mvn-repo/master/'
     }
 }
 ```
 
-2. dependencies中增加依赖包。其中，版本号+号是指随便获取一个版本（不一定是最新版本）。如果要指定版本号，可以将+号改为4.0.0，或4.3.21等等。未来还会有更多版本。
+2. dependencies中增加引擎的远程依赖包。注意：远程引擎包不会经常更新，仅当有涉及插件接口变化的重大更新时才会更新对应的调试版本**仅用于插件开发调试使用**，无关紧要的小bug不一定会更新在此处。使用正式引擎还需要通过AppCan官方的打包服务。
 
 ```
 dependencies {
-    implementation 'org.appcan:engine:+:systemRelease@aar'//依赖远程引擎
+    //implementation 'org.appcan:engine:4.0.0'
+    //implementation 'org.appcan:engine:4.3.23'
+    //implementation 'org.appcan:engine:4.4.27'
+    implementation 'org.appcan:engine:4.5.30_dev'
 }
 ```
+
+### 相关的其他仓库传送门
+
+1. mvn-repo：用于存放仅供插件开发调试使用的远程依赖引擎包
+
+https://github.com/android-plugin/mvn-repo
+
+2. gradle-plugin：插件辅助编译gradle脚本
+
+https://github.com/android-plugin/gradle-plugin
+
+3. appcan-gradle-plugin：引擎辅助编译出包gradle插件源码
+
+https://github.com/sandy1108/appcan-gradle-plugin
+
+### 大版本更新列举（涉及插件开发的变动）
+
+#### 4.1版本
+
+1. JS交互逻辑变更，为了适配安全问题。
+
+#### 4.2版本
+
+1. JS交互逻辑再次变更，修复回调超过10240个字符时会被截断的问题。
+
+#### 4.3版本
+
+1. 全面增加Android动态权限申请，需要相关插件适配。引擎增加了针对插件申请权限的API。
+2. 补充内置了部分常用的support库，更新版本至26。
+3. minSdkVersion提升至16，targetSdkVersion提升至26
+
+#### 4.4版本
+
+1. 新增arm64等其他常见架构的libappcan.so库，引擎包基础工程的gradle中进行了过滤（v7和arm64），若有引擎定制需求，建议只需要修改gradle脚本的过滤，无需增删so的架构文件。另外，配合新版打包服务，可以无需定制引擎即可选择架构。
+2. support相关库升级至28。
+3. minSdkVersion提升至18，targetSdkVersion提升至28
+
+#### 4.5版本
+
+1. minSdkVersion提升至22，targetSdkVersion依然是28
+2. gson库升级至2.8.5，补充大量常用的support库，版本依然是28。（support库最后一个版本就是28，已经成为历史，下一步要迁移为androidx）
+3. 工程配置升级，支持JDK8编译（需要打包服务编译环境配合升级）。compileOptions中指定jdk版本为1.8，com.android.tools.build:gradle升级至3.1.3
+
