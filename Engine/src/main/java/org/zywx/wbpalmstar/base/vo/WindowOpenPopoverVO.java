@@ -30,6 +30,6 @@ public class WindowOpenPopoverVO implements Serializable {
 
     public int bottomMargin;
 
-    public WindowOpenPopoverExtraVO extras;
+    public WindowOpenPopoverExtrasVO extras;
 
 }

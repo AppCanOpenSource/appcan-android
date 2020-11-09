@@ -26,4 +26,6 @@ public interface EBrowserBaseSetting {
     void setSupportZoom();
 
     void setUserAgent(String userAgent);
+
+    void setCacheMode(int cacheMode);
 }

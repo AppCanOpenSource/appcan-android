@@ -52,6 +52,23 @@ public class EBrwViewEntry {
     public static final String TAG_EXTRAINFO = "extraInfo";
     public static final String TAG_DELAYTIME = "delayTime";
 
+    /**
+     * 引擎默认模式（默认值）：忽略本地缓存，只走网络。
+     */
+    public static final int AC_LOAD_ENGINE_DEFAULT = 0;
+    /**
+     * WebView默认缓存模式：会优先考虑Cache-Control等头信息的配置。如果没有指定配置，则优先检查本地有效的缓存，不存在有效缓存的话则走网络。
+     */
+    public static final int AC_LOAD_WEBVIEW_DEFAULT = 1;
+    /**
+     * 优先走本地缓存，没有缓存走网络。
+     */
+    public static final int AC_LOAD_CACHE_ELSE_NETWORK = 2;
+    /**
+     * 忽略网络，只走缓存。
+     */
+    public static final int AC_LOAD_CACHE_ONLY = 3;
+
 
     public int mType;
     public int mWindowStyle;//窗口样式
@@ -85,7 +102,9 @@ public class EBrwViewEntry {
 
     public WindowOptionsVO mWindowOptions;
     public String mExeJS = "";//打开窗口时由前端传入想要注入的JS字符串，WebView加载完成的时候执行这段JS。
-    public int mExeScale=-1;
+    public int mExeScale=-1; // setInitialScale 设置初始化的缩放值 TODO 使用场景不太明确，暂未覆盖全部接口。
+    public int mCacheMode = AC_LOAD_ENGINE_DEFAULT; // 缓存模式，分为4种配置，传值为0 1 2 3，解释见后面文字。 0：AppCan默认模式：忽略本地缓存，只请求网络数据； 1：浏览器默认模式：根据服务端返回的配置执行； 2： 优先本地缓存，如果本地缓存无效，则请求网络； 3： 只使用本地缓存，不请求网络数据
+
     public EBrwViewEntry(int inType) {
         mType = inType;
     }

@@ -16,4 +16,10 @@ public class WindowOpenExtrasInfoVO implements Serializable {
 
     public String exeJS;
 
+    public int downloadCallback;
+
+    public String userAgent;
+
+    public int cacheMode;
+
 }

@@ -233,6 +233,7 @@ public class EBrowserWidget extends AbsoluteLayout {
         newWindow.init(mBrw, entry);
         newWindow.setWindowHWEnable(entry.mHardware);
         newWindow.setDownloadCallback(entry.mDownloadCallback);
+        newWindow.setCacheMode(entry.mCacheMode);
         newWindow.setUserAgent(entry.mUserAgent);
         newWindow.setExeJS(entry.mExeJS);
         if (entry.checkFlag(EBrwViewEntry.F_FLAG_GESTURE)) {

@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Created by ylt on 16/8/4.
  */
 
-public class WindowOpenPopoverExtraVO implements Serializable {
+public class WindowOpenPopoverExtraInfoVO implements Serializable {
 
     public String opaque;
 
@@ -15,5 +15,13 @@ public class WindowOpenPopoverExtraVO implements Serializable {
     public long delayTime;
 
     public int hardware;
+
+    public int downloadCallback;
+
+    public String userAgent;
+
+    public String exeJS;
+
+    public int cacheMode;
 
 }
