@@ -80,6 +80,7 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
 
     public static boolean sHardwareAccelerate = true;//配置全部WebView是否硬件加速,默认开启，config.xml 配置关闭
     private String mExeJS;//打开窗口时由前端传入想要注入的JS字符串，WebView加载完成的时候执行这段JS。
+
     public EBrowserView(Context context, int inType, EBrowserWindow inParent) {
         super(context);
         mMyCountId = EBrowser.assignCountID();
@@ -1470,11 +1471,20 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
         return super.getDownloadCallback();
     }
 
+    @Override
     public void setDownloadCallback(int downloadCallback) {
         if (mDestroyed) {
             return;
         }
         super.setDownloadCallback(downloadCallback);
+    }
+
+    @Override
+    public void setCacheMode(int mCacheMode) {
+        if (mDestroyed) {
+            return;
+        }
+        super.setCacheMode(mCacheMode);
     }
 
     public String getWebViewKernelInfo() {
