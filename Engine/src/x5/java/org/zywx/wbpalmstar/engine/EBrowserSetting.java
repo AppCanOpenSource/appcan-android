@@ -103,6 +103,19 @@ public class EBrowserSetting implements EBrowserBaseSetting {
     }
 
     @Override
+    public void setCacheMode(int cacheMode) {
+        if (cacheMode == EBrwViewEntry.AC_LOAD_ENGINE_DEFAULT){
+            mWebSetting.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        }else if (cacheMode == EBrwViewEntry.AC_LOAD_WEBVIEW_DEFAULT){
+            mWebSetting.setCacheMode(WebSettings.LOAD_DEFAULT);
+        }else if (cacheMode == EBrwViewEntry.AC_LOAD_CACHE_ELSE_NETWORK){
+            mWebSetting.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        }else if (cacheMode == EBrwViewEntry.AC_LOAD_CACHE_ONLY){
+            mWebSetting.setCacheMode(WebSettings.LOAD_CACHE_ONLY);
+        }
+    }
+
+    @Override
     public void setDefaultFontSize(int size) {
         if (mWebApp) {
             return;
