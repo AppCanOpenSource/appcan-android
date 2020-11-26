@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -32,6 +33,7 @@ import android.webkit.URLUtil;
 import android.widget.Toast;
 
 import org.zywx.wbpalmstar.base.BConstant;
+import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.WebViewSdkCompat;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 
@@ -242,14 +244,16 @@ public class EDownloadDialog extends ProgressDialog implements Runnable {
     private void downloadDone() {
         stopDownload();
         Intent installIntent = new Intent(Intent.ACTION_VIEW);
-        String filename = mTmpFile.getAbsolutePath();
-        Uri path = Uri.parse(filename);
-        if (path.getScheme() == null) {
-            path = Uri.fromFile(new File(filename));
+        String mTmpFileAbsolutePath = mTmpFile.getAbsolutePath();
+        Uri pathUri;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            pathUri = BUtility.getUriForFileWithFileProvider(getContext(), mTmpFileAbsolutePath);
+        } else {
+            pathUri = Uri.fromFile(mTmpFile);
         }
-        String suffix = makeFileSuffix(filename).toLowerCase(Locale.US);
+        String suffix = makeFileSuffix(mTmpFileAbsolutePath).toLowerCase(Locale.US);
         mimetype = MimeTypeMap.getSingleton().getMimeTypeFromExtension(suffix);
-        installIntent.setDataAndType(path, mimetype);
+        installIntent.setDataAndType(pathUri, mimetype);
         installIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         try {
             getContext().startActivity(installIntent);
