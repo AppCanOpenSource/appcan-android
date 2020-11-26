@@ -39,6 +39,7 @@ import android.widget.Toast;
 
 import org.zywx.wbpalmstar.acedes.ACEDESBrowserWindow7;
 import org.zywx.wbpalmstar.base.BDebug;
+import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.engine.universalex.EUExScript;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.platform.certificates.Http;
@@ -55,6 +56,8 @@ import java.util.Map;
 
 public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
 
+    private static final String TAG = "CBrowserWindow7";
+    
     protected String mReferenceUrl;
     protected String mParms;
 
@@ -302,15 +305,22 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
 
     public void onDownloadStart(Context context, String url, String userAgent,
                                 String contentDisposition, String mimetype, long contentLength) {
+        BDebug.i(TAG, "onDownloadStart", "\n url: " + url, "\n userAgent: " + userAgent, "\n contentDisposition: " + contentDisposition, "\n mimetype: " + mimetype, "\n contentLength: " + contentLength);
         if (contentDisposition == null
                 || !contentDisposition.regionMatches(true, 0, "attachment", 0, 10)) {
+            // 下载信息返回不全，无法处理，直接发送Intent抛给系统处理。
             Intent installIntent = new Intent(Intent.ACTION_VIEW);
             String filename = url;
-            Uri path = Uri.parse(filename);
-            if (path.getScheme() == null) {
-                path = Uri.fromFile(new File(filename));
+            Uri pathUri = Uri.parse(filename);
+            if (pathUri.getScheme() == null) {
+                // scheme为空，则推测可能是本地路径
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    pathUri = BUtility.getUriForFileWithFileProvider(context, filename);
+                } else {
+                    pathUri = Uri.fromFile(new File(filename));
+                }
             }
-            installIntent.setDataAndType(path, mimetype);
+            installIntent.setDataAndType(pathUri, mimetype);
             installIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             if (checkInstallApp(context, installIntent)) {
                 try {
