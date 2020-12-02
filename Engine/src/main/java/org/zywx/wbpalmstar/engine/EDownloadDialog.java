@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -32,6 +33,8 @@ import android.webkit.URLUtil;
 import android.widget.Toast;
 
 import org.zywx.wbpalmstar.base.BConstant;
+import org.zywx.wbpalmstar.base.BDebug;
+import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.WebViewSdkCompat;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 
@@ -49,6 +52,8 @@ import java.util.zip.GZIPInputStream;
 
 public class EDownloadDialog extends ProgressDialog implements Runnable {
 
+    private static final String TAG = "EDownloadDialog";
+    public final static String STREAM_MIME_TYPE = "application/octet-stream";
 
     public URL mClient;
     public HttpURLConnection mConnection;
@@ -199,57 +204,82 @@ public class EDownloadDialog extends ProgressDialog implements Runnable {
                 contentLength = Long.parseLong(cLength);
             }
         }
+        // 下载文件的位置
         File tm = Environment.getExternalStorageDirectory();
         File target = new File(tm.getAbsoluteFile() + "/Download/");
         if (!target.exists()) {
             target.mkdirs();
         }
+        // 开始处理下载文件的文件名
         String extension = null;
-        if (mimetype != null) {
-            MimeTypeMap mtm = MimeTypeMap.getSingleton();
-            extension = mtm.getExtensionFromMimeType(mimetype);
-        }
-        if (extension == null) {
+        if (!TextUtils.isEmpty(contentDisposition)){
+            // 如果返回了建议文件名，则直接使用
             contentDisposition = URLDecoder.decode(contentDisposition, "UTF-8");
-            String fileName = URLUtil.guessFileName(url, contentDisposition,
-                    mimetype);
+            String fileName = null;
+            // 由于application/octet-stream类型的情况下，WebView内部会识别为bin后缀，但实际上contentDisposition字段中有可能已经包含了正确的文件名和文件后缀。为了避免错误，故排除这种类型的mimetype情况。guessFileName传入null的mimetype就会把contentDisposition中的文件名作为文件名。但如果此文件名中没有后缀，则该文件不会附带后缀。 by yipeng
+            if (STREAM_MIME_TYPE.equals(mimetype)) {
+                fileName = URLUtil.guessFileName(url, contentDisposition,
+                        null);
+            }else{
+                fileName = URLUtil.guessFileName(url, contentDisposition,
+                        mimetype);
+            }
+            // 如果contentDisposition建议的文件名中携带了/字符，需要将其转义，否则会导致File对象对路径判断错误的问题。此处不允许通过/来远程创建本地目录，既不安全，也容易导致bug。 by yipeng
             if (!TextUtils.isEmpty(fileName)) {
-                fileName.replaceAll("/", "");
+                fileName.replaceAll("/", "%2F");
                 mTmpFile = new File(target, fileName);
             }
-        } else {
-            mTmpFile = new File(target, UUID.randomUUID() + "." + extension);
+        }else{
+            // 没有返回建议文件名时，则随机生成文件名，以及推测可能的后缀
+            if (mimetype != null) {
+                MimeTypeMap mtm = MimeTypeMap.getSingleton();
+                extension = mtm.getExtensionFromMimeType(mimetype);
+            }
+            // 有后缀则拼接后缀，无法推测出后缀则生成无后缀文件名
+            if (!TextUtils.isEmpty(extension)){
+                mTmpFile = new File(target, "ACEDownloadFile-" + UUID.randomUUID() + "." + extension);
+            }else{
+                mTmpFile = new File(target, "ACEDownloadFile-" + UUID.randomUUID());
+            }
         }
-
+        // 写入文件流
         OutputStream outStream = new FileOutputStream(mTmpFile);
-        byte buffer[] = new byte[1024 * 3];
+        byte[] buffer = new byte[1024 * 3];
         while (true) {
-            int numread = mInStream.read(buffer);
-            if (numread == -1) {
+            int numRead = mInStream.read(buffer);
+            if (numRead == -1) {
                 mProgressHandler.sendEmptyMessage(100);
                 break;
             }
-            outStream.write(buffer, 0, numread);
-            downLoaderSise += numread;
+            outStream.write(buffer, 0, numRead);
+            downLoaderSise += numRead;
             int p = (int) (((float) downLoaderSise / contentLength) * 100);
             mProgressHandler.sendEmptyMessage(p);
         }
+        // 写入完成
         if (contentLength <= 0) {
             mProgressHandler.sendEmptyMessage(100);
         }
     }
 
+    /**
+     * 文件下载完成后打开文件的相关操作处理
+     */
     private void downloadDone() {
         stopDownload();
         Intent installIntent = new Intent(Intent.ACTION_VIEW);
-        String filename = mTmpFile.getAbsolutePath();
-        Uri path = Uri.parse(filename);
-        if (path.getScheme() == null) {
-            path = Uri.fromFile(new File(filename));
+        String mTmpFileAbsolutePath = mTmpFile.getAbsolutePath();
+        BDebug.i(TAG, "downloadDone: " + mTmpFileAbsolutePath);
+        Uri pathUri;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            pathUri = BUtility.getUriForFileWithFileProvider(getContext(), mTmpFileAbsolutePath);
+        } else {
+            pathUri = Uri.fromFile(mTmpFile);
         }
-        String suffix = makeFileSuffix(filename).toLowerCase(Locale.US);
+        BDebug.i(TAG, "downloadDone prepareOpenUri: " + pathUri);
+        String suffix = makeFileSuffix(mTmpFileAbsolutePath).toLowerCase(Locale.US);
         mimetype = MimeTypeMap.getSingleton().getMimeTypeFromExtension(suffix);
-        installIntent.setDataAndType(path, mimetype);
+        installIntent.setDataAndType(pathUri, mimetype);
         installIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         try {
             getContext().startActivity(installIntent);
