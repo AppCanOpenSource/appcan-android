@@ -11893,18 +11893,22 @@ appcan.define("icache", function($, exports, module) {
     var opid = 1000;
     var CACHE_PATH = "box://icache/";
     function iCache(option) {
-        var self = this;
-        appcan.extend(this, appcan.eventEmitter);
-        self.waiting = [];
-        self.running = [];
-        self.option = $.extend({
-            maxtask : 3
-        }, option, true);
-        appcan.file.getRealPath("box://",function(err,data,dataType,optId){
-            self.realpath = data;
-            self.emit("NEXT_SESSION");
-        });
-        self.on("NEXT_SESSION", self._next);
+        try{
+            var self = this;
+            appcan.extend(this, appcan.eventEmitter);
+            self.waiting = [];
+            self.running = [];
+            self.option = $.extend({
+                maxtask : 3
+            }, option, true);
+            appcan.file.getRealPath("box://",function(err,data,dataType,optId){
+                self.realpath = data;
+                self.emit("NEXT_SESSION");
+            });
+            self.on("NEXT_SESSION", self._next);
+        }catch(e){
+            console.log("iCache error catched: " + e);
+        }
 
     }
 
