@@ -70,7 +70,7 @@ buildscript {
                 project.ext.set("rewriterGradlePluginDir", rewriterGradlePluginDir);
                 String rewriterPluginName = rewriterDir.getParentFile().getName();
                 project.ext.set("rewriterPluginName", rewriterPluginName);
-                println("find rewriter plugin : " + rewriterPluginName);
+                println("rewriter---find rewriter plugin : " + rewriterPluginName);
             }
         }
         int status0 = p.waitFor();
@@ -80,12 +80,13 @@ buildscript {
         String rewriterGradlePluginDir = project.rewriterGradlePluginDir;
         dependencies {
             if (rewriterPluginName != "" && rewriterGradlePluginDir != "") {
-                println("rewriter depenencies: " + rewriterGradlePluginDir);
+                println("rewriter---rewriter depenencies: " + rewriterGradlePluginDir);
+                // 依赖rewriter目录下的所有gradle插件相关的jar包
                 classpath fileTree(dir: rewriterGradlePluginDir, include: '*.jar');
             }
         }
     }catch(Exception e){
-        println("rewriter--exception: " + e.getMessage());
+        println("rewriter---exception: " + e.getMessage());
     }
 
 }
@@ -96,15 +97,18 @@ try{
     String rewriterGradlePluginDir = project.rewriterGradlePluginDir;
     if("uexNBSAppAgent".equals(rewriterPluginName)){
         apply plugin: 'newlens'
-        println("apply plugin: newlens success")
+        println("rewriter---apply plugin: newlens success")
     }else if("uexOneAPM".equals(rewriterPluginName)){
         apply plugin: 'oneapm'
-        println("apply plugin: oneapm success")
+        println("rewriter---apply plugin: oneapm success")
+    }else if("uexBonree".equals(rewriterPluginName)){
+        apply plugin: 'bonree'
+        println("rewriter---apply plugin: bonree success")
     }else{
-        println("no rewriter plugin or not supported plugin: " + rewriterPluginName);
+        println("rewriter---no rewriter plugin or not supported plugin: " + rewriterPluginName);
     }
 }catch(Exception e){
-    println("rewriter--exception: " + e.getMessage());
+    println("rewriter---exception: " + e.getMessage());
 }
 repositories {
     flatDir {
