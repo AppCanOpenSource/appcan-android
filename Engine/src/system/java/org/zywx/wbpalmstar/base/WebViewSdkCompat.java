@@ -15,6 +15,8 @@ import android.webkit.WebSettings;
  */
 public class WebViewSdkCompat {
 
+    private static final String TAG = "WebViewSdkCompat";
+    
     public static final String type="system";
 
     public static void initInActivity(Activity activity){
@@ -47,16 +49,9 @@ public class WebViewSdkCompat {
     }
 
     public static void clearCookie() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            CookieManager.getInstance().removeAllCookies(new android.webkit.ValueCallback<Boolean>() {
-                @Override
-                public void onReceiveValue(Boolean value) {
-
-                }
-            });
-        }else{
-            CookieManager.getInstance().removeAllCookie();
-        }
+        CookieManager.getInstance().removeAllCookies(value -> {
+            BDebug.d(TAG, "clearCookie finish result: " + value);
+        });
     }
 
     public enum ZoomDensityCompat{

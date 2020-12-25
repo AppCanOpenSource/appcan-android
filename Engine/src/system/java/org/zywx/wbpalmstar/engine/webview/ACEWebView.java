@@ -29,13 +29,10 @@ import android.webkit.WebView;
 
 import org.zywx.wbpalmstar.acedes.EXWebViewClient;
 import org.zywx.wbpalmstar.base.vo.KernelInfoVO;
-import org.zywx.wbpalmstar.engine.CBrowserMainFrame;
 import org.zywx.wbpalmstar.engine.CBrowserMainFrame7;
-import org.zywx.wbpalmstar.engine.CBrowserWindow;
 import org.zywx.wbpalmstar.engine.CBrowserWindow7;
 import org.zywx.wbpalmstar.engine.DataHelper;
 import org.zywx.wbpalmstar.engine.EBrowserBaseSetting;
-import org.zywx.wbpalmstar.engine.EBrowserSetting;
 import org.zywx.wbpalmstar.engine.EBrowserSetting7;
 import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.EBrowserWindow;
@@ -45,6 +42,7 @@ import org.zywx.wbpalmstar.engine.EBrowserWindow;
  * Created by ylt on 15/8/24.
  */
 public class ACEWebView extends WebView implements DownloadListener {
+
     private EXWebViewClient mEXWebViewClient;
     private EBrowserBaseSetting mBaSetting;
     private Context mContext;
@@ -53,7 +51,6 @@ public class ACEWebView extends WebView implements DownloadListener {
     private int mDownloadCallback = 0;  // 0 下载不回调，使用引擎下载; 1 下载回调给主窗口，前端自己下载; 2 下载回调给当前窗口，前端自己下载;
     private boolean mWebApp;
 
-
     public ACEWebView(Context context) {
 		super(context);
         this.mContext=context;
@@ -61,27 +58,14 @@ public class ACEWebView extends WebView implements DownloadListener {
 
     public void init(EBrowserView eBrowserView) {
         mBroView = eBrowserView;
-        mWebApp=true;
-        if (Build.VERSION.SDK_INT <= 7) {
-            if (mBaSetting == null) {
-                mBaSetting = new EBrowserSetting(eBrowserView);
-                mBaSetting.initBaseSetting(mWebApp);
-                setWebViewClient(mEXWebViewClient = new CBrowserWindow());
-                setWebChromeClient(new CBrowserMainFrame(eBrowserView.getContext()));
-            }
-
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-                // 适配Android5.0无法正常保存和携带cookie的问题
-                CookieManager.getInstance().setAcceptThirdPartyCookies(this, true);
-            }
-            if (mBaSetting == null) {
-                mBaSetting = new EBrowserSetting7(eBrowserView);
-                mBaSetting.initBaseSetting(mWebApp);
-                setWebViewClient(mEXWebViewClient = new CBrowserWindow7());
-                setWebChromeClient(new CBrowserMainFrame7(eBrowserView.getContext()));
-            }
-
+        mWebApp = true; // 这里默认赋值true，是由于为了适配高版本的chromium，会与引擎内对字体等的缩放产生冲突，因此设置为true则会默认关闭引擎的缩放。
+        // 适配Android5.0无法正常保存和携带cookie的问题
+        CookieManager.getInstance().setAcceptThirdPartyCookies(this, true);
+        if (mBaSetting == null) {
+            mBaSetting = new EBrowserSetting7(eBrowserView);
+            mBaSetting.initBaseSetting(mWebApp);
+            setWebViewClient(mEXWebViewClient = new CBrowserWindow7());
+            setWebChromeClient(new CBrowserMainFrame7(eBrowserView.getContext()));
         }
     }
 
@@ -98,9 +82,8 @@ public class ACEWebView extends WebView implements DownloadListener {
     }
 
     public void setRemoteDebug(boolean remoteDebug) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            setWebContentsDebuggingEnabled(remoteDebug);
-        }
+        // 设置web调试模式用于与Chrome远程调试，仅开发阶段使用
+        setWebContentsDebuggingEnabled(remoteDebug);
     }
 
     public void setDefaultFontSize(int defaultFontSize) {
@@ -202,9 +185,13 @@ public class ACEWebView extends WebView implements DownloadListener {
         setVerticalScrollBarEnabled(visible);
     }
 
+    /**
+     * 获取当前系统所使用的WebView内核版本等信息
+     */
     public String getWebViewKernelInfo() {
         KernelInfoVO infoVO = new KernelInfoVO();
         if (Build.VERSION.SDK_INT > 18) {
+            // 获取当前系统所使用的WebView内核版本
             infoVO.setKernelType("System(Blink)");
             try {
                 PackageManager pm = this.getContext().getPackageManager();
@@ -220,6 +207,7 @@ public class ACEWebView extends WebView implements DownloadListener {
         String info = DataHelper.gson.toJson(infoVO);
         return info;
     }
+
     public View getRealWebView(){
         return this;
     }

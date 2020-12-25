@@ -36,26 +36,7 @@ public class DiskCache {
     public static File cacheFolder;
 
     public static void initDiskCache(Context context) {
-
-        if (Build.VERSION.SDK_INT <= 7) {
-            if (Environment.MEDIA_MOUNTED.equals(Environment
-                    .getExternalStorageState())) {
-                String appendPath = "Android/data/" + context.getPackageName()
-                        + "/cache";
-                try {
-                    cacheFolder = new File(
-                            Environment.getExternalStorageDirectory(),
-                            appendPath);
-                    if (!cacheFolder.exists()) {
-                        cacheFolder.mkdirs();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        } else {
-            cacheFolder = context.getExternalCacheDir(); // 返回外部高速缓存路径，当没有SDCard时，返回null，当应用程序卸载的时候，此路径也会被卸载，
-        }
+        cacheFolder = context.getExternalCacheDir(); // 返回外部高速缓存路径，当没有SDCard时，返回null，当应用程序卸载的时候，此路径也会被卸载，
     }
 
     public static boolean writeDiskCache(String fileName, Bitmap bitmap) {

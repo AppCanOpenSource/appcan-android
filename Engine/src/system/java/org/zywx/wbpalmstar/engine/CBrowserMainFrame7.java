@@ -43,11 +43,14 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.webkit.ConsoleMessage;
 import android.webkit.GeolocationPermissions;
+import android.webkit.JsPromptResult;
+import android.webkit.JsResult;
 import android.webkit.PermissionRequest;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebStorage.QuotaUpdater;
 import android.webkit.WebView;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -56,13 +59,15 @@ import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.WebViewSdkCompat;
 import org.zywx.wbpalmstar.base.vo.ValueCallbackVO;
 import org.zywx.wbpalmstar.engine.callback.IActivityCallback;
+import org.zywx.wbpalmstar.engine.universalex.EUExManager;
+import org.zywx.wbpalmstar.engine.universalex.EUExScript;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.widgetone.dataservice.WDataManager;
 
 import java.io.File;
 
 
-public class CBrowserMainFrame7 extends CBrowserMainFrame implements IActivityCallback {
+public class CBrowserMainFrame7 extends WebChromeClient implements IActivityCallback {
 
     final long MAX_QUOTA = 104857600L;
 
@@ -87,19 +92,143 @@ public class CBrowserMainFrame7 extends CBrowserMainFrame implements IActivityCa
     private ValueCallbackVO mValueCallbackVO;
 
     private final Handler mainThreadHandler;
+    private Context mContext;
 
-    /**
-     * android version < 2.1 use
-     *
-     * @param context
-     */
     public CBrowserMainFrame7(Context context) {
-        super(context);
+        this.mContext = context;
         mainThreadHandler = new Handler(Looper.myLooper());
     }
 
-//	private ValueCallback<Uri> mFile;
+    @Override
+    public void onProgressChanged(WebView view, int newProgress) {
+        if (view != null) {
+            EBrowserView target = (EBrowserView) view;
+            EBrowserWindow bWindow = target.getBrowserWindow();
+            if (bWindow != null) {
+                bWindow.setGlobalProgress(newProgress);
+                if (100 == newProgress) {
+                    bWindow.hiddenProgress();
+                }
+            }
+        }
+    }
 
+    @Override
+    public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
+        if (!((EBrowserActivity) view.getContext()).isVisable()) {
+            result.confirm();
+        }
+        AlertDialog.Builder dia = new AlertDialog.Builder(view.getContext());
+        dia.setTitle(EUExUtil.getResStringID("prompt"));
+        dia.setMessage(message);
+        dia.setCancelable(false);
+        dia.setPositiveButton(EUExUtil.getResStringID("confirm"), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                result.confirm();
+            }
+        });
+        dia.create();
+        dia.show();
+        return true;
+    }
+
+    @Override
+    public boolean onJsConfirm(WebView view, String url, String message, final JsResult result) {
+        if (!((EBrowserActivity) view.getContext()).isVisable()) {
+            result.cancel();
+            return true;
+        }
+        AlertDialog.Builder dia = new AlertDialog.Builder(view.getContext());
+        dia.setMessage(message);
+        dia.setTitle(EUExUtil.getResStringID("prompt"));
+        dia.setCancelable(false);
+        dia.setPositiveButton(EUExUtil.getResStringID("confirm"),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        result.confirm();
+                    }
+                });
+        dia.setNegativeButton(EUExUtil.getResStringID("cancel"),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        result.cancel();
+                    }
+                });
+        dia.create();
+        dia.show();
+        return true;
+    }
+
+    @Override
+    public boolean onJsPrompt(WebView view, String url, String message, String defaultValue, final JsPromptResult result) {
+        if (message != null
+                && message.startsWith(EUExScript.JS_APPCAN_ONJSPARSE)) {
+            appCanJsParse(result, view,
+                    message.substring(EUExScript.JS_APPCAN_ONJSPARSE.length()));
+            result.cancel();
+        } else {
+            if (!((EBrowserActivity) view.getContext()).isVisable()) {
+                result.cancel();
+                return true;
+            }
+            AlertDialog.Builder dia = new AlertDialog.Builder(view.getContext());
+            dia.setTitle(null);
+            dia.setMessage(message);
+            final EditText input = new EditText(view.getContext());
+            if (defaultValue != null) {
+                input.setText(defaultValue);
+            }
+            input.setSelectAllOnFocus(true);
+            dia.setView(input);
+            dia.setCancelable(false);
+            dia.setPositiveButton(EUExUtil.getResStringID("confirm"),
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            result.confirm(input.getText().toString());
+                        }
+                    });
+            dia.setNegativeButton(EUExUtil.getResStringID("cancel"),
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            result.cancel();
+                        }
+                    });
+            dia.create();
+            dia.show();
+        }
+        return true;
+    }
+
+    /**
+     * 用于解析基于prompt的AppCanJS桥。
+     *（由于此方式存在字符串最大上限10240个字符的问题，已经不再使用，具体控制在于EUExScript中的JS注入。）
+     *
+     */
+    private void appCanJsParse(final JsPromptResult result, WebView view, String parseStr) {
+        try {
+            if (!(view instanceof EBrowserView)) {
+                return;
+            }
+            EBrowserView browserView = (EBrowserView) view;
+            final EUExManager uexManager = browserView.getEUExManager();
+            if (uexManager != null) {
+                result.confirm(uexManager.dispatch(parseStr));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public WebViewSdkCompat.ValueCallback<Uri> getCompatCallback(final ValueCallback<Uri> uploadMsg){
+        return new WebViewSdkCompat.ValueCallback<Uri>() {
+            @Override
+            public void onReceiveValue(Uri uri) {
+                uploadMsg.onReceiveValue(uri);
+            }
+        };
+    }
+
+    @Override
     public void onHideCustomView() {
         ((EBrowserActivity) mContext).hideCustomView();
     }
@@ -122,6 +251,7 @@ public class CBrowserMainFrame7 extends CBrowserMainFrame implements IActivityCa
         return progress;
     }
 
+    @Override
     public void onShowCustomView(View view, int requestedOrientation, final CustomViewCallback callback) {
         FrameLayout container = new FrameLayout(mContext);
         container.setBackgroundColor(0xff000000);
@@ -129,15 +259,8 @@ public class CBrowserMainFrame7 extends CBrowserMainFrame implements IActivityCa
         container.setLayoutParams(parm);
         container.setClickable(true);
         container.addView(view);
-        //	((EBrowserActivity)mContext).requestWindowFeature()
-        WebViewSdkCompat.CustomViewCallback compatCallback=new WebViewSdkCompat.CustomViewCallback() {
-            @Override
-            public void onCustomViewHidden() {
-                callback.onCustomViewHidden();
-            }
-        };
+        WebViewSdkCompat.CustomViewCallback compatCallback= callback::onCustomViewHidden;
         ((EBrowserActivity) mContext).showCustomView(container, compatCallback);
-
     }
 
     @Override
@@ -146,14 +269,8 @@ public class CBrowserMainFrame7 extends CBrowserMainFrame implements IActivityCa
         FrameLayout.LayoutParams parm = new FrameLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
         container.setLayoutParams(parm);
         container.addView(view);
-        WebViewSdkCompat.CustomViewCallback compatCallback=new WebViewSdkCompat.CustomViewCallback() {
-            @Override
-            public void onCustomViewHidden() {
-                callback.onCustomViewHidden();
-            }
-        };
+        WebViewSdkCompat.CustomViewCallback compatCallback= callback::onCustomViewHidden;
         ((EBrowserActivity) mContext).showCustomView(container, compatCallback);
-
     }
 
     static class FullscreenHolder extends FrameLayout {
@@ -467,15 +584,11 @@ public class CBrowserMainFrame7 extends CBrowserMainFrame implements IActivityCa
             }
         }
         builder.setMessage(messageStrb.toString());
-        DialogInterface.OnClickListener dialogButtonOnClickListener = new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int clickedButton) {
-                if (DialogInterface.BUTTON_POSITIVE == clickedButton) {
-                    request.grant(request.getResources());
-                } else if (DialogInterface.BUTTON_NEGATIVE == clickedButton) {
-                    request.deny();
-                }
+        DialogInterface.OnClickListener dialogButtonOnClickListener = (dialog, clickedButton) -> {
+            if (DialogInterface.BUTTON_POSITIVE == clickedButton) {
+                request.grant(request.getResources());
+            } else if (DialogInterface.BUTTON_NEGATIVE == clickedButton) {
+                request.deny();
             }
         };
         builder.setPositiveButton(EUExUtil.getString("ac_engine_webview_allow"), dialogButtonOnClickListener);
