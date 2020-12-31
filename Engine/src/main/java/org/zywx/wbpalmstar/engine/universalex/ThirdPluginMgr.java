@@ -28,10 +28,6 @@ import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.content.res.XmlResourceParser;
 import android.os.Build;
-import android.util.Xml;
-
-import com.ryg.dynamicload.internal.DLPluginManager;
-import com.ryg.dynamicload.internal.DLPluginPackage;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.zywx.wbpalmstar.base.BDebug;
@@ -42,7 +38,6 @@ import org.zywx.wbpalmstar.widgetone.Smith;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -281,74 +276,6 @@ public class ThirdPluginMgr {
     }
 
 	/**
-	 * 加载apk形式的动态库插件，获取classLoader
-	 * 
-	 * @param apkPath 动态加载的apk路径
-	 * @return DLPluginPackage对象，包含动态加载的apk信息
-	 */
-	private DLPluginPackage loadDynamicPluginClass(String apkPath) {
-		DLPluginPackage dlPkg = DLPluginManager.getInstance(mContext).loadApk(
-				apkPath, false, mParentClassLoader, null);
-		mParentClassLoader = dlPkg.classLoader;
-		mAssetManager = dlPkg.assetManager;
-		mResources = dlPkg.resources;
-		return dlPkg;
-	}
-
-	/**
-	 * 拷贝并初始化所有动态库插件
-	 * 
-	 * @param listenerQueue
-	 */
-	public void loadInitAllDynamicPluginClass(
-			ELinkedList<EngineEventListener> listenerQueue) {
-		long time = System.currentTimeMillis();
-		long cost = 0;
-		this.copyDynamicApk();
-		XmlPullParser plugins = null;
-		// 动态加载apk插件
-		File apkPluginParentDir = new File(libsParentDir + File.separator + dexApk);
-		File[] pluginApks = apkPluginParentDir.listFiles();
-		if (pluginApks != null) {
-			for (int i = 0; i < pluginApks.length; i++) {
-				try {
-					File apkPluginDir = pluginApks[i];
-					if (apkPluginDir.isDirectory()) {
-						// 一个动态插件所在目录
-						String uexName = apkPluginDir.getName();
-						File apkPluginFile = new File(apkPluginDir
-								+ File.separator + uexName + ".apk");
-						DLPluginPackage dlPkg = this
-								.loadDynamicPluginClass(apkPluginFile
-										.getAbsolutePath());
-						ClassLoader classLoader = dlPkg.classLoader;
-						File apkPluginXmlFile = new File(apkPluginDir
-								+ File.separator + "plugin.xml");
-						FileInputStream inputStream = new FileInputStream(
-								apkPluginXmlFile);
-						plugins = Xml.newPullParser();
-						plugins.setInput(inputStream, "UTF-8");
-						this.initClass(plugins, listenerQueue,
-								classLoader);
-					}
-				} catch (Exception e) {
-				    e.printStackTrace();
-					BDebug.e(e.toString());
-				}
-			}
-		}
-        if(mParentClassLoader != null){
-            try {
-                replaceCurrentClassLoader(mParentClassLoader);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-		cost = System.currentTimeMillis() - time;
-		BDebug.i("DL", "dynamic plugins loading costs " + cost);
-	}
-
-	/**
 	 * 根据plugin.xml中的配置，加载插件
 	 * 
 	 * @param plugins
@@ -565,55 +492,6 @@ public class ThirdPluginMgr {
 		}
 		isSuccess = true;
 		return isSuccess;
-	}
-
-	private void copyDynamicApk() {
-		BDebug.i("DL", "copyDynamicApk");
-		long time = System.currentTimeMillis();
-		long cost = 0;
-		// if (ESystemInfo.getIntence().mIsDevelop) {
-		// //TODO 如果是IDE调试版就把插件复制到sd卡
-		// }
-		SharedPreferences sp = mContext.getSharedPreferences(
-				F_SP_NAME_PLUGIN_LOADING, Context.MODE_PRIVATE);
-		boolean isFinished = false;
-		String curVersion = "";// 记录当前apk版本号
-		try {
-			PackageManager pm = mContext.getPackageManager();
-			PackageInfo pinfo = pm.getPackageInfo(mContext.getPackageName(),
-					PackageManager.GET_CONFIGURATIONS);
-			curVersion = pinfo.versionName;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		try {
-			isFinished = sp.getBoolean(F_SP_KEY_NAME_PLUGIN_COPY_FINISHED,
-					false);
-			if (isFinished) {
-				String lastCopyPkgVer = sp.getString(
-						F_SP_KEY_NAME_PLUGIN_COPY_LAST_PKG_VERSION, "");
-				// 若当前版本号与上次拷贝版本号不相同，则要重新拷贝动态库插件
-				isFinished = lastCopyPkgVer.equals(curVersion);
-			}
-		} catch (Exception e) {
-			// TODO BDebug
-			e.printStackTrace();
-		}
-		if (!isFinished) {
-			isFinished = CopyAssets(mContext, dexApk, libsParentDir
-					+ File.separator
-					+ dexApk);
-			// copy完成，记录状态以及当前apk版本
-			Editor edit = sp.edit();
-			edit.putBoolean(F_SP_KEY_NAME_PLUGIN_COPY_FINISHED, isFinished);
-			edit.putString(F_SP_KEY_NAME_PLUGIN_COPY_LAST_PKG_VERSION,
-					curVersion);
-			edit.commit();
-		} else {
-			BDebug.i("DL", "copyDynamicApk is already done");
-		}
-		cost = System.currentTimeMillis() - time;
-		BDebug.i("DL", "copyDynamicApk costs " + cost);
 	}
 
 	// 因为之前的方法无法替换子进程的classloader，故改成以下的方式。由于每一个进程初始化的时候都会初始化一次他的application，而且默认的classloader是和application的classloader一样的

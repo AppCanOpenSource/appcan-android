@@ -265,7 +265,7 @@ public class AppCan {
             // 开始拷贝和加载旧版dex动态库插件
             mThirdPluginMgr.loadInitAllDexPluginClass();
             // 开始拷贝和加载动态库插件
-            mThirdPluginMgr.loadInitAllDynamicPluginClass(mListenerQueue);
+//            mThirdPluginMgr.loadInitAllDynamicPluginClass(mListenerQueue);
             // 开始加载打包内置的xml中的plugin文件
             XmlPullParser plugins = null;
             int id = EUExUtil.getResXmlID("plugin");
