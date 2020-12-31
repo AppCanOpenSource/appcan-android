@@ -51,7 +51,7 @@ public class EBrowserWidgetPool {
     private EWidgetStack mWgtStack;
     private WWidgetData mRootWidget;
     private EBrowserWidget mRootBrowserWidget;
-    public static EBrowserWidgetPool mEBrowserWidgetPool;
+    public static EBrowserWidgetPool mEBrowserWidgetPool; // TODO 这里有待改进，不用改作为静态变量暴露，且有内存泄露风险
 
     public EBrowserWidgetPool(EBrowser inBrw, FrameLayout window,
                               EBrowserAround inShelter) {

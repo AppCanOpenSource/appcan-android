@@ -17,6 +17,8 @@
         tools:replace="android:allowBackup,android:label">
 
         <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+
+        <!--引擎主Activity-->
         <activity
             android:name="org.zywx.wbpalmstar.engine.EBrowserActivity"
             android:alwaysRetainTaskState="true"
@@ -31,10 +33,12 @@
                 <data android:scheme="appcanscheme"/>
             </intent-filter>
         </activity>
+        <!--启动图过渡页面（防黑屏）-->
         <activity android:name="org.zywx.wbpalmstar.engine.TempActivity"
             android:launchMode="standard"
             android:theme="@style/browser_loading_theme"
             android:exported="false"/>
+        <!--启动图首屏-->
         <activity android:name="org.zywx.wbpalmstar.engine.LoadingActivity"
             android:configChanges="keyboardHidden|orientation"
             android:theme="@style/browser_loading_theme"
@@ -46,6 +50,13 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <!-- 用于首次启动时的先导提示页面WebView-->
+        <activity
+            android:name="org.zywx.wbpalmstar.engine.LaunchNoticeWebViewActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
+            android:exported="false">
         </activity>
 
         <service

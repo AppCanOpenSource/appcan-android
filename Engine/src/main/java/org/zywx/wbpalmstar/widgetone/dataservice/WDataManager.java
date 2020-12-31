@@ -32,6 +32,7 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Xml;
 
+import org.w3c.dom.Text;
 import org.xmlpull.v1.XmlPullParser;
 import org.zywx.wbpalmstar.acedes.ACEDes;
 import org.zywx.wbpalmstar.base.BDebug;
@@ -822,7 +823,7 @@ public class WDataManager {
 
 
         WWidgetData widgetData = null;
-        WWidgetData assetsData = getWidgetDataByXML(m_rootWidgetConfigPath, 0);
+        WWidgetData assetsData = getWidgetDataByXML(m_rootWidgetConfigPath, 0);// apk打包预置的config.xml解析结果
         isUpdateWidget = checkAppStatus(m_context, assetsData.m_appId);
         isCopyAssetsFinish = m_preferences.getBoolean(m_copyAssetsFinish, false);
         try {
@@ -899,7 +900,7 @@ public class WDataManager {
         }
 
         WWidgetData xmlWidgetData = getWidgetDataByXML(m_rootWidgetConfigPath,
-                0);
+                0); // 拷贝到沙箱空间的config.xml解析结果
 
         if (xmlWidgetData != null) {
             if (widgetData == null) {
@@ -933,15 +934,20 @@ public class WDataManager {
                     }
                 }
             }
+        }else{
+            // 如果没有
+            xmlWidgetData = assetsData;
         }
 
-        widgetData.m_appdebug = assetsData.m_appdebug;
-        widgetData.m_logServerIp = assetsData.m_logServerIp;
-        widgetData.m_obfuscation = assetsData.m_obfuscation;
-        widgetData.m_opaque = assetsData.m_opaque;
-        widgetData.mErrorPath=assetsData.mErrorPath;
-        widgetData.noHardwareList=assetsData.noHardwareList;
+        widgetData.m_appdebug = xmlWidgetData.m_appdebug;
+        widgetData.m_logServerIp = xmlWidgetData.m_logServerIp;
+        widgetData.m_obfuscation = xmlWidgetData.m_obfuscation;
+        widgetData.m_opaque = xmlWidgetData.m_opaque;
+        widgetData.mErrorPath=xmlWidgetData.mErrorPath;
+        widgetData.noHardwareList=xmlWidgetData.noHardwareList;
+        widgetData.splashDialogPageVersion=xmlWidgetData.splashDialogPageVersion;
 
+        // 处理index url
         if (isUpdateWidget && isCopyAssetsFinish) {
             String matchAssetPath = BUtility.F_ASSET_PATH + "widget/";
             if (widgetData.m_indexUrl.startsWith(matchAssetPath)) {
@@ -951,6 +957,19 @@ public class WDataManager {
             }
         } else {
             widgetData.m_indexUrl = assetsData.m_indexUrl;
+        }
+        // 处理splash page url
+        if (!TextUtils.isEmpty(widgetData.splashDialogPagePath)){
+            if (isUpdateWidget && isCopyAssetsFinish) {
+                String matchAssetPath = BUtility.F_ASSET_PATH + "widget/";
+                if (widgetData.splashDialogPagePath.startsWith(matchAssetPath)) {
+                    String splashDialogPagePath = widgetData.splashDialogPagePath.substring(matchAssetPath.length());
+                    String matchContentPath = "file://" + m_sboxPath + "widget/";
+                    widgetData.splashDialogPagePath = matchContentPath + splashDialogPagePath;
+                }
+            } else {
+                widgetData.splashDialogPagePath = xmlWidgetData.splashDialogPagePath;
+            }
         }
 
         if (widgetData.m_obfuscation == 1) {
@@ -962,9 +981,15 @@ public class WDataManager {
             if (isUpdateWidget && isCopyAssetsFinish) {
                 BUtility.g_desPath = contentPrefix + packg + spPostFix + "android_asset" + m_sboxPath;
                 widgetData.m_indexUrl = contentPrefix + packg + spPostFix + "android_asset/" + widgetData.m_indexUrl.substring("file:///".length());
+                if (!TextUtils.isEmpty(widgetData.splashDialogPagePath)){
+                    widgetData.splashDialogPagePath = contentPrefix + packg + spPostFix + "android_asset/" + widgetData.splashDialogPagePath.substring("file:///".length());
+                }
             } else {
                 BUtility.g_desPath = contentPrefix + packg + spPostFix;
                 widgetData.m_indexUrl = contentPrefix + packg + spPostFix + "android_asset/" + widgetData.m_indexUrl.substring(preString.length());
+                if (!TextUtils.isEmpty(widgetData.splashDialogPagePath)){
+                    widgetData.splashDialogPagePath = contentPrefix + packg + spPostFix + "android_asset/" + widgetData.splashDialogPagePath.substring(preString.length());
+                }
             }
 
             widgetData.m_obfuscation = 0;
@@ -1023,6 +1048,16 @@ public class WDataManager {
                 errorPath = widgetPath + configVO.errorPath;
             }
         }
+        String splashDialogPath = null;
+        if ("#".equals(configVO.splashDialogPath)
+                || configVO.splashDialogPath == null
+                || configVO.splashDialogPath.length() == 0) {
+            splashDialogPath = widgetPath + "splash.html";
+        } else {
+            if (!BUtility.uriHasSchema(configVO.splashDialogPath)) {
+                splashDialogPath = widgetPath + configVO.splashDialogPath;
+            }
+        }
         WWidgetData widgetData = new WWidgetData();
         widgetData.m_appId = configVO.appId;
         widgetData.m_appkey = configVO.appkey;
@@ -1033,6 +1068,8 @@ public class WDataManager {
         widgetData.m_widgetPath = widgetPath;
         widgetData.m_description = configVO.description;
         widgetData.mErrorPath = errorPath;
+        widgetData.splashDialogPagePath = splashDialogPath;
+        widgetData.splashDialogPageVersion = configVO.splashDialogVersion;
         widgetData.m_wgtType = wgtType;
         widgetData.m_indexWindowOptions = configVO.indexWindowOptions;
         return widgetData;
@@ -1327,21 +1364,20 @@ public class WDataManager {
                     widgetData.m_indexUrl = widgetPath + widgetData.m_indexUrl;
                 }
             }
-
+            if ("#".equals(widgetData.splashDialogPagePath)
+                    || widgetData.splashDialogPagePath == null
+                    || widgetData.splashDialogPagePath.length() == 0) {
+                widgetData.splashDialogPagePath = widgetPath + "splash.html";
+            } else {
+                if (!BUtility.uriHasSchema(widgetData.splashDialogPagePath)) {
+                    widgetData.splashDialogPagePath = widgetPath + widgetData.splashDialogPagePath;
+                }
+            }
             if (widgetData.m_iconPath != null
                     && !BUtility.uriHasSchema(widgetData.m_iconPath)) {
                 widgetData.m_iconPath = widgetPath + widgetData.m_iconPath;
             }
-            try {
-                TelephonyManager telephonyManager = (TelephonyManager) m_context
-                        .getSystemService(Context.TELEPHONY_SERVICE);
-
-//                widgetData.m_imei = telephonyManager.getDeviceId();
-                widgetData.m_imei = Settings.System.getString(m_context.getContentResolver(), Settings.Secure.ANDROID_ID);
-            } catch (Exception e) {
-                // TODO: handle exception
-                e.printStackTrace();
-            }
+            widgetData.m_imei = BUtility.getIMEI(m_context);
 
             try {
                 if (!isWidgetOneSBox) {
@@ -1588,6 +1624,11 @@ public class WDataManager {
                         }else if ("error".equals(localName)){
                             widgetData.mErrorPath = parser.getAttributeValue(null,
                                     "src");
+                        }else if ("splashdialog".equals(localName)){
+                            widgetData.setSplashDialogPagePath(parser.getAttributeValue(null,
+                                    "src"));
+                            widgetData.setSplashDialogPageVersion(parser.getAttributeValue(null,
+                                    "version"));
                         }else if("statusbar".equals(localName)){
                             WWidgetData.sStatusBarColor= Color.parseColor(parser.getAttributeValue(null,"color"));
                         } else if ("statusfontblack".equals(localName)) {

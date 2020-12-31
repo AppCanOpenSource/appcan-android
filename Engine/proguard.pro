@@ -391,6 +391,7 @@
     public void setKeyboardMode(java.lang.String[]);
     public void reload(java.lang.String[]);
     public void reloadWidgetByAppId(java.lang.String[]);
+    public void splashPageAction(java.lang.String[]);
     public void closeLoading(java.lang.String[]);
     public void moveToBack(java.lang.String[]);
     public void setSwipeCloseEnable(java.lang.String[]);

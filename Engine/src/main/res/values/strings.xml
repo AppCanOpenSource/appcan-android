@@ -67,6 +67,8 @@
     <string name="platform_widget_path_not_exist">路径为 %1$s 的Widget不存在</string>
     <string name="platform_widget_search_failed">搜索Widget发生异常!请确认Widget是否损坏!</string>
 
+    <string name="ac_engine_splash_ask_to_agree">请仔细阅读后进行页面点击操作</string>
+
     <string name="ac_engine_webview_file_chooser_title">前往选择文件</string>
     <string name="ac_engine_webview_file_chooser_camera">拍照导入</string>
     <string name="ac_engine_webview_file_chooser_gallery">从相册选择</string>
