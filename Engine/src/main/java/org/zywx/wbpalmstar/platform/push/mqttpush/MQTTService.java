@@ -707,7 +707,7 @@ public class MQTTService implements MqttSimpleCallback {
                     Context.MODE_PRIVATE);
             String mAppId = sp.getString("appid", null);
             String macAddress = BUtility.getMacAddress(_context).replaceAll(":", "");
-            String clientId = macAddress + mAppId;
+            String clientId = macAddress + mAppId; // 注意：clientId长度不能超过23个字符
             mqttClient.connect(clientId, cleanStart, keepAliveSeconds);
 
             //

@@ -130,6 +130,10 @@ public class PushReportUtility {
         }
     }
 
+    public static String getSoftToken(Context context, String appkey){
+        return BUtility.getSoftToken(context, appkey);
+    }
+
     /**
      * sd卡记录信息
      *
