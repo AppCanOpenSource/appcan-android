@@ -28,6 +28,13 @@ public class BConstant {
     public static final String ENGINE_VERSION="4.5.38";
     public static final int ENGINE_VERSION_CODE=405038;
 
+    /**
+     * 当前使用的softToken生成规则的版本，用于做兼容和更新的判断
+     */
+    public static final int CURRENT_SOFTTOKEN_VERSION = 2;
+
+    public static final String SP_APP_KEY_SOFT_VER = "softTokenVersion";
+
     public static final String F_URL = "url";
     public static final String F_WIDGET = "widget";
     public static final String F_MULTIPLEWINDOW = "MultipleWindow";

@@ -80,7 +80,7 @@ public class PushService extends Service implements PushDataCallback {
         EUExUtil.init(this.getApplicationContext());
         String appKey = EUExUtil.getString("appkey");
         appKey = BUtility.decodeStr(appKey);
-        softToken = BUtility.getSoftToken(this, appKey);
+        softToken = PushReportUtility.getSoftToken(this, appKey);
         preferences = this.getSharedPreferences(PushReportConstants.SP_APP,
                 Context.MODE_PRIVATE);
         url_push = BUtility.getPushHost(this);
@@ -98,7 +98,7 @@ public class PushService extends Service implements PushDataCallback {
                 return;
             }
             if (pushGetData == null) {
-                String softToken = preferences.getString("softToken", null);
+                String softToken = PushReportUtility.getSoftToken(this, appKey);
                 pushGetData = new MQTTService(this, url_push, this, softToken);
                 ((MQTTService) pushGetData).init();
             } else {
