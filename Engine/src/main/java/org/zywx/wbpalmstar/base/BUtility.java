@@ -1449,7 +1449,7 @@ public class BUtility {
         if (!TextUtils.isEmpty(softToken) && !isNeedUpdateSoftToken(context)) {
             return softToken;
         }
-
+        BDebug.i(TAG, "getSoftToken: start generate new softToken");
         String[] val = new String[2];
         try {
             val[0] = getUniqueIDLikeIMEI(context);
@@ -1462,6 +1462,7 @@ public class BUtility {
         editor.putString("softToken", softToken);
         editor.putInt(BConstant.SP_APP_KEY_SOFT_VER, BConstant.CURRENT_SOFTTOKEN_VERSION);
         editor.commit();
+        BDebug.i(TAG, "getSoftToken: new softToken is " + softToken);
         return softToken;
     }
 
