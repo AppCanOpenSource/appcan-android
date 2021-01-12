@@ -3,6 +3,6 @@
     <version>$version$</version>
     <package>$package$</package>
     <kernel>$kernel$</kernel>
-    <description>(非混淆)增加了对BonreeSDK的gradle编译插件的适配</description>
+    <description>(非混淆)调整了softToken以及IMEI号的获取和生成方式，并进行了生成规则变更的平滑升级处理</description>
     <dssVersion>4.4.1</dssVersion>
 </info>

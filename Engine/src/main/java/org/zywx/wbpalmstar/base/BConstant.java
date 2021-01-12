@@ -25,8 +25,8 @@ import java.text.DecimalFormat;
 
 public class BConstant {
 
-    public static final String ENGINE_VERSION="4.5.38";
-    public static final int ENGINE_VERSION_CODE=405038;
+    public static final String ENGINE_VERSION="4.5.39";
+    public static final int ENGINE_VERSION_CODE=405039;
 
     /**
      * 当前使用的softToken生成规则的版本，用于做兼容和更新的判断
