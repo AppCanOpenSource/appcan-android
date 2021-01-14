@@ -46,8 +46,6 @@ import android.view.Surface;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.webkit.ValueCallback;
-import android.webkit.WebChromeClient;
 import android.widget.FrameLayout;
 
 import com.slidingmenu.lib.SlidingMenu;
@@ -60,6 +58,7 @@ import org.zywx.wbpalmstar.base.ResoureFinder;
 import org.zywx.wbpalmstar.base.WebViewSdkCompat;
 import org.zywx.wbpalmstar.base.util.ActivityActionRecorder;
 import org.zywx.wbpalmstar.base.util.ConfigXmlUtil;
+import org.zywx.wbpalmstar.base.vo.ValueCallbackVO;
 import org.zywx.wbpalmstar.engine.external.Compat;
 import org.zywx.wbpalmstar.engine.universalex.EUExBase;
 import org.zywx.wbpalmstar.engine.universalex.EUExCallback;
@@ -73,6 +72,7 @@ import org.zywx.wbpalmstar.platform.push.report.PushReportConstants;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
@@ -87,7 +87,6 @@ public final class EBrowserActivity extends BaseActivity {
     public static final String KET_WIDGET_DATE="key_widget_data";
 
     public static final int F_OAUTH_CODE = 100001;
-    public final static int FILECHOOSER_RESULTCODE = 233;
     public final static String APP_TYPE_NOT_START = "0";
     public final static String APP_TYPE_START_BACKGROUND = "1";
     public final static String APP_TYPE_START_FORGROUND= "2";
@@ -114,19 +113,38 @@ public final class EBrowserActivity extends BaseActivity {
     public static boolean isForground = false;
 
     public SlidingMenu globalSlidingMenu;
-    private WebViewSdkCompat.ValueCallback<Uri> mUploadMessage;
+
     public static boolean mLoadingRemoved = false;
 
-    public ValueCallback<Uri[]> getUploadMessage() {
-        return uploadMessage;
-    }
-
-    public void setUploadMessage(ValueCallback<Uri[]> uploadMessage) {
-        this.uploadMessage = uploadMessage;
-    }
-
-    private ValueCallback<Uri[]> uploadMessage;
     public static final int REQUEST_SELECT_FILE = 100;
+    public static final int FILECHOOSER_RESULTCODE = 101;
+    public static final int REQUEST_CAPTURE_PICTURE = 102;
+
+    /**
+     * 用于接收文件选择结果的回调（Api21以下）
+     */
+    private WebViewSdkCompat.ValueCallback<Uri> mUploadMessage;
+    /**
+     * 用于接收文件选择结果的回调（Api21以上）
+     */
+    private ValueCallbackVO valueCallbackVO;
+
+    public WebViewSdkCompat.ValueCallback<Uri> getmUploadMessage() {
+        return mUploadMessage;
+    }
+
+    public void setmUploadMessage(WebViewSdkCompat.ValueCallback<Uri> mUploadMessage) {
+        this.mUploadMessage = mUploadMessage;
+    }
+
+    public ValueCallbackVO getApi21UploadMessage() {
+        return valueCallbackVO;
+    }
+
+    public void setApi21UploadMessage(ValueCallbackVO valueCallbackVO) {
+        this.valueCallbackVO = valueCallbackVO;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(null);
@@ -732,16 +750,31 @@ public final class EBrowserActivity extends BaseActivity {
             Uri result = data == null || resultCode != RESULT_OK ? null : data.getData();
             mUploadMessage.onReceiveValue(result);
             mUploadMessage = null;
-        } else if(requestCode==REQUEST_SELECT_FILE) {
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            {
-
-                if (uploadMessage == null)
+        } else if(requestCode == REQUEST_SELECT_FILE) {
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+                if (valueCallbackVO == null){
                     return;
-                uploadMessage.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(resultCode, data));
-                uploadMessage = null;
+                }
+                WebViewSdkCompat.ValueCallback<Uri[]> api21UploadMessage = valueCallbackVO.getValueCallbackForApi21();
+                api21UploadMessage.onReceiveValue(WebViewSdkCompat.fileChooserParamsParseResult(resultCode, data));
+                valueCallbackVO = null;
             }
 
+        } else if(requestCode == REQUEST_CAPTURE_PICTURE){
+            if (valueCallbackVO == null){
+                return;
+            }
+            Uri[] uriResult = WebViewSdkCompat.fileChooserParamsParseResult(resultCode, data);
+            if (uriResult == null){
+                String imgSaveUrl = valueCallbackVO.getCameraImgSaveUrl();
+                if (!TextUtils.isEmpty(imgSaveUrl)){
+                    Uri imgSaveUri = Uri.fromFile(new File(imgSaveUrl));
+                    uriResult = new Uri[]{imgSaveUri};
+                }
+            }
+            WebViewSdkCompat.ValueCallback<Uri[]> api21UploadMessage = valueCallbackVO.getValueCallbackForApi21();
+            api21UploadMessage.onReceiveValue(uriResult);
+            valueCallbackVO = null;
         }
         if (mCallbackRuning && null != mActivityCallback) {
             mActivityCallback.onActivityResult(requestCode, resultCode, data);
@@ -841,14 +874,6 @@ public final class EBrowserActivity extends BaseActivity {
                 loadByOtherApp();
             }
         }
-    }
-
-    public WebViewSdkCompat.ValueCallback<Uri> getmUploadMessage() {
-        return mUploadMessage;
-    }
-
-    public void setmUploadMessage(WebViewSdkCompat.ValueCallback<Uri> mUploadMessage) {
-        this.mUploadMessage = mUploadMessage;
     }
 
     public class EHandler extends Handler {
