@@ -38,7 +38,10 @@
                     <div class="button ub ub-ac bc-text-head ub-pc bc-btn" onclick="requestResourcePermission()">申请设备资源权限</div>
                 </div>
                 <div class="btncss" data-control="BOX">
-                    <input type="file" id="uploadFile" accept="image/png" class="button ub ub-ac bc-text-head ub-pc bc-btn" />
+                    <input type="file" id="selectImage" value="选择图片" accept="image/*" class="button ub ub-ac bc-text-head ub-pc bc-btn" onchange="onSelectImage"/>
+                </div>
+                <div class="btncss" data-control="BOX">
+                    <input type="file" id="selectFile" value="选择文件" accept="*/*" class="button ub ub-ac bc-text-head ub-pc bc-btn" onchange="onSelectFile"/>
                 </div>
                 <div style="height:800px;width:200px">
                 </div>
@@ -75,6 +78,14 @@
                     /* 处理error */
                     alert(error);
                 });
+            }
+            function onSelectFile(){
+                console.log(document.getElementById('selectImage').files[0].name);
+                alert(document.getElementById('selectImage').files[0].name);
+            }
+            function onSelectImage(){
+                console.log(document.getElementById('selectFile').files[0].name);
+                alert(document.getElementById('selectFile').files[0].name);
             }
         </script>
     </body>
