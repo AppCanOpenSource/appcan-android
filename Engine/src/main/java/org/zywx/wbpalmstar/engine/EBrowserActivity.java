@@ -59,8 +59,8 @@ import org.zywx.wbpalmstar.base.WebViewSdkCompat;
 import org.zywx.wbpalmstar.base.util.ActivityActionRecorder;
 import org.zywx.wbpalmstar.base.util.ConfigXmlUtil;
 import org.zywx.wbpalmstar.base.vo.ValueCallbackVO;
+import org.zywx.wbpalmstar.engine.callback.IActivityCallback;
 import org.zywx.wbpalmstar.engine.external.Compat;
-import org.zywx.wbpalmstar.engine.universalex.EUExBase;
 import org.zywx.wbpalmstar.engine.universalex.EUExCallback;
 import org.zywx.wbpalmstar.engine.universalex.EUExEventListener;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
@@ -95,7 +95,7 @@ public final class EBrowserActivity extends BaseActivity {
     private boolean mKeyDown;
     private EHandler mEHandler;
     private EBrowserAround mBrowserAround;
-    private EUExBase mActivityCallback;
+    private IActivityCallback mActivityCallback;
     private boolean mCallbackRuning;
     private EBrowserMainFrame mEBrwMainFrame;
     private boolean mFinish;
@@ -115,35 +115,6 @@ public final class EBrowserActivity extends BaseActivity {
     public SlidingMenu globalSlidingMenu;
 
     public static boolean mLoadingRemoved = false;
-
-    public static final int REQUEST_SELECT_FILE = 100;
-    public static final int FILECHOOSER_RESULTCODE = 101;
-    public static final int REQUEST_CAPTURE_PICTURE = 102;
-
-    /**
-     * 用于接收文件选择结果的回调（Api21以下）
-     */
-    private WebViewSdkCompat.ValueCallback<Uri> mUploadMessage;
-    /**
-     * 用于接收文件选择结果的回调（Api21以上）
-     */
-    private ValueCallbackVO valueCallbackVO;
-
-    public WebViewSdkCompat.ValueCallback<Uri> getmUploadMessage() {
-        return mUploadMessage;
-    }
-
-    public void setmUploadMessage(WebViewSdkCompat.ValueCallback<Uri> mUploadMessage) {
-        this.mUploadMessage = mUploadMessage;
-    }
-
-    public ValueCallbackVO getApi21UploadMessage() {
-        return valueCallbackVO;
-    }
-
-    public void setApi21UploadMessage(ValueCallbackVO valueCallbackVO) {
-        this.valueCallbackVO = valueCallbackVO;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -744,37 +715,6 @@ public final class EBrowserActivity extends BaseActivity {
                 uexOnAuthorize(authorizeID);
             }
             return;
-        } else if (requestCode == FILECHOOSER_RESULTCODE) {
-            if (null == mUploadMessage)
-                return;
-            Uri result = data == null || resultCode != RESULT_OK ? null : data.getData();
-            mUploadMessage.onReceiveValue(result);
-            mUploadMessage = null;
-        } else if(requestCode == REQUEST_SELECT_FILE) {
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-                if (valueCallbackVO == null){
-                    return;
-                }
-                WebViewSdkCompat.ValueCallback<Uri[]> api21UploadMessage = valueCallbackVO.getValueCallbackForApi21();
-                api21UploadMessage.onReceiveValue(WebViewSdkCompat.fileChooserParamsParseResult(resultCode, data));
-                valueCallbackVO = null;
-            }
-
-        } else if(requestCode == REQUEST_CAPTURE_PICTURE){
-            if (valueCallbackVO == null){
-                return;
-            }
-            Uri[] uriResult = WebViewSdkCompat.fileChooserParamsParseResult(resultCode, data);
-            if (uriResult == null){
-                String imgSaveUrl = valueCallbackVO.getCameraImgSaveUrl();
-                if (!TextUtils.isEmpty(imgSaveUrl)){
-                    Uri imgSaveUri = Uri.fromFile(new File(imgSaveUrl));
-                    uriResult = new Uri[]{imgSaveUri};
-                }
-            }
-            WebViewSdkCompat.ValueCallback<Uri[]> api21UploadMessage = valueCallbackVO.getValueCallbackForApi21();
-            api21UploadMessage.onReceiveValue(uriResult);
-            valueCallbackVO = null;
         }
         if (mCallbackRuning && null != mActivityCallback) {
             mActivityCallback.onActivityResult(requestCode, resultCode, data);
@@ -783,7 +723,7 @@ public final class EBrowserActivity extends BaseActivity {
         }
     }
 
-    public final void startActivityForResult(EUExBase callack, Intent intent,
+    public final void startActivityForResult(IActivityCallback callack, Intent intent,
                                              int requestCode) {
         if (mCallbackRuning) {
             return;
@@ -795,7 +735,7 @@ public final class EBrowserActivity extends BaseActivity {
         }
     }
 
-    public final void registerActivityForResult(EUExBase callback) {
+    public final void registerActivityForResult(IActivityCallback callback) {
         if (mCallbackRuning) {
             return;
         }
@@ -962,15 +902,16 @@ public final class EBrowserActivity extends BaseActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (mActivityCallback != null){
+        if (null != mActivityCallback) {
             mActivityCallback.onRequestPermissionResult(requestCode, permissions, grantResults);
+            mActivityCallback = null;
         }else{
             BDebug.w("onRequestPermissionsResult error: mActivityCallback is null. Do you forget to call registerActivityResult() of EUExBase's instance?");
         }
 
     }
 
-    public void requsetPerssionsMore(final String[] perssions, EUExBase callack, String message, final int requestCode){
+    public void requsetPerssionsMore(final String[] perssions, IActivityCallback callack, String message, final int requestCode){
 
 //        if (mCallbackRuning) {
 //            return;
@@ -999,7 +940,7 @@ public final class EBrowserActivity extends BaseActivity {
         }
     }
 
-    public void requsetPerssions(final String perssions, EUExBase callack, String message, final int requestCode){
+    public void requsetPerssions(final String perssions, IActivityCallback callack, String message, final int requestCode){
 
 //        if (mCallbackRuning) {
 //            return;

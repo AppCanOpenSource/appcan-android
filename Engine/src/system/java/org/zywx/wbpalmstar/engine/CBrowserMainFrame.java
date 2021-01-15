@@ -163,37 +163,6 @@ public class CBrowserMainFrame extends WebChromeClient {
         }
     }
 
-    // For Android 3.0-
-    public void openFileChooser(ValueCallback<Uri> uploadMsg) {
-        ((EBrowserActivity) mContext).setmUploadMessage(getCompatCallback(uploadMsg));
-        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-        i.addCategory(Intent.CATEGORY_OPENABLE);
-        i.setType("*/*");
-        ((EBrowserActivity) mContext).startActivityForResult(Intent.createChooser(i, "File Chooser"),
-                EBrowserActivity.FILECHOOSER_RESULTCODE);
-    }
-
-    // For Android 3.0+
-    public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType) {
-        ((EBrowserActivity) mContext).setmUploadMessage(getCompatCallback(uploadMsg));
-        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-        i.addCategory(Intent.CATEGORY_OPENABLE);
-        i.setType("*/*");
-        ((EBrowserActivity) mContext).startActivityForResult(Intent.createChooser(i, "File Browser"),
-                EBrowserActivity.FILECHOOSER_RESULTCODE);
-    }
-
-    // For Android 4.1
-    public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
-        ((EBrowserActivity) mContext).setmUploadMessage(getCompatCallback(uploadMsg));
-        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-        i.addCategory(Intent.CATEGORY_OPENABLE);
-        i.setType("*/*");
-        ((EBrowserActivity) mContext).startActivityForResult(Intent.createChooser(i, "File Chooser"),
-                EBrowserActivity.FILECHOOSER_RESULTCODE);
-    }
-
-
     public WebViewSdkCompat.ValueCallback<Uri> getCompatCallback(final ValueCallback<Uri> uploadMsg){
         return new WebViewSdkCompat.ValueCallback<Uri>() {
             @Override

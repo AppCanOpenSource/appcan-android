@@ -70,6 +70,8 @@
     <string name="ac_engine_webview_file_chooser_title">前往选择文件</string>
     <string name="ac_engine_webview_file_chooser_camera">拍照导入</string>
     <string name="ac_engine_webview_file_chooser_gallery">从相册选择</string>
+    <string name="ac_engine_webview_file_chooser_request_camera_permission">需要允许相机权限才可以从相机拍照导入图片</string>
+    <string name="ac_engine_webview_file_chooser_request_camera_permission_denied">相机权限被拒绝，无法从相机拍照导入图片！</string>
     <string name="ac_engine_webview_file_chooser_file_manager">从文件管理器选择</string>
     <string name="ac_engine_webview_allow">允许</string>
     <string name="ac_engine_webview_deny">拒绝</string>

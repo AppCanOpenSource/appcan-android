@@ -19,11 +19,13 @@
 package org.zywx.wbpalmstar.engine;
 
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -31,6 +33,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.view.MotionEvent;
@@ -44,18 +47,20 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebStorage.QuotaUpdater;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.WebViewSdkCompat;
 import org.zywx.wbpalmstar.base.vo.ValueCallbackVO;
+import org.zywx.wbpalmstar.engine.callback.IActivityCallback;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.widgetone.dataservice.WDataManager;
 
 import java.io.File;
 
 
-public class CBrowserMainFrame7 extends CBrowserMainFrame {
+public class CBrowserMainFrame7 extends CBrowserMainFrame implements IActivityCallback {
 
     final long MAX_QUOTA = 104857600L;
 
@@ -63,6 +68,21 @@ public class CBrowserMainFrame7 extends CBrowserMainFrame {
 
     private AlertDialog mGeoPromptAlertDialog;
     private AlertDialog mResourcesPromptAlertDialog;
+
+    public static final int REQUEST_SELECT_FILE = 100;
+    public static final int FILECHOOSER_RESULTCODE = 101;
+    public static final int REQUEST_CAPTURE_PICTURE = 102;
+
+    public static final int REQUEST_PERMISSION_CAPTURE_PICTURE = 202;
+
+    /**
+     * 用于接收文件选择结果的回调（Api21以下）
+     */
+    private WebViewSdkCompat.ValueCallback<Uri> mUploadMessage;
+    /**
+     * 用于接收文件选择结果的回调（Api21以上）
+     */
+    private ValueCallbackVO mValueCallbackVO;
 
     /**
      * android version < 2.1 use
@@ -142,6 +162,80 @@ public class CBrowserMainFrame7 extends CBrowserMainFrame {
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == REQUEST_SELECT_FILE) {
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+                if (mValueCallbackVO == null){
+                    return;
+                }
+                WebViewSdkCompat.ValueCallback<Uri[]> api21UploadMessage = mValueCallbackVO.getValueCallbackForApi21();
+                api21UploadMessage.onReceiveValue(WebViewSdkCompat.fileChooserParamsParseResult(resultCode, data));
+                mValueCallbackVO = null;
+            }
+
+        } else if(requestCode == REQUEST_CAPTURE_PICTURE){
+            if (mValueCallbackVO == null){
+                return;
+            }
+            Uri[] uriResult = WebViewSdkCompat.fileChooserParamsParseResult(resultCode, data);
+            if (uriResult == null){
+                String imgSaveUrl = mValueCallbackVO.getCameraImgSaveUrl();
+                if (!TextUtils.isEmpty(imgSaveUrl) && new File(imgSaveUrl).exists()){
+                    Uri imgSaveUri = Uri.fromFile(new File(imgSaveUrl));
+                    uriResult = new Uri[]{imgSaveUri};
+                }
+            }
+            WebViewSdkCompat.ValueCallback<Uri[]> api21UploadMessage = mValueCallbackVO.getValueCallbackForApi21();
+            api21UploadMessage.onReceiveValue(uriResult);
+            mValueCallbackVO = null;
+        } else if (requestCode == FILECHOOSER_RESULTCODE) {
+            if (null == mUploadMessage)
+                return;
+            Uri result = data == null || resultCode != Activity.RESULT_OK ? null : data.getData();
+            mUploadMessage.onReceiveValue(result);
+            mUploadMessage = null;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_PERMISSION_CAPTURE_PICTURE){
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                Uri imageUri;
+                String filePath = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES) + File.separator;
+                BDebug.i(TAG, "openActionDialog DIRECTORY_PICTURES=" + filePath);
+                String fileName = "appcan_engine_capture_" + System.currentTimeMillis()+ ".jpg";
+                String imageDstUrl = filePath + fileName;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    imageUri = BUtility.getUriForFileWithFileProvider(mContext, imageDstUrl);
+                } else {
+                    imageUri = Uri.fromFile(new File(imageDstUrl));
+                }
+                Intent chooserIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                chooserIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                BDebug.i(TAG, "openActionDialog EXTRA_OUTPUT=" + imageUri);
+                chooserIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                chooserIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                ((EBrowserActivity)mContext).startActivityForResult(CBrowserMainFrame7.this, chooserIntent, REQUEST_CAPTURE_PICTURE);
+                // 记住指定的照片位置，直接使用。否则onActivityResult中无法返回地址。
+                if (mValueCallbackVO != null){
+                    mValueCallbackVO.setCameraImgSaveUrl(imageDstUrl);
+                }
+            }else{
+                Toast.makeText(mContext, EUExUtil.getResStringID("ac_engine_webview_file_chooser_request_camera_permission_denied"), Toast.LENGTH_LONG).show();
+                if (mValueCallbackVO != null){
+                    WebViewSdkCompat.ValueCallback<Uri[]> uploadMessage = mValueCallbackVO.getValueCallbackForApi21();
+                    // 兼容特殊情况下上次文件上传发生异常的情况，可能导致callback依然保持，需要给一个结果，才能继续下一个上传
+                    if (uploadMessage != null) {
+                        uploadMessage.onReceiveValue(null);
+                    }
+                    mValueCallbackVO = null;
+                }
+            }
+        }
+    }
+
     static class FullscreenHolder extends FrameLayout {
 
         public FullscreenHolder(Context ctx) {
@@ -168,12 +262,11 @@ public class CBrowserMainFrame7 extends CBrowserMainFrame {
 
     // For Android 4.1
     public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
-        WebViewSdkCompat.ValueCallback<Uri> uploadMessage = ((EBrowserActivity) mContext).getmUploadMessage();
         // 兼容特殊情况下上次文件上传发生异常的情况，可能导致callback依然保持，需要给一个结果，才能继续下一个上传
-        if (uploadMessage != null) {
-            uploadMessage.onReceiveValue(null);
+        if (mUploadMessage != null) {
+            mUploadMessage.onReceiveValue(null);
         }
-        ((EBrowserActivity) mContext).setmUploadMessage(getCompatCallback(uploadMsg));
+        mUploadMessage = getCompatCallback(uploadMsg);
         // 前往选择文件
         String title = EUExUtil.getString("ac_engine_webview_file_chooser_title");
         Intent i = new Intent(Intent.ACTION_GET_CONTENT);
@@ -184,7 +277,7 @@ public class CBrowserMainFrame7 extends CBrowserMainFrame {
             i.setType("*/*");
         }
         try {
-            ((EBrowserActivity)mContext).startActivityForResult(Intent.createChooser(i, title), EBrowserActivity.FILECHOOSER_RESULTCODE);
+            ((EBrowserActivity)mContext).startActivityForResult(this, Intent.createChooser(i, title), FILECHOOSER_RESULTCODE);
         } catch (Exception e) {
             BDebug.w(TAG, "openFileChooser exception", e);
             uploadMsg.onReceiveValue(null);
@@ -203,9 +296,8 @@ public class CBrowserMainFrame7 extends CBrowserMainFrame {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
-        ValueCallbackVO valueCallbackVO = ((EBrowserActivity) mContext).getApi21UploadMessage();
-        if (valueCallbackVO != null){
-            WebViewSdkCompat.ValueCallback<Uri[]> uploadMessage = valueCallbackVO.getValueCallbackForApi21();
+        if (mValueCallbackVO != null){
+            WebViewSdkCompat.ValueCallback<Uri[]> uploadMessage = mValueCallbackVO.getValueCallbackForApi21();
             // 兼容特殊情况下上次文件上传发生异常的情况，可能导致callback依然保持，需要给一个结果，才能继续下一个上传
             if (uploadMessage != null) {
                 uploadMessage.onReceiveValue(null);
@@ -247,7 +339,7 @@ public class CBrowserMainFrame7 extends CBrowserMainFrame {
             public void onClick(DialogInterface dialog, int which) {
                 if(filePathCallback != null){
                     filePathCallback.onReceiveValue(null);
-                    ((EBrowserActivity) mContext).setApi21UploadMessage(null);
+                    mValueCallbackVO = null;
                 }
             }
         });
@@ -271,36 +363,25 @@ public class CBrowserMainFrame7 extends CBrowserMainFrame {
                         // 前往选择文件
                         try {
                             Intent i = fileChooserParams.createIntent();
-                            ((Activity)mContext).startActivityForResult(Intent.createChooser(i, title), EBrowserActivity.REQUEST_SELECT_FILE);
+                            ((EBrowserActivity)mContext).startActivityForResult(CBrowserMainFrame7.this, Intent.createChooser(i, title), REQUEST_SELECT_FILE);
                             // 保存回调
-                            ((EBrowserActivity) mContext).setApi21UploadMessage(new ValueCallbackVO(getApi21CompatCallback(filePathCallback)));
+                            mValueCallbackVO = new ValueCallbackVO(getApi21CompatCallback(filePathCallback));
                         } catch (Exception e) {
                             BDebug.w(TAG, "onShowFileChooser openActionDialog exception", e);
                             filePathCallback.onReceiveValue(null);
-                            ((EBrowserActivity) mContext).setApi21UploadMessage(null);
+                            mValueCallbackVO = null;
                         }
                         break;
                     //从相机拍照获得
                     case 1:
                         dialog.dismiss();
-                        Uri imageUri;
-                        String filePath = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES) + File.separator;
-                        BDebug.i(TAG, "openActionDialog DIRECTORY_PICTURES=" + filePath);
-                        String fileName = "appcan_engine_capture_" + System.currentTimeMillis()+ ".jpg";
-                        String imageDstUrl = filePath + fileName;
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            imageUri = BUtility.getUriForFileWithFileProvider(mContext, imageDstUrl);
-                        } else {
-                            imageUri = Uri.fromFile(new File(imageDstUrl));
-                        }
-                        Intent chooserIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        chooserIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                        BDebug.i(TAG, "openActionDialog EXTRA_OUTPUT=" + imageUri);
-                        chooserIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                        chooserIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        ((Activity)mContext).startActivityForResult(chooserIntent, EBrowserActivity.REQUEST_CAPTURE_PICTURE);
                         // 保存回调
-                        ((EBrowserActivity) mContext).setApi21UploadMessage(new ValueCallbackVO(getApi21CompatCallback(filePathCallback), imageDstUrl));
+                        mValueCallbackVO = new ValueCallbackVO(getApi21CompatCallback(filePathCallback));
+                        // 请求相机权限，然后在权限获取后继续调用相机。
+                        ((EBrowserActivity)mContext).requsetPerssions(Manifest.permission.CAMERA,
+                                CBrowserMainFrame7.this,
+                                EUExUtil.getString("ac_engine_webview_file_chooser_request_camera_permission"),
+                                REQUEST_PERMISSION_CAPTURE_PICTURE);
                         break;
                 }
             }

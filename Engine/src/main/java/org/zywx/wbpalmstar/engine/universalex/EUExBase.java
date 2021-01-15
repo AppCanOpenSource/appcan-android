@@ -45,6 +45,7 @@ import org.zywx.wbpalmstar.engine.EBrowserAnimation;
 import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.EBrowserWindow;
 import org.zywx.wbpalmstar.engine.EWgtResultInfo;
+import org.zywx.wbpalmstar.engine.callback.IActivityCallback;
 import org.zywx.wbpalmstar.engine.container.ContainerAdapter;
 import org.zywx.wbpalmstar.engine.container.ContainerViewPager;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
@@ -52,7 +53,7 @@ import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 import java.io.File;
 import java.util.Vector;
 
-public abstract class EUExBase {
+public abstract class EUExBase implements IActivityCallback {
 
     public static final int F_UEX_EVENT_TYPE_APP_EXIT = 0;
     public static final int F_UEX_EVENT_TYPE_APP_ON_RESUME = 1;
@@ -736,6 +737,7 @@ public abstract class EUExBase {
      * @param data        目标Activity finish时返回的数据.
      */
     @Keep
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         ;
     }
@@ -920,6 +922,7 @@ public abstract class EUExBase {
 
     }
     @Keep
+    @Override
     public void onRequestPermissionResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if(grantResults[0]== PackageManager.PERMISSION_DENIED){
             String js = "javascript:if(uexWidgetOne.cbPerssionsDenied){uexWidgetOne.cbPerssionsDenied(' "+permissions[0]+" ')}";
