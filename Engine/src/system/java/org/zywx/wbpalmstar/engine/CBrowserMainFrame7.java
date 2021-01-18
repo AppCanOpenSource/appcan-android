@@ -32,6 +32,8 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
@@ -84,6 +86,8 @@ public class CBrowserMainFrame7 extends CBrowserMainFrame implements IActivityCa
      */
     private ValueCallbackVO mValueCallbackVO;
 
+    private final Handler mainThreadHandler;
+
     /**
      * android version < 2.1 use
      *
@@ -91,6 +95,7 @@ public class CBrowserMainFrame7 extends CBrowserMainFrame implements IActivityCa
      */
     public CBrowserMainFrame7(Context context) {
         super(context);
+        mainThreadHandler = new Handler(Looper.myLooper());
     }
 
 //	private ValueCallback<Uri> mFile;
@@ -151,6 +156,20 @@ public class CBrowserMainFrame7 extends CBrowserMainFrame implements IActivityCa
 
     }
 
+    static class FullscreenHolder extends FrameLayout {
+
+        public FullscreenHolder(Context ctx) {
+            super(ctx);
+            setBackgroundColor(0xFF000000);
+        }
+
+        @Override
+        public boolean onTouchEvent(MotionEvent evt) {
+            return true;
+        }
+
+    }
+
     @Override
     public void onExceededDatabaseQuota(String url, String databaseIdentifier, long currentQuota, long estimatedSize, long totalUsedQuota,
                                         QuotaUpdater quotaUpdater) {
@@ -202,26 +221,8 @@ public class CBrowserMainFrame7 extends CBrowserMainFrame implements IActivityCa
     public void onRequestPermissionResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_PERMISSION_CAPTURE_PICTURE){
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                Uri imageUri;
-                String filePath = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES) + File.separator;
-                BDebug.i(TAG, "openActionDialog DIRECTORY_PICTURES=" + filePath);
-                String fileName = "appcan_engine_capture_" + System.currentTimeMillis()+ ".jpg";
-                String imageDstUrl = filePath + fileName;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    imageUri = BUtility.getUriForFileWithFileProvider(mContext, imageDstUrl);
-                } else {
-                    imageUri = Uri.fromFile(new File(imageDstUrl));
-                }
-                Intent chooserIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                chooserIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                BDebug.i(TAG, "openActionDialog EXTRA_OUTPUT=" + imageUri);
-                chooserIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                chooserIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                ((EBrowserActivity)mContext).startActivityForResult(CBrowserMainFrame7.this, chooserIntent, REQUEST_CAPTURE_PICTURE);
-                // 记住指定的照片位置，直接使用。否则onActivityResult中无法返回地址。
-                if (mValueCallbackVO != null){
-                    mValueCallbackVO.setCameraImgSaveUrl(imageDstUrl);
-                }
+                // note: 如果直接在监听权限授权的方法中执行相机，当首次执行时，可能由于权限还未彻底授权完成，最终则无法收到onActivityResult。小米华为均测试如此。故使用了handler将操作带入下一个loop执行，则不会有此问题。
+                mainThreadHandler.post(this::openCameraForImageCapture);
             }else{
                 Toast.makeText(mContext, EUExUtil.getResStringID("ac_engine_webview_file_chooser_request_camera_permission_denied"), Toast.LENGTH_LONG).show();
                 if (mValueCallbackVO != null){
@@ -236,18 +237,30 @@ public class CBrowserMainFrame7 extends CBrowserMainFrame implements IActivityCa
         }
     }
 
-    static class FullscreenHolder extends FrameLayout {
-
-        public FullscreenHolder(Context ctx) {
-            super(ctx);
-            setBackgroundColor(0xFF000000);
+    /**
+     * 打开相机捕获图片的操作
+     */
+    private void openCameraForImageCapture(){
+        Uri imageUri;
+        String filePath = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES) + File.separator;
+        BDebug.i(TAG, "openActionDialog DIRECTORY_PICTURES=" + filePath);
+        String fileName = "appcan_engine_capture_" + System.currentTimeMillis()+ ".jpg";
+        String imageDstUrl = filePath + fileName;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            imageUri = BUtility.getUriForFileWithFileProvider(mContext, imageDstUrl);
+        } else {
+            imageUri = Uri.fromFile(new File(imageDstUrl));
         }
-
-        @Override
-        public boolean onTouchEvent(MotionEvent evt) {
-            return true;
+        Intent chooserIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        chooserIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        BDebug.i(TAG, "openActionDialog EXTRA_OUTPUT=" + imageUri);
+        chooserIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        chooserIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        ((EBrowserActivity)mContext).startActivityForResult(CBrowserMainFrame7.this, chooserIntent, REQUEST_CAPTURE_PICTURE);
+        // 记住指定的照片位置，直接使用。否则onActivityResult中无法返回地址。
+        if (mValueCallbackVO != null){
+            mValueCallbackVO.setCameraImgSaveUrl(imageDstUrl);
         }
-
     }
 
     // For Android 3.0-
