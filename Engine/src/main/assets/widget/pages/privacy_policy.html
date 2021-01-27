@@ -90,6 +90,14 @@
       text-align: center;
     }
   </style>
+  <script>
+      function agree(){
+          uexWidget.splashPageAction({"action":"continue"});
+      }
+      function disagree(){
+          uexWidget.splashPageAction({"action":"exit"});
+      }
+  </script>
 </head>
 
 <body>
@@ -108,8 +116,8 @@
           (HTML/CSS/JavaScript) 开发移动应用，而原生接口以 JS 对象的方式呈现。
         </div>
         <div class="bottom-align">
-          <div class="sure">同意</div>
-          <div class="cancel">不同意</div>
+          <div class="sure" onclick="agree();">同意</div>
+          <div class="cancel" onclick="disagree();">不同意</div>
         </div>
       </div>
     </div>

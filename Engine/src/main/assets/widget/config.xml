@@ -7,7 +7,7 @@
 	<icon src="icon.png" />
 	<license href=""></license>
 	<content src="index.html" encoding="utf-8"></content>
-	<splashdialog src="pages/privacy_policy.html" />
+	<splashdialog src="pages/privacy_policy.html" version="1"/>
 	<!--	<error src="error_content.html"/>-->
 	<updateurl></updateurl>
 	<logserverip></logserverip> 
