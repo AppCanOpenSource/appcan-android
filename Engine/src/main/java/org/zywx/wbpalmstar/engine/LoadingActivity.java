@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.listener.OnAppCanInitStatusChanged;
 import org.zywx.wbpalmstar.base.util.ConfigXmlUtil;
 import org.zywx.wbpalmstar.base.util.PermissionUtils;
@@ -52,6 +53,8 @@ import static org.zywx.wbpalmstar.base.util.PermissionUtils.REQUESTFLAGDENIEDNOA
 
 public class LoadingActivity extends Activity implements RequestPermissionsCallBcak {
 
+    private static final String TAG = "LoadingActivity";
+    
     public static final String FINISH_BROADCAST_ACTION = "com.appcan.close";
 
     public static final String KEY_INTENT_ROOT_PAGE_DATA = "root_page_data";
@@ -150,6 +153,7 @@ public class LoadingActivity extends Activity implements RequestPermissionsCallB
         String splashPageUrl = widgetData.splashDialogPagePath;
         String splashPageVersion = widgetData.splashDialogPageVersion;
         String lastVersion = getShownCustomSplashPageVersion();
+        BDebug.i(TAG, "shouldShowSplashPage: lastVersion=" + lastVersion + " splashPageVersion=" + splashPageVersion + " splashPageUrl=" + splashPageUrl);
         return !TextUtils.isEmpty(splashPageUrl) // path不为空表示配置了splashPage
                 &&(TextUtils.isEmpty(lastVersion)||!lastVersion.equals(splashPageVersion)); // lastVersion为空则表示首次启动，需要展示；或者是lastVersion与本次不一致，表示版本号变了（不比大小，只比变化），也需要展示。
     }
@@ -187,8 +191,10 @@ public class LoadingActivity extends Activity implements RequestPermissionsCallB
         if (isFrist && shouldShowSplashPage()) {
             Intent intent = new Intent(this, LaunchNoticeWebViewActivity.class);
             startActivityForResult(intent, REQUEST_CODE_START_SPLASH);
+            BDebug.i(TAG, "start LaunchNoticePage");
         }else{
             startEngin();
+            BDebug.i(TAG, "escape LaunchNoticePage");
         }
         isFrist = false;
     }

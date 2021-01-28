@@ -959,17 +959,17 @@ public class WDataManager {
             widgetData.m_indexUrl = assetsData.m_indexUrl;
         }
         // 处理splash page url
-        if (!TextUtils.isEmpty(widgetData.splashDialogPagePath)){
-            if (isUpdateWidget && isCopyAssetsFinish) {
+        if (isUpdateWidget && isCopyAssetsFinish) {
+            if (!TextUtils.isEmpty(widgetData.splashDialogPagePath)){
                 String matchAssetPath = BUtility.F_ASSET_PATH + "widget/";
                 if (widgetData.splashDialogPagePath.startsWith(matchAssetPath)) {
                     String splashDialogPagePath = widgetData.splashDialogPagePath.substring(matchAssetPath.length());
                     String matchContentPath = "file://" + m_sboxPath + "widget/";
                     widgetData.splashDialogPagePath = matchContentPath + splashDialogPagePath;
                 }
-            } else {
-                widgetData.splashDialogPagePath = xmlWidgetData.splashDialogPagePath;
             }
+        } else {
+            widgetData.splashDialogPagePath = xmlWidgetData.splashDialogPagePath;
         }
 
         if (widgetData.m_obfuscation == 1) {
@@ -1049,14 +1049,13 @@ public class WDataManager {
             }
         }
         String splashDialogPath = null;
-        if ("#".equals(configVO.splashDialogPath)
-                || configVO.splashDialogPath == null
-                || configVO.splashDialogPath.length() == 0) {
-            splashDialogPath = widgetPath + "splash.html";
-        } else {
+        if (!TextUtils.isEmpty(configVO.splashDialogPath)) {
             if (!BUtility.uriHasSchema(configVO.splashDialogPath)) {
                 splashDialogPath = widgetPath + configVO.splashDialogPath;
             }
+        }else{
+            // 没有配置splash path，则无需处理
+            splashDialogPath = configVO.splashDialogPath;
         }
         WWidgetData widgetData = new WWidgetData();
         widgetData.m_appId = configVO.appId;
@@ -1364,11 +1363,7 @@ public class WDataManager {
                     widgetData.m_indexUrl = widgetPath + widgetData.m_indexUrl;
                 }
             }
-            if ("#".equals(widgetData.splashDialogPagePath)
-                    || widgetData.splashDialogPagePath == null
-                    || widgetData.splashDialogPagePath.length() == 0) {
-                widgetData.splashDialogPagePath = widgetPath + "splash.html";
-            } else {
+            if (!TextUtils.isEmpty(widgetData.splashDialogPagePath)) {
                 if (!BUtility.uriHasSchema(widgetData.splashDialogPagePath)) {
                     widgetData.splashDialogPagePath = widgetPath + widgetData.splashDialogPagePath;
                 }
