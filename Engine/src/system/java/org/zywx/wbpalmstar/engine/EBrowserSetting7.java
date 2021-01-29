@@ -69,21 +69,22 @@ public class EBrowserSetting7 implements EBrowserBaseSetting {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 mWebSetting.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
             }
-            return;
+        }else{
+            mWebSetting.setTextZoom(100);
+            mWebSetting.setDisplayZoomControls(false);
+            // disables the actual onscreen controls from showing up
+            // 默认状态为关闭缩放按钮
+            mWebSetting.setBuiltInZoomControls(false);
+            // disables the ability to zoom
+            // 默认禁止缩放
+            mWebSetting.setSupportZoom(false);
+            mWebSetting.setDefaultFontSize(ESystemInfo.getIntence().mDefaultFontSize);
+            mWebSetting.setDefaultFixedFontSize(ESystemInfo.getIntence().mDefaultFontSize);
+            if (Build.VERSION.SDK_INT <= 18) {
+                mWebSetting.setDefaultZoom(ESystemInfo.getIntence().mDefaultzoom.getValue());
+            }
         }
-        mWebSetting.setTextZoom(100);
-        mWebSetting.setDisplayZoomControls(false);
-        // disables the actual onscreen controls from showing up
-        // 默认状态为关闭缩放按钮
-        mWebSetting.setBuiltInZoomControls(false);
-        // disables the ability to zoom
-        // 默认禁止缩放
-        mWebSetting.setSupportZoom(false);
-        mWebSetting.setDefaultFontSize(ESystemInfo.getIntence().mDefaultFontSize);
-        mWebSetting.setDefaultFixedFontSize(ESystemInfo.getIntence().mDefaultFontSize);
-        if (Build.VERSION.SDK_INT <= 18) {
-            mWebSetting.setDefaultZoom(ESystemInfo.getIntence().mDefaultzoom.getValue());
-        }
+
         mWebSetting.setDomStorageEnabled(true);//开启DOM storage API功能
         mWebSetting.setAppCacheEnabled(true);
         mWebSetting.setAppCachePath(mBrwView.getContext().getDir("cache", 0).getPath());
