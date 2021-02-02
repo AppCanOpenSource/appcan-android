@@ -84,7 +84,7 @@ public class AppCan {
         mListenerQueue = new ELinkedList<EngineEventListener>();
         PushEngineEventListener pushlistener = new PushEngineEventListener();
         mListenerQueue.add(pushlistener);
-        BDebug.init();
+        BDebug.init(context.getApplicationContext());
         BConstant.app = (Application) mContext;
         DiskCache.initDiskCache(mContext);
         ACEDes.setContext(mContext);

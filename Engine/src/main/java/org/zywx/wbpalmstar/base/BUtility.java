@@ -105,6 +105,12 @@ public class BUtility {
     public final static String m_loadingImagePath = "loadingImagePath";
     public final static String m_loadingImageTime = "loadingImageTime";
 
+    /**
+     * 是否使用旧版存储方式。默认为false，不使用，即不会将引擎生成的文件存放在外部存储公共空间，无需申请存储权限
+     * 除非特殊情况下可以通过代码修改这个常量开关，否则以后将一直都是false
+     */
+    public final static boolean useLegacyStorage = false;
+
     public static boolean isDes = false;
     public static String g_desPath = "";
     public static String widgetOneRootPath = "";
@@ -281,8 +287,14 @@ public class BUtility {
     public static void initWidgetOneFile(Context context, String appId) {
         String root = null;
         appId += "/";
-        if (!WDataManager.isWidgetOneSBox && sdCardIsWork()) {
-            root = getSdCardRootPath();
+        // 如果开启了沙箱存储开关，则存储data内部区域，否则存在外部存储区域
+        // 4.6引擎开始，为适配Android分区存储，减少不必要的存储权限的申请，外部存储情况下不会存储在SD卡公共区域，而是app位于外部存储的系统规定的私有区域。
+        if (!WDataManager.isWidgetOneSBox) {
+            if (sdCardIsWork() && useLegacyStorage){
+                root = getSdCardRootPath();
+            }else{
+                root = getExterBoxPath(context);
+            }
         } else {
             root = getSBoxRootPath(context);
         }
