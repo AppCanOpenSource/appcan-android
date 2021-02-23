@@ -18,12 +18,15 @@
 
 package org.zywx.wbpalmstar.base;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -38,6 +41,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
 import android.support.annotation.Keep;
+import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -431,6 +435,17 @@ public class BUtility {
     public static boolean sdCardIsWork() {
         if (Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * sd 卡是否工作，并且已经获得了权限
+     */
+    public static boolean sdCardIsWorkWithPermission(Context context) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                && Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             return true;
         }
         return false;
@@ -1521,6 +1536,7 @@ public class BUtility {
      * @param context
      * @return
      */
+    @SuppressLint("MissingPermission")
     public static String getIMEI(Context context){
         String imei = "";
         try {

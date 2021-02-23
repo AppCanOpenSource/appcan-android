@@ -18,10 +18,13 @@
 
 package org.zywx.wbpalmstar.base;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.support.annotation.Keep;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.text.format.Time;
 import android.util.Log;
@@ -47,6 +50,7 @@ public class BDebug {
     public static boolean DEBUG = false;
 
     public static final String TAG = "appcan";
+    public static final String SDCARD_LOG_DIR = "widgetone/log/";
     public static final String LOG_DIR = "appcanlog/";
 
     private static String outputLogPath = "";
@@ -69,7 +73,11 @@ public class BDebug {
     }
 
     public static String getOutputLogBasePath(Context applicationContext){
-        return BUtility.getExterBoxPath(applicationContext) + LOG_DIR;
+        if (ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
+            return BUtility.getSdCardRootPath() + SDCARD_LOG_DIR;
+        }else{
+            return BUtility.getExterBoxPath(applicationContext) + LOG_DIR;
+        }
     }
 
     public static boolean isDebugMode(){

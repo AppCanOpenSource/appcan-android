@@ -18,11 +18,20 @@
 
 package org.zywx.wbpalmstar.widgetone;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Environment;
+import android.support.v4.content.ContextCompat;
 
-import java.io.*;
+import org.zywx.wbpalmstar.base.BUtility;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -30,15 +39,16 @@ import java.util.Date;
 
 public class ECrashHandler implements UncaughtExceptionHandler {
 
-    private Thread.UncaughtExceptionHandler mDefaultHandler;
-    private DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-    private static Context mContext;
     private static ECrashHandler eCrashHandler;
     public static String m_ECrashHandler_SharedPre = "crash";
     public static String m_ECrashHandler_Key = "saveCrashInfo2File";
 
+    private Thread.UncaughtExceptionHandler mDefaultHandler;
+    private DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+    private Context mContext;
+
     private ECrashHandler(Context context) {
-        mContext = context;
+        mContext = context.getApplicationContext();
         mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(this);
     }
@@ -84,22 +94,27 @@ public class ECrashHandler implements UncaughtExceptionHandler {
         sb.append(result);
         try {
             String time = formatter.format(new Date());
-            String fileName = time + ".log";
-            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            String fileName = time + "_" + mContext.getPackageName() + ".log";
+            String path = null;
+            if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                    && Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                // SD卡读写权限已经获取并且已经挂载可使用状态，则写入。
                 String ePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-                String path = ePath + "/widgetone/log/crash/";
-                SharedPreferences sp = mContext.getSharedPreferences(
-                        m_ECrashHandler_SharedPre, Context.MODE_PRIVATE);
-                sp.edit().putString(m_ECrashHandler_Key, path + fileName).commit();
-                File dir = new File(path);
-                if (!dir.exists()) {
-                    dir.mkdirs();
-                }
-                FileOutputStream fos = new FileOutputStream(path + fileName);
-                fos.write(sb.toString().getBytes());
-                fos.flush();
-                fos.close();
+                path = ePath + "/widgetone/log/crash/";
+            }else{
+                path = BUtility.getExterBoxPath(mContext) + "appcanlog/log/crash/";
             }
+            SharedPreferences sp = mContext.getSharedPreferences(
+                    m_ECrashHandler_SharedPre, Context.MODE_PRIVATE);
+            sp.edit().putString(m_ECrashHandler_Key, path + fileName).apply();
+            File dir = new File(path);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            FileOutputStream fos = new FileOutputStream(path + fileName);
+            fos.write(sb.toString().getBytes());
+            fos.flush();
+            fos.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
