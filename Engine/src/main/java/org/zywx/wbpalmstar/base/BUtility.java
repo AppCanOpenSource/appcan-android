@@ -69,10 +69,14 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class BUtility {
+
+    private static final String TAG = "BUtility";
+    
     public final static String F_SDCARD_PATH = "file:///sdcard/";
     public final static String F_RES_PATH = "file:///res/";
     public final static String F_DATA_PATH = "file:///data/";
@@ -1442,13 +1446,13 @@ public class BUtility {
         SharedPreferences preferences = context.getSharedPreferences(
                 PushReportConstants.SP_APP, Context.MODE_PRIVATE);
         String softToken = preferences.getString("softToken", null);
-        if (softToken != null) {
+        if (!TextUtils.isEmpty(softToken) && !isNeedUpdateSoftToken(context)) {
             return softToken;
         }
-
+        BDebug.i(TAG, "getSoftToken: start generate new softToken");
         String[] val = new String[2];
         try {
-            val[0] = getIMEI(context);
+            val[0] = getUniqueIDLikeIMEI(context);
             val[1] = appKey;
         } catch (Exception e) {
             e.printStackTrace();
@@ -1456,26 +1460,83 @@ public class BUtility {
         softToken = getMD5Code(val);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("softToken", softToken);
+        editor.putInt(BConstant.SP_APP_KEY_SOFT_VER, BConstant.CURRENT_SOFTTOKEN_VERSION);
         editor.commit();
+        BDebug.i(TAG, "getSoftToken: new softToken is " + softToken);
         return softToken;
     }
 
+    /**
+     * 判断是否需要刷新softToken缓存
+     *
+     * @return
+     */
+    public static boolean isNeedUpdateSoftToken(Context context){
+        SharedPreferences preferences = context.getSharedPreferences(
+                PushReportConstants.SP_APP, Context.MODE_PRIVATE);
+        int softTokenVersion = 0;
+        try {
+            softTokenVersion = preferences.getInt(BConstant.SP_APP_KEY_SOFT_VER, 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // 若本地读取的版本低于
+        return softTokenVersion < BConstant.CURRENT_SOFTTOKEN_VERSION;
+    }
+
+    /**
+     * 获取IMEI号类似作用的唯一标识，IMEI号获取不到就获取一个随机UUID
+     *
+     * @param context
+     * @return
+     */
+    public static String getUniqueIDLikeIMEI(Context context){
+        String imei = getIMEI(context);
+        if (TextUtils.isEmpty(imei)){
+            imei = getRandomIdentifier();
+            BDebug.i(TAG, "getUniqueIDLikeIMEI: use RandomIdentifier.");
+        }
+        if (imei == null){
+            imei = "";
+            BDebug.i(TAG, "getUniqueIDLikeIMEI: use empty string.");
+        }
+        return imei;
+    }
+
+    /**
+     * 获取设备IMEI号。Android10以上无法获取，改为使用AndroidID。某些情况下获取为空时，则
+     *
+     * @param context
+     * @return
+     */
     public static String getIMEI(Context context){
         String imei = "";
         try {
             if (Build.VERSION.SDK_INT >= 29){
                 // Android10.0以上，使用AndroidID
                 imei = Settings.System.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+                BDebug.i(TAG, "getUniqueIDLikeIMEI: use Settings.Secure.ANDROID_ID.");
             }else{
                 // 否则，使用IMEI
                 TelephonyManager telephonyManager = (TelephonyManager) context
                         .getSystemService(Context.TELEPHONY_SERVICE);
                 imei = telephonyManager.getDeviceId();
+                BDebug.i(TAG, "getUniqueIDLikeIMEI: use telephonyManager.getDeviceId().");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return imei;
+    }
+
+    /**
+     * 获取一个随机值，用于在各种本机标识都无法获取的时候，生成一个唯一值用于生成标识，防止标识重复。
+     *
+     * @return
+     */
+    public static String getRandomIdentifier(){
+        String uuid = UUID.randomUUID().toString();
+        return uuid;
     }
 
     /**

@@ -107,6 +107,9 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
+    <!-- 以下权限为插件会携带的权限，引擎默认不会注册这些权限，所以不要配置在引擎出包的基础工程中-->
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"

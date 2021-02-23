@@ -46,8 +46,6 @@ import android.view.Surface;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.webkit.ValueCallback;
-import android.webkit.WebChromeClient;
 import android.widget.FrameLayout;
 
 import com.slidingmenu.lib.SlidingMenu;
@@ -60,8 +58,9 @@ import org.zywx.wbpalmstar.base.ResoureFinder;
 import org.zywx.wbpalmstar.base.WebViewSdkCompat;
 import org.zywx.wbpalmstar.base.util.ActivityActionRecorder;
 import org.zywx.wbpalmstar.base.util.ConfigXmlUtil;
+import org.zywx.wbpalmstar.base.vo.ValueCallbackVO;
+import org.zywx.wbpalmstar.engine.callback.IActivityCallback;
 import org.zywx.wbpalmstar.engine.external.Compat;
-import org.zywx.wbpalmstar.engine.universalex.EUExBase;
 import org.zywx.wbpalmstar.engine.universalex.EUExCallback;
 import org.zywx.wbpalmstar.engine.universalex.EUExEventListener;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
@@ -73,6 +72,7 @@ import org.zywx.wbpalmstar.platform.push.report.PushReportConstants;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
@@ -87,7 +87,6 @@ public final class EBrowserActivity extends BaseActivity {
     public static final String KET_WIDGET_DATE="key_widget_data";
 
     public static final int F_OAUTH_CODE = 100001;
-    public final static int FILECHOOSER_RESULTCODE = 233;
     public final static String APP_TYPE_NOT_START = "0";
     public final static String APP_TYPE_START_BACKGROUND = "1";
     public final static String APP_TYPE_START_FORGROUND= "2";
@@ -96,7 +95,7 @@ public final class EBrowserActivity extends BaseActivity {
     private boolean mKeyDown;
     private EHandler mEHandler;
     private EBrowserAround mBrowserAround;
-    private EUExBase mActivityCallback;
+    private IActivityCallback mActivityCallback;
     private boolean mCallbackRuning;
     private EBrowserMainFrame mEBrwMainFrame;
     private boolean mFinish;
@@ -114,19 +113,9 @@ public final class EBrowserActivity extends BaseActivity {
     public static boolean isForground = false;
 
     public SlidingMenu globalSlidingMenu;
-    private WebViewSdkCompat.ValueCallback<Uri> mUploadMessage;
+
     public static boolean mLoadingRemoved = false;
 
-    public ValueCallback<Uri[]> getUploadMessage() {
-        return uploadMessage;
-    }
-
-    public void setUploadMessage(ValueCallback<Uri[]> uploadMessage) {
-        this.uploadMessage = uploadMessage;
-    }
-
-    private ValueCallback<Uri[]> uploadMessage;
-    public static final int REQUEST_SELECT_FILE = 100;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(null);
@@ -726,22 +715,6 @@ public final class EBrowserActivity extends BaseActivity {
                 uexOnAuthorize(authorizeID);
             }
             return;
-        } else if (requestCode == FILECHOOSER_RESULTCODE) {
-            if (null == mUploadMessage)
-                return;
-            Uri result = data == null || resultCode != RESULT_OK ? null : data.getData();
-            mUploadMessage.onReceiveValue(result);
-            mUploadMessage = null;
-        } else if(requestCode==REQUEST_SELECT_FILE) {
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            {
-
-                if (uploadMessage == null)
-                    return;
-                uploadMessage.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(resultCode, data));
-                uploadMessage = null;
-            }
-
         }
         if (mCallbackRuning && null != mActivityCallback) {
             mActivityCallback.onActivityResult(requestCode, resultCode, data);
@@ -750,7 +723,7 @@ public final class EBrowserActivity extends BaseActivity {
         }
     }
 
-    public final void startActivityForResult(EUExBase callack, Intent intent,
+    public final void startActivityForResult(IActivityCallback callack, Intent intent,
                                              int requestCode) {
         if (mCallbackRuning) {
             return;
@@ -762,7 +735,7 @@ public final class EBrowserActivity extends BaseActivity {
         }
     }
 
-    public final void registerActivityForResult(EUExBase callback) {
+    public final void registerActivityForResult(IActivityCallback callback) {
         if (mCallbackRuning) {
             return;
         }
@@ -841,14 +814,6 @@ public final class EBrowserActivity extends BaseActivity {
                 loadByOtherApp();
             }
         }
-    }
-
-    public WebViewSdkCompat.ValueCallback<Uri> getmUploadMessage() {
-        return mUploadMessage;
-    }
-
-    public void setmUploadMessage(WebViewSdkCompat.ValueCallback<Uri> mUploadMessage) {
-        this.mUploadMessage = mUploadMessage;
     }
 
     public class EHandler extends Handler {
@@ -937,15 +902,16 @@ public final class EBrowserActivity extends BaseActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (mActivityCallback != null){
+        if (null != mActivityCallback) {
             mActivityCallback.onRequestPermissionResult(requestCode, permissions, grantResults);
+            mActivityCallback = null;
         }else{
             BDebug.w("onRequestPermissionsResult error: mActivityCallback is null. Do you forget to call registerActivityResult() of EUExBase's instance?");
         }
 
     }
 
-    public void requsetPerssionsMore(final String[] perssions, EUExBase callack, String message, final int requestCode){
+    public void requsetPerssionsMore(final String[] perssions, IActivityCallback callack, String message, final int requestCode){
 
 //        if (mCallbackRuning) {
 //            return;
@@ -974,7 +940,7 @@ public final class EBrowserActivity extends BaseActivity {
         }
     }
 
-    public void requsetPerssions(final String perssions, EUExBase callack, String message, final int requestCode){
+    public void requsetPerssions(final String perssions, IActivityCallback callack, String message, final int requestCode){
 
 //        if (mCallbackRuning) {
 //            return;

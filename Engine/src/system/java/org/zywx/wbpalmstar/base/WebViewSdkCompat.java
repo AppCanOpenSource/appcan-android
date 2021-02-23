@@ -2,6 +2,8 @@ package org.zywx.wbpalmstar.base;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -78,8 +80,19 @@ public class WebViewSdkCompat {
     }
 
 
-    public interface ValueCallback<Uri> extends android.webkit.ValueCallback <Uri>{
+    public interface ValueCallback<T> extends android.webkit.ValueCallback <T>{
 
+    }
+
+    /**
+     * 兼容多内核的parseResult方法
+     *
+     * @param resultCode
+     * @param data
+     * @return
+     */
+    public static Uri[] fileChooserParamsParseResult(int resultCode, Intent data){
+        return WebChromeClient.FileChooserParams.parseResult(resultCode, data);
     }
 
 }

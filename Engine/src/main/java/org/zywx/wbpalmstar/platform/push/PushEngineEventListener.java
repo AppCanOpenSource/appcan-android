@@ -27,6 +27,7 @@ import org.zywx.wbpalmstar.engine.EngineEventListener;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.platform.push.report.PushReportAgent;
 import org.zywx.wbpalmstar.platform.push.report.PushReportConstants;
+import org.zywx.wbpalmstar.platform.push.report.PushReportUtility;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
 import java.util.List;
@@ -125,7 +126,7 @@ public class PushEngineEventListener implements EngineEventListener {
         Log.i("push", "getPushInfo");
         String appKey = EUExUtil.getString("appkey");
         appKey = BUtility.decodeStr(appKey);
-        String softToken = BUtility.getSoftToken(context, appKey);
+        String softToken = PushReportUtility.getSoftToken(context, appKey);
         PushReportAgent.reportPush(pushInfo, occuredAt,
                 PushReportConstants.EVENT_TYPE_OPEN, softToken, context);
     }

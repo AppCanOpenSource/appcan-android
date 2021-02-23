@@ -161,7 +161,7 @@ public class PushReportThread extends Thread implements PushReportConstants {
     }
 
     private void unBindUserInfo() {
-        String softToken = BUtility.getSoftToken(m_activity, PushReportAgent.mCurWgt.m_appkey);
+        String softToken = PushReportUtility.getSoftToken(m_activity, PushReportAgent.mCurWgt.m_appkey);
         String bu = PushReportHttpClient.sendPostDataByNameValuePair(
                 (host_pushBindUser + "msg/" + softToken + "/unBindUser"), mNameValuePairs,
                 m_activity);
