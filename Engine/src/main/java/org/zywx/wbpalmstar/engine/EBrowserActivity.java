@@ -64,6 +64,7 @@ import org.zywx.wbpalmstar.engine.external.Compat;
 import org.zywx.wbpalmstar.engine.universalex.EUExCallback;
 import org.zywx.wbpalmstar.engine.universalex.EUExEventListener;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
+import org.zywx.wbpalmstar.engine.universalex.IACEContext;
 import org.zywx.wbpalmstar.engine.universalex.ThirdPluginMgr;
 import org.zywx.wbpalmstar.engine.universalex.ThirdPluginObject;
 import org.zywx.wbpalmstar.platform.push.PushDataInfo;
@@ -82,7 +83,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public final class EBrowserActivity extends BaseActivity {
+public final class EBrowserActivity extends BaseActivity implements IACEContext {
 
     public static final String KET_WIDGET_DATE="key_widget_data";
 
@@ -602,6 +603,7 @@ public final class EBrowserActivity extends BaseActivity {
         }
     }
 
+    @Override
     public final void exitBrowser() {
         if (mSipBranch) {
             Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -723,6 +725,7 @@ public final class EBrowserActivity extends BaseActivity {
         }
     }
 
+    @Override
     public final void startActivityForResult(IActivityCallback callack, Intent intent,
                                              int requestCode) {
         if (mCallbackRuning) {
@@ -735,6 +738,7 @@ public final class EBrowserActivity extends BaseActivity {
         }
     }
 
+    @Override
     public final void registerActivityForResult(IActivityCallback callback) {
         if (mCallbackRuning) {
             return;
@@ -745,12 +749,14 @@ public final class EBrowserActivity extends BaseActivity {
         }
     }
 
+    @Override
     public final void registerAppEventListener(EUExEventListener listener) {
         if (null != mBrowserAround) {
             mBrowserAround.registerAppEventListener(listener);
         }
     }
 
+    @Override
     public final void unRegisterAppEventListener(EUExEventListener listener) {
         if (null != mBrowserAround) {
             mBrowserAround.unRegisterAppEventListener(listener);
@@ -911,56 +917,83 @@ public final class EBrowserActivity extends BaseActivity {
 
     }
 
+    /**
+     * 请求多个权限
+     *
+     * @deprecated Wrong Spelling. use requestPermissionsMore method instead.
+     */
+    @Deprecated
     public void requsetPerssionsMore(final String[] perssions, IActivityCallback callack, String message, final int requestCode){
+        acRequestPermissionsMore(perssions, callack, message, requestCode);
+    }
 
-//        if (mCallbackRuning) {
-//            return;
-//        }
+    /**
+     * 请求单个权限
+     *
+     * @deprecated Wrong Spelling. use requestPermissions method instead.
+     */
+    @Deprecated
+    public void requsetPerssions(final String perssions, IActivityCallback callack, String message, final int requestCode){
+        acRequestPermissions(perssions, callack, message, requestCode);
+    }
+
+    /**
+     * 请求多个权限
+     *
+     * @param permissions 权限列表
+     * @param message 权限请求提示语
+     * @param requestCode 请求编号
+     */
+    @Override
+    public void acRequestPermissionsMore(final String[] permissions, IActivityCallback callack, String message, final int requestCode){
         if (null != callack) {
             mActivityCallback = callack;
-//            mCallbackRuning = true;
         }
         //系统运行环境小于6.0不需要权限申请
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            mActivityCallback.onRequestPermissionResult(requestCode, perssions, new int[]{0});
+            mActivityCallback.onRequestPermissionResult(requestCode, permissions, new int[]{0});
             return;
         }
 
         List<String> permissionLists = new ArrayList<String>();
-        for (String permission : perssions) {
+        for (String permission : permissions) {
             if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                // 若有未授权的，则存起来重新申请
                 permissionLists.add(permission);
             }
         }
         if (!permissionLists.isEmpty()) {
             ActivityCompat.requestPermissions(this, permissionLists.toArray(new String[permissionLists.size()]), requestCode);
         } else {
-            //表示全都授权了
-            mActivityCallback.onRequestPermissionResult(requestCode, perssions, new int[]{0});
+            //未授权列表为空，表示全都授权了
+            mActivityCallback.onRequestPermissionResult(requestCode, permissions, new int[]{0});
         }
     }
 
-    public void requsetPerssions(final String perssions, IActivityCallback callack, String message, final int requestCode){
-
-//        if (mCallbackRuning) {
-//            return;
-//        }
-        if (null != callack) {
-            mActivityCallback = callack;
-//            mCallbackRuning = true;
+    /**
+     * 请求权限
+     *
+     * @param permission 权限
+     * @param message 权限请求提示语
+     * @param requestCode 请求编号
+     */
+    @Override
+    public void acRequestPermissions(final String permission, IActivityCallback callback, String message, final int requestCode){
+        if (null != callback) {
+            mActivityCallback = callback;
         }
         //系统运行环境小于6.0不需要权限申请
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            mActivityCallback.onRequestPermissionResult(requestCode, new String[]{perssions}, new int[]{0});
+            mActivityCallback.onRequestPermissionResult(requestCode, new String[]{permission}, new int[]{0});
             return;
         }
         //检查权限是否授权
-        int checkCallPhonePermisssion = ContextCompat.checkSelfPermission(this, perssions);
-        if(checkCallPhonePermisssion!= PackageManager.PERMISSION_GRANTED){
-            //判断是不是第一次申请权限，如果是第一次申请权限则返回fasle，如果之前拒绝再次申请则返回true
-            ActivityCompat.requestPermissions(EBrowserActivity.this, new String[]{perssions}, requestCode);
+        int checkPermissionResult = ContextCompat.checkSelfPermission(this, permission);
+        if(checkPermissionResult != PackageManager.PERMISSION_GRANTED){
+            //判断是不是第一次申请权限，如果是第一次申请权限则返回false，如果之前拒绝再次申请则返回true
+            ActivityCompat.requestPermissions(EBrowserActivity.this, new String[]{permission}, requestCode);
         }else {
-            mActivityCallback.onRequestPermissionResult(requestCode, new String[]{perssions}, new int[]{0});
+            mActivityCallback.onRequestPermissionResult(requestCode, new String[]{permission}, new int[]{0});
         }
     }
 
