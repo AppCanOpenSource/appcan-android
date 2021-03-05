@@ -25,8 +25,8 @@ import java.text.DecimalFormat;
 
 public class BConstant {
 
-    public static final String ENGINE_VERSION="4.5.40";
-    public static final int ENGINE_VERSION_CODE=405040;
+    public static final String ENGINE_VERSION="4.6.41";
+    public static final int ENGINE_VERSION_CODE=406041;
 
     /**
      * 当前使用的softToken生成规则的版本，用于做兼容和更新的判断
@@ -65,7 +65,6 @@ public class BConstant {
             f = (float) ((float) size / (float) (1024 * 1024));
             return (df.format(new Float(f).doubleValue()) + " MB");
         }
-
     }
 
     public static String getSizeText(int downLoadSize, int fileSize) {

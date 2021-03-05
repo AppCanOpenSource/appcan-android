@@ -3,6 +3,6 @@
     <version>$version$</version>
     <package>$package$</package>
     <kernel>$kernel$</kernel>
-    <description>(非混淆)CompileSdk30 TargetSdk30 MinSdk22；首次启动时，引擎默认不再申请任何权限。运行时按需申请权限。没有存储权限时，日志输出路径会在外部存储空间的App私有目录中。</description>
+    <description>(Beta测试)CompileSdk30 TargetSdk30 MinSdk22；首次启动时，引擎默认不再申请任何权限。运行时按需申请权限。没有存储权限时，日志输出路径会在外部存储空间的App私有目录中。</description>
     <dssVersion>4.4.1</dssVersion>
 </info>
