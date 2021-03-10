@@ -21,7 +21,7 @@ package org.zywx.wbpalmstar.platform.certificates;
 import android.content.Context;
 import android.content.res.AssetManager;
 
-import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.zywx.wbpalmstar.base.BDebug;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -39,7 +39,7 @@ public class Http {
     public static String algorithm = "X509";
     public static String keyType = "pkcs12";
     /**
-     * 是否检查https证书为可信机构颁发
+     * 校验证书是否为可信机构颁发
      */
     private static boolean isCheckTrustCert = false;
 
@@ -68,14 +68,15 @@ public class Http {
         return inStream;
     }
 
-    public static HNetSSLSocketFactory getSSLSocketFactoryWithCert(String cPassWord, String cPath, Context ctx) {
+    public static HNetSSLSocketFactory getSSLSocketFactoryWithCert(
+            String cPassWord, String cPath, Context ctx) {
         InputStream inStream = null;
         HNetSSLSocketFactory ssSocketFactory = null;
         try {
             int index = cPath.lastIndexOf('/');
             String keyName = cPath.substring(index);
             KeyStore ksP12 = KEY_STORE.get(keyName);
-            if(null == ksP12){
+            if (null == ksP12) {
                 inStream = getInputStream(cPath, ctx);
                 ksP12 = KeyStore.getInstance("pkcs12");
                 ksP12.load(inStream, cPassWord.toCharArray());
@@ -83,7 +84,9 @@ public class Http {
             }
             ssSocketFactory = new HNetSSLSocketFactory(ksP12, cPassWord);
         } catch (Exception e) {
-            e.printStackTrace();
+            if (BDebug.isDebugMode()){
+                e.printStackTrace();
+            }
             ssSocketFactory = getSSLSocketFactory();
         }
         return ssSocketFactory;
@@ -96,25 +99,11 @@ public class Http {
             keyStore.load(null, null);
             ssSocketFactory = new HNetSSLSocketFactory(keyStore, null);
         } catch (Exception e) {
-            e.printStackTrace();
+            if (BDebug.isDebugMode()){
+                e.printStackTrace();
+            }
         }
         return ssSocketFactory;
-    }
-
-    public static HttpsURLConnection getHttpsURLConnection(URL url) throws Exception {
-        HttpsURLConnection mConnection = null;
-        mConnection = (HttpsURLConnection) url.openConnection();
-        javax.net.ssl.SSLSocketFactory ssFact = null;
-        ssFact = Http.getSSLSocketFactory();
-        ((HttpsURLConnection) mConnection).setSSLSocketFactory(ssFact);
-        if (!isCheckTrustCert()) {
-            ((HttpsURLConnection) mConnection)
-                    .setHostnameVerifier(new HX509HostnameVerifier());
-        } else {
-            ((HttpsURLConnection) mConnection)
-                    .setHostnameVerifier(SSLSocketFactory.STRICT_HOSTNAME_VERIFIER);
-        }
-        return mConnection;
     }
 
     public static HttpsURLConnection getHttpsURLConnection(String urlString) throws Exception {
@@ -123,8 +112,24 @@ public class Http {
         return mConnection;
     }
 
+    public static HttpsURLConnection getHttpsURLConnection(URL url)
+            throws Exception {
+        HttpsURLConnection mConnection = null;
+        mConnection = (HttpsURLConnection) url.openConnection();
+        javax.net.ssl.SSLSocketFactory ssFact = null;
+        ssFact = Http.getSSLSocketFactory();
+        ((HttpsURLConnection) mConnection).setSSLSocketFactory(ssFact);
+        if (!isCheckTrustCert()) {
+            ((HttpsURLConnection) mConnection)
+                    .setHostnameVerifier(new HX509HostnameVerifierTrustAll());
+        } else {
+            // 走默认的Hostname校验
+        }
+        return mConnection;
+    }
+
     public static HttpsURLConnection getHttpsURLConnectionWithCert(URL url,
-            String cPassWord, String cPath, Context ctx) throws Exception {
+                                                                   String cPassWord, String cPath, Context ctx) throws Exception {
         HttpsURLConnection mConnection = null;
         mConnection = (HttpsURLConnection) url.openConnection();
         javax.net.ssl.SSLSocketFactory ssFact = null;
@@ -132,10 +137,9 @@ public class Http {
         ((HttpsURLConnection) mConnection).setSSLSocketFactory(ssFact);
         if (!isCheckTrustCert()) {
             ((HttpsURLConnection) mConnection)
-                    .setHostnameVerifier(new HX509HostnameVerifier());
+                    .setHostnameVerifier(new HX509HostnameVerifierTrustAll());
         } else {
-            ((HttpsURLConnection) mConnection)
-                    .setHostnameVerifier(SSLSocketFactory.STRICT_HOSTNAME_VERIFIER);
+            // 走默认的Hostname校验
         }
         return mConnection;
     }
