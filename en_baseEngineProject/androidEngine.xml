@@ -3,6 +3,6 @@
     <version>$version$</version>
     <package>$package$</package>
     <kernel>$kernel$</kernel>
-    <description>(非混淆)首次启动取消申请定位权限；H5中调用原生文件选择时增加了拍照选择的功能；调整了softToken以及IMEI号的获取和生成方式，并进行了生成规则变更的平滑升级处理</description>
+    <description>(非混淆)修复证书链为1层时跳过了证书校验的安全错误；首次启动取消申请定位权限；H5中调用原生文件选择时增加了拍照选择的功能；调整了softToken以及IMEI号的获取和生成方式，并进行了生成规则变更的平滑升级处理</description>
     <dssVersion>4.4.1</dssVersion>
 </info>
