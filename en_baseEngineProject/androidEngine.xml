@@ -3,6 +3,6 @@
     <version>$version$</version>
     <package>$package$</package>
     <kernel>$kernel$</kernel>
-    <description>调整softToken生成规则v2；修复WebView页面内自动处理下载的逻辑没有兼容Android8+的问题以及修复mimetype是application/octet-stream类型的时候下载文件类型处理错误问题；增加cacheMode参数用于控制窗口的缓存模式。解决沉浸式状态栏开启后键盘压缩模式adjustResize不生效的问题；修复摄像头和麦克风权限的申请失败的问题；修复uexWindow.share的系统适配问题以及分享到微信的问题</description>
+    <description>修复证书链为1层时跳过了证书校验的安全错误；调整softToken生成规则v2；修复WebView页面内自动处理下载的逻辑没有兼容Android8+的问题以及修复mimetype是application/octet-stream类型的时候下载文件类型处理错误问题；增加cacheMode参数用于控制窗口的缓存模式。解决沉浸式状态栏开启后键盘压缩模式adjustResize不生效的问题；修复摄像头和麦克风权限的申请失败的问题；修复uexWindow.share的系统适配问题以及分享到微信的问题</description>
     <dssVersion>4.3.0</dssVersion>
 </info>
