@@ -58,9 +58,11 @@ public class BDebug {
     public static void init() {
         if (Environment.MEDIA_MOUNTED.equals(Environment
                 .getExternalStorageState())) {
+            // 20210312 note：经过在Android11的谷歌版Android系统下测试，判断文件是否存在的代码在没有获取存储权限的情况下依然可以生效。不知未来是否会有变化。
             File file = new File(Environment.getExternalStorageDirectory(), FILE_NAME);
             if (file.exists()) {
                 DEBUG = true;
+                Log.i(TAG, "BDebug init: DEBUG = true");
             }
         }
     }
