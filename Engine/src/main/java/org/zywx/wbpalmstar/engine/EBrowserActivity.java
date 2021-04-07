@@ -30,7 +30,6 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -52,13 +51,11 @@ import com.slidingmenu.lib.SlidingMenu;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.zywx.wbpalmstar.acedes.ACEDes;
 import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.ResoureFinder;
 import org.zywx.wbpalmstar.base.WebViewSdkCompat;
 import org.zywx.wbpalmstar.base.util.ActivityActionRecorder;
 import org.zywx.wbpalmstar.base.util.ConfigXmlUtil;
-import org.zywx.wbpalmstar.base.vo.ValueCallbackVO;
 import org.zywx.wbpalmstar.engine.callback.IActivityCallback;
 import org.zywx.wbpalmstar.engine.external.Compat;
 import org.zywx.wbpalmstar.engine.universalex.EUExCallback;
@@ -72,10 +69,6 @@ import org.zywx.wbpalmstar.platform.push.PushRecieveMsgReceiver;
 import org.zywx.wbpalmstar.platform.push.report.PushReportConstants;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -275,7 +268,8 @@ public final class EBrowserActivity extends BaseActivity implements IACEContext 
         }
         ConfigXmlUtil.setFullScreen(this);
 
-        ACEDes.getObfuscationList();
+        // 部分加密文件列表。此功能弃用已久，故自4.6版本起，不再调用，提升性能。
+        // ACEDes.getObfuscationList();
 
         // String[] plugins = {"uexXmlHttpMgr", "uexCamera"};
         // rootWidget.disablePlugins = plugins;
