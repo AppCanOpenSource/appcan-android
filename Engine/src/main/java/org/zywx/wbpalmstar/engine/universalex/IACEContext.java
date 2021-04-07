@@ -20,6 +20,8 @@ public interface IACEContext {
 
     void registerActivityForResult(IActivityCallback callback);
 
+    void registerActivityForPermissionRequest(IActivityCallback callback);
+
     void startActivityForResult(IActivityCallback callback, Intent intent,
                                 int requestCode);
 

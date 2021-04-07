@@ -80,7 +80,6 @@ public final class EBrowserActivity extends BaseActivity implements IACEContext 
 
     public static final String KET_WIDGET_DATE="key_widget_data";
 
-    public static final int F_OAUTH_CODE = 100001;
     public final static String APP_TYPE_NOT_START = "0";
     public final static String APP_TYPE_START_BACKGROUND = "1";
     public final static String APP_TYPE_START_FORGROUND= "2";
@@ -90,7 +89,8 @@ public final class EBrowserActivity extends BaseActivity implements IACEContext 
     private EHandler mEHandler;
     private EBrowserAround mBrowserAround;
     private IActivityCallback mActivityCallback;
-    private boolean mCallbackRuning;
+    private boolean mCallbackRunning;
+    private IActivityCallback mActivityPermissionRequestCallback;
     private EBrowserMainFrame mEBrwMainFrame;
     private boolean mFinish;
     private boolean mVisable;
@@ -700,46 +700,43 @@ public final class EBrowserActivity extends BaseActivity implements IACEContext 
     @Override
     protected final void onActivityResult(int requestCode, int resultCode,
                                           Intent data) {
-        if (F_OAUTH_CODE == requestCode) {
-            if (null != data) {
-                int result = data.getIntExtra("result", 0);
-                if (0 == result) {
-                    exitBrowser();
-                    return;
-                }
-                String authorizeID = data.getStringExtra("authorizeID");
-                uexOnAuthorize(authorizeID);
+        if (mCallbackRunning) {
+            if(null != mActivityCallback){
+                mActivityCallback.onActivityResult(requestCode, resultCode, data);
+                mActivityCallback = null;
             }
-            return;
-        }
-        if (mCallbackRuning && null != mActivityCallback) {
-            mActivityCallback.onActivityResult(requestCode, resultCode, data);
-            mCallbackRuning = false;
-            mActivityCallback = null;
+            mCallbackRunning = false;
         }
     }
 
     @Override
     public final void startActivityForResult(IActivityCallback callack, Intent intent,
                                              int requestCode) {
-        if (mCallbackRuning) {
+        if (mCallbackRunning) {
             return;
         }
         if (null != callack) {
             mActivityCallback = callack;
-            mCallbackRuning = true;
+            mCallbackRunning = true;
             super.startActivityForResult(intent, requestCode);
         }
     }
 
     @Override
     public final void registerActivityForResult(IActivityCallback callback) {
-        if (mCallbackRuning) {
+        if (mCallbackRunning) {
             return;
         }
         if (null != callback) {
             mActivityCallback = callback;
-            mCallbackRuning = true;
+            mCallbackRunning = true;
+        }
+    }
+
+    @Override
+    public void registerActivityForPermissionRequest(IActivityCallback callback) {
+        if (null != callback) {
+            mActivityPermissionRequestCallback = callback;
         }
     }
 
@@ -902,11 +899,11 @@ public final class EBrowserActivity extends BaseActivity implements IACEContext 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (null != mActivityCallback) {
-            mActivityCallback.onRequestPermissionResult(requestCode, permissions, grantResults);
-            mActivityCallback = null;
+        if (null != mActivityPermissionRequestCallback) {
+            mActivityPermissionRequestCallback.onRequestPermissionResult(requestCode, permissions, grantResults);
+            mActivityPermissionRequestCallback = null;
         }else{
-            BDebug.w("onRequestPermissionsResult error: mActivityCallback is null. Do you forget to call registerActivityResult() of EUExBase's instance?");
+            BDebug.w("onRequestPermissionsResult error: mActivityPermissionRequestCallback is null. Do you forget to call registerPermissionRequestResult() of EUExBase's instance?");
         }
 
     }
@@ -941,11 +938,15 @@ public final class EBrowserActivity extends BaseActivity implements IACEContext 
     @Override
     public void acRequestPermissionsMore(final String[] permissions, IActivityCallback callack, String message, final int requestCode){
         if (null != callack) {
-            mActivityCallback = callack;
+            mActivityPermissionRequestCallback = callack;
         }
         //系统运行环境小于6.0不需要权限申请
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            mActivityCallback.onRequestPermissionResult(requestCode, permissions, new int[]{0});
+            if (mActivityPermissionRequestCallback != null){
+                mActivityPermissionRequestCallback.onRequestPermissionResult(requestCode, permissions, new int[]{PackageManager.PERMISSION_GRANTED});
+            }else{
+                BDebug.w("acRequestPermissionsMore error: mActivityPermissionRequestCallback is null. Do you forget to call registerPermissionRequestResult() of EUExBase's instance?");
+            }
             return;
         }
 
@@ -960,7 +961,12 @@ public final class EBrowserActivity extends BaseActivity implements IACEContext 
             ActivityCompat.requestPermissions(this, permissionLists.toArray(new String[permissionLists.size()]), requestCode);
         } else {
             //未授权列表为空，表示全都授权了
-            mActivityCallback.onRequestPermissionResult(requestCode, permissions, new int[]{0});
+            if (mActivityPermissionRequestCallback != null){
+                // TODO 这里PackageManager.PERMISSION_GRANTED的个数应该与permission的个数一致，然而此处并未处理，后续应当改正。
+                mActivityPermissionRequestCallback.onRequestPermissionResult(requestCode, permissions, new int[]{PackageManager.PERMISSION_GRANTED});
+            }else{
+                BDebug.w("acRequestPermissionsMore error: mActivityPermissionRequestCallback is null. Do you forget to call registerPermissionRequestResult() of EUExBase's instance?");
+            }
         }
     }
 
@@ -974,11 +980,15 @@ public final class EBrowserActivity extends BaseActivity implements IACEContext 
     @Override
     public void acRequestPermissions(final String permission, IActivityCallback callback, String message, final int requestCode){
         if (null != callback) {
-            mActivityCallback = callback;
+            mActivityPermissionRequestCallback = callback;
         }
         //系统运行环境小于6.0不需要权限申请
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            mActivityCallback.onRequestPermissionResult(requestCode, new String[]{permission}, new int[]{0});
+            if (mActivityPermissionRequestCallback != null){
+                mActivityPermissionRequestCallback.onRequestPermissionResult(requestCode, new String[]{permission}, new int[]{PackageManager.PERMISSION_GRANTED});
+            }else{
+                BDebug.w("acRequestPermissions error: mActivityPermissionRequestCallback is null. Do you forget to call registerPermissionRequestResult() of EUExBase's instance?");
+            }
             return;
         }
         //检查权限是否授权
@@ -987,7 +997,11 @@ public final class EBrowserActivity extends BaseActivity implements IACEContext 
             //判断是不是第一次申请权限，如果是第一次申请权限则返回false，如果之前拒绝再次申请则返回true
             ActivityCompat.requestPermissions(EBrowserActivity.this, new String[]{permission}, requestCode);
         }else {
-            mActivityCallback.onRequestPermissionResult(requestCode, new String[]{permission}, new int[]{0});
+            if (mActivityPermissionRequestCallback != null){
+                mActivityPermissionRequestCallback.onRequestPermissionResult(requestCode, new String[]{permission}, new int[]{PackageManager.PERMISSION_GRANTED});
+            }else{
+                BDebug.w("acRequestPermissions error: mActivityPermissionRequestCallback is null. Do you forget to call registerPermissionRequestResult() of EUExBase's instance?");
+            }
         }
     }
 

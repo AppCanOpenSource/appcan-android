@@ -265,6 +265,13 @@ public abstract class EUExBase implements IActivityCallback {
     }
 
     /**
+     * 修复requestPermission是通过三方应用调起时，收不到回调的问题
+     */
+    public final void registerPermissionRequestResult() {
+        getACEContext().registerActivityForPermissionRequest(this);
+    }
+
+    /**
      * 运行一个Activity
      *
      * @param intent 目标Intent
