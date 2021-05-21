@@ -951,6 +951,9 @@ public class WDataManager {
                 String indexPath = widgetData.m_indexUrl.substring(matchAssetPath.length());
                 String matchContentPath = "file://" + m_sboxPath + "widget/";
                 widgetData.m_indexUrl = matchContentPath + indexPath;
+                String finalIndexPath = m_sboxPath + "widget/" + indexPath;
+                widgetData.m_indexUrl = BUtility.getUriForFileWithFileProvider(m_context, finalIndexPath).toString();
+                BDebug.i("WDataManager", "widgetData.m_indexUrl=" + widgetData.m_indexUrl);
             }
         } else {
             widgetData.m_indexUrl = assetsData.m_indexUrl;
