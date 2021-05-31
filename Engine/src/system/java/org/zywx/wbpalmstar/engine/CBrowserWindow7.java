@@ -130,7 +130,8 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
                 || url.startsWith("content://");
         boolean isCustomUrl = url.startsWith("alipay://")
                 || url.startsWith("alipays://")
-                || url.startsWith("weixin://");
+                || url.startsWith("weixin://")
+                || url.startsWith("upwrp://");
         if (!isUrl) {
             if (isCustomUrl) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);

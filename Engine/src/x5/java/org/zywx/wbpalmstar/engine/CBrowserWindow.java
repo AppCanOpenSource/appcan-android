@@ -25,7 +25,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Message;
 import android.widget.Toast;
 
@@ -108,7 +107,10 @@ public class CBrowserWindow extends EXWebViewClient {
             return true;
         }
         boolean isUrl = url.startsWith("file") || url.startsWith("http") || url.startsWith("content://");
-        boolean isCustomUrl = url.startsWith("alipay://") || url.startsWith("weixin://");
+        boolean isCustomUrl = url.startsWith("alipay://")
+                || url.startsWith("alipays://")
+                || url.startsWith("weixin://")
+                || url.startsWith("upwrp://");
         if (!isUrl) {
             if (isCustomUrl) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
