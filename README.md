@@ -166,7 +166,7 @@ QQ交流群：173758265
   **说明**：生成aar需要将`Engine`目录下的`build.gradle`文件中的
 
   ```groovy
-  apply plugin: 'com.android.applicaiton'
+  apply plugin: 'com.android.application'
   ```
 
   替换成
@@ -310,7 +310,7 @@ https://github.com/sandy1108/appcan-gradle-plugin
 
 #### 4.6版本
 
-1. minSdkVerssion依然22保持不变，targetSdkVersion提升至30，compileSdkVersion也提升至30；
+1. minSdkVersion依然22保持不变，targetSdkVersion提升至29，compileSdkVersion也提升至30；
 2. 由于targetSdkVersion升级到30，Android相关新特性和新的适配需要插件开发者关注，比如分区存储权限的变更等；
 3. 由于业内现在的普遍规定，App启动时引擎框架内默认不会强制申请任何权限（4.6以下版本的引擎会强制申请三个权限：WRITE_EXTERNAL_STORAGE, READ_PHONE_STATE, ACCESS_COARSE_LOCATION）。对于原生插件来说，则需要自行检查自己的首次启动的权限申请是否妥当（比如是否缺失了上述三个权限是否会导致应用闪退或者异常，自动申请权限是否提前弹出了对用户友好的引导提示等等）；
 4. 工程配置升级，com.android.tools.build:gradle升级至4.1.2
