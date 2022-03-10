@@ -39,3 +39,12 @@ function openWindow(windowName){
         flag:1024
     });
 }
+
+function openWindowWithUrl(windowName, url){
+    uexWindow.open({
+        name:windowName,
+        data:url,
+        animID:12,
+        flag:0
+    });
+}
