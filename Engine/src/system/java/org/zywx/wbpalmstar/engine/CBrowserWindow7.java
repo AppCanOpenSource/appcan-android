@@ -199,8 +199,12 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
             mReferenceUrl = url;
             if (url.startsWith("http")) {
                 EBrowserWindow bWindow = target.getBrowserWindow();
+                EBrowserView.WebProgressHandler webProgressHandler = target.getWebProgressHandler();
                 if (bWindow != null && 1 == bWindow.getWidget().m_webapp) {
-                    bWindow.showProgress();
+//                    bWindow.showProgress();
+                    if (webProgressHandler != null) {
+                        webProgressHandler.showProgress();
+                    }
                 }
             }
         }
@@ -214,10 +218,14 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
         }
         EBrowserView target = (EBrowserView) view;
         EBrowserWindow bWindow = target.getBrowserWindow();
+        EBrowserView.WebProgressHandler webProgressHandler = target.getWebProgressHandler();
         if (url != null) {
             if (url.startsWith("http")) {
                 if (bWindow != null && 1 == bWindow.getWidget().m_webapp) {
-                    bWindow.hiddenProgress();
+//                    bWindow.hiddenProgress();
+                    if (webProgressHandler != null) {
+                        webProgressHandler.hideProgress();
+                    }
                 }
             }
             String oUrl = view.getOriginalUrl();

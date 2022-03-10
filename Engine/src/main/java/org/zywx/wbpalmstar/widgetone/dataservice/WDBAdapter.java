@@ -30,7 +30,7 @@ public class WDBAdapter {
     public static final String F_WIDGET_TABLE_NAME = "widget";
     // public static final String F_SPACE_TABLE_NAME = "space";
     // public static final String F_WIDGETONE_TABLE_NAME = "widgetone";
-    public static final int F_DB_VERSION = 12;
+    public static final int F_DB_VERSION = 13;
 
     public static final String F_COLUMN_ID = "_id";
     public static final String F_COLUMN_WIDGETONEID = "widgetOneId";
@@ -61,6 +61,8 @@ public class WDBAdapter {
     public static final String F_COLUMN_ORIENTATION = "orientation";
     public static final String F_COLUMN_OPAQUE = "opaque";
     public static final String F_COLUMN_BGCOLOR = "bgColor";
+    public static final String F_COLUMN_PROGRESS_COLOR_1 = "progressColor1";
+    public static final String F_COLUMN_PROGRESS_COLOR_2 = "progressColor2";
 
     public static final String F_WIDGET_CREATE_TABLE = "CREATE TABLE "
             + F_WIDGET_TABLE_NAME + " (" + F_COLUMN_ID
@@ -76,7 +78,8 @@ public class WDBAdapter {
             + F_COLUMN_DESCRIPTION + " TEXT," + F_COLUMN_EMAIL + " TEXT,"
             + F_COLUMN_AUTHOR + " TEXT," + F_COLUMN_LICENSE + " TEXT,"
             + F_COLUMN_ORIENTATION + " INTEGER," + F_COLUMN_OPAQUE + " TEXT,"
-            + F_COLUMN_BGCOLOR + " TEXT)";
+            + F_COLUMN_BGCOLOR + " TEXT," + F_COLUMN_PROGRESS_COLOR_1 + " TEXT,"
+            + F_COLUMN_PROGRESS_COLOR_2 + " TEXT)";
     private DatabaseHelper DBHelper;
     private SQLiteDatabase db;
 

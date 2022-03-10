@@ -59,6 +59,7 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
     private Context mContext;
     private EUExManager mUExMgr;
     private EBrowserWindow mBroWind;
+    private WebProgressHandler mWebProgressHandler;
     private boolean mShouldOpenInSystem;
     private boolean mOpaque;
     private boolean mOAuth;
@@ -101,6 +102,10 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
                 super.setRemoteDebug(debug == 1);
             }
         }
+    }
+
+    public void setWebProgressHandler(WebProgressHandler webProgressHandler) {
+        mWebProgressHandler = webProgressHandler;
     }
 
     public EUExManager getEUExManager() {
@@ -823,6 +828,10 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
         }
     }
 
+    public WebProgressHandler getWebProgressHandler() {
+        return mWebProgressHandler;
+    }
+
     public EBrowserWindow getBrowserWindow() {
 
         return mBroWind;
@@ -1341,6 +1350,7 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
         }
         mDestroyed = true;
         mBroWind = null;
+        mWebProgressHandler = null;
         mContext = null;
         clearView();
         clearHistory();
@@ -1498,5 +1508,14 @@ public class EBrowserView extends ACEWebView implements View.OnLongClickListener
         if (!TextUtils.isEmpty(mExeJS)){
             loadUrl("javascript:"+mExeJS+"//"+System.currentTimeMillis());
         }
+    }
+
+    /**
+     * 接口用于定义外部显示的加载进度
+     */
+    public interface WebProgressHandler {
+        void changeLoadingWebProgressValue(int progressInt);
+        void showProgress();
+        void hideProgress();
     }
 }

@@ -23,7 +23,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.content.Intent;
 import android.net.Uri;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
@@ -52,12 +51,16 @@ public class CBrowserMainFrame extends WebChromeClient {
     public void onProgressChanged(WebView view, int newProgress) {
         if (view != null) {
             EBrowserView target = (EBrowserView) view;
-            EBrowserWindow bWindow = target.getBrowserWindow();
-            if (bWindow != null) {
-                bWindow.setGlobalProgress(newProgress);
-                if (100 == newProgress) {
-                    bWindow.hiddenProgress();
-                }
+//            EBrowserWindow bWindow = target.getBrowserWindow();
+//            if (bWindow != null) {
+//                bWindow.setGlobalProgress(newProgress);
+//                if (100 == newProgress) {
+//                    bWindow.hiddenProgress();
+//                }
+//            }
+            EBrowserView.WebProgressHandler webProgressHandler = target.getWebProgressHandler();
+            if (webProgressHandler != null) {
+                webProgressHandler.changeLoadingWebProgressValue(newProgress);
             }
         }
     }
