@@ -115,6 +115,10 @@ public class WWidgetData implements Parcelable,Cloneable {
     public int m_widgetAdStatus;
     // 是否是webApp(0-不是; 1-是)
     public int m_webapp = 0;
+    // 进度条颜色1
+    public String mProgressColor1 = null;
+    // 进度条颜色2
+    public String mProgressColor2 = null;
     /**
      * 被禁用的插件
      * @deprecated
@@ -185,6 +189,8 @@ public class WWidgetData implements Parcelable,Cloneable {
             widget.m_orientation = source.readInt();
             widget.m_widgetAdStatus = source.readInt();
             widget.m_webapp = source.readInt();
+            widget.mProgressColor1 = source.readString();
+            widget.mProgressColor2 = source.readString();
             widget.m_opaque = source.readString();
             widget.m_bgColor = source.readString();
             widget.m_appkey = source.readString();
@@ -284,6 +290,8 @@ public class WWidgetData implements Parcelable,Cloneable {
         parcel.writeInt(m_orientation);
         parcel.writeInt(m_widgetAdStatus);
         parcel.writeInt(m_webapp);
+        parcel.writeString(mProgressColor1);
+        parcel.writeString(mProgressColor2);
         parcel.writeString(m_opaque);
         parcel.writeString(m_bgColor);
         parcel.writeString(m_appkey);
@@ -356,6 +364,10 @@ public class WWidgetData implements Parcelable,Cloneable {
         sb.append("m_widgetAdStatus: " + m_widgetAdStatus);
         sb.append("\n");
         sb.append("m_webapp: " + m_webapp);
+        sb.append("\n");
+        sb.append("mProgressColor1: " + mProgressColor1);
+        sb.append("\n");
+        sb.append("mProgressColor2: " + mProgressColor2);
         sb.append("\n");
         sb.append("m_appkey: " + m_appkey);
         sb.append("\n");

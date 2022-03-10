@@ -427,6 +427,8 @@ public class WDataManager {
                 widgetData.m_orientation = cursor.getInt(21);
                 widgetData.m_opaque = cursor.getString(cursor.getColumnIndex(WDBAdapter.F_COLUMN_OPAQUE));
                 widgetData.m_bgColor = cursor.getString(cursor.getColumnIndex(WDBAdapter.F_COLUMN_BGCOLOR));
+                widgetData.mProgressColor1 = cursor.getString(cursor.getColumnIndex(WDBAdapter.F_COLUMN_PROGRESS_COLOR_1));
+                widgetData.mProgressColor2 = cursor.getString(cursor.getColumnIndex(WDBAdapter.F_COLUMN_PROGRESS_COLOR_2));
                 // widgetData.m_widgetAdStatus = cursor.getInt(22);
             }
             cursor.close();
@@ -469,6 +471,8 @@ public class WDataManager {
                 widgetData.m_orientation = cursor.getInt(21);
                 widgetData.m_opaque = cursor.getString(cursor.getColumnIndex(WDBAdapter.F_COLUMN_OPAQUE));
                 widgetData.m_bgColor = cursor.getString(cursor.getColumnIndex(WDBAdapter.F_COLUMN_BGCOLOR));
+                widgetData.mProgressColor1 = cursor.getString(cursor.getColumnIndex(WDBAdapter.F_COLUMN_PROGRESS_COLOR_1));
+                widgetData.mProgressColor2 = cursor.getString(cursor.getColumnIndex(WDBAdapter.F_COLUMN_PROGRESS_COLOR_2));
                 // widgetData.m_widgetAdStatus = cursor.getInt(22);
             }
             cursor.close();
@@ -681,6 +685,8 @@ public class WDataManager {
         cv.put(WDBAdapter.F_COLUMN_ORIENTATION, widgetData.m_orientation);
         cv.put(WDBAdapter.F_COLUMN_OPAQUE, widgetData.m_opaque);
         cv.put(WDBAdapter.F_COLUMN_BGCOLOR, widgetData.m_bgColor);
+        cv.put(WDBAdapter.F_COLUMN_PROGRESS_COLOR_1, widgetData.mProgressColor1);
+        cv.put(WDBAdapter.F_COLUMN_PROGRESS_COLOR_2, widgetData.mProgressColor2);
         widgetDBId = db.insert(cv, tableName);
         widgetData.m_id = Integer.parseInt(String.valueOf(widgetDBId));
 
@@ -943,6 +949,8 @@ public class WDataManager {
         widgetData.mErrorPath=xmlWidgetData.mErrorPath;
         widgetData.noHardwareList=xmlWidgetData.noHardwareList;
         widgetData.splashDialogPageVersion=xmlWidgetData.splashDialogPageVersion;
+        widgetData.mProgressColor1=assetsData.mProgressColor1;
+        widgetData.mProgressColor2=assetsData.mProgressColor2;
 
         // 处理index url
         if (isUpdateWidget && isCopyAssetsFinish) {
@@ -1594,6 +1602,10 @@ public class WDataManager {
                                 widgetData.m_orientation = Integer.parseInt(value);
                             }
                         } else if ("webapp".equals(localName)) {
+                            widgetData.mProgressColor1 = parser.getAttributeValue(null,
+                                    "progressColor1");
+                            widgetData.mProgressColor2 = parser.getAttributeValue(null,
+                                    "progressColor2");
                             String text = parser.nextText();
                             if ("true".equals(text)) {
                                 widgetData.m_webapp = 1;
