@@ -18,12 +18,6 @@
 
 package org.zywx.wbpalmstar.engine;
 
-import org.json.JSONObject;
-import org.zywx.wbpalmstar.base.BUtility;
-import org.zywx.wbpalmstar.base.WebViewSdkCompat;
-import org.zywx.wbpalmstar.engine.external.Compat;
-import org.zywx.wbpalmstar.engine.universalex.EUExScript;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -31,7 +25,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -40,7 +36,18 @@ import android.view.ViewConfiguration;
 import android.widget.LinearLayout;
 import android.widget.Scroller;
 
-public class EBounceView extends LinearLayout {
+import org.json.JSONObject;
+import org.zywx.wbpalmstar.base.BDebug;
+import org.zywx.wbpalmstar.base.BUtility;
+import org.zywx.wbpalmstar.base.DensityUtil;
+import org.zywx.wbpalmstar.base.WebViewSdkCompat;
+import org.zywx.wbpalmstar.engine.external.Compat;
+import org.zywx.wbpalmstar.engine.external.WebProgress;
+import org.zywx.wbpalmstar.engine.universalex.EUExScript;
+
+public class EBounceView extends LinearLayout implements EBrowserView.WebProgressHandler {
+
+    private static final String TAG = "EBounceView";
 
     private int mLastY;
     private Context mContext;
@@ -86,6 +93,8 @@ public class EBounceView extends LinearLayout {
 
     private float mDensity = ESystemInfo.getIntence().mDensity;
 
+    private WebProgress mWebProgress;
+
     public EBounceView(Context context) {
         this(context, null);
     }
@@ -110,6 +119,12 @@ public class EBounceView extends LinearLayout {
 
     @Override
     public void addView(View child) {
+        // 初始化web顶部进度条
+        mWebProgress = new WebProgress(mContext);
+        mWebProgress.hide();
+        LinearLayout.LayoutParams webProgressLParams = new LinearLayout.LayoutParams(Compat.FILL, DensityUtil.dp2px(2));
+        addView(mWebProgress, webProgressLParams);
+
         mHeaderView = new EBounceViewHeader(mContext, EViewEntry.F_BOUNCE_TYPE_TOP);
         LayoutParams hlp = new LinearLayout.LayoutParams(Compat.FILL, mBounceViewHeight);
         hlp.topMargin = -mBounceViewHeight;
@@ -120,7 +135,30 @@ public class EBounceView extends LinearLayout {
         mBrwView = (EBrowserView) child;
         LayoutParams wlp = new LinearLayout.LayoutParams(Compat.FILL, Compat.FILL);
         wlp.weight = 1.0f;
+        mBrwView.setWebProgressHandler(this);
         addView(mBrwView, wlp);
+        // 在mBrwView初始化后再进行progressColor的处理逻辑
+        try {
+            if (mBrwView != null) {
+                String color1 = mBrwView.getCurrentWidget().mProgressColor1;
+                String color2 = mBrwView.getCurrentWidget().mProgressColor2;
+                if (TextUtils.isEmpty(color1)
+                        && !TextUtils.isEmpty(mBrwView.getCurrentWidget().mProgressColor2)) {
+                    color1 = mBrwView.getCurrentWidget().mProgressColor2;
+                }
+                if (!TextUtils.isEmpty(color1)) {
+                    if (TextUtils.isEmpty(color2)) {
+                        mWebProgress.setColor(color1);
+                    } else {
+                        mWebProgress.setColor(color1, color2);
+                    }
+                }
+            }
+//        mWebProgress.setColor("#D81B60");             // 设置颜色
+//        mWebProgress.setColor("#D81B60","#D81B60"); // 设置渐变色
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         mTailView = new EBounceViewHeader(mContext, EViewEntry.F_BOUNCE_TYPE_BOTTOM);
         LayoutParams tlp = new LinearLayout.LayoutParams(Compat.FILL, mBounceViewHeight);
@@ -128,6 +166,60 @@ public class EBounceView extends LinearLayout {
         tlp.gravity = Gravity.CENTER;
         addView(mTailView, tlp);
         mTailView.setVisibility(GONE);
+    }
+
+    @Override
+    public void changeLoadingWebProgressValue(int progressInt) {
+        try {
+            if (mWebProgress == null) {
+                BDebug.i("changeLoadingWebProgressValue fail: mWebProgress == null");
+                return;
+            }
+            if (mWebProgress.isShown() && mBrwView != null && 1 == mBrwView.getBrowserWindow().getWidget().m_webapp) {
+                BDebug.i("changeLoadingWebProgressValue: progressInt=" + progressInt);
+                mWebProgress.setWebProgress(progressInt);
+            }
+        } catch (Exception e) {
+            if (BDebug.isDebugMode()) {
+                Log.w(TAG, "changeLoadingWebProgressValue exception", e);
+            }
+        }
+    }
+
+    @Override
+    public void showProgress() {
+        try {
+            if (mWebProgress == null) {
+                BDebug.i("showProgress fail: mWebProgress == null");
+                return;
+            }
+            if (mBrwView != null && 1 == mBrwView.getBrowserWindow().getWidget().m_webapp) {
+                BDebug.i("showProgress");
+                mWebProgress.show();
+            }
+        } catch (Exception e) {
+            if (BDebug.isDebugMode()) {
+                Log.w(TAG, "showProgress exception", e);
+            }
+        }
+    }
+
+    @Override
+    public void hideProgress() {
+        try {
+            if (mWebProgress == null) {
+                BDebug.i("hideProgress fail: mWebProgress == null");
+                return;
+            }
+            if (mBrwView != null && 1 == mBrwView.getBrowserWindow().getWidget().m_webapp) {
+                BDebug.i("hideProgress");
+                mWebProgress.hide();
+            }
+        } catch (Exception e) {
+            if (BDebug.isDebugMode()) {
+                Log.w(TAG, "hideProgress exception", e);
+            }
+        }
     }
 
     private VelocityTracker mVelocityTracker;
