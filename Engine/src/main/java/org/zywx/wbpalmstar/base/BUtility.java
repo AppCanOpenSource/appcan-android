@@ -1511,6 +1511,10 @@ public class BUtility {
         return softTokenVersion < BConstant.CURRENT_SOFTTOKEN_VERSION;
     }
 
+    public static boolean isInvalidIMEI(String imei) {
+        return TextUtils.isEmpty(imei) || imei.startsWith("0000");
+    }
+
     /**
      * 获取IMEI号类似作用的唯一标识，IMEI号获取不到就获取一个随机UUID
      *
@@ -1519,7 +1523,7 @@ public class BUtility {
      */
     public static String getUniqueIDLikeIMEI(Context context){
         String imei = getIMEI(context);
-        if (TextUtils.isEmpty(imei)){
+        if (isInvalidIMEI(imei)){
             imei = getRandomIdentifier();
             BDebug.i(TAG, "getUniqueIDLikeIMEI: use RandomIdentifier.");
         }

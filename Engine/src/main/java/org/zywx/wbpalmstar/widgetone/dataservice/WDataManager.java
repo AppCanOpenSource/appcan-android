@@ -26,13 +26,10 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.provider.Settings;
 import android.support.annotation.Keep;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Xml;
 
-import org.w3c.dom.Text;
 import org.xmlpull.v1.XmlPullParser;
 import org.zywx.wbpalmstar.acedes.ACEDes;
 import org.zywx.wbpalmstar.base.BDebug;
@@ -1372,7 +1369,9 @@ public class WDataManager {
                     && !BUtility.uriHasSchema(widgetData.m_iconPath)) {
                 widgetData.m_iconPath = widgetPath + widgetData.m_iconPath;
             }
-            widgetData.m_imei = BUtility.getIMEI(m_context);
+            // 移除引擎中自动获取IMEI的代码。
+            widgetData.m_imei = "";
+//            widgetData.m_imei = BUtility.getIMEI(m_context);
 
             try {
                 if (!isWidgetOneSBox) {
