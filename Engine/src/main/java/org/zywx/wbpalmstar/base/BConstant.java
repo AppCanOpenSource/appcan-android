@@ -31,7 +31,7 @@ public class BConstant {
     /**
      * 当前使用的softToken生成规则的版本，用于做兼容和更新的判断
      */
-    public static final int CURRENT_SOFTTOKEN_VERSION = 2;
+    public static final int CURRENT_SOFTTOKEN_VERSION = 3;
 
     public static final String SP_APP_KEY_SOFT_VER = "softTokenVersion";
 
