@@ -83,6 +83,11 @@ public class PushReportAgent implements PushReportConstants {
         String appkey = EUExUtil.getString("appkey");
         appkey = BUtility.decodeStr(appkey);
         checkAppStatus(context, wData.m_appId);
+        // 如果推送没有开启，则直接后续操作不执行
+        if (!widgetPush) {
+            BDebug.i(TAG, "initPush widgetPush is false");
+            return;
+        }
         PushReportUtility.getSoftToken(context, appkey);// 初始化将softToken保存在sp中
         SharedPreferences sp = context.getSharedPreferences(SP_APP,
                 Context.MODE_PRIVATE);

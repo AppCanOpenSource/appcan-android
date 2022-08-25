@@ -20,14 +20,11 @@ package org.zywx.wbpalmstar.platform.push.report;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Process;
 import android.text.TextUtils;
 import android.util.Log;
 
 import org.zywx.wbpalmstar.base.BUtility;
-import org.zywx.wbpalmstar.base.ResoureFinder;
 import org.zywx.wbpalmstar.base.vo.PushDeviceBindVO;
 import org.zywx.wbpalmstar.platform.push.PushService;
 
@@ -169,18 +166,7 @@ public class PushReportThread extends Thread implements PushReportConstants {
     }
 
     private void initPush() {
-        String localPushMes = "0";// setPushState 可以改变
-        String pushMes = "1";
-        SharedPreferences sp = m_activity.getSharedPreferences("saveData",
-                Context.MODE_MULTI_PROCESS);
-        Editor editor = sp.edit();
-        if (!PushReportAgent.widgetPush) {
-            pushMes = "0";
-        }
-        editor.putString("pushMes", pushMes);
-        editor.commit();
-        localPushMes = sp.getString("localPushMes", pushMes);
-        if ("1".equals(localPushMes) && "1".equals(pushMes)) {
+        if (PushReportUtility.isPushSwitchOpen(m_activity)) {
             Intent myIntent = new Intent(m_activity, PushService.class);
             myIntent.putExtra("type", 1);
             m_activity.startService(myIntent);

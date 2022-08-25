@@ -1579,7 +1579,7 @@ public class BUtility {
     public static String getMacAddress(Context context) {
         String macSerial = null;
         try {
-            WifiManager wifi = (WifiManager) context
+            WifiManager wifi = (WifiManager) context.getApplicationContext()
                     .getSystemService(Context.WIFI_SERVICE);
             WifiInfo info = wifi.getConnectionInfo();
             macSerial = info.getMacAddress();
