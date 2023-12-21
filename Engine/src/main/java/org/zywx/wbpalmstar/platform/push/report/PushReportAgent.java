@@ -83,7 +83,12 @@ public class PushReportAgent implements PushReportConstants {
         String appkey = EUExUtil.getString("appkey");
         appkey = BUtility.decodeStr(appkey);
         checkAppStatus(context, wData.m_appId);
-        BUtility.getSoftToken(context, appkey);// 初始化将softToken保存在sp中
+        // 如果推送没有开启，则直接后续操作不执行
+        if (!widgetPush) {
+            BDebug.i(TAG, "initPush widgetPush is false");
+            return;
+        }
+        PushReportUtility.getSoftToken(context, appkey);// 初始化将softToken保存在sp中
         SharedPreferences sp = context.getSharedPreferences(SP_APP,
                 Context.MODE_PRIVATE);
         Editor editor = sp.edit();
@@ -252,7 +257,7 @@ public class PushReportAgent implements PushReportConstants {
      */
     @SuppressWarnings("rawtypes")
     public static void setPushInfo(Context context, List nameValuePairs) {
-        String softToken = BUtility.getSoftToken(context, mCurWgt.m_appkey);
+        String softToken = PushReportUtility.getSoftToken(context, mCurWgt.m_appkey);
         nameValuePairs.add(new NameValuePairVO("softToken", softToken));
         nameValuePairs.add(new NameValuePairVO("deviceToken", softToken));
         PushReportThread.getPushBindUserThread(context, sAgent,
@@ -267,7 +272,7 @@ public class PushReportAgent implements PushReportConstants {
 
     public static void deviceBind(String userId, String userName, Context context) {
         try {
-            String softToken = BUtility.getSoftToken(context, mCurWgt.m_appkey);
+            String softToken = PushReportUtility.getSoftToken(context, mCurWgt.m_appkey);
             PushDeviceBindVO pushDeviceBind = new PushDeviceBindVO();
             pushDeviceBind.setDeviceName(Build.MODEL);
             pushDeviceBind.setDeviceVersion(Build.VERSION.RELEASE);
@@ -304,7 +309,7 @@ public class PushReportAgent implements PushReportConstants {
 
     public static void deviceUnBind(Context context) {
         try {
-            String softToken = BUtility.getSoftToken(context, mCurWgt.m_appkey);
+            String softToken = PushReportUtility.getSoftToken(context, mCurWgt.m_appkey);
             PushDeviceBindVO pushDeviceBind = new PushDeviceBindVO();
             pushDeviceBind.setSoftToken(softToken);
             pushDeviceBind.setDeviceToken(softToken);

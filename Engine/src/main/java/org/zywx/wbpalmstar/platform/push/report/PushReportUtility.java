@@ -130,6 +130,25 @@ public class PushReportUtility {
         }
     }
 
+    public static boolean isPushSwitchOpen(Context context) {
+        String localPushMes = "0";// setPushState 可以改变
+        String pushMes = "1";
+        SharedPreferences sp = context.getSharedPreferences("saveData",
+                Context.MODE_MULTI_PROCESS);
+        Editor editor = sp.edit();
+        if (!PushReportAgent.widgetPush) {
+            pushMes = "0";
+        }
+        editor.putString("pushMes", pushMes);
+        editor.commit();
+        localPushMes = sp.getString("localPushMes", pushMes);
+        return "1".equals(localPushMes) && "1".equals(pushMes);
+    }
+
+    public static String getSoftToken(Context context, String appkey){
+        return BUtility.getSoftToken(context, appkey);
+    }
+
     /**
      * sd卡记录信息
      *

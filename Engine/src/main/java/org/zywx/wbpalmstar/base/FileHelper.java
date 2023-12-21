@@ -25,6 +25,9 @@ import org.zywx.wbpalmstar.acedes.ACEDes;
 
 import java.io.*;
 
+/**
+ * @deprecated 暂无用途，准备在4.6或4.7版本中移除。
+ */
 public class FileHelper {
     public static final String SDCARD = Environment
             .getExternalStorageDirectory().getPath();

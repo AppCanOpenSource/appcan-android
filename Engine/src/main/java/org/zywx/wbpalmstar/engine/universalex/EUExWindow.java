@@ -4117,6 +4117,9 @@ public class EUExWindow extends EUExBase {
                 mBrwView.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        if (mBrwView == null){
+                            return;
+                        }
                         mBrwView.clearHistory();
                     }
                 }, 1000);

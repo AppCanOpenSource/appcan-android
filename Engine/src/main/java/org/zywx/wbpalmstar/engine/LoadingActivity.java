@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.ViewGroup;
@@ -24,13 +26,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.zywx.wbpalmstar.base.BDebug;
+import org.zywx.wbpalmstar.base.listener.OnAppCanInitStatusChanged;
 import org.zywx.wbpalmstar.base.util.ConfigXmlUtil;
 import org.zywx.wbpalmstar.base.util.PermissionUtils;
 import org.zywx.wbpalmstar.engine.callback.RequestPermissionsCallBcak;
 import org.zywx.wbpalmstar.engine.external.Compat;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
+import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
-import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,12 +53,19 @@ import static org.zywx.wbpalmstar.base.util.PermissionUtils.REQUESTFLAGDENIEDNOA
 
 public class LoadingActivity extends Activity implements RequestPermissionsCallBcak {
 
+    private static final String TAG = "LoadingActivity";
+    
     public static final String FINISH_BROADCAST_ACTION = "com.appcan.close";
 
     public static final String KEY_INTENT_ROOT_PAGE_DATA = "root_page_data";
 
     private static final int MSG_GET_WIDGET_DATA = 100;
     private static final int REQUEST_CODE_ASK_CALL_PHONE = 1;
+    private static final int REQUEST_CODE_START_SPLASH = 2;
+
+    private static final String SP_NAME_APPCAN_LOADING = "appcan_loading";
+    private static final String SP_KEY_APPCAN_LOADING_SHOWN_VERSION = "shownVersion";
+    private static final String SP_KEY_APPCAN_LOADING_SHOWN_VERSION_DEFAULT = "defaultVersion";
 
     private FrameLayout mRootLayout;
     private BroadcastReceiver mBroadcastReceiver;
@@ -63,14 +74,16 @@ public class LoadingActivity extends Activity implements RequestPermissionsCallB
 
     private boolean isTemp = false;
 
-    //申请两个权限，录音和文件读写
+    // 申请两个权限，手机状态权限和文件读写权限
     //1、首先声明一个数组permissions，将需要的权限都放在里面
-    private String[] permissions = {
+    private final String[] permissions = {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.READ_PHONE_STATE};
     //2、创建一个mPermissionList，逐个判断哪些权限未授予，未授予的权限存储到mPerrrmissionList中
     List<String> mPermissionList = new ArrayList<String>();
+    /**
+     * 用于防止再次onResume的时候重复执行逻辑
+     */
     private boolean isFrist = true;
 
 
@@ -130,6 +143,44 @@ public class LoadingActivity extends Activity implements RequestPermissionsCallB
         }
     }
 
+    /**
+     * 判断如果path不为空，并且version与上次显示过的version不同
+     *
+     * @return
+     */
+    private boolean shouldShowSplashPage(){
+        WWidgetData widgetData = AppCan.getInstance().getRootWidgetData();
+        String splashPageUrl = widgetData.splashDialogPagePath;
+        String splashPageVersion = widgetData.splashDialogPageVersion;
+        String lastVersion = getShownCustomSplashPageVersion();
+        BDebug.i(TAG, "shouldShowSplashPage: lastVersion=" + lastVersion + " splashPageVersion=" + splashPageVersion + " splashPageUrl=" + splashPageUrl);
+        return !TextUtils.isEmpty(splashPageUrl) // path不为空表示配置了splashPage
+                &&(TextUtils.isEmpty(lastVersion)||!lastVersion.equals(splashPageVersion)); // lastVersion为空则表示首次启动，需要展示；或者是lastVersion与本次不一致，表示版本号变了（不比大小，只比变化），也需要展示。
+    }
+
+    /**
+     * 获取是否已经显示过自定义首屏页面
+     */
+    private String getShownCustomSplashPageVersion(){
+        SharedPreferences sp = getSharedPreferences(SP_NAME_APPCAN_LOADING, Context.MODE_PRIVATE);
+        String shownVersion = sp.getString(SP_KEY_APPCAN_LOADING_SHOWN_VERSION, "");
+        return shownVersion;
+    }
+
+    /**
+     * 保存状态：是否已经显示过自定义的首屏页面（保存版本号）
+     *
+     * @param showVersion
+     */
+    private void setShownCustomSplashPageVersion(String showVersion){
+        // 这个地方的只要存值，就不要存空，下一次取出判断的时候，就可以判断出来是否是首次了。
+        if (TextUtils.isEmpty(showVersion)){
+            showVersion = SP_KEY_APPCAN_LOADING_SHOWN_VERSION_DEFAULT;
+        }
+        SharedPreferences sp = getSharedPreferences(SP_NAME_APPCAN_LOADING, Context.MODE_PRIVATE);
+        sp.edit().putString(SP_KEY_APPCAN_LOADING_SHOWN_VERSION, showVersion).apply();
+    }
+
     @Override
     public void onBackPressed() {
     }
@@ -137,10 +188,33 @@ public class LoadingActivity extends Activity implements RequestPermissionsCallB
     @Override
     protected void onResume() {
         super.onResume();
+        if (isFrist && shouldShowSplashPage()) {
+            Intent intent = new Intent(this, LaunchNoticeWebViewActivity.class);
+            startActivityForResult(intent, REQUEST_CODE_START_SPLASH);
+            BDebug.i(TAG, "start LaunchNoticePage");
+        }else{
+            startEngin();
+            BDebug.i(TAG, "escape LaunchNoticePage");
+        }
+        isFrist = false;
+    }
 
-        if (isFrist) {
-            requsetPerssions(permissions);
-            isFrist = false;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_START_SPLASH && resultCode == Activity.RESULT_OK){
+            String status = data.getExtras().getString(LaunchNoticeWebViewActivity.INTENT_KEY_STATUS, "");
+            if (status.equals(OnAppCanInitStatusChanged.STATUS.CONTINUE)){
+                // 继续
+                WWidgetData widgetData = AppCan.getInstance().getRootWidgetData();
+                String splashPageVersion = widgetData.splashDialogPageVersion;
+                setShownCustomSplashPageVersion(splashPageVersion);
+                startEngin();
+            }else{
+                // 退出
+                finish();
+            }
+        }else{
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 

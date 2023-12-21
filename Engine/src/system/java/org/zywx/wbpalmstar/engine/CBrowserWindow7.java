@@ -30,10 +30,11 @@ import android.net.http.SslError;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Message;
-import android.util.Log;
 import android.webkit.CookieSyncManager;
 import android.webkit.HttpAuthHandler;
 import android.webkit.SslErrorHandler;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.widget.Toast;
 
@@ -228,7 +229,7 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
         mIsPageOnload = true;
         ESystemInfo info = ESystemInfo.getIntence();
 
-        if (!target.isWebApp()) { //4.3及4.3以下手机
+        if (!target.isWebApp()) {
             int defaultFontSize = (int) (info.mDefaultFontSize / target.getScaleWrap());
             info.mScaled = true;
             target.setDefaultFontSize(defaultFontSize);
@@ -267,8 +268,7 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
         if (view instanceof EBrowserView){
             windowName = ((EBrowserView) view).getName();
             notifyScaleChangedToJS((EBrowserView) view);
-//            BDebug.i("windowName = " + windowName + " oldScale = " + oldScale + " newScale = " + newScale);
-            Log.e("TAG","windowName = " + windowName + " oldScale = " + oldScale + " newScale = " + newScale);
+            BDebug.i(TAG,"windowName = " + windowName + " oldScale = " + oldScale + " newScale = " + newScale);
             EBrowserView target = (EBrowserView) view;
             ESystemInfo info = ESystemInfo.getIntence();
             int defaultFontSize;
@@ -279,7 +279,7 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
     }
 
     private void notifyScaleChangedToJS(EBrowserView webview){
-        String js = "javascript:if(window.onresize){window.onresize()}else{console.log('AppCanEngine-->notifyScaleChangedToJS else')}";
+        String js = "javascript:if(window.onresize){window.onresize()}else{console.log('AppCanEngine-->notifyScaleChangedToJS else: window.onresize 未定义。建议监听此回调用于适配页面大小变化时布局的变化。')}";
         webview.addUriTask(js);
     }
 
@@ -361,6 +361,21 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
     }
 
     @Override
+    public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
+        super.doUpdateVisitedHistory(view, url, isReload);
+        BDebug.d(TAG, "doUpdateVisitedHistory url: " + url + " isReload: " + isReload);
+    }
+
+    @Override
+    public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
+        super.onReceivedHttpError(view, request, errorResponse);
+        if (request == null){
+            return;
+        }
+        BDebug.w(TAG, "onReceivedHttpError url: " + request.getUrl());
+    }
+
+    @Override
     public void onReceivedError(WebView view, int errorCode,
                                 String description, String failingUrl) {
         EBrowserView errorView = (EBrowserView) view;
@@ -372,7 +387,7 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
     @Override
     public void onTooManyRedirects(WebView view, Message cancelMsg,
                                    Message continueMsg) {
-
+        BDebug.w(TAG, "onTooManyRedirects ====");
         continueMsg.sendToTarget();
     }
 
@@ -380,8 +395,28 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
     public void onReceivedSslError(WebView view, SslErrorHandler handler,
                                    SslError error) {
         if (Http.isCheckTrustCert()){
+            // 如果需要检测服务端证书，则此处直接走父类默认逻辑，该怎么检测怎么检测。
             BDebug.w("onReceivedSslError: " + error);
-            super.onReceivedSslError(view,handler,error);
+            super.onReceivedSslError(view, handler, error);
+            // 弹对话框询问是否继续：下面这种逻辑目前被注释掉，主要是因为在App内这种行为不太合适，因为毕竟不是浏览器，页面都是可控的，个人认为不应该存在需要用户来决定是否继续。如果却有需求，可以自行定制。
+//            final AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+//            builder.setMessage("SSL证书错误，是否继续？");
+//            builder.setPositiveButton("继续", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    handler.proceed();
+//                    dialog.dismiss();
+//                }
+//            });
+//            builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    handler.cancel();
+//                    dialog.dismiss();
+//                }
+//            });
+//            final AlertDialog dialog = builder.create();
+//            dialog.show();
         }else{
             BDebug.w("onReceivedSslError, will be ignored: " + error);
             handler.proceed();
@@ -391,7 +426,6 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
     @Override
     public void onReceivedHttpAuthRequest(WebView view,
                                           HttpAuthHandler handler, String host, String realm) {
-
         super.onReceivedHttpAuthRequest(view, handler, host, realm);
     }
 
@@ -429,4 +463,19 @@ public class CBrowserWindow7 extends ACEDESBrowserWindow7 {
             e.printStackTrace();
         }
     }
+
+    /*
+     * This method is unstable and generally leads to error, so deprecate.
+     *
+     * @Override public void onScaleChanged(WebView view, float oldScale, float
+     * newScale) { ESystemInfo info = ESystemInfo.getIntence(); float willScale
+     * = info.mFinished ? (newScale / oldScale) : newScale; adptScaled(view,
+     * willScale); }
+     *
+     * private void adptScaled(WebView view, float newScale){ ESystemInfo info =
+     * ESystemInfo.getIntence(); EBrowserView target = (EBrowserView)view;
+     * if(!info.mScaled&&!target.isWebApp()){ int size =
+     * (int)(info.mDefaultFontSize / newScale); info.mDefaultFontSize = size;
+     * target.setDefaultFontSize(size); info.mScaled = true; } }
+     */
 }

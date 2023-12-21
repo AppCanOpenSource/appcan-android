@@ -13,16 +13,15 @@ buildscript {
 
     def mavenUrl=System.getenv("GRADLE_M2_HOME");
     if(mavenUrl==null){
-        mavenUrl="/usr/share/gradle/m2repository"
+        println("AppCanPkgError: GRADLE_M2_HOME mavenUrl is null. Not Supported Environment.");
     }
-
     repositories {
-      maven {
+        maven {
             url mavenUrl
-      }
+        }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.3'
+        classpath 'com.android.tools.build:gradle:4.1.2'
     }
 }
 
@@ -70,7 +69,7 @@ buildscript {
                 project.ext.set("rewriterGradlePluginDir", rewriterGradlePluginDir);
                 String rewriterPluginName = rewriterDir.getParentFile().getName();
                 project.ext.set("rewriterPluginName", rewriterPluginName);
-                println("find rewriter plugin : " + rewriterPluginName);
+                println("rewriter---find rewriter plugin : " + rewriterPluginName);
             }
         }
         int status0 = p.waitFor();
@@ -80,12 +79,13 @@ buildscript {
         String rewriterGradlePluginDir = project.rewriterGradlePluginDir;
         dependencies {
             if (rewriterPluginName != "" && rewriterGradlePluginDir != "") {
-                println("rewriter depenencies: " + rewriterGradlePluginDir);
+                println("rewriter---rewriter depenencies: " + rewriterGradlePluginDir);
+                // 依赖rewriter目录下的所有gradle插件相关的jar包
                 classpath fileTree(dir: rewriterGradlePluginDir, include: '*.jar');
             }
         }
     }catch(Exception e){
-        println("rewriter--exception: " + e.getMessage());
+        println("rewriter---exception: " + e.getMessage());
     }
 
 }
@@ -96,19 +96,29 @@ try{
     String rewriterGradlePluginDir = project.rewriterGradlePluginDir;
     if("uexNBSAppAgent".equals(rewriterPluginName)){
         apply plugin: 'newlens'
-        println("apply plugin: newlens success")
+        println("rewriter---apply plugin: newlens success")
     }else if("uexOneAPM".equals(rewriterPluginName)){
         apply plugin: 'oneapm'
-        println("apply plugin: oneapm success")
+        println("rewriter---apply plugin: oneapm success")
+    }else if("uexBonree".equals(rewriterPluginName)){
+        apply plugin: 'bonree'
+        println("rewriter---apply plugin: bonree success")
     }else{
-        println("no rewriter plugin or not supported plugin: " + rewriterPluginName);
+        println("rewriter---no rewriter plugin or not supported plugin: " + rewriterPluginName);
     }
 }catch(Exception e){
-    println("rewriter--exception: " + e.getMessage());
+    println("rewriter---exception: " + e.getMessage());
 }
 repositories {
     flatDir {
         dirs 'libs'
+    }
+    def mavenUrl=System.getenv("GRADLE_M2_HOME");
+    if(mavenUrl==null){
+        println("AppCanPkgError: GRADLE_M2_HOME mavenUrl is null. Not Supported Environment.");
+    }
+    maven {
+        url mavenUrl
     }
 }
 
@@ -123,8 +133,8 @@ dependencies {
 }
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion "28.0.3"
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -166,7 +176,7 @@ android {
 
     defaultConfig {
         minSdkVersion 22
-        targetSdkVersion 28
+        targetSdkVersion 29
         multiDexEnabled true
         // 过滤armeabi架构，如有其它架构需要，后续可以再增加或自行定制引擎
         // 此处AbiFilters选项的值，打包服务脚本程序可能会对其进行修改，不要进行大幅度的变更格式

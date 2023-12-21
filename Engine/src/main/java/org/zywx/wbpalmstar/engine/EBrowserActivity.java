@@ -30,7 +30,6 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -46,25 +45,23 @@ import android.view.Surface;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.webkit.ValueCallback;
-import android.webkit.WebChromeClient;
 import android.widget.FrameLayout;
 
 import com.slidingmenu.lib.SlidingMenu;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.zywx.wbpalmstar.acedes.ACEDes;
 import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.ResoureFinder;
 import org.zywx.wbpalmstar.base.WebViewSdkCompat;
 import org.zywx.wbpalmstar.base.util.ActivityActionRecorder;
 import org.zywx.wbpalmstar.base.util.ConfigXmlUtil;
+import org.zywx.wbpalmstar.engine.callback.IActivityCallback;
 import org.zywx.wbpalmstar.engine.external.Compat;
-import org.zywx.wbpalmstar.engine.universalex.EUExBase;
 import org.zywx.wbpalmstar.engine.universalex.EUExCallback;
 import org.zywx.wbpalmstar.engine.universalex.EUExEventListener;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
+import org.zywx.wbpalmstar.engine.universalex.IACEContext;
 import org.zywx.wbpalmstar.engine.universalex.ThirdPluginMgr;
 import org.zywx.wbpalmstar.engine.universalex.ThirdPluginObject;
 import org.zywx.wbpalmstar.platform.push.PushDataInfo;
@@ -72,9 +69,6 @@ import org.zywx.wbpalmstar.platform.push.PushRecieveMsgReceiver;
 import org.zywx.wbpalmstar.platform.push.report.PushReportConstants;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -82,12 +76,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public final class EBrowserActivity extends BaseActivity {
+public final class EBrowserActivity extends BaseActivity implements IACEContext {
 
     public static final String KET_WIDGET_DATE="key_widget_data";
 
-    public static final int F_OAUTH_CODE = 100001;
-    public final static int FILECHOOSER_RESULTCODE = 233;
     public final static String APP_TYPE_NOT_START = "0";
     public final static String APP_TYPE_START_BACKGROUND = "1";
     public final static String APP_TYPE_START_FORGROUND= "2";
@@ -96,8 +88,9 @@ public final class EBrowserActivity extends BaseActivity {
     private boolean mKeyDown;
     private EHandler mEHandler;
     private EBrowserAround mBrowserAround;
-    private EUExBase mActivityCallback;
-    private boolean mCallbackRuning;
+    private IActivityCallback mActivityCallback;
+    private boolean mCallbackRunning;
+    private IActivityCallback mActivityPermissionRequestCallback;
     private EBrowserMainFrame mEBrwMainFrame;
     private boolean mFinish;
     private boolean mVisable;
@@ -114,19 +107,9 @@ public final class EBrowserActivity extends BaseActivity {
     public static boolean isForground = false;
 
     public SlidingMenu globalSlidingMenu;
-    private WebViewSdkCompat.ValueCallback<Uri> mUploadMessage;
+
     public static boolean mLoadingRemoved = false;
 
-    public ValueCallback<Uri[]> getUploadMessage() {
-        return uploadMessage;
-    }
-
-    public void setUploadMessage(ValueCallback<Uri[]> uploadMessage) {
-        this.uploadMessage = uploadMessage;
-    }
-
-    private ValueCallback<Uri[]> uploadMessage;
-    public static final int REQUEST_SELECT_FILE = 100;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(null);
@@ -285,7 +268,8 @@ public final class EBrowserActivity extends BaseActivity {
         }
         ConfigXmlUtil.setFullScreen(this);
 
-        ACEDes.getObfuscationList();
+        // 部分加密文件列表。此功能弃用已久，故自4.6版本起，不再调用，提升性能。
+        // ACEDes.getObfuscationList();
 
         // String[] plugins = {"uexXmlHttpMgr", "uexCamera"};
         // rootWidget.disablePlugins = plugins;
@@ -613,6 +597,7 @@ public final class EBrowserActivity extends BaseActivity {
         }
     }
 
+    @Override
     public final void exitBrowser() {
         if (mSipBranch) {
             Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -715,69 +700,54 @@ public final class EBrowserActivity extends BaseActivity {
     @Override
     protected final void onActivityResult(int requestCode, int resultCode,
                                           Intent data) {
-        if (F_OAUTH_CODE == requestCode) {
-            if (null != data) {
-                int result = data.getIntExtra("result", 0);
-                if (0 == result) {
-                    exitBrowser();
-                    return;
-                }
-                String authorizeID = data.getStringExtra("authorizeID");
-                uexOnAuthorize(authorizeID);
+        if (mCallbackRunning) {
+            if(null != mActivityCallback){
+                mActivityCallback.onActivityResult(requestCode, resultCode, data);
+                mActivityCallback = null;
             }
-            return;
-        } else if (requestCode == FILECHOOSER_RESULTCODE) {
-            if (null == mUploadMessage)
-                return;
-            Uri result = data == null || resultCode != RESULT_OK ? null : data.getData();
-            mUploadMessage.onReceiveValue(result);
-            mUploadMessage = null;
-        } else if(requestCode==REQUEST_SELECT_FILE) {
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            {
-
-                if (uploadMessage == null)
-                    return;
-                uploadMessage.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(resultCode, data));
-                uploadMessage = null;
-            }
-
-        }
-        if (mCallbackRuning && null != mActivityCallback) {
-            mActivityCallback.onActivityResult(requestCode, resultCode, data);
-            mCallbackRuning = false;
-            mActivityCallback = null;
+            mCallbackRunning = false;
         }
     }
 
-    public final void startActivityForResult(EUExBase callack, Intent intent,
+    @Override
+    public final void startActivityForResult(IActivityCallback callack, Intent intent,
                                              int requestCode) {
-        if (mCallbackRuning) {
+        if (mCallbackRunning) {
             return;
         }
         if (null != callack) {
             mActivityCallback = callack;
-            mCallbackRuning = true;
+            mCallbackRunning = true;
             super.startActivityForResult(intent, requestCode);
         }
     }
 
-    public final void registerActivityForResult(EUExBase callback) {
-        if (mCallbackRuning) {
+    @Override
+    public final void registerActivityForResult(IActivityCallback callback) {
+        if (mCallbackRunning) {
             return;
         }
         if (null != callback) {
             mActivityCallback = callback;
-            mCallbackRuning = true;
+            mCallbackRunning = true;
         }
     }
 
+    @Override
+    public void registerActivityForPermissionRequest(IActivityCallback callback) {
+        if (null != callback) {
+            mActivityPermissionRequestCallback = callback;
+        }
+    }
+
+    @Override
     public final void registerAppEventListener(EUExEventListener listener) {
         if (null != mBrowserAround) {
             mBrowserAround.registerAppEventListener(listener);
         }
     }
 
+    @Override
     public final void unRegisterAppEventListener(EUExEventListener listener) {
         if (null != mBrowserAround) {
             mBrowserAround.unRegisterAppEventListener(listener);
@@ -841,14 +811,6 @@ public final class EBrowserActivity extends BaseActivity {
                 loadByOtherApp();
             }
         }
-    }
-
-    public WebViewSdkCompat.ValueCallback<Uri> getmUploadMessage() {
-        return mUploadMessage;
-    }
-
-    public void setmUploadMessage(WebViewSdkCompat.ValueCallback<Uri> mUploadMessage) {
-        this.mUploadMessage = mUploadMessage;
     }
 
     public class EHandler extends Handler {
@@ -937,64 +899,109 @@ public final class EBrowserActivity extends BaseActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (mActivityCallback != null){
-            mActivityCallback.onRequestPermissionResult(requestCode, permissions, grantResults);
+        if (null != mActivityPermissionRequestCallback) {
+            mActivityPermissionRequestCallback.onRequestPermissionResult(requestCode, permissions, grantResults);
+            mActivityPermissionRequestCallback = null;
         }else{
-            BDebug.w("onRequestPermissionsResult error: mActivityCallback is null. Do you forget to call registerActivityResult() of EUExBase's instance?");
+            BDebug.w("onRequestPermissionsResult error: mActivityPermissionRequestCallback is null. Do you forget to call registerPermissionRequestResult() of EUExBase's instance?");
         }
 
     }
 
-    public void requsetPerssionsMore(final String[] perssions, EUExBase callack, String message, final int requestCode){
+    /**
+     * 请求多个权限
+     *
+     * @deprecated Wrong Spelling. use requestPermissionsMore method instead.
+     */
+    @Deprecated
+    public void requsetPerssionsMore(final String[] perssions, IActivityCallback callack, String message, final int requestCode){
+        acRequestPermissionsMore(perssions, callack, message, requestCode);
+    }
 
-//        if (mCallbackRuning) {
-//            return;
-//        }
+    /**
+     * 请求单个权限
+     *
+     * @deprecated Wrong Spelling. use requestPermissions method instead.
+     */
+    @Deprecated
+    public void requsetPerssions(final String perssions, IActivityCallback callack, String message, final int requestCode){
+        acRequestPermissions(perssions, callack, message, requestCode);
+    }
+
+    /**
+     * 请求多个权限
+     *
+     * @param permissions 权限列表
+     * @param message 权限请求提示语
+     * @param requestCode 请求编号
+     */
+    @Override
+    public void acRequestPermissionsMore(final String[] permissions, IActivityCallback callack, String message, final int requestCode){
         if (null != callack) {
-            mActivityCallback = callack;
-//            mCallbackRuning = true;
+            mActivityPermissionRequestCallback = callack;
         }
         //系统运行环境小于6.0不需要权限申请
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            mActivityCallback.onRequestPermissionResult(requestCode, perssions, new int[]{0});
+            if (mActivityPermissionRequestCallback != null){
+                mActivityPermissionRequestCallback.onRequestPermissionResult(requestCode, permissions, new int[]{PackageManager.PERMISSION_GRANTED});
+            }else{
+                BDebug.w("acRequestPermissionsMore error: mActivityPermissionRequestCallback is null. Do you forget to call registerPermissionRequestResult() of EUExBase's instance?");
+            }
             return;
         }
 
         List<String> permissionLists = new ArrayList<String>();
-        for (String permission : perssions) {
+        for (String permission : permissions) {
             if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                // 若有未授权的，则存起来重新申请
                 permissionLists.add(permission);
             }
         }
         if (!permissionLists.isEmpty()) {
             ActivityCompat.requestPermissions(this, permissionLists.toArray(new String[permissionLists.size()]), requestCode);
         } else {
-            //表示全都授权了
-            mActivityCallback.onRequestPermissionResult(requestCode, perssions, new int[]{0});
+            //未授权列表为空，表示全都授权了
+            if (mActivityPermissionRequestCallback != null){
+                // TODO 这里PackageManager.PERMISSION_GRANTED的个数应该与permission的个数一致，然而此处并未处理，后续应当改正。
+                mActivityPermissionRequestCallback.onRequestPermissionResult(requestCode, permissions, new int[]{PackageManager.PERMISSION_GRANTED});
+            }else{
+                BDebug.w("acRequestPermissionsMore error: mActivityPermissionRequestCallback is null. Do you forget to call registerPermissionRequestResult() of EUExBase's instance?");
+            }
         }
     }
 
-    public void requsetPerssions(final String perssions, EUExBase callack, String message, final int requestCode){
-
-//        if (mCallbackRuning) {
-//            return;
-//        }
-        if (null != callack) {
-            mActivityCallback = callack;
-//            mCallbackRuning = true;
+    /**
+     * 请求权限
+     *
+     * @param permission 权限
+     * @param message 权限请求提示语
+     * @param requestCode 请求编号
+     */
+    @Override
+    public void acRequestPermissions(final String permission, IActivityCallback callback, String message, final int requestCode){
+        if (null != callback) {
+            mActivityPermissionRequestCallback = callback;
         }
         //系统运行环境小于6.0不需要权限申请
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            mActivityCallback.onRequestPermissionResult(requestCode, new String[]{perssions}, new int[]{0});
+            if (mActivityPermissionRequestCallback != null){
+                mActivityPermissionRequestCallback.onRequestPermissionResult(requestCode, new String[]{permission}, new int[]{PackageManager.PERMISSION_GRANTED});
+            }else{
+                BDebug.w("acRequestPermissions error: mActivityPermissionRequestCallback is null. Do you forget to call registerPermissionRequestResult() of EUExBase's instance?");
+            }
             return;
         }
         //检查权限是否授权
-        int checkCallPhonePermisssion = ContextCompat.checkSelfPermission(this, perssions);
-        if(checkCallPhonePermisssion!= PackageManager.PERMISSION_GRANTED){
-            //判断是不是第一次申请权限，如果是第一次申请权限则返回fasle，如果之前拒绝再次申请则返回true
-            ActivityCompat.requestPermissions(EBrowserActivity.this, new String[]{perssions}, requestCode);
+        int checkPermissionResult = ContextCompat.checkSelfPermission(this, permission);
+        if(checkPermissionResult != PackageManager.PERMISSION_GRANTED){
+            //判断是不是第一次申请权限，如果是第一次申请权限则返回false，如果之前拒绝再次申请则返回true
+            ActivityCompat.requestPermissions(EBrowserActivity.this, new String[]{permission}, requestCode);
         }else {
-            mActivityCallback.onRequestPermissionResult(requestCode, new String[]{perssions}, new int[]{0});
+            if (mActivityPermissionRequestCallback != null){
+                mActivityPermissionRequestCallback.onRequestPermissionResult(requestCode, new String[]{permission}, new int[]{PackageManager.PERMISSION_GRANTED});
+            }else{
+                BDebug.w("acRequestPermissions error: mActivityPermissionRequestCallback is null. Do you forget to call registerPermissionRequestResult() of EUExBase's instance?");
+            }
         }
     }
 

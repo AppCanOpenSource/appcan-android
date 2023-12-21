@@ -179,6 +179,7 @@ public class EUExScript {
                 + "setPushHost:function(){uexDispatcher.dispatch('uexWidget','setPushHost',jo(arguments));},"
                 + "getPushHost:function(){return uexDispatcher.dispatch('uexWidget','getPushHost',jo(arguments));},"
                 + "reloadWidgetByAppId:function(){uexDispatcher.dispatch('uexWidget','reloadWidgetByAppId',jo(arguments));},"
+                + "splashPageAction:function(){uexDispatcher.dispatch('uexWidget','splashPageAction',jo(arguments));},"
                 + "closeLoading:function(){uexDispatcher.dispatch('uexWidget','closeLoading',jo(arguments));},"
                 + "moveToBack:function(){uexDispatcher.dispatch('uexWidget','moveToBack',jo(arguments));},"
                 + "setKeyboardMode:function(){uexDispatcher.dispatch('uexWidget','setKeyboardMode',jo(arguments));}};"

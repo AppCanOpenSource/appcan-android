@@ -18,12 +18,15 @@
 
 package org.zywx.wbpalmstar.base;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -38,6 +41,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
 import android.support.annotation.Keep;
+import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -69,10 +73,14 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class BUtility {
+
+    private static final String TAG = "BUtility";
+    
     public final static String F_SDCARD_PATH = "file:///sdcard/";
     public final static String F_RES_PATH = "file:///res/";
     public final static String F_DATA_PATH = "file:///data/";
@@ -100,6 +108,12 @@ public class BUtility {
     public final static String m_loadingImageSp = "loadingImageSp";
     public final static String m_loadingImagePath = "loadingImagePath";
     public final static String m_loadingImageTime = "loadingImageTime";
+
+    /**
+     * 是否使用旧版存储方式。默认为false，不使用，即不会将引擎生成的文件存放在外部存储公共空间，无需申请存储权限
+     * 除非特殊情况下可以通过代码修改这个常量开关，否则以后将一直都是false
+     */
+    public final static boolean useLegacyStorage = false;
 
     public static boolean isDes = false;
     public static String g_desPath = "";
@@ -277,8 +291,14 @@ public class BUtility {
     public static void initWidgetOneFile(Context context, String appId) {
         String root = null;
         appId += "/";
-        if (!WDataManager.isWidgetOneSBox && sdCardIsWork()) {
-            root = getSdCardRootPath();
+        // 如果开启了沙箱存储开关，则存储data内部区域，否则存在外部存储区域
+        // 4.6引擎开始，为适配Android分区存储，减少不必要的存储权限的申请，外部存储情况下不会存储在SD卡公共区域，而是app位于外部存储的系统规定的私有区域。
+        if (!WDataManager.isWidgetOneSBox) {
+            if (sdCardIsWork() && useLegacyStorage){
+                root = getSdCardRootPath();
+            }else{
+                root = getExterBoxPath(context);
+            }
         } else {
             root = getSBoxRootPath(context);
         }
@@ -415,6 +435,17 @@ public class BUtility {
     public static boolean sdCardIsWork() {
         if (Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * sd 卡是否工作，并且已经获得了权限
+     */
+    public static boolean sdCardIsWorkWithPermission(Context context) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                && Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             return true;
         }
         return false;
@@ -1442,13 +1473,13 @@ public class BUtility {
         SharedPreferences preferences = context.getSharedPreferences(
                 PushReportConstants.SP_APP, Context.MODE_PRIVATE);
         String softToken = preferences.getString("softToken", null);
-        if (softToken != null) {
+        if (!TextUtils.isEmpty(softToken) && !isNeedUpdateSoftToken(context)) {
             return softToken;
         }
-
+        BDebug.i(TAG, "getSoftToken: start generate new softToken");
         String[] val = new String[2];
         try {
-            val[0] = getIMEI(context);
+            val[0] = getUniqueIDLikeIMEI(context);
             val[1] = appKey;
         } catch (Exception e) {
             e.printStackTrace();
@@ -1456,26 +1487,88 @@ public class BUtility {
         softToken = getMD5Code(val);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("softToken", softToken);
+        editor.putInt(BConstant.SP_APP_KEY_SOFT_VER, BConstant.CURRENT_SOFTTOKEN_VERSION);
         editor.commit();
+        BDebug.i(TAG, "getSoftToken: new softToken is " + softToken);
         return softToken;
     }
 
+    /**
+     * 判断是否需要刷新softToken缓存
+     *
+     * @return
+     */
+    public static boolean isNeedUpdateSoftToken(Context context){
+        SharedPreferences preferences = context.getSharedPreferences(
+                PushReportConstants.SP_APP, Context.MODE_PRIVATE);
+        int softTokenVersion = 0;
+        try {
+            softTokenVersion = preferences.getInt(BConstant.SP_APP_KEY_SOFT_VER, 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // 若本地读取的版本低于
+        return softTokenVersion < BConstant.CURRENT_SOFTTOKEN_VERSION;
+    }
+
+    public static boolean isInvalidIMEI(String imei) {
+        return TextUtils.isEmpty(imei) || imei.startsWith("0000");
+    }
+
+    /**
+     * 获取IMEI号类似作用的唯一标识，IMEI号获取不到就获取一个随机UUID
+     *
+     * @param context
+     * @return
+     */
+    public static String getUniqueIDLikeIMEI(Context context){
+        String imei = getIMEI(context);
+        if (isInvalidIMEI(imei)){
+            imei = getRandomIdentifier();
+            BDebug.i(TAG, "getUniqueIDLikeIMEI: use RandomIdentifier.");
+        }
+        if (imei == null){
+            imei = "";
+            BDebug.i(TAG, "getUniqueIDLikeIMEI: use empty string.");
+        }
+        return imei;
+    }
+
+    /**
+     * 获取设备IMEI号。Android10以上无法获取，改为使用AndroidID。某些情况下获取为空时，则
+     *
+     * @param context
+     * @return
+     */
+    @SuppressLint("MissingPermission")
     public static String getIMEI(Context context){
         String imei = "";
         try {
             if (Build.VERSION.SDK_INT >= 29){
                 // Android10.0以上，使用AndroidID
                 imei = Settings.System.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+                BDebug.i(TAG, "getUniqueIDLikeIMEI: use Settings.Secure.ANDROID_ID.");
             }else{
                 // 否则，使用IMEI
                 TelephonyManager telephonyManager = (TelephonyManager) context
                         .getSystemService(Context.TELEPHONY_SERVICE);
                 imei = telephonyManager.getDeviceId();
+                BDebug.i(TAG, "getUniqueIDLikeIMEI: use telephonyManager.getDeviceId().");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return imei;
+    }
+
+    /**
+     * 获取一个随机值，用于在各种本机标识都无法获取的时候，生成一个唯一值用于生成标识，防止标识重复。
+     *
+     * @return
+     */
+    public static String getRandomIdentifier(){
+        String uuid = UUID.randomUUID().toString();
+        return uuid;
     }
 
     /**
@@ -1486,7 +1579,7 @@ public class BUtility {
     public static String getMacAddress(Context context) {
         String macSerial = null;
         try {
-            WifiManager wifi = (WifiManager) context
+            WifiManager wifi = (WifiManager) context.getApplicationContext()
                     .getSystemService(Context.WIFI_SERVICE);
             WifiInfo info = wifi.getConnectionInfo();
             macSerial = info.getMacAddress();

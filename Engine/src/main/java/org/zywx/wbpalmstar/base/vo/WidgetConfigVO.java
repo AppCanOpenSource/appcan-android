@@ -24,6 +24,10 @@ public class WidgetConfigVO {
 
     public String errorPath;
 
+    public String splashDialogPath;
+
+    public String splashDialogVersion;
+
     public String debug;
 
     public int animId;

@@ -149,6 +149,10 @@ public class WWidgetData implements Parcelable,Cloneable {
 
     public String mErrorPath;//页面加载错误时的错误页面路径
 
+    public String splashDialogPagePath;//App首次启动提示对话框页面路径
+
+    public String splashDialogPageVersion;//App首次启动提示对话框页面版本，用于决定何时需要再次显示
+
     public static int sStatusBarColor=-16777216;
     public static boolean sStatusfontBlack = false;//状态栏上字体的颜色
     public IndexWindowOptionsVO m_indexWindowOptions;//root窗口的相关配置参数，目前用于公众号样式窗口的配置
@@ -185,6 +189,8 @@ public class WWidgetData implements Parcelable,Cloneable {
             widget.m_bgColor = source.readString();
             widget.m_appkey = source.readString();
             widget.mErrorPath=source.readString();
+            widget.splashDialogPagePath=source.readString();
+            widget.splashDialogPageVersion=source.readString();
             widget.m_appdebug=source.readInt();
             widget.m_widgetOneLocation = source.readInt();
             if (widget.disablePluginsList != null) {
@@ -236,6 +242,22 @@ public class WWidgetData implements Parcelable,Cloneable {
         }
     }
 
+    public String getSplashDialogPagePath() {
+        return splashDialogPagePath;
+    }
+
+    public void setSplashDialogPagePath(String splashDialogPagePath) {
+        this.splashDialogPagePath = splashDialogPagePath;
+    }
+
+    public String getSplashDialogPageVersion() {
+        return splashDialogPageVersion;
+    }
+
+    public void setSplashDialogPageVersion(String splashDialogPageVersion) {
+        this.splashDialogPageVersion = splashDialogPageVersion;
+    }
+
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeInt(m_id);
         parcel.writeString(m_widgetOneId);
@@ -266,6 +288,8 @@ public class WWidgetData implements Parcelable,Cloneable {
         parcel.writeString(m_bgColor);
         parcel.writeString(m_appkey);
         parcel.writeString(mErrorPath);
+        parcel.writeString(splashDialogPagePath);
+        parcel.writeString(splashDialogPageVersion);
         parcel.writeInt(m_appdebug);
         parcel.writeInt(m_widgetOneLocation);
         parcel.writeStringList(disablePluginsList);
@@ -342,6 +366,10 @@ public class WWidgetData implements Parcelable,Cloneable {
         sb.append("m_remove_loading:" + m_remove_loading);
         sb.append("\n");
         sb.append("mErrorPath:" + mErrorPath);
+        sb.append("\n");
+        sb.append("splashDialogPagePath:" + splashDialogPagePath);
+        sb.append("\n");
+        sb.append("splashDialogPageVersion:" + splashDialogPageVersion);
         sb.append("\n");
         sb.append("m_widgetOneLocation: " + m_widgetOneLocation);
         sb.append("\n");

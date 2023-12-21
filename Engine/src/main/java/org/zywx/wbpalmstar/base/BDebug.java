@@ -18,27 +18,24 @@
 
 package org.zywx.wbpalmstar.base;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.support.annotation.Keep;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.text.format.Time;
 import android.util.Log;
 
 import org.zywx.wbpalmstar.engine.DataHelper;
-import org.zywx.wbpalmstar.platform.push.report.PushReportUtility;
 import org.zywx.wbpalmstar.widgetone.dataservice.WDataManager;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * SD卡根目录新建文件“appcandebug.txt”，即打开debug开关，删除文件即关闭
@@ -53,17 +50,35 @@ public class BDebug {
     public static boolean DEBUG = false;
 
     public static final String TAG = "appcan";
+    public static final String SDCARD_LOG_DIR = "widgetone/log/";
+    public static final String LOG_DIR = "appcanlog/";
 
-    private static ExecutorService mExecutorService;
-
+    private static String outputLogPath = "";
 
     public static void init() {
         if (Environment.MEDIA_MOUNTED.equals(Environment
                 .getExternalStorageState())) {
+            // 20210312 note：经过在Android11的谷歌版Android系统下测试，判断文件是否存在的代码在没有获取存储权限的情况下依然可以生效。不知未来是否会有变化。
             File file = new File(Environment.getExternalStorageDirectory(), FILE_NAME);
             if (file.exists()) {
                 DEBUG = true;
+                Log.i(TAG, "BDebug init: DEBUG = true");
             }
+        }
+    }
+
+    public synchronized static void init(Context applicationContext){
+        init();
+        if (TextUtils.isEmpty(outputLogPath)){
+            outputLogPath = getOutputLogBasePath(applicationContext);
+        }
+    }
+
+    public static String getOutputLogBasePath(Context applicationContext){
+        if (ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
+            return BUtility.getSdCardRootPath() + SDCARD_LOG_DIR;
+        }else{
+            return BUtility.getExterBoxPath(applicationContext) + LOG_DIR;
         }
     }
 
@@ -125,30 +140,39 @@ public class BDebug {
             BDebug.e("params error.");
             return;
         }
-        if (BUtility.sdCardIsWork()){
-            String developPath = BUtility.getSdCardRootPath()
-                    + "widgetone/log/";
-            File dir = new File(developPath);
-            if (!dir.exists()) {
-                dir.mkdirs();
+        final long logFileMaxSize = 102400;// log文件上限100KB
+        String logDirPath = null;
+        if (TextUtils.isEmpty(outputLogPath)){
+            if (BUtility.sdCardIsWork()){
+                // 如果输出路径还未生成（逻辑问题），则尝试使用旧逻辑输出日志
+                logDirPath = BUtility.getWidgetOneRootPath() + "log/";
+            }else{
+                BDebug.e("outputLogPath is null.");
+                return;
             }
-            File log = new File(developPath +plugin +"_log"+ ".txt");
-            try {
-                if (!log.exists()) {
-                    log.createNewFile();
-                }
-                FileInputStream inputStream=new FileInputStream(log);
-                BufferedWriter m_fout = new BufferedWriter(new FileWriter(log,
-                        inputStream.available()<102400));
-                m_fout.write(PushReportUtility.getNowTime() + "\n"
-                        + content+"\n");
-                m_fout.flush();
-                m_fout.close();
-                m_fout = null;
-            } catch (Exception e) {
-                if (DEBUG){
-                    e.printStackTrace();
-                }
+        }else{
+            logDirPath = outputLogPath + "log/";
+        }
+        File dir = new File(logDirPath);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        File log = new File(logDirPath + plugin +"_log" + ".txt");
+        try {
+            if (!log.exists()) {
+                log.createNewFile();
+            }
+            FileInputStream inputStream=new FileInputStream(log);
+            BufferedWriter m_fout = new BufferedWriter(new FileWriter(log,
+                    inputStream.available() < logFileMaxSize));
+            m_fout.write(getNowTime() + "\n"
+                    + content + "\n");
+            m_fout.flush();
+            m_fout.close();
+            m_fout = null;
+        } catch (Exception e) {
+            if (DEBUG){
+                e.printStackTrace();
             }
         }
     }
@@ -250,5 +274,25 @@ public class BDebug {
         BConstant.app.startService(intent);
     }
 
+    private static String getNowTime() {
+        Time time = new Time();
+        time.setToNow();
+        int year = time.year;
+        int month = time.month + 1;
+        int day = time.monthDay;
+        int minute = time.minute;
+        int hour = time.hour;
+        int sec = time.second;
+        return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":"
+                + sec;
+    }
+
+    private static String getCurYearAndMonth() {
+        Time time = new Time();
+        time.setToNow();
+        int year = time.year;
+        int month = time.month + 1;
+        return year + "_" + month;
+    }
 
 }

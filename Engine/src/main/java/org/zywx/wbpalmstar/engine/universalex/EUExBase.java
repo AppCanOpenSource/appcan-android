@@ -45,6 +45,7 @@ import org.zywx.wbpalmstar.engine.EBrowserAnimation;
 import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.EBrowserWindow;
 import org.zywx.wbpalmstar.engine.EWgtResultInfo;
+import org.zywx.wbpalmstar.engine.callback.IActivityCallback;
 import org.zywx.wbpalmstar.engine.container.ContainerAdapter;
 import org.zywx.wbpalmstar.engine.container.ContainerViewPager;
 import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
@@ -52,7 +53,7 @@ import org.zywx.wbpalmstar.widgetone.dataservice.WWidgetData;
 import java.io.File;
 import java.util.Vector;
 
-public abstract class EUExBase {
+public abstract class EUExBase implements IActivityCallback {
 
     public static final int F_UEX_EVENT_TYPE_APP_EXIT = 0;
     public static final int F_UEX_EVENT_TYPE_APP_ON_RESUME = 1;
@@ -66,6 +67,7 @@ public abstract class EUExBase {
      * 可根据实际情况强转为相应的类.
      */
     protected Context mContext;
+
     /**
      * 本js扩展对象所在的WebView.
      */
@@ -83,6 +85,15 @@ public abstract class EUExBase {
         mContext = context;
         mBrwView = inParent;
         mHandler = new c(Looper.getMainLooper());
+    }
+
+    /**
+     * 拿到引擎上下文类型IACEContext的对象
+     *
+     * @return 类型不匹配或者为null时，则会抛出异常
+     */
+    private IACEContext getACEContext(){
+        return (IACEContext)mContext;
     }
 
     /**
@@ -222,18 +233,11 @@ public abstract class EUExBase {
             sb.append(");");
             BDebug.i(sb.toString());
             //在主线程回调
-            if (mContext!=null&&mContext instanceof Activity){
-                ((Activity)mContext).runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (null != mBrwView) {
-                            mBrwView.loadUrl(sb.toString());
-                        }
-                    }
-                });
-            }else{
-                callbackToJs(mBrwView,sb.toString());
-            }
+            mHandler.post(() -> {
+                if (null != mBrwView) {
+                    mBrwView.loadUrl(sb.toString());
+                }
+            });
          }
     }
 
@@ -249,7 +253,7 @@ public abstract class EUExBase {
         if (null == mBrwView) {
             return;
         }
-        ((EBrowserActivity) mContext).startActivityForResult(this, intent,
+        getACEContext().startActivityForResult(this, intent,
                 requestCode);
     }
 
@@ -257,7 +261,14 @@ public abstract class EUExBase {
      * 修复startActivityForResult是通过三方应用调起时，收不到回调的问题
      */
     public final void registerActivityResult() {
-        ((EBrowserActivity) mContext).registerActivityForResult(this);
+        getACEContext().registerActivityForResult(this);
+    }
+
+    /**
+     * 修复requestPermission是通过三方应用调起时，收不到回调的问题
+     */
+    public final void registerPermissionRequestResult() {
+        getACEContext().registerActivityForPermissionRequest(this);
     }
 
     /**
@@ -269,14 +280,14 @@ public abstract class EUExBase {
         if (null == mContext) {
             return;
         }
-        ((EBrowserActivity) mContext).startActivity(intent);
+        ((Activity) mContext).startActivity(intent);
     }
 
     public final void exitApp() {
         if (null == mContext) {
             return;
         }
-        ((EBrowserActivity) mContext).exitBrowser();
+        getACEContext().exitBrowser();
     }
 
     /**
@@ -412,33 +423,29 @@ public abstract class EUExBase {
         if (null == mBrwView || opid == null) {
             return;
         }
-        ((EBrowserActivity) mContext).runOnUiThread(new Runnable() {
-
-            @Override
-            public void run() {
-                EBrowserWindow mWindow = mBrwView.getBrowserWindow();
-                int count = mWindow.getChildCount();
-                for (int i = 0; i < count; i++) {
-                    View view = mWindow.getChildAt(i);
-                    if (view instanceof ContainerViewPager) {
-                        ContainerViewPager pager = (ContainerViewPager) view;
-                        if (opid.equals((String) pager.getContainerVO().getId())) {
-                            ContainerAdapter adapter = (ContainerAdapter) pager.getAdapter();
-                            Vector<FrameLayout> views = adapter.getViewList();
-                            if (index < views.size() && index >= 0) {
-                                adapter.destroyItem(pager, index, null);
-                                views.get(index).removeAllViews();
-                                views.set(index, new FrameLayout(mContext));
-                            } else {
-                                return;
-                            }
-                            adapter.setViewList(views);
-                            adapter.notifyDataSetChanged();
+        ((Activity) mContext).runOnUiThread(() -> {
+            EBrowserWindow mWindow = mBrwView.getBrowserWindow();
+            int count = mWindow.getChildCount();
+            for (int i = 0; i < count; i++) {
+                View view = mWindow.getChildAt(i);
+                if (view instanceof ContainerViewPager) {
+                    ContainerViewPager pager = (ContainerViewPager) view;
+                    if (opid.equals((String) pager.getContainerVO().getId())) {
+                        ContainerAdapter adapter = (ContainerAdapter) pager.getAdapter();
+                        Vector<FrameLayout> views = adapter.getViewList();
+                        if (index < views.size() && index >= 0) {
+                            adapter.destroyItem(pager, index, null);
+                            views.get(index).removeAllViews();
+                            views.set(index, new FrameLayout(mContext));
+                        } else {
                             return;
-                        }//end equals opid
-                    }//end instanceof
-                }//end for
-            }// end run 
+                        }
+                        adapter.setViewList(views);
+                        adapter.notifyDataSetChanged();
+                        return;
+                    }//end equals opid
+                }//end instanceof
+            }//end for
         });// end runOnUI
     }
 
@@ -601,15 +608,6 @@ public abstract class EUExBase {
                 }
             }
         }
-        // final EBrowserActivity screen = (EBrowserActivity) mContext;
-        // final int wgtOrientation = inData.m_orientation;
-        // Runnable mainThread = new Runnable() {
-        // @Override
-        // public void run() {
-        // screen.changeConfiguration(wgtOrientation);
-        // }
-        // };
-        // screen.runOnUiThread(mainThread);
         mBrwView.startWidget(inData, inResult);
         return true;
     }
@@ -689,7 +687,7 @@ public abstract class EUExBase {
      */
     public final void registerAppEventListener(EUExEventListener listener) {
         if (null != listener && null != mContext) {
-            ((EBrowserActivity) mContext).registerAppEventListener(listener);
+            getACEContext().registerAppEventListener(listener);
         }
     }
 
@@ -700,7 +698,7 @@ public abstract class EUExBase {
      */
     public final void unRegisterAppEventListener(EUExEventListener listener) {
         if (null != listener && null != mContext) {
-            ((EBrowserActivity) mContext).unRegisterAppEventListener(listener);
+            getACEContext().unRegisterAppEventListener(listener);
         }
     }
 
@@ -736,6 +734,7 @@ public abstract class EUExBase {
      * @param data        目标Activity finish时返回的数据.
      */
     @Keep
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         ;
     }
@@ -911,19 +910,64 @@ public abstract class EUExBase {
         void RequestPerssionsSucess();
         void RequestPerssionsFaile();
     }
-    public void requsetPerssions(String perssions,String message,int requestCode){
-        ((EBrowserActivity) mContext).requsetPerssions(perssions,this,message,requestCode);
 
-    }
-    public void requsetPerssionsMore(String[] perssions,String message,int requestCode){
-        ((EBrowserActivity) mContext).requsetPerssionsMore(perssions,this,message,requestCode);
-
-    }
+    /**
+     * 请求权限
+     *
+     * @param permission 权限
+     * @param message 权限请求提示语
+     * @param requestCode 请求编号
+     */
     @Keep
+    public void requestPermissions(String permission, String message, int requestCode){
+        getACEContext().acRequestPermissions(permission,this, message, requestCode);
+    }
+
+    /**
+     * 请求多个权限
+     *
+     * @param permissions 权限列表
+     * @param message 权限请求提示语
+     * @param requestCode 请求编号
+     */
+    @Keep
+    public void requestPermissionsMore(String[] permissions, String message, int requestCode){
+        getACEContext().acRequestPermissionsMore(permissions,this, message, requestCode);
+    }
+
+    /**
+     * 请求单个权限
+     *
+     * @deprecated Wrong Spelling. use requestPermissions method instead.
+     */
+    @Keep
+    @Deprecated
+    public void requsetPerssions(String permission, String message, int requestCode){
+        requestPermissions(permission, message, requestCode);
+
+    }
+
+    /**
+     * 请求多个权限
+     *
+     * @deprecated Wrong Spelling. use requestPermissionsMore method instead.
+     */
+    @Keep
+    @Deprecated
+    public void requsetPerssionsMore(String[] permissions, String message, int requestCode){
+        requestPermissionsMore(permissions, message, requestCode);
+    }
+
+    @Keep
+    @Override
     public void onRequestPermissionResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if(grantResults[0]== PackageManager.PERMISSION_DENIED){
+            // 权限被拒的时候，旧回调通知
             String js = "javascript:if(uexWidgetOne.cbPerssionsDenied){uexWidgetOne.cbPerssionsDenied(' "+permissions[0]+" ')}";
             callbackToJs(js);
+            // 权限被拒的时候，新回调通知
+            String jsNew = "javascript:if(uexWidgetOne.onRequestPermissionsDenied){uexWidgetOne.onRequestPermissionsDenied(' "+permissions[0]+" ')}";
+            callbackToJs(jsNew);
         }
     }
 

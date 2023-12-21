@@ -44,7 +44,6 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.webkit.MimeTypeMap;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -58,6 +57,7 @@ import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.JsConst;
 import org.zywx.wbpalmstar.base.ResoureFinder;
+import org.zywx.wbpalmstar.base.listener.OnAppCanInitStatusChanged;
 import org.zywx.wbpalmstar.base.util.AppCanAPI;
 import org.zywx.wbpalmstar.base.vo.AppInstalledVO;
 import org.zywx.wbpalmstar.base.vo.ErrorResultVO;
@@ -67,7 +67,14 @@ import org.zywx.wbpalmstar.base.vo.WidgetCheckUpdateResultVO;
 import org.zywx.wbpalmstar.base.vo.WidgetConfigVO;
 import org.zywx.wbpalmstar.base.vo.WidgetFinishVO;
 import org.zywx.wbpalmstar.base.vo.WidgetStartVO;
-import org.zywx.wbpalmstar.engine.*;
+import org.zywx.wbpalmstar.engine.AppCan;
+import org.zywx.wbpalmstar.engine.DataHelper;
+import org.zywx.wbpalmstar.engine.EBrowserActivity;
+import org.zywx.wbpalmstar.engine.EBrowserAnimation;
+import org.zywx.wbpalmstar.engine.EBrowserView;
+import org.zywx.wbpalmstar.engine.EBrowserWidget;
+import org.zywx.wbpalmstar.engine.EBrowserWindow;
+import org.zywx.wbpalmstar.engine.EWgtResultInfo;
 import org.zywx.wbpalmstar.engine.universalex.wrapper.WidgetJsonWrapper;
 import org.zywx.wbpalmstar.platform.push.report.PushReportConstants;
 import org.zywx.wbpalmstar.widgetone.dataservice.ReData;
@@ -1189,6 +1196,26 @@ public class EUExWidget extends EUExBase {
         }
         widget.reloadWidget();
     }
+
+    public void splashPageAction(String[] params){
+        if (params.length < 1){
+            return;
+        }
+        String actionJsonStr = params[0];
+        if (mContext instanceof OnAppCanInitStatusChanged){
+            BDebug.i(tag, "splashPageAction: " + actionJsonStr);
+            try {
+                JSONObject actionJson = new JSONObject(actionJsonStr);
+                String action = actionJson.getString("action");
+                ((OnAppCanInitStatusChanged)mContext).onReceivedStatus(action);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }else{
+            BDebug.e(tag, "splashPageAction: current context is not an OnAppCanInitStatusChanged instance.");
+        }
+    }
+
     private void callBackPluginJs(String methodName, String jsonData) {
         String js = SCRIPT_HEADER + "if(" + methodName + "){"
                 + methodName + "('" + jsonData + "');}";
