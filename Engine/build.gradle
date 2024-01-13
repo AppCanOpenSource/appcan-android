@@ -7,9 +7,9 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.3'
+        classpath 'com.android.tools.build:gradle:7.1.2'
 //        classpath fileTree(dir: '../gradle-plugin', include: '*.jar')
-        classpath 'org.appcan.gradle.plugins:appcan-gradle-plugin:2.4.0'
+        classpath 'org.appcan.gradle.plugins:appcan-gradle-plugin:2.5.0'
     }
 }
 
@@ -23,11 +23,6 @@ android {
         exclude 'META-INF/MANIFEST.MF'
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
-    }
-    sourceSets {
-        // by a similar customization.
-        debug.setRoot('build-types/debug')
-        release.setRoot('build-types/release')
     }
     lintOptions {
         abortOnError false
