@@ -176,7 +176,7 @@ android {
 
     defaultConfig {
         minSdkVersion 22
-        targetSdkVersion 29
+        targetSdkVersion 30
         multiDexEnabled true
         // 过滤armeabi架构，如有其它架构需要，后续可以再增加或自行定制引擎
         // 此处AbiFilters选项的值，打包服务脚本程序可能会对其进行修改，不要进行大幅度的变更格式
