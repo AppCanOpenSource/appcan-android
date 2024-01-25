@@ -3,6 +3,6 @@
     <version>$version$</version>
     <package>$package$</package>
     <kernel>$kernel$</kernel>
-    <description>适配TargetSdk30 CompileSdk30 MinSdk22。</description>
+    <description>结合近期引擎其他分支的改进，全新适配TargetSdk30 CompileSdk30 MinSdk22。</description>
     <dssVersion>4.6.0</dssVersion>
 </info>
