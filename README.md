@@ -106,7 +106,7 @@ QQ交流群：173758265
 
 ### AppCan Gradle插件
 
-一般情况下生成引擎只需要调用`gradle buildEngine` 就可以生成所有的引擎包，如果有其他需要可以调用其他的task。目前提供的task有：
+一般情况下生成引擎只需要调用`gradle buildSystemEngine` 就可以生成系统内核的默认引擎包，如果有其他需要可以调用其他的task。目前提供的task有：
 
 - **build{Flavor}Engine**：生成对应flavor的引擎
 
@@ -181,13 +181,11 @@ QQ交流群：173758265
   applicationId 'org.zywx.wbpalmstar.widgetone.uex'
   ```
 
-### 已经适配到AndroidStudio3.5.0开发环境
+### 已经适配到AndroidStudio Giraffe 2022.3.1 Patch 3开发环境（截至2024.1.25）
   ​
-> 后续更高的gradle版本，升级原理相同，本文档更新不及时的话，开发者可以自行更新工程配置。但是gradle版本更新过高可能会导致引擎出包脚本使用的gradle插件不兼容，需要等待后续进行适配。目前经过完整测试的是可以适配到3.5.0。
+> 后续更高的gradle版本，升级原理相同，本文档更新不及时的话，开发者可以自行更新工程配置。但是gradle版本更新过高可能会导致引擎出包脚本使用的gradle插件不兼容，需要等待后续进行适配。目前经过完整测试的是可以适配到GradleWrapper 7.6.3 + AGBT 7.4.2。
 
-在3.5.0遇到Gradle插件和脚本运行出错，是因为工程中的AppCanGradle插件未做高版本的适配。有两种方式解决：
-
-#### 1. 降级gradle
+#### 1. 版本对应推荐
 
 目前，本工程的默认配置为适配AS3.5.0，Gradle版本为5.4.1，AndroidGradle构建插件版本为3.5.0。如果开发者没有升级AndroidStudio，按照以下操作降级：
 
@@ -197,11 +195,18 @@ QQ交流群：173758265
 
 - 经过以上操作后，理论上可以编译通过。不过还是建议升级AS。
 
+| AndroidStudio | GradleWrapper | AGBT | AppCanGradlePlugin |
+| -- | -- | -- | -- |
+| 3.5.0以前 | 4.1 | 3.0.1 | 2.2.4 |
+| 3.5.0 | 4.1 | 3.5.0 | 2.3.1 |
+| 4.1.2 | 6.5 | 4.1.2 | 2.4.0 |
+| 2022.3.1 Patch 3 | 7.6.3 | 7.4.2 | 2.6.0 |
+
 #### 2. 依赖新版AppCanGradle插件
 
-1. 修改Engine/gradle/wrapper/gradle-wrapper.properties，其中版本改为5.4.1；
+1. 修改Engine/gradle/wrapper/gradle-wrapper.properties，其中版本改为7.6.3；
 
-2. 修改Engine/build.gradle文件中。其中，repositories增加一个github的maven库，dependencies中将原来的依赖本地的gradle插件改为依赖线上的，版本目前是2.4.0，相关仓库见文档后面。修改部分参考下面：
+2. 修改Engine/build.gradle文件中。其中，repositories增加一个github的maven库，dependencies中将原来的依赖本地的gradle插件改为依赖线上的，版本目前是2.6.0，相关仓库见文档后面。修改部分参考下面：
 
 ```groovy
 buildscript {
@@ -213,14 +218,14 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.3'
+        classpath 'com.android.tools.build:gradle:7.4.2'
 //        classpath fileTree(dir: '../gradle-plugin', include: '*.jar')
-        classpath 'org.appcan.gradle.plugins:appcan-gradle-plugin:2.4.0'
+        classpath 'org.appcan.gradle.plugins:appcan-gradle-plugin:2.6.0'
     }
 }
 ```
 
-3. dependencies中com.android.tools.build:gradle设置为3.0.1或更高版本之后，需要在所有的repositories中增加google()，否则会找不到Android新版的官方gradle相关插件库而报错；
+3. dependencies中com.android.tools.build:gradle设置为7.4.2或更高版本之后，需要在所有的repositories中增加google()，否则会找不到Android新版的官方gradle相关插件库而报错；
 
 4. 若buildToolsVersion改为26或更高后，还会要求修改flavor的定义，如下修改即可：
 
@@ -262,7 +267,9 @@ dependencies {
     //implementation 'org.appcan:engine:4.0.0'
     //implementation 'org.appcan:engine:4.3.23'
     //implementation 'org.appcan:engine:4.4.27'
-    implementation 'org.appcan:engine:4.5.30_dev'
+    //implementation 'org.appcan:engine:4.5.30_dev'
+    //implementation 'org.appcan:engine:4.6.42'
+    implementation 'org.appcan:engine:4.7.49'
 }
 ```
 
@@ -310,8 +317,14 @@ https://github.com/sandy1108/appcan-gradle-plugin
 
 #### 4.6版本
 
-1. minSdkVersion依然22保持不变，targetSdkVersion提升至29，compileSdkVersion也提升至30；
-2. 由于targetSdkVersion升级到30，Android相关新特性和新的适配需要插件开发者关注，比如分区存储权限的变更等；
+1. minSdkVersion依然22保持不变，targetSdkVersion提升至29，compileSdkVersion提升至30；
+2. targetSdkVersion升级到29，Android相关新特性和新的适配需要插件开发者关注，比如分区存储权限的变更等已经处于过渡期，应尽快适配；
 3. 由于业内现在的普遍规定，App启动时引擎框架内默认不会强制申请任何权限（4.6以下版本的引擎会强制申请三个权限：WRITE_EXTERNAL_STORAGE, READ_PHONE_STATE, ACCESS_COARSE_LOCATION）。对于原生插件来说，则需要自行检查自己的首次启动的权限申请是否妥当（比如是否缺失了上述三个权限是否会导致应用闪退或者异常，自动申请权限是否提前弹出了对用户友好的引导提示等等）；
 4. 工程配置升级，com.android.tools.build:gradle升级至4.1.2
+
+#### 4.7版本
+
+1. minSdkVersion依然22保持不变，targetSdkVersion提升至30，compileSdkVersion维持30不变；
+2. 由于targetSdkVersion升级到30，Android相关新特性和新的适配需要插件开发者关注，比如分区存储权限的变更等，不适配将无法使用；
+3. BUtility中增加了方法用于转换本地存储路径为ContentProvider的形式，插件开发者若返回了file路径，需要展示在webview中，则可能需要转换为content://开头，否则将可能无法读取。
 

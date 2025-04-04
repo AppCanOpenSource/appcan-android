@@ -7,9 +7,9 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.2'
+        classpath 'com.android.tools.build:gradle:7.4.2'
 //        classpath fileTree(dir: '../gradle-plugin', include: '*.jar')
-        classpath 'org.appcan.gradle.plugins:appcan-gradle-plugin:2.5.0'
+        classpath 'org.appcan.gradle.plugins:appcan-gradle-plugin:2.6.1'
     }
 }
 
